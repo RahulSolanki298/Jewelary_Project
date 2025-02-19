@@ -11,6 +11,5 @@ namespace DataAccess.Entities
         public string UserName { get; set; }         // User performing the action
         public string TableName { get; set; }        // Name of the table where action was performed
         public string ActionType { get; set; }       // Action performed (INSERT, UPDATE, DELETE)
-
     }
 }

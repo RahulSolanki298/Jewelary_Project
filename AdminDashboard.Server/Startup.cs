@@ -1,3 +1,5 @@
+using Business.Repository;
+using Business.Repository.IRepository;
 using DataAccess.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
@@ -8,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MudBlazor.Services;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +31,13 @@ namespace AdminDashboard.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            Log.Logger = new LoggerConfiguration()
+                        .MinimumLevel.Debug()
+                        .WriteTo.Console()
+                        .WriteTo.File("Logs/log-.yyyy-MM-dd.txt", rollingInterval: RollingInterval.Day)
+                        .CreateLogger();
+
+            services.AddSingleton<ILogEntryRepository, LogEntryRepository>();
             services.AddDbContext<ApplicationDBContext>(option => option.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
             services.AddRazorPages();
             services.AddServerSideBlazor();
@@ -47,7 +57,7 @@ namespace AdminDashboard.Server
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            app.UseSerilogRequestLogging();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
