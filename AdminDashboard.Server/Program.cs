@@ -1,11 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AdminDashboard.Server
 {
@@ -13,7 +9,26 @@ namespace AdminDashboard.Server
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            // Configure Serilog at the start of the application.
+            Log.Logger = new LoggerConfiguration()
+                        .MinimumLevel.Debug() // Log level can be adjusted (Debug, Information, etc.)
+                        .WriteTo.File($"Logs/log-{DateTime.Now.ToString("ddMMyyyy")}.txt") // Rolling daily logs with ddMMyyyy date format
+                        .CreateLogger();
+
+
+            try
+            {
+                // Create and run the host
+                CreateHostBuilder(args).Build().Run();
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Host terminated unexpectedly");
+            }
+            finally
+            {
+                Log.CloseAndFlush(); // Ensure logs are flushed before app exits
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -21,6 +36,7 @@ namespace AdminDashboard.Server
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                })
+                .UseSerilog(); // Use Serilog for logging
     }
 }

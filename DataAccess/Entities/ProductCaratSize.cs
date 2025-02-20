@@ -2,6 +2,8 @@
 {
     public class ProductCaratSize
     {
+        public int Id { get; set; }
+
         public int CaratId { get; set; }
 
         public int ShapeId { get; set; }

@@ -1,18 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DataAccess.Entities
+namespace Models
 {
-    public class VirtualAppointment
+    public class VirtualAppointmentDTO
     {
         public int Id { get; set; }
 
         public string CompanyName { get; set; }
 
+        // Jewelry like [Ring, Earrings]
         public int CategoryId { get; set; }
 
-        public DateTime RegisterDate { get; set; }
+        public string CategoryName { get; set; }
+
+        public DateTime? RegisterDate { get; set; }
 
         public string RegisterTime { get; set; } //  hh:mm
 
@@ -25,10 +26,5 @@ namespace DataAccess.Entities
         public string Message { get; set; }
 
         public string Status { get; set; }
-
-
-
-        //[ForeignKey("CategoryId")]
-        //public virtual Category Category { get; set; }
     }
 }
