@@ -10,5 +10,6 @@ namespace DataAccess.Data
         }
 
         public DbSet<LogEntry> LogEntries { get; set; }
+        public DbSet<VirtualAppointment> VirtualAppointment { get; set; }
     }
 }

@@ -1,3 +1,4 @@
+using AutoMapper;
 using Business.Repository;
 using Business.Repository.IRepository;
 using DataAccess.Data;
@@ -31,17 +32,17 @@ namespace AdminDashboard.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            Log.Logger = new LoggerConfiguration()
-                        .MinimumLevel.Debug()
-                        .WriteTo.Console()
-                        .WriteTo.File("Logs/log-.yyyy-MM-dd.txt", rollingInterval: RollingInterval.Day)
-                        .CreateLogger();
+            
 
-            services.AddSingleton<ILogEntryRepository, LogEntryRepository>();
             services.AddDbContext<ApplicationDBContext>(option => option.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
+            
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddMudServices();
+            services.AddScoped<ILogEntryRepository, LogEntryRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
