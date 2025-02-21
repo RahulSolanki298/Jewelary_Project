@@ -1,26 +1,45 @@
 ﻿@page "/"
 
 
-<!-- Hero Section -->
-<section id="hero" class="hero section light-background">
-
+<section id="hero" class="section light-background">
 	<div class="container">
 		<div class="row gy-4">
-			<div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center" data-aos="zoom-out">
-				<h1>Welcome to <span>Godhani Jewelry Store</span></h1>
-				<p>We are team of talented designers making websites with Bootstrap</p>
-				<div class="d-flex">
-					<a href="#about" class="btn-get-started">Get Started</a>
-					<a href="https://www.youtube.com/watch?v=xuuNZQwhEn4" class="glightbox btn-watch-video d-flex align-items-center">
-						<i class="bi bi-play-circle"></i><span>Watch Video</span>
-					</a>
-				</div>
+			<!-- Background Video -->
+			<video id="fst-video" loop autoplay muted style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2;">
+				<source src="Videos/diamond.mp4" type="video/mp4">
+			</video>
+
+			<!-- Content Overlay -->
+			@* <div class="content-overlay">
+				<img src="Images/diamond.png" style="width:200px;" />
+				<h2 class="text-info">Godhani Jems</h2>
+			</div> *@
+			<div class="content-overlay">
+
+			</div>
+
+			<!-- Animated Background Symbols -->
+			<div id="background-header">
+				<div><span></span></div>
+				<div><span></span></div>
+				<div><span></span></div>
+				<div><span></span></div>
+				<div><span></span></div>
+				<div><span></span></div>
+				<div><span></span></div>
+				<div><span></span></div>
+				<div><span></span></div>
+				<div><span></span></div>
+
 			</div>
 		</div>
 	</div>
+</section>
 
-</section><!-- /Hero Section -->
-<!-- Featured Services Section -->
+
+
+
+
 <section id="featured-services" class="featured-services section">
 	<!-- Section Title -->
 	<div class="container section-title" data-aos="fade-up">
@@ -36,7 +55,7 @@
 					<div class="icon"><img src="Images/diamond.png" style="width:35px;" /></div>
 					<h4><a href="#" class="stretched-link">Lab Grow Diamond & Jewelry</a></h4>
 				</div>
-			</div><!-- End Service Item -->
+			</div>
 
 			<div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="200">
 				<div class="service-item position-relative">
@@ -49,14 +68,14 @@
 						</a>
 					</h4>
 				</div>
-			</div><!-- End Service Item -->
+			</div>
 
 			<div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="300">
 				<div class="service-item position-relative">
 					<div class="icon"><i class="bi bi-calendar4-week icon"></i></div>
 					<h4><a href="" class="stretched-link">Laser inscribed diamonds with Godhani Jems logo</a></h4>
 				</div>
-			</div><!-- End Service Item -->
+			</div>
 
 			<div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="400">
 				<div class="service-item position-relative">
@@ -68,21 +87,20 @@
 						</a>
 					</h4>
 				</div>
-			</div><!-- End Service Item -->
+			</div>
 
 		</div>
 
 	</div>
 
-</section><!-- /Featured Services Section -->
-<!-- About Section -->
+</section>
+
 <section id="about" class="about section light-background">
 
-	<!-- Section Title -->
 	<div class="container section-title" data-aos="fade-up">
 		<h2>About</h2>
 		<p><span>Find Out More</span> <span class="description-title">About Us</span></p>
-	</div><!-- End Section Title -->
+	</div>
 
 	<div class="container">
 
@@ -127,7 +145,7 @@
 
 	</div>
 
-</section><!-- /About Section -->
+</section>
 
 <section id="services" class="services section">
 	<!-- Section Title -->
@@ -139,7 +157,6 @@
 	<div class="container">
 		<div class="row gy-4">
 
-			<!-- Rings Card -->
 			<div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
 				<div class="card">
 					<img src="Images/Rings.jpg" class="card-img-top" alt="Rings">
@@ -149,8 +166,7 @@
 						<a href="#" class="btn btn-primary">Shop Now</a>
 					</div>
 				</div>
-			</div><!-- End Rings Card -->
-			<!-- Earrings Card -->
+			</div>
 			<div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
 				<div class="card">
 					<img src="Images/Earings.jpg" class="card-img-top" alt="Earrings">
@@ -160,8 +176,7 @@
 						<a href="#" class="btn btn-primary">Shop Now</a>
 					</div>
 				</div>
-			</div><!-- End Earrings Card -->
-			<!-- Necklaces Card -->
+			</div>
 			<div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
 				<div class="card">
 					<img src="Images/Nackless.jpg" class="card-img-top" alt="Necklaces">
@@ -171,8 +186,7 @@
 						<a href="#" class="btn btn-primary">Shop Now</a>
 					</div>
 				</div>
-			</div><!-- End Necklaces Card -->
-			<!-- More Products Card -->
+			</div>
 			<div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
 				<div class="card">
 					<img src="Images/More.jpg" class="card-img-top" alt="More Products">
@@ -182,11 +196,10 @@
 						<a href="#" class="btn btn-primary">Shop Now</a>
 					</div>
 				</div>
-			</div><!-- End More Products Card -->
-
+			</div>
 		</div>
 	</div>
-</section><!-- /Services Section -->
-<!-- Testimonials Section -->
+</section>
+
 
 
