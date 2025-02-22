@@ -7,11 +7,13 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Blazored.TextEditor" Version="1.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.17" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
     <PackageReference Include="MudBlazor" Version="5.0.14" />
     <PackageReference Include="MudBlazor.ThemeManager" Version="1.0.2" />
     <PackageReference Include="Serilog" Version="4.2.0" />
@@ -27,7 +29,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Pages\Applications\B2BCustomers\" />
+    <Folder Include="Pages\Applications\Customers\" />
+    <Folder Include="Pages\Applications\Suppliers\" />
+    <Folder Include="Pages\Applications\Supplier\" />
+    <Folder Include="Pages\Applications\Products\" />
+    <Folder Include="Pages\Applications\SubCategory\" />
+    <Folder Include="Pages\Applications\ProductProperty\" />
     <Folder Include="Pages\LogManager\" />
+    <Folder Include="Pages\Applications\ProductImages\" />
   </ItemGroup>
 
 </Project>

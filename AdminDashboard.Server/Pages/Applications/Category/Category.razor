@@ -1,0 +1,47 @@
+﻿@page "/category-list"
+
+@using DataAccess.Entities
+
+@using Business.Repository
+@using Business.Repository.IRepository
+@inject ICategoryRepository categoryRepository
+
+<MudItem xs="12" sm="12" md="12">
+	<MudCard Elevation="25" Style="height:100%;">
+		<MudCardHeader>
+			<CardHeaderContent>
+				<MudText Typo="Typo.h6">Category List</MudText>
+			</CardHeaderContent>
+		</MudCardHeader>
+		<MudCardContent Class="px-0">
+			<MudTable Items="categories" SortLabel="Sort" Hover="true" Striped="true">
+				<HeaderContent>
+					<MudTh Sortable="true" SortLabel="Name">Name</MudTh>
+					<MudTh>Actions</MudTh>
+				</HeaderContent>
+				<RowTemplate>
+					<MudTd DataLabel="Name">@context.Name</MudTd>
+					<MudTd></MudTd>
+				</RowTemplate>
+			</MudTable>
+		</MudCardContent>
+	</MudCard>
+</MudItem>
+
+@code {
+	private IEnumerable<Category> categories { get; set; } = new List<Category>();
+	private bool IsLoading { get; set; } = false;
+	private int currentPage = 0;
+	private int pageSize = 5;
+
+	protected override async Task OnInitializedAsync()
+	{
+		IsLoading = true;
+		var categories = await categoryRepository.GetCategoryList();
+
+		if (categories.Count() == 0)
+		{
+			IsLoading = false;
+		}
+	}
+}
