@@ -25,6 +25,8 @@ namespace DataAccess.Entities
         public int? ClarityId { get; set; }
         public int? ColorId { get; set; }
         public int? ShapeId { get; set; }
+        public int? StyleId { get; set; }       // Style is brands
+        public int? CollectionsId { get; set; } // Group of products
         public bool IsActivated { get; set; } = false;
     }
 }
