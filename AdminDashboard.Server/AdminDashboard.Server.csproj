@@ -31,11 +31,8 @@
   <ItemGroup>
     <Folder Include="Pages\Applications\B2BCustomers\" />
     <Folder Include="Pages\Applications\Customers\" />
-    <Folder Include="Pages\Applications\Suppliers\" />
-    <Folder Include="Pages\Applications\Supplier\" />
     <Folder Include="Pages\Applications\Products\" />
-    <Folder Include="Pages\Applications\SubCategory\" />
-    <Folder Include="Pages\Applications\ProductProperty\" />
+    <Folder Include="Pages\Applications\Suppliers\" />
     <Folder Include="Pages\LogManager\" />
     <Folder Include="Pages\Applications\ProductImages\" />
   </ItemGroup>

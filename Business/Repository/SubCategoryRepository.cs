@@ -44,11 +44,11 @@ namespace Business.Repository
 
         // Optimized Get method (Direct fetch without unnecessary async overhead)
         public async Task<IEnumerable<SubCategory>> GetSubCategoryList() =>
-            await _context.SubCategory.AsNoTracking().ToListAsync(); // AsNoTracking for read-only queries
+            await _context.SubCategory.ToListAsync(); 
 
         // Optimized GetById method (No need for extra query if null returned)
         public async Task<SubCategory> GetSubCategoryById(int id) =>
-            await _context.SubCategory.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id); // AsNoTracking
+            await _context.SubCategory.FirstOrDefaultAsync(x => x.Id == id); // AsNoTracking
 
         // Optimized Save method with single async operation, better exception handling
         public async Task<SubCategory> SaveSubCategory(SubCategory subCategory, int scatId = 0)

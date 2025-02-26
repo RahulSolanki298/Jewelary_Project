@@ -1,22 +1,22 @@
-﻿@page "/applications/category/categoryList"
+﻿@page "/applications/subCategory/subCategoryList"
 
 @using Business.Repository
 @using Business.Repository.IRepository
 
-@inject ICategoryRepositry categoryRepository
+@inject ISubCategoryRepository _subcategoryRepository
 @inject ISnackbar Snackbar
 
 <MudCard>
     <MudItem>
         <MudCardHeader>
             <CardHeaderContent>
-                <MudText Typo="Typo.h6">Add / Edit Category</MudText>
+                <MudText Typo="Typo.h6">Add / Edit Sub-Category</MudText>
             </CardHeaderContent>
         </MudCardHeader>
         <MudCardContent>
-            <MudText @bind-Value="category.Id" InputType="InputType.Hidden" ></MudText>
-            <MudTextField @bind-Value="category.Name" Placeholder="Please enter category name."></MudTextField>
-            <MudTextField @bind-Value="category.ProductType" Placeholder="Please enter product type name."></MudTextField>
+            <MudText @bind-Value="subCategory.Id" InputType="InputType.Hidden" ></MudText>
+            <MudTextField @bind-Value="subCategory.Name" Placeholder="Please enter subcategory name."></MudTextField>
+            <MudTextField @bind-Value="subCategory.CategoryId" Placeholder="Please enter category no."></MudTextField>
             <br/>
             <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="SaveCategory">Save Category</MudButton>
             <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="ClearAll">Clear</MudButton>
@@ -24,20 +24,20 @@
     </MudItem>
 </MudCard>
 
-<MudTable Elevation="10" Items="categories" Filter="new Func<DataAccess.Entities.Category,bool>(Search)" @bind-category="category" Hover="@hower" Dense="@dense">
+<MudTable Elevation="10" Items="subCategories" Filter="new Func<DataAccess.Entities.SubCategory,bool>(Search)" @bind-category="subCategory" Hover="@hower" Dense="@dense">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Category List</MudText>
+        <MudText Typo="Typo.h6">Sub Category List</MudText>
         <MudToolBarSpacer />
-        <MudTextField @bind-Value="searchstring" Placeholder="Search Category..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudTextField @bind-Value="searchstring" Placeholder="Search Sub Category..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh><MudTableSortLabel SortBy="new Func<DataAccess.Entities.Category, object>(x=>x.Name)" InitialDirection="SortDirection.Ascending"></MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<DataAccess.Entities.Category, object>(x=>x.ProductType)">Product Type</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<DataAccess.Entities.SubCategory, object>(x=>x.Name)" InitialDirection="SortDirection.Ascending"></MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<DataAccess.Entities.SubCategory, object>(x=>x.CategoryId)">Category Id</MudTableSortLabel></MudTh>
         <MudTh>Actions</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTh DataLabel="Name">@context.Name</MudTh>
-        <MudTh DataLabel="ProductType">@context.ProductType</MudTh>
+        <MudTh DataLabel="CategoryId">@context.CategoryId</MudTh>
         <MudTd DataLabel=""> 
             <MudFab @onclick="@(() => Edit(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
             <MudFab @onclick="@(() => Delete(context.Id))" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
@@ -66,8 +66,8 @@
     private bool hower = true;
     private bool dense = true;
     private string searchstring = "";
-    private DataAccess.Entities.Category category = new DataAccess.Entities.Category();
-    private IEnumerable<DataAccess.Entities.Category> categories { get; set; } = new List<DataAccess.Entities.Category>();
+    private DataAccess.Entities.SubCategory subCategory = new DataAccess.Entities.SubCategory();
+    private IEnumerable<DataAccess.Entities.SubCategory> subCategories { get; set; } = new List<DataAccess.Entities.SubCategory>();
     private bool IsLoading { get; set; } = false;
     private int currentPage = 0;
     private int pageSize = 5;
@@ -78,7 +78,7 @@
     {
         IsLoading = true;
         await GetCategoryList();
-        if (categories.Count() == 0)
+        if (subCategories.Count() == 0)
         {
             IsLoading = false;
         }
@@ -86,14 +86,13 @@
 
     private async Task GetCategoryList()
     {
-        categories = await categoryRepository.GetCategoryList();
+        subCategories = await _subcategoryRepository.GetSubCategoryList();
     }
 
-    private bool Search(DataAccess.Entities.Category category)
+    private bool Search(DataAccess.Entities.SubCategory subCategory)
     {
-        if (category.Name != null && category.ProductType != null && 
-            category.Name.Contains(searchstring,StringComparison.OrdinalIgnoreCase) ||
-            category.ProductType.Contains(searchstring, StringComparison.OrdinalIgnoreCase) )
+        if (subCategory.Name != null && subCategory.CategoryId != null &&
+            subCategory.Name.Contains(searchstring, StringComparison.OrdinalIgnoreCase))
         {
             return true;
         }
@@ -102,14 +101,14 @@
 
     private async Task SaveCategory()
     {
-        await categoryRepository.SaveCategory(category,category.Id);
-        category = new DataAccess.Entities.Category();  
-        Snackbar.Add("Category has been saved successfully.", Severity.Success);
+        await _subcategoryRepository.SaveSubCategory(subCategory, subCategory.Id);
+        subCategory = new DataAccess.Entities.SubCategory();
+        Snackbar.Add("Sub Category has been saved successfully.", Severity.Success);
         await GetCategoryList();
     }
 
     private async Task Edit(int id){
-        category = await categoryRepository.GetCategoryById(id);
+        subCategory = await _subcategoryRepository.GetSubCategoryById(id);
     }
 
     private async Task Delete(int id)
@@ -119,15 +118,15 @@
 
         if (_state == "Deleted!")
         {
-            await categoryRepository.DeleteCategoryById(id);
-            Snackbar.Add("Category deleted successfully.", Severity.Success);
+            await _subcategoryRepository.DeleteSubCategoryById(id);
+            Snackbar.Add("Subcategory deleted successfully.", Severity.Success);
             await GetCategoryList();
         }
     }
 
     private void ClearAll()
     {
-        category = new DataAccess.Entities.Category();
+        subCategory = new DataAccess.Entities.SubCategory();
     }
 
 }
