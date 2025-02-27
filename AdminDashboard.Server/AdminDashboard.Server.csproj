@@ -31,8 +31,6 @@
   <ItemGroup>
     <Folder Include="Pages\Applications\B2BCustomers\" />
     <Folder Include="Pages\Applications\Customers\" />
-    <Folder Include="Pages\Applications\Products\" />
-    <Folder Include="Pages\Applications\Suppliers\" />
     <Folder Include="Pages\LogManager\" />
     <Folder Include="Pages\Applications\ProductImages\" />
   </ItemGroup>

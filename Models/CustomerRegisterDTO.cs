@@ -34,6 +34,6 @@ namespace Models
 
         public string ActivationStatus { get; set; }
 
-        public string UserRole { get; set; }
+        
     }
 }

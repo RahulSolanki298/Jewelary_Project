@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using DataAccess.Entities;
+using Microsoft.AspNetCore.Identity;
 using Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Business.Repository.IRepository
@@ -8,10 +10,18 @@ namespace Business.Repository.IRepository
     {
         Task<IdentityResult> CustomerRegisterAsync(CustomerRegisterDTO customerRegister);
 
-        Task<SignInResult> CustomerLoginAsync(CustomerLoginDTO customerLogin);
+        Task<IdentityResult> EmployeeRegisterAsync(CustomerRegisterDTO customerRegister);
+
+        Task<IdentityResult> SupplierRegisterAsync(CustomerRegisterDTO customerRegister);
 
         Task<IdentityResult> UpsertBusinessAccountAsync(BusinessAccountRegisterDTO customerRegister);
 
+        Task<List<ApplicationUser>> GetCustomerData();
 
+        Task<List<ApplicationUser>> GetSuppliersData();
+
+        Task<List<ApplicationUser>> GetBusinessAccountData();
+
+        Task<List<ApplicationUser>> GetEmployeeList();
     }
 }

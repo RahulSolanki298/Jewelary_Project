@@ -43,7 +43,6 @@ namespace Models
 
         [Required(ErrorMessage = "Please enter whatsapp number.")]
         public string WhatsAppNumber { get; set; }
-
  
         public string OfficialWebsite { get; set; }
 

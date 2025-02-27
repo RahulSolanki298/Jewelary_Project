@@ -49,7 +49,8 @@ namespace AdminDashboard.Server
             services.AddScoped<ICategoryRepositry, CategoryRepository>();
             services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
             services.AddScoped<IProductPropertyRepository, ProductPropertyRepository>();
-
+            services.AddScoped<IProductRepository, ProductRepository>();
+            
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddMudServices();

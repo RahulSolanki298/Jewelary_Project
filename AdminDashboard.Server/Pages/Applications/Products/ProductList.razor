@@ -1,0 +1,108 @@
+﻿@page "/applications/product/product-list"
+
+@using Business.Repository
+@using Business.Repository.IRepository
+@using global::Models
+
+@inject IProductRepository productRepository
+@inject ISnackbar Snackbar
+
+<MudTable Elevation="10" Items="productList" Filter="new Func<ProductDTO,bool>(Search)" @bind-category="product" Hover="@hower" Dense="@dense">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Product List</MudText>
+        <MudToolBarSpacer />
+        <MudTextField @bind-Value="searchstring" Placeholder="Search Product..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortBy="new Func<ProductDTO, object>(x=>x.Title)" InitialDirection="SortDirection.Ascending"></MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<ProductDTO, object>(x=>x.CategoryName)">Category</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<ProductDTO, object>(x=>x.CaratName)">Carat</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<ProductDTO, object>(x=>x.ClarityName)">Clarity</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<ProductDTO, object>(x=>x.ColorName)">Color</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<ProductDTO, object>(x=>x.CaratSizeName)">Size</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTh DataLabel="Name">@context.Title</MudTh>
+        <MudTh DataLabel="Category Name">@context.CategoryName</MudTh>
+        <MudTh DataLabel="Carat Name">@context.CaratName</MudTh>
+        <MudTh DataLabel="ClarityName">@context.ClarityName</MudTh>
+        <MudTh DataLabel="CategoryName">@context.ColorName</MudTh>
+        <MudTh DataLabel="CaratSizeName">@context.CaratSizeName</MudTh>
+        <MudTh DataLabel="ShapeName">@context.ShapeName</MudTh>
+        <MudTd DataLabel=""> 
+            <MudFab @onclick="@(() => Edit(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
+            <MudFab @onclick="@(() => Delete(context.Id))" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="new int[]{5,10,20,50,100}"/>
+    </PagerContent>
+</MudTable>
+<MudSwitch @bind-Checked="@hower" Color="Color.Primary"></MudSwitch>
+<MudSwitch @bind-Checked="@dense" Color="Color.Secondary"></MudSwitch>
+
+
+
+<MudMessageBox @ref="_mudMessageBox" Title="Delete" CancelText="Cancel">
+    <MessageContent>
+        Are you sure do you want to delete?
+    </MessageContent>
+    <YesButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever">Delete!</MudButton>
+    </YesButton>
+</MudMessageBox>
+
+
+@code {
+    private bool hower = true;
+    private bool dense = true;
+    private string searchstring = "";
+    private ProductDTO product = new ProductDTO();
+    private IEnumerable<ProductDTO> productList { get; set; } = new List<ProductDTO>();
+    private bool IsLoading { get; set; } = false;
+    private int currentPage = 0;
+    private int pageSize = 5;
+    private MudMessageBox _mudMessageBox;
+    private string _state = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoading = true;
+        await GetProductPropertyList();
+        if (productList.Count() == 0)
+        {
+            IsLoading = false;
+        }
+    }
+
+    private async Task GetProductPropertyList()
+    {
+        productList = await productRepository.GetProductList();
+
+    }
+
+    private bool Search(ProductDTO product)
+    {
+        if (product.Title != null && 
+            product.CategoryName != null && 
+            product.ShapeName != null &&
+            product.CaratSizeName != null &&
+            product.CaratName != null &&
+            product.Title.Contains(searchstring, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private void Edit(Guid productId)
+    {
+        
+    }
+
+    private void Delete(Guid productId)
+    {
+
+    }
+
+}

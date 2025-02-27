@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Business.Repository.IRepository;
 using Common;
@@ -14,15 +16,12 @@ namespace Business.Repository
     {
         private readonly ApplicationDBContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
 
         public AccountRepository(ApplicationDBContext context,
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+            UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
-            _signInManager = signInManager;
         }
 
         public async Task<IdentityResult> CustomerRegisterAsync(CustomerRegisterDTO customerRegister)
@@ -38,34 +37,17 @@ namespace Business.Repository
                 Email = customerRegister.EmailId,
                 UserName = customerRegister.EmailId,
                 ActivationStatus = customerRegister.ActivationStatus,
-                Gender=customerRegister.Gender                
+                Gender=customerRegister.Gender,
+                IsBusinessAccount=false,
+                PhoneNumber=customerRegister.PhoneNumber                
             };
 
             var result = await _userManager.CreateAsync(user, customerRegister.TextPassword);
 
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, customerRegister.UserRole);
+                await _userManager.AddToRoleAsync(user, SD.Customer);
             }
-
-            return result;
-        }
-
-        public async Task<SignInResult> CustomerLoginAsync(CustomerLoginDTO customerLogin)
-        {
-            var user = await _userManager.FindByNameAsync(customerLogin.Username);
-            if (user == null)
-            {
-                return SignInResult.Failed;
-            }
-
-            var roles = await _userManager.GetRolesAsync(user);
-            if (!roles.Contains(SD.Admin))
-            {
-                return SignInResult.Failed; 
-            }
-
-            var result = await _signInManager.PasswordSignInAsync(user, customerLogin.Password, false, false);
 
             return result;
         }
@@ -125,14 +107,11 @@ namespace Business.Repository
                 existingBusinessAccount.OwnerProfileImageId = customerRegister.OwnerProfileImageId;
                 existingBusinessAccount.CompanyLogoId = customerRegister.CompanyLogoId;
 
-                // No need to change BusinessCode as it's usually static.
-                // Only update if necessary (e.g., new BusinessCertificate, BusinessEmailId, etc.)
+                _context.BusinessAccount.Update(existingBusinessAccount);
             }
 
-            // Ensure BusinessAccount data is saved
             await _context.SaveChangesAsync();
 
-            // Now handle the ApplicationUser (for business owner)
             var user = await _userManager.FindByEmailAsync(customerRegister.Customer.EmailId);
 
             if (user == null) // If user doesn't exist, create new one
@@ -150,24 +129,24 @@ namespace Business.Repository
                     ActivationStatus = customerRegister.Customer.ActivationStatus,
                     Gender = customerRegister.Customer.Gender,
                     IsBusinessAccount = true,
-                    BusinessAccId = existingBusinessAccount.Id // Link to the existing or newly created BusinessAccount
+                    BusinessAccId = existingBusinessAccount.Id
                 };
 
                 var result = await _userManager.CreateAsync(user, customerRegister.Customer.TextPassword);
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(user, customerRegister.Customer.UserRole);
+                    await _userManager.AddToRoleAsync(user, SD.BusinessAccount);
                 }
                 return result;
             }
-            else // If user exists, update the user details if necessary
+            else
             {
                 user.FirstName = customerRegister.Customer.FirstName;
                 user.MiddleName = customerRegister.Customer.MiddleName;
                 user.LastName = customerRegister.Customer.LastName;
                 user.AadharCardNo = customerRegister.Customer.AadharCardNo;
                 user.PancardNo = customerRegister.Customer.PancardNo;
-                user.TextPassword = customerRegister.Customer.TextPassword; // Update password if required
+                user.TextPassword = customerRegister.Customer.TextPassword;
                 user.ActivationStatus = customerRegister.Customer.ActivationStatus;
                 user.Gender = customerRegister.Customer.Gender;
                 user.PhoneNumber = customerRegister.Customer.PhoneNumber;
@@ -181,23 +160,85 @@ namespace Business.Repository
             }
         }
 
-        public async Task<SignInResult> BusinessUserLoginAsync(string username, string password)
+        public async Task<IdentityResult> EmployeeRegisterAsync(CustomerRegisterDTO customerRegister)
         {
-            var user = await _userManager.FindByNameAsync(username);
-            if (user == null)
+            var user = new ApplicationUser
             {
-                return SignInResult.Failed;
-            }
+                FirstName = customerRegister.FirstName,
+                MiddleName = customerRegister.MiddleName,
+                LastName = customerRegister.LastName,
+                AadharCardNo = customerRegister.AadharCardNo,
+                PancardNo = customerRegister.PancardNo,
+                TextPassword = customerRegister.TextPassword,
+                Email = customerRegister.EmailId,
+                UserName = customerRegister.EmailId,
+                ActivationStatus = customerRegister.ActivationStatus,
+                Gender = customerRegister.Gender,
+                IsBusinessAccount = false,
+                PhoneNumber = customerRegister.PhoneNumber
+            };
 
-            var roles = await _userManager.GetRolesAsync(user);
-            if (!roles.Contains(SD.BusinessAccount))
+            var result = await _userManager.CreateAsync(user, customerRegister.TextPassword);
+
+            if (result.Succeeded)
             {
-                return SignInResult.Failed; 
+                await _userManager.AddToRoleAsync(user, SD.Employee);
             }
-
-            var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
 
             return result;
+        }
+
+        public async Task<IdentityResult> SupplierRegisterAsync(CustomerRegisterDTO customerRegister)
+        {
+            var user = new ApplicationUser
+            {
+                FirstName = customerRegister.FirstName,
+                MiddleName = customerRegister.MiddleName,
+                LastName = customerRegister.LastName,
+                AadharCardNo = customerRegister.AadharCardNo,
+                PancardNo = customerRegister.PancardNo,
+                TextPassword = customerRegister.TextPassword,
+                Email = customerRegister.EmailId,
+                UserName = customerRegister.EmailId,
+                ActivationStatus = customerRegister.ActivationStatus,
+                Gender = customerRegister.Gender,
+                IsBusinessAccount = false,
+                PhoneNumber = customerRegister.PhoneNumber                
+            };
+
+            var result = await _userManager.CreateAsync(user, customerRegister.TextPassword);
+
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, SD.Supplier);
+            }
+
+            return result;
+        }
+
+
+        public async Task<List<ApplicationUser>> GetCustomerData()
+        {
+           var resultDT= await _userManager.GetUsersInRoleAsync("Customer");
+            return resultDT.ToList();
+        }
+
+        public async Task<List<ApplicationUser>> GetSuppliersData()
+        {
+            var resultDT = await _userManager.GetUsersInRoleAsync("Supplier");
+            return resultDT.ToList();
+        }
+
+        public async Task<List<ApplicationUser>> GetBusinessAccountData()
+        {
+            var resultDT = await _userManager.GetUsersInRoleAsync("BusinessAccount");
+            return resultDT.ToList();
+        }
+
+        public async Task<List<ApplicationUser>> GetEmployeeList()
+        {
+            var resultDT = await _userManager.GetUsersInRoleAsync("Employee");
+            return resultDT.ToList();
         }
 
         private string GenerateBusinessAccountCode()

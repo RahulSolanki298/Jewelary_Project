@@ -54,16 +54,7 @@
         {
             try
             {
-                var result = await _userAccountRepo.CustomerLoginAsync(customrLoginDt);
-
-                if (result.Succeeded) // Assuming the result is a success flag, change this depending on your actual API response.
-                {
-                    Message = "Login Successful!";
-                }
-                else
-                {
-                    Message = "Invalid credentials. Please try again.";
-                }
+                
             }
             catch (Exception ex)
             {
