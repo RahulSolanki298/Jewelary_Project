@@ -20,6 +20,8 @@
         <MudTh><MudTableSortLabel SortBy="new Func<ProductDTO, object>(x=>x.ClarityName)">Clarity</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<ProductDTO, object>(x=>x.ColorName)">Color</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<ProductDTO, object>(x=>x.CaratSizeName)">Size</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<ProductDTO, object>(x=>x.ShapeName)">Shape</MudTableSortLabel></MudTh>
+        <MudTh>Actions</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTh DataLabel="Name">@context.Title</MudTh>
