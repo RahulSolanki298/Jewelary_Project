@@ -24,5 +24,7 @@ namespace Business.Repository.IRepository
         Task<int> GetClarityId();
 
         Task<List<ProductProperty>> GetClarityList();
+
+        Task<bool> SaveProductList(List<ProductDTO> products);
     }
 }

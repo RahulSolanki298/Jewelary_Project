@@ -51,7 +51,8 @@ namespace APIs.Controllers
             {
                 UserName = userRequestDTO.Email,
                 Email = userRequestDTO.Email,
-                FirstName = userRequestDTO.Name,
+                FirstName = userRequestDTO.FirstName,
+                LastName = userRequestDTO.LastName,
                 PhoneNumber = userRequestDTO.PhoneNo,
                 EmailConfirmed = true
             };
