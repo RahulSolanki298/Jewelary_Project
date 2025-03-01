@@ -70,10 +70,13 @@ namespace APIs
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IEmailSender, EmailSender>();
+            services.AddScoped<ILogEntryRepository, LogEntryRepository>();
+            services.AddScoped<IVirtualAppointmentRepo, VirtualAppointmentRepo>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<ICategoryRepositry, CategoryRepository>();
             services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
-            services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductPropertyRepository, ProductPropertyRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
 
             services.AddCors(o => o.AddPolicy("Jewelary", builder =>
             {

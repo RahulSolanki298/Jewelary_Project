@@ -1,4 +1,5 @@
 ﻿using APIs.Helper;
+using Business.Repository.IRepository;
 using Common;
 using DataAccess.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -20,25 +21,28 @@ namespace APIs.Controllers
     [Route("api/[controller]/[action]")]
     [ApiController]
     [Authorize]
-    public class AccountController : Controller
+    public class AccountController : ControllerBase
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly APISettings _aPISettings;
+        private readonly IAccountRepository _accountRepository;
 
         public AccountController(SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
-            IOptions<APISettings> options)
+            IOptions<APISettings> options,
+            IAccountRepository accountRepository)
         {
             _roleManager = roleManager;
             _userManager = userManager;
             _signInManager = signInManager;
             _aPISettings = options.Value;
+            _accountRepository = accountRepository;
         }
 
-        [HttpPost]
+        [HttpPost("/ClientSignUp")]
         [AllowAnonymous]
         public async Task<IActionResult> SignUp([FromBody] UserRequestDTO userRequestDTO)
         {
@@ -76,9 +80,9 @@ namespace APIs.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPost("/ClientSignIn")]
         [AllowAnonymous]
-        public async Task<IActionResult> SignIn([FromBody] CustomerLoginDTO authenticationDTO)
+        public async Task<ActionResult> SignIn([FromBody] CustomerLoginDTO authenticationDTO)
         {
             var result = await _signInManager.PasswordSignInAsync(authenticationDTO.Username,
                 authenticationDTO.Password, false, false);
@@ -129,6 +133,32 @@ namespace APIs.Controllers
                     IsAuthSuccessful = false,
                     ErrorMessage = "Invalid Authentication"
                 });
+            }
+        }
+
+        [HttpPost("/B2BSignUp")]
+        [AllowAnonymous]
+        public async Task<ActionResult> CreateBusinessAccount([FromBody] BusinessAccountRegisterDTO buzzRequest)
+        {
+
+            if (buzzRequest == null)
+            {
+                return BadRequest("Business account data is required.");
+            }
+
+            try
+            {
+                var response = await _accountRepository.UpsertBusinessAccountAsync(buzzRequest);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (you can use a logger here)
+                // _logger.LogError(ex, "An error occurred while creating the business account");
+
+                // Return a general error response with a message
+                return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
 

@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models
 {
     public class CustomerRegisterDTO
     {
-        public string Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required(ErrorMessage ="Please enter your first name.")]
         public string FirstName { get; set; }

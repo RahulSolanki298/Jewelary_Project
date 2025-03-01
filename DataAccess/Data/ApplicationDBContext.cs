@@ -12,6 +12,8 @@ namespace DataAccess.Data
 
         public DbSet<LogEntry> LogEntries { get; set; }
 
+        public DbSet<Diamond> Diamonds { get; set; }
+
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
 
         public DbSet<VirtualAppointment> VirtualAppointment { get; set; }
