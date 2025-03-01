@@ -132,5 +132,7 @@ namespace APIs.Controllers
 
             return Ok("Images uploaded and organized successfully.");
         }
+
+       
     }
 }

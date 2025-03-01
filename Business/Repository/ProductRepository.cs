@@ -23,6 +23,10 @@ namespace Business.Repository
         {
             try
             {
+                // Step 0: Initilize veriable
+                var newProduct = new Product();
+                var existingProduct = new Product();
+
                 // Step 1: Fetch all related entities in bulk to avoid repeated database calls
                 var colors = await GetColorList();
                 var categories = await _context.Category.ToListAsync();
@@ -70,7 +74,7 @@ namespace Business.Repository
                     caratSizeId = caratSizeDict.GetValueOrDefault(product.CaratSizeName);
 
                     // Check if a product already exists based on related field IDs
-                    var existingProduct = await _context.Product
+                    existingProduct = await _context.Product
                         .Where(x => x.ProductType == product.ProductType
                                     && x.CategoryId == categoryId
                                     && x.SubCategoryId == subCategoryId
@@ -94,7 +98,7 @@ namespace Business.Repository
                     else
                     {
                         // Insert new product
-                        var newProduct = new Product
+                        newProduct = new Product
                         {
                             Title = $"{product.CategoryName} {product.ColorName} {product.CaratName} {product.ProductType}",
                             Sku = product.Sku,
@@ -180,7 +184,6 @@ namespace Business.Repository
 
                                   join col in _context.CollectionHistory on product.CollectionsId equals col.Id into colGroup
                                   from col in colGroup.DefaultIfEmpty() // LEFT JOIN
-
                                   select new ProductDTO
                                   {
                                       Id = product.Id,
