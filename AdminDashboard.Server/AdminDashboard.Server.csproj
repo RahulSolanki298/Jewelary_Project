@@ -5,26 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Pages\LogManager\**" />
-    <Content Remove="Pages\LogManager\**" />
-    <EmbeddedResource Remove="Pages\LogManager\**" />
-    <None Remove="Pages\LogManager\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Blazored.TextEditor" Version="1.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.17" />
+    <PackageReference Include="EPPlus" Version="7.6.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="5.0.17" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.17">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.17" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.17" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.17">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
     <PackageReference Include="MudBlazor" Version="5.0.14" />
     <PackageReference Include="MudBlazor.ThemeManager" Version="1.0.2" />
@@ -43,6 +33,7 @@
   <ItemGroup>
     <Folder Include="Pages\Applications\B2BCustomers\" />
     <Folder Include="Pages\Applications\Customers\" />
+    <Folder Include="Pages\LogManager\" />
     <Folder Include="Pages\Applications\ProductImages\" />
   </ItemGroup>
 

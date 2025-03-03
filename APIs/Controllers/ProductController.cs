@@ -69,6 +69,7 @@ namespace APIs.Controllers
                                 UnitPrice = Convert.ToDecimal(worksheet.Cells[row, 11].Text),
                                 Quantity = Convert.ToInt32(worksheet.Cells[row, 12].Text),
                                 StyleName = worksheet.Cells[row, 13].Text,
+                                IsActivated=Convert.ToBoolean(worksheet.Cells[row, 14].Text),
                                 Id = Guid.NewGuid()
                             };
                             rows.Add(data);

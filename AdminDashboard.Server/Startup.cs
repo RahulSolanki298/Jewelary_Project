@@ -8,12 +8,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MudBlazor.Services;
-using Business.Mapping;
 using DataAccess.Entities;
 using Microsoft.AspNetCore.Identity;
 using AdminDashboard.Service.IService;
 using AdminDashboard.Service;
 using System;
+using System.Net.Http;
 
 namespace AdminDashboard.Server
 {
@@ -42,6 +42,11 @@ namespace AdminDashboard.Server
             //services.AddAutoMapper(typeof(MappingProfile));  // Ensure your mapping profile is properly registered
 
             // Add necessary services for DB, Blazor, etc.
+            services.AddScoped<HttpClient>(sp =>
+            {
+                var baseAddress = new Uri("https://localhost:4050/"); // Your API base address
+                return new HttpClient { BaseAddress = baseAddress };
+            });
             services.AddScoped<ILogEntryRepository, LogEntryRepository>();
             services.AddScoped<IVirtualAppointmentRepo, VirtualAppointmentRepo>();
             services.AddScoped<IAccountRepository, AccountRepository>();

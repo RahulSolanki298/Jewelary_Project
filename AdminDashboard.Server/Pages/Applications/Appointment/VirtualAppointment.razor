@@ -1,11 +1,12 @@
 ﻿@page "/applications/virtualAppointment/appointments"
+
 @using Business.Repository.IRepository
 @using Models
 @using global::Models
+
 @inject IVirtualAppointmentRepo virtualAppointmentReposiory
 @inject IJSRuntime jsRuntime
 @inject NavigationManager navigationManager
-
 
 <MudTable Elevation="10" Items="virtualAppointments" SortLabel="Sort" Hover="true" Striped="true" Filter="new Func<VirtualAppointmentDTO,bool>(Search)">
 	<ToolBarContent>

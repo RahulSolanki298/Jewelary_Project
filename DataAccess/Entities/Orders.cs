@@ -10,7 +10,9 @@ namespace DataAccess.Entities
 
         public DateTime OrderDate { get; set; }
 
-        public string BuyerCode { get; set; }  //  Customer
+        public string BuyerCode { get; set; }  //   B2B Customer
+
+        public string CustomerCode { get; set; } //  Customer
 
         public int NoOfQty { get; set; }
         

@@ -49,7 +49,7 @@ namespace Business.Repository
                 var productList = new List<Product>();
                 var updateList = new List<Product>();
 
-                int colorId, subCategoryId, categoryId, clarityId, caratId, caratSizeId, shapeId = 0;
+                int colorId, subCategoryId, categoryId, clarityId, caratId, caratSizeId, shapeId, styleId = 0;
 
                 // Step 3: Process each product
                 foreach (var product in products)
@@ -73,6 +73,11 @@ namespace Business.Repository
                     shapeId = shapeDict.GetValueOrDefault(product.ShapeName);
                     caratSizeId = caratSizeDict.GetValueOrDefault(product.CaratSizeName);
 
+                    if (string.IsNullOrEmpty(product.StyleName) != true)
+                    {
+                        styleId = _context.ProductProperty.Where(x => x.Name == product.StyleName).FirstOrDefault().Id;
+                    }
+
                     // Check if a product already exists based on related field IDs
                     existingProduct = await _context.Product
                         .Where(x => x.ProductType == product.ProductType
@@ -81,18 +86,20 @@ namespace Business.Repository
                                     && x.ClarityId == clarityId
                                     && x.ColorId == colorId
                                     && x.CaratId == caratId
-                                    && x.CaratSizeId == caratSizeId)
+                                    && x.CaratSizeId == caratSizeId
+                                    && x.Sku == product.Sku)
                         .FirstOrDefaultAsync();
 
                     if (existingProduct != null)
                     {
                         // Update existing product
-                        existingProduct.Title = $"{product.CategoryName} {product.ColorName} {product.CaratName} {product.ProductType}";
+                        existingProduct.Title = $"{product.CategoryName} {product.ColorName} {product.CaratName} {product.ProductType} {product.Sku}";
                         existingProduct.Sku = product.Sku;
                         existingProduct.Price = product.Price;
                         existingProduct.UnitPrice = product.UnitPrice;
                         existingProduct.Quantity = product.Quantity;
-
+                        existingProduct.StyleId = styleId;
+                        existingProduct.IsActivated = product.IsActivated;
                         updateList.Add(existingProduct);
                     }
                     else
@@ -100,7 +107,7 @@ namespace Business.Repository
                         // Insert new product
                         newProduct = new Product
                         {
-                            Title = $"{product.CategoryName} {product.ColorName} {product.CaratName} {product.ProductType}",
+                            Title = $"{product.CategoryName} {product.ColorName} {product.CaratName} {product.ProductType} {product.Sku}",
                             Sku = product.Sku,
                             CategoryId = categoryId,
                             SubCategoryId = subCategoryId,
@@ -110,7 +117,7 @@ namespace Business.Repository
                             ColorId = colorId,
                             Description=product.Description,
                             IsActivated=product.IsActivated,
-                            StyleId=product.StyleId,
+                            StyleId=styleId,
                             GoldWeight=product.GoldWeight,
                             GoldPurity=product.GoldPurity,
                             Price = product.Price,
@@ -121,7 +128,7 @@ namespace Business.Repository
                             Id=product.Id
                         };
 
-                        productList.Add(newProduct);
+                            productList.Add(newProduct);
                     }
                 }
 
