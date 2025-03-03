@@ -89,7 +89,7 @@ namespace AdminDashboard.Service
                     FirstName = "Vivek",
                     LastName = "Godhani",
                     Gender = "Male",
-                    TextPassword = "Admin123*",
+                    TextPassword = "Admin123*"
                 };
 
                 var result = await _userManager.CreateAsync(adminUser, "Admin123*");

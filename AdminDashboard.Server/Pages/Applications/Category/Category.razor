@@ -14,15 +14,30 @@
             </CardHeaderContent>
         </MudCardHeader>
         <MudCardContent>
-            <MudText @bind-Value="category.Id" InputType="InputType.Hidden" ></MudText>
-            <MudTextField @bind-Value="category.Name" Placeholder="Please enter category name."></MudTextField>
-            <MudTextField @bind-Value="category.ProductType" Placeholder="Please enter product type name."></MudTextField>
-            <br/>
-            <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="SaveCategory">Save Category</MudButton>
-            <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="ClearAll">Clear</MudButton>
+            <MudForm Model="@category" IsValid="@isValid" Validated="OnValidated">
+                <MudTextField @bind-Value="category.Id" InputType="InputType.Hidden"></MudTextField>
+
+                <MudTextField @bind-Value="category.Name" Placeholder="Please enter category name."
+                              Label="Category Name"
+                              Required="true"
+                              RequiredError="Category name is required.">
+                </MudTextField>
+
+                <MudTextField @bind-Value="category.ProductType" Placeholder="Please enter product type name."
+                              Label="Product Type"
+                              Required="true"
+                              RequiredError="Product type is required.">
+                </MudTextField>
+
+                <br />
+
+                <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="ValidateAndSave">Save Category</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="ClearAll">Clear</MudButton>
+            </MudForm>
         </MudCardContent>
     </MudItem>
 </MudCard>
+
 
 <MudTable Elevation="10" Items="categories" Filter="new Func<DataAccess.Entities.Category,bool>(Search)" @bind-category="category" Hover="@hower" Dense="@dense">
     <ToolBarContent>
@@ -63,8 +78,10 @@
 
 
 @code {
+    private MudForm form;
     private bool hower = true;
     private bool dense = true;
+    private bool isValid;
     private string searchstring = "";
     private DataAccess.Entities.Category category = new DataAccess.Entities.Category();
     private IEnumerable<DataAccess.Entities.Category> categories { get; set; } = new List<DataAccess.Entities.Category>();
@@ -81,6 +98,15 @@
         if (categories.Count() == 0)
         {
             IsLoading = false;
+        }
+    }
+
+    private async Task ValidateAndSave()
+    {
+        form.Validate();
+        if (isValid)
+        {
+           await SaveCategory();
         }
     }
 

@@ -33,13 +33,13 @@ namespace AdminDashboard.Server
                 option.UseSqlServer(_config.GetConnectionString("DefaultConnection"))
             );
 
-            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-            {
-            })
+            services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDBContext>()
-            .AddDefaultTokenProviders();
+            .AddDefaultTokenProviders()
+            .AddDefaultUI();
 
-            services.AddAutoMapper(typeof(MappingProfile));  // Ensure your mapping profile is properly registered
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            //services.AddAutoMapper(typeof(MappingProfile));  // Ensure your mapping profile is properly registered
 
             // Add necessary services for DB, Blazor, etc.
             services.AddScoped<ILogEntryRepository, LogEntryRepository>();
@@ -52,6 +52,7 @@ namespace AdminDashboard.Server
             services.AddScoped<IProductRepository, ProductRepository>();
             
             services.AddRazorPages();
+            services.AddHttpContextAccessor();
             services.AddServerSideBlazor();
             services.AddMudServices();
         }
