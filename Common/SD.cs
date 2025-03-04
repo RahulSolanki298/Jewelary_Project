@@ -29,6 +29,23 @@
         public static string Approve = "Approve";
         public static string DisApprove = "DisApprove";
 
+        //  Order System
+        public static string OrderRequested = "OrderRequested";
+        public static string OrderAccepted = "OrderAccepted";
+        public static string OrderRejected = "OrderRejected";
+        public static string Processing = "Processing";
+        public static string StartPackaging = "StartPackaging";
+        public static string ReadyForShipment = "ReadyForShipment";
+        public static string Shipped = "Shipped";
+        public static string InTransit = "InTransit";
+        public static string OutForDelivery = "OutForDelivery";
+        public static string Delivered = "Delivered";
+        public static string Cancelled = "Cancelled";
+        public static string Returned = "Returned";
+        public static string Refunded = "Refunded";
+
+        public static string BaseApiUrl = "https://localhost:4050";
+
 
     }
 }

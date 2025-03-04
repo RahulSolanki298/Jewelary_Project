@@ -1,4 +1,4 @@
-﻿@page "/applications/b2borders/order-list"
+﻿@page "/applications/product/product-collection-list"
 
 @using Business.Repository
 @using Business.Repository.IRepository
@@ -13,7 +13,7 @@
 
 <MudTable Elevation="10" Items="productList" Filter="new Func<ProductDTO,bool>(Search)" @bind-category="product" Hover="@hower" Dense="@dense">
 	<ToolBarContent>
-		<MudText Typo="Typo.h6">B2B Order Request List</MudText>
+		<MudText Typo="Typo.h6">Product List</MudText>
 		<MudToolBarSpacer />
 
 		<!-- Add Products Button -->
@@ -44,6 +44,7 @@
 		<MudTd DataLabel="Shape">@context.ShapeName</MudTd>
 		<MudTd DataLabel="Style">@context.CollectionName</MudTd>
 		<MudTd>
+			<MudFab @onclick="@(() => Edit(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Pageview" Size="Size.Small" IconSize="Size.Small" />
 			<MudFab @onclick="@(() => Edit(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
 			<MudFab @onclick="@(() => Delete(context.Id))" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
 		</MudTd>

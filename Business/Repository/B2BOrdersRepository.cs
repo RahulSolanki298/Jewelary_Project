@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Business.Repository.IRepository;
 using DataAccess.Data;
 using DataAccess.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Business.Repository
 {
@@ -14,9 +16,10 @@ namespace Business.Repository
             _context = context;
         }
 
-        public List<Orders> GetB2BOrderList()
+        public async Task<IEnumerable<Orders>> GetB2BOrderReqs()
         {
-            return new List<Orders>();
+            return await _context.Orders.ToListAsync();
         }
+       
     }
 }

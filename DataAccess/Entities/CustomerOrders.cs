@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DataAccess.Entities
 {
-    public class Orders
+    public class CustomerOrders
     {
         [Key]
         public Guid OrderId { get; set; }
@@ -12,7 +12,7 @@ namespace DataAccess.Entities
 
         public string  OrderCode { get; set; }
 
-        public string BusinessCode { get; set; }  //   B2B Customer
+        public string CustomerCode { get; set; } //  Customer
 
         public int NoOfQty { get; set; }
         

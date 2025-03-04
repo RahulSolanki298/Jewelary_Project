@@ -3,6 +3,7 @@
     public class ProductImages
     {
         public int Id { get; set; }
+
         public string ProductId { get; set; }
 
         public int? ImageLgId { get; set; }

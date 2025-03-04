@@ -1,4 +1,4 @@
-﻿@page "/applications/b2borders/order-list"
+﻿@page "/applications/product/product-style-list"
 
 @using Business.Repository
 @using Business.Repository.IRepository
@@ -13,7 +13,7 @@
 
 <MudTable Elevation="10" Items="productList" Filter="new Func<ProductDTO,bool>(Search)" @bind-category="product" Hover="@hower" Dense="@dense">
 	<ToolBarContent>
-		<MudText Typo="Typo.h6">B2B Order Request List</MudText>
+		<MudText Typo="Typo.h6">Product List</MudText>
 		<MudToolBarSpacer />
 
 		<!-- Add Products Button -->
@@ -31,7 +31,7 @@
 		<MudTh><MudTableSortLabel SortBy="new Func<ProductDTO, object>(x=>x.ColorName)">Color</MudTableSortLabel></MudTh>
 		<MudTh><MudTableSortLabel SortBy="new Func<ProductDTO, object>(x=>x.CaratSizeName)">Size</MudTableSortLabel></MudTh>
 		<MudTh><MudTableSortLabel SortBy="new Func<ProductDTO, object>(x=>x.ShapeName)">Shape</MudTableSortLabel></MudTh>
-		<MudTh><MudTableSortLabel SortBy="new Func<ProductDTO, object>(x=>x.CollectionName)">Collection</MudTableSortLabel></MudTh>
+		<MudTh><MudTableSortLabel SortBy="new Func<ProductDTO, object>(x=>x.StyleName)">Styles</MudTableSortLabel></MudTh>
 		<MudTh>Actions</MudTh>
 	</HeaderContent>
 	<RowTemplate>
@@ -42,7 +42,7 @@
 		<MudTd DataLabel="Color">@context.ColorName</MudTd>
 		<MudTd DataLabel="Size">@context.CaratSizeName</MudTd>
 		<MudTd DataLabel="Shape">@context.ShapeName</MudTd>
-		<MudTd DataLabel="Style">@context.CollectionName</MudTd>
+		<MudTd DataLabel="Style">@context.StyleName</MudTd>
 		<MudTd>
 			<MudFab @onclick="@(() => Edit(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
 			<MudFab @onclick="@(() => Delete(context.Id))" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
@@ -68,19 +68,16 @@
 @code {
 
 	private IBrowserFile selectedFile;
-	private IEnumerable<ProductDTO> productList { get; set; } = new List<ProductDTO>();
 
 	private readonly DialogOptions _maxWidth = new() { MaxWidth = MaxWidth.Medium, FullWidth = true };
 	private bool hower = true;
 	private bool dense = true;
 	private string searchstring = "";
-
 	private ProductDTO product = new ProductDTO();
-
+	private IEnumerable<ProductDTO> productList { get; set; } = new List<ProductDTO>();
 	private bool IsLoading { get; set; } = false;
 	private int currentPage = 0;
 	private int pageSize = 5;
-
 	private MudMessageBox _mudMessageBox;
 	private MudDialog BulkAddDialog;
 	private string uploadedFilePath = "";
@@ -112,11 +109,11 @@
 			fileContent.Add(fileStreamContent, "file", selectedFile.Name);
 
 			var httpClient = new HttpClient();
-			var response = await httpClient.PostAsync($"{SD.BaseApiUrl}/api/product/BulkProductCollectionUpload", fileContent);
+			var response = await httpClient.PostAsync($"{SD.BaseApiUrl}/api/product/BulkProductUpload", fileContent);
 
 			if (response.IsSuccessStatusCode)
 			{
-				Snackbar.Add("Product collection uploaded successfully!", Severity.Success);
+				Snackbar.Add("Products uploaded successfully!", Severity.Success);
 				await GetProductPropertyList(); // Refresh the product list after successful upload
 			}
 			else
@@ -132,7 +129,7 @@
 
 	private async Task GetProductPropertyList()
 	{
-		productList = await productRepository.GetProductCollectionList();
+		productList = await productRepository.GetProductStyleList();
 	}
 
 	private bool Search(ProductDTO product)

@@ -22,6 +22,10 @@ namespace DataAccess.Entities
 
         public int? BusinessAccId { get; set; }
 
+        public bool IsCustomer { get; set; } = false;
+
+        public string CustomerCode { get; set; }
+
         public string ActivationStatus { get; set; }
     }
 }

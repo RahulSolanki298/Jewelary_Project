@@ -7,8 +7,6 @@ namespace Business.Repository.IRepository
 {
     public interface IProductRepository
     {
-        Task<IEnumerable<ProductDTO>> GetProductList();
-
         Task<int> GetColorId();
 
         Task<List<ProductProperty>> GetColorList();
@@ -25,6 +23,14 @@ namespace Business.Repository.IRepository
 
         Task<List<ProductProperty>> GetClarityList();
 
+        Task<IEnumerable<ProductDTO>> GetProductCollectionList();
+
+        Task<IEnumerable<ProductDTO>> GetProductStyleList();
+
         Task<bool> SaveProductList(List<ProductDTO> products);
+
+        Task<bool> SaveProductCollectionList(List<ProductDTO> products);
+
+        string ExtractStyleName(string fileName);
     }
 }

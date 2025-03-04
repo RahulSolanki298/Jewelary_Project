@@ -14,6 +14,7 @@ using AdminDashboard.Service.IService;
 using AdminDashboard.Service;
 using System;
 using System.Net.Http;
+using Business.Mapping;
 
 namespace AdminDashboard.Server
 {
@@ -33,13 +34,17 @@ namespace AdminDashboard.Server
                 option.UseSqlServer(_config.GetConnectionString("DefaultConnection"))
             );
 
+        //    services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+        //.AddEntityFrameworkStores<ApplicationDBContext>();
+
+
             services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDBContext>()
             .AddDefaultTokenProviders()
             .AddDefaultUI();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            //services.AddAutoMapper(typeof(MappingProfile));  // Ensure your mapping profile is properly registered
+            services.AddAutoMapper(typeof(MappingProfile));  // Ensure your mapping profile is properly registered
 
             // Add necessary services for DB, Blazor, etc.
             services.AddScoped<HttpClient>(sp =>
@@ -88,8 +93,10 @@ namespace AdminDashboard.Server
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapBlazorHub();
-                endpoints.MapFallbackToPage("/_Host");
+                //endpoints.MapFallbackToPage("/Account/Login");
+                endpoints.MapRazorPages();
             });
         }
 

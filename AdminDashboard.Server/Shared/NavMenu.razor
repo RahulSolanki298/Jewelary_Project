@@ -9,20 +9,35 @@
 	<MudNavLink Href="/applications/category/categoryList" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.Category">Category</MudNavLink>
 	<MudNavLink Href="/applications/subCategory/subCategoryList" Icon="@Icons.Material.Outlined.Favorite">Sub Category</MudNavLink>
 	<MudNavLink Href="/applications/product-property/product-property-list" Icon="@Icons.Material.Outlined.Subtitles">Product Property Type</MudNavLink>
-	<MudNavLink Href="/applications/product/product-list" Icon="@Icons.Material.Sharp.Preview">Product</MudNavLink>
-	<MudNavLink Href="/applications/product/product-images" Icon="@Icons.Material.Sharp.BrokenImage">Product Images</MudNavLink>
+	<MudNavLink Href="/applications/product/product-style-list" Icon="@Icons.Material.Sharp.BrokenImage">Product Styles</MudNavLink>
+	<MudNavLink Href="/applications/product/product-collection-list" Icon="@Icons.Material.Sharp.Preview">Product Collection</MudNavLink>
+
+
+	<MudText Typo="Typo.subtitle2" Color="Color.Inherit" Class="ml-4 my-3">B2B Customer Manager</MudText>
+	<MudNavGroup Title="B2BCustomers" Icon="@Icons.Material.Outlined.AssignmentInd" HideExpandIcon="true">
+		<MudNavLink Href="pages/b2bCustomer/b2b-customer-list" Icon="@Icons.Material.Outlined.NaturePeople">B2B Customers</MudNavLink>
+		<MudNavLink Href="pages/b2bCustomer/manage-b2bCustomer-price" Icon="@Icons.Material.Outlined.AccountBalance">Customer Price Manager</MudNavLink>
+		<MudNavLink Href="pages/b2bCustomer/select-customer-categories" Icon="@Icons.Material.Outlined.AccountBalance">Select Products</MudNavLink>
+	</MudNavGroup>
+
+	<MudText Typo="Typo.subtitle2" Color="Color.Inherit" Class="ml-4 my-3">B2B Order Management</MudText>
+	<MudNavGroup Title="Orders" Icon="@Icons.Material.Outlined.CropOriginal" HideExpandIcon="true">
+		<MudNavLink Href="/applications/b2borders/order-list" Icon="@Icons.Material.Outlined.InsertDriveFile">Order Requests</MudNavLink>
+		<MudNavLink Href="/applications/b2borders/order-list" Icon="@Icons.Material.Outlined.InsertDriveFile">Order Process</MudNavLink>
+		<MudNavLink Href="/applications/b2borders/order-list" Icon="@Icons.Material.Outlined.InsertDriveFile">Order Rejected</MudNavLink>
+		<MudNavLink Href="/applications/b2borders/order-list" Icon="@Icons.Material.Outlined.InsertDriveFile">Order Return</MudNavLink>
+	</MudNavGroup>
 
 	<MudText Typo="Typo.subtitle2" Color="Color.Inherit" Class="ml-4 my-3">Customer Manager</MudText>
 	<MudNavGroup Title="Customers" Icon="@Icons.Material.Outlined.AssignmentInd" HideExpandIcon="true">
-		<MudNavLink Href="pages/authentication/login" Icon="@Icons.Material.Outlined.NaturePeople">Customers</MudNavLink>
-		<MudNavLink Href="pages/authentication/register" Icon="@Icons.Material.Outlined.AccountBalance">Customer Price Manager</MudNavLink>
+		<MudNavLink Href="pages/customer/customer-list" Icon="@Icons.Material.Outlined.NaturePeople">Customers</MudNavLink>
 	</MudNavGroup>
-	<MudText Typo="Typo.subtitle2" Color="Color.Inherit" Class="ml-4 my-3">Order Management</MudText>
+	<MudText Typo="Typo.subtitle2" Color="Color.Inherit" Class="ml-4 my-3">Customer Order Management</MudText>
 	<MudNavGroup Title="Orders" Icon="@Icons.Material.Outlined.CropOriginal" HideExpandIcon="true">
-		<MudNavLink Href="pages/authentication/login" Icon="@Icons.Material.Outlined.InsertDriveFile">Order Requests</MudNavLink>
-		<MudNavLink Href="pages/authentication/register" Icon="@Icons.Material.Outlined.InsertDriveFile">Order Process</MudNavLink>
-		<MudNavLink Href="pages/authentication/forgot-password" Icon="@Icons.Material.Outlined.InsertDriveFile">Order Rejected</MudNavLink>
-		<MudNavLink Href="pages/authentication/reset-password" Icon="@Icons.Material.Outlined.InsertDriveFile">Order Return</MudNavLink>
+		<MudNavLink Href="/applications/b2corders/order-list" Icon="@Icons.Material.Outlined.InsertDriveFile">Order Requests</MudNavLink>
+		<MudNavLink Href="/applications/b2corders/order-list" Icon="@Icons.Material.Outlined.InsertDriveFile">Order Process</MudNavLink>
+		<MudNavLink Href="/applications/b2corders/order-list" Icon="@Icons.Material.Outlined.InsertDriveFile">Order Rejected</MudNavLink>
+		<MudNavLink Href="/applications/b2corders/order-list" Icon="@Icons.Material.Outlined.InsertDriveFile">Order Return</MudNavLink>
 	</MudNavGroup>
 	<MudNavLink Href="applications/virtualAppointment/appointments" Icon="@Icons.Material.Outlined.TouchApp">Virtual Appointment</MudNavLink>
 	<MudNavLink Href="pages/error/404" Icon="@Icons.Material.Outlined.NewReleases">Blogs</MudNavLink>
