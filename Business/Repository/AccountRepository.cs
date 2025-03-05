@@ -37,9 +37,9 @@ namespace Business.Repository
                 Email = customerRegister.EmailId,
                 UserName = customerRegister.EmailId,
                 ActivationStatus = customerRegister.ActivationStatus,
-                Gender=customerRegister.Gender,
-                IsBusinessAccount=false,
-                PhoneNumber=customerRegister.PhoneNumber                
+                Gender = customerRegister.Gender,
+                IsBusinessAccount = false,
+                PhoneNumber = customerRegister.PhoneNumber
             };
 
             var result = await _userManager.CreateAsync(user, customerRegister.TextPassword);
@@ -57,7 +57,7 @@ namespace Business.Repository
             var existingBusinessAccount = await _context.BusinessAccount
                 .FirstOrDefaultAsync(b => b.BusinessPanCardNo == customerRegister.BusinessPanCardNo);
 
-            if (existingBusinessAccount == null) 
+            if (existingBusinessAccount == null)
             {
                 existingBusinessAccount = new BusinessAccount
                 {
@@ -190,36 +190,44 @@ namespace Business.Repository
 
         public async Task<IdentityResult> SupplierRegisterAsync(CustomerRegisterDTO customerRegister)
         {
-            var user = new ApplicationUser
+            try
             {
-                FirstName = customerRegister.FirstName,
-                MiddleName = customerRegister.MiddleName,
-                LastName = customerRegister.LastName,
-                AadharCardNo = customerRegister.AadharCardNo,
-                PancardNo = customerRegister.PancardNo,
-                TextPassword = customerRegister.TextPassword,
-                Email = customerRegister.EmailId,
-                UserName = customerRegister.EmailId,
-                ActivationStatus = customerRegister.ActivationStatus,
-                Gender = customerRegister.Gender,
-                IsBusinessAccount = false,
-                PhoneNumber = customerRegister.PhoneNumber                
-            };
+                var user = new ApplicationUser
+                {
+                    FirstName = customerRegister.FirstName,
+                    MiddleName = customerRegister.MiddleName,
+                    LastName = customerRegister.LastName,
+                    AadharCardNo = customerRegister.AadharCardNo,
+                    PancardNo = customerRegister.PancardNo,
+                    TextPassword = customerRegister.TextPassword,
+                    Email = customerRegister.EmailId,
+                    UserName = customerRegister.EmailId,
+                    ActivationStatus = customerRegister.ActivationStatus,
+                    Gender = customerRegister.Gender,
+                    IsBusinessAccount = false,
+                    PhoneNumber = customerRegister.PhoneNumber
+                };
 
-            var result = await _userManager.CreateAsync(user, customerRegister.TextPassword);
+                var result = await _userManager.CreateAsync(user, customerRegister.TextPassword);
 
-            if (result.Succeeded)
-            {
-                await _userManager.AddToRoleAsync(user, SD.Supplier);
+                if (result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(user, SD.Supplier);
+                }
+
+                return result;
             }
+            catch (Exception)
+            {
 
-            return result;
+                throw;
+            }
         }
 
 
         public async Task<List<ApplicationUser>> GetCustomerData()
         {
-           var resultDT= await _userManager.GetUsersInRoleAsync("Customer");
+            var resultDT = await _userManager.GetUsersInRoleAsync("Customer");
             return resultDT.ToList();
         }
 

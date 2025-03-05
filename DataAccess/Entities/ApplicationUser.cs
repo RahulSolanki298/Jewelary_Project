@@ -4,6 +4,8 @@ namespace DataAccess.Entities
 {
     public class ApplicationUser : IdentityUser
     {
+        public string VenderGroupName { get; set; }
+
         public string FirstName { get; set; }
 
         public string MiddleName { get; set; }

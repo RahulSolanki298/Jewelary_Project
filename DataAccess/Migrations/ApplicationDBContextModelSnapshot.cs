@@ -107,6 +107,9 @@ namespace DataAccess.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<string>("VenderGroupName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -637,6 +640,9 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int?>("CTW")
+                        .HasColumnType("int");
+
                     b.Property<int?>("CaratId")
                         .HasColumnType("int");
 
@@ -644,6 +650,12 @@ namespace DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CenterCaratId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CenterShapeId")
                         .HasColumnType("int");
 
                     b.Property<int?>("ClarityId")
@@ -658,14 +670,17 @@ namespace DataAccess.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("GoldPurity")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("GoldPurityId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("GoldWeight")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("GoldWeightId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsActivated")
                         .HasColumnType("bit");
+
+                    b.Property<int>("NoOfStones")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -693,6 +708,9 @@ namespace DataAccess.Migrations
 
                     b.Property<decimal>("UnitPrice")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("VenderId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -805,6 +823,33 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ProductProperty");
+                });
+
+            modelBuilder.Entity("DataAccess.Entities.ProductStyles", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool?>("IsActivated")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("StyleName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("VenderId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductStyles");
                 });
 
             modelBuilder.Entity("DataAccess.Entities.SubCategory", b =>

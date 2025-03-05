@@ -162,6 +162,43 @@ namespace APIs.Controllers
             }
         }
 
+        [HttpPost("/SupplierSignUp")]
+        [AllowAnonymous]
+        public async Task<IActionResult> SupplierSignUp([FromBody] UserRequestDTO userRequestDTO)
+        {
+            if (userRequestDTO == null || !ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var user = new ApplicationUser
+            {
+                UserName = userRequestDTO.Email,
+                Email = userRequestDTO.Email,
+                FirstName = userRequestDTO.FirstName,
+                LastName = userRequestDTO.LastName,
+                PhoneNumber = userRequestDTO.PhoneNo,
+                EmailConfirmed = true
+            };
+
+            var result = await _userManager.CreateAsync(user, userRequestDTO.Password);
+
+            if (!result.Succeeded)
+            {
+                var errors = result.Errors.Select(e => e.Description);
+                return BadRequest(new RegisterationResponseDTO
+                { Errors = errors, IsRegisterationSuccessful = false });
+            }
+            var roleResult = await _userManager.AddToRoleAsync(user, SD.Supplier);
+            if (!roleResult.Succeeded)
+            {
+                var errors = result.Errors.Select(e => e.Description);
+                return BadRequest(new RegisterationResponseDTO
+                { Errors = errors, IsRegisterationSuccessful = false });
+            }
+            return StatusCode(201);
+        }
+
 
         private SigningCredentials GetSigningCredentials()
         {

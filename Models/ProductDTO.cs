@@ -6,6 +6,10 @@ namespace Models
     {
         public Guid Id { get; set; }
 
+        public string VenderId { get; set; }
+
+        public string VenderName { get; set; }
+
         public string Sku { get; set; }  // OTN23U01-D300R0B 
 
         public string Title { get; set; }
@@ -24,6 +28,8 @@ namespace Models
         public string GoldPurity { get; set; } // 18 k
 
         public string GoldWeight { get; set; } // 3.00 GMS
+
+        public string CTW { get; set; }
 
         //  If Diamond
         public int? CategoryId { get; set; }

@@ -47,5 +47,7 @@ namespace DataAccess.Data
         public DbSet<BuyerOrderStatus> BuyerOrderStatus { get; set; }
 
         public DbSet<FileManager> FileManager { get; set; }
+
+        public DbSet<ProductStyles> ProductStyles { get; set; }
     }
 }

@@ -73,11 +73,21 @@ namespace Business.Repository
                     shapeId = shapeDict.GetValueOrDefault(product.ShapeName);
                     caratSizeId = caratSizeDict.GetValueOrDefault(product.CaratSizeName);
 
+                    #region Create style
                     if (string.IsNullOrEmpty(product.StyleName) != true)
                     {
-                        styleId = _context.ProductProperty.Where(x => x.Name == product.StyleName).FirstOrDefault().Id;
-                    }
+                        var styleDT = _context.ProductStyles.Where(x => x.StyleName == product.StyleName).FirstOrDefault();
 
+                        if (styleDT != null)
+                        {
+                            styleId = styleDT.Id;
+                        }
+                        else
+                        {
+
+                        }
+                    }
+                    #endregion
                     // Check if a product already exists based on related field IDs
                     existingProduct = await _context.Product
                         .Where(x => x.ProductType == product.ProductType
@@ -118,8 +128,8 @@ namespace Business.Repository
                             Description = product.Description,
                             IsActivated = product.IsActivated,
                             StyleId = styleId,
-                            GoldWeight = product.GoldWeight,
-                            GoldPurity = product.GoldPurity,
+                            //GoldWeightId = product.GoldWeightId,
+                            //GoldPurityId = product.GoldPurity,
                             Price = product.Price,
                             UnitPrice = product.UnitPrice,
                             Quantity = product.Quantity,
@@ -256,8 +266,8 @@ namespace Business.Repository
                             ColorId = colorId,
                             Description = product.Description,
                             IsActivated = product.IsActivated,
-                            GoldWeight = product.GoldWeight,
-                            GoldPurity = product.GoldPurity,
+                            //GoldWeight = product.GoldWeight,
+                            //GoldPurity = product.GoldPurity,
                             Price = product.Price,
                             UnitPrice = product.UnitPrice,
                             Quantity = product.Quantity,
@@ -518,7 +528,7 @@ namespace Business.Repository
         //    if (filters.ShapeId.HasValue)
         //        query = query.Where(p => p.ShapeId == filters.ShapeId.Value);
 
-           
+
         //    return await query.ToListAsync();
         //}
     }
