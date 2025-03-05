@@ -260,8 +260,13 @@ namespace APIs.Controllers
         }
 
 
-        //public async Task<IActionResult> GetProductListByCollection()
-        //{
-        //}
+        [HttpPost("GetProductDetailsList")]
+        public async Task<IActionResult> GetProductDetailsList()
+        {
+            return Ok();
+        }
+
+
+
     }
 }

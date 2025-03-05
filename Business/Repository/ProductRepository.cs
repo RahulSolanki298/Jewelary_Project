@@ -477,5 +477,49 @@ namespace Business.Repository
             int underscoreIndex = fileName.IndexOf('_');
             return (underscoreIndex > 0) ? fileName.Substring(0, underscoreIndex) : "Unknown";
         }
+
+        //public async Task<List<Product>> GetFilteredProducts(ProductFilters filters)
+        //{
+        //    var query = _context.Set<Product>().AsQueryable();
+
+        //    if (!string.IsNullOrEmpty(filters.Sku))
+        //        query = query.Where(p => p.Sku.Contains(filters.Sku));
+
+        //    if (!string.IsNullOrEmpty(filters.Title))
+        //        query = query.Where(p => p.Title.Contains(filters.Title));
+
+        //    if (!string.IsNullOrEmpty(filters.ProductType))
+        //        query = query.Where(p => p.ProductType == filters.ProductType);
+
+        //    if (filters.MinPrice.HasValue)
+        //        query = query.Where(p => p.Price >= filters.MinPrice.Value);
+
+        //    if (filters.MaxPrice.HasValue)
+        //        query = query.Where(p => p.Price <= filters.MaxPrice.Value);
+
+        //    if (filters.CategoryId.HasValue)
+        //        query = query.Where(p => p.CategoryId == filters.CategoryId.Value);
+
+        //    if (filters.SubCategoryId.HasValue)
+        //        query = query.Where(p => p.SubCategoryId == filters.SubCategoryId.Value);
+
+        //    if (filters.CaratId.HasValue)
+        //        query = query.Where(p => p.CaratId == filters.CaratId.Value);
+
+        //    if (filters.CaratSizeId.HasValue)
+        //        query = query.Where(p => p.CaratSizeId == filters.CaratSizeId.Value);
+
+        //    if (filters.ClarityId.HasValue)
+        //        query = query.Where(p => p.ClarityId == filters.ClarityId.Value);
+
+        //    if (filters.ColorId.HasValue)
+        //        query = query.Where(p => p.ColorId == filters.ColorId.Value);
+
+        //    if (filters.ShapeId.HasValue)
+        //        query = query.Where(p => p.ShapeId == filters.ShapeId.Value);
+
+           
+        //    return await query.ToListAsync();
+        //}
     }
 }
