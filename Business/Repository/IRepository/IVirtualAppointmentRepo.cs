@@ -11,5 +11,6 @@ namespace Business.Repository.IRepository
         public Task<VirtualAppointmentDTO> CreateVirtualAppointment(VirtualAppointmentDTO virtualAppointment);
         public Task<VirtualAppointmentDTO> UpdateVirtualAppointmentById(int virtualId,VirtualAppointmentDTO virtualAppointment);
         public Task<int> DeleteVirtualAppointmentById(int virtualId);
+
     }
 }

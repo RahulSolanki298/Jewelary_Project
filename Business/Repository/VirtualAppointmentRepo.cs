@@ -100,7 +100,6 @@ namespace Business.Repository
         {
             try
             {
-                // Retrieve all virtual appointments from the database
                 var virtualAppointments = await (from va in _context.VirtualAppointment
                                                  join cat in _context.Category on va.CategoryId equals cat.Id
                                                  select new VirtualAppointmentDTO
@@ -118,7 +117,7 @@ namespace Business.Repository
                                                      Status=va.Status
                                                  }).ToListAsync();
 
-                // Return the list of DTOs
+                
                 return virtualAppointments;
             }
             catch (Exception ex)
@@ -137,7 +136,6 @@ namespace Business.Repository
                 return new List<VirtualAppointmentDTO>();
             }
         }
-
 
         public async Task<VirtualAppointmentDTO> UpdateVirtualAppointmentById(int virtualId, VirtualAppointmentDTO virtualAppointmentDTO)
         {
