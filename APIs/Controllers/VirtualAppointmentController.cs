@@ -37,8 +37,8 @@ namespace APIs.Controllers
             }
         }
 
-        [HttpGet("appointment-list")]
-        public async Task<ActionResult> GetVirtualAppointment()
+        [HttpGet("appointment-by-id")]
+        public async Task<ActionResult> GetVirtualAppointmentById(int id)
         {
             try
             {
