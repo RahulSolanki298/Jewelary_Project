@@ -78,7 +78,7 @@ namespace APIs
             services.AddScoped<IProductPropertyRepository, ProductPropertyRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
 
-            services.AddCors(o => o.AddPolicy("Jewelary", builder =>
+            services.AddCors(o => o.AddPolicy("AllowAllOrigins", builder =>
             {
                 builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
             }));
@@ -132,7 +132,7 @@ namespace APIs
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "APIs v1"));
             }
             app.UseHttpsRedirection();
-            app.UseCors("Jewelary");
+            app.UseCors("AllowAllOrigins");
             app.UseStaticFiles();
             app.UseRouting();
 
