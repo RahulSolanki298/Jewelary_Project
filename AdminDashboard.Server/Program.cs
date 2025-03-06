@@ -9,25 +9,24 @@ namespace AdminDashboard.Server
     {
         public static void Main(string[] args)
         {
-            // Configure Serilog at the start of the application.
+            // Configure Serilog to capture only errors and above (including fatal exceptions)
             Log.Logger = new LoggerConfiguration()
-                        .MinimumLevel.Debug() // Log level can be adjusted (Debug, Information, etc.)
-                        .WriteTo.File($"Logs/log-{DateTime.Now.ToString("ddMMyyyy")}.txt") // Rolling daily logs with ddMMyyyy date format
+                        .MinimumLevel.Error() // Logs only Error and Fatal logs
+                        .WriteTo.File($"Logs/errors-{DateTime.Now:ddMMyyyy}.log", rollingInterval: RollingInterval.Day)
                         .CreateLogger();
-
 
             try
             {
-                // Create and run the host
+                // Run the application
                 CreateHostBuilder(args).Build().Run();
             }
             catch (Exception ex)
             {
-                Log.Fatal(ex, "Host terminated unexpectedly");
+                Log.Fatal(ex, "Application terminated unexpectedly.");
             }
             finally
             {
-                Log.CloseAndFlush(); // Ensure logs are flushed before app exits
+                Log.CloseAndFlush(); // Ensure logs are flushed before application exits
             }
         }
 

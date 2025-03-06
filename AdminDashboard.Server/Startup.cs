@@ -1,20 +1,21 @@
-using Business.Repository;
-using Business.Repository.IRepository;
-using DataAccess.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MudBlazor.Services;
-using DataAccess.Entities;
+using Serilog;
+using System;
+using DataAccess.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using AdminDashboard.Service.IService;
 using AdminDashboard.Service;
-using System;
-using System.Net.Http;
+using Business.Repository;
+using Business.Repository.IRepository;
 using Business.Mapping;
+using MudBlazor.Services;
+using DataAccess.Entities;
+using Microsoft.Extensions.Configuration;
+using System.Net.Http;
 
 namespace AdminDashboard.Server
 {
@@ -29,29 +30,21 @@ namespace AdminDashboard.Server
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // Register AutoMapper
-            services.AddDbContext<ApplicationDBContext>(option =>
-                option.UseSqlServer(_config.GetConnectionString("DefaultConnection"))
+            // Configure Database
+            services.AddDbContext<ApplicationDBContext>(options =>
+                options.UseSqlServer(_config.GetConnectionString("DefaultConnection"))
             );
 
-        //    services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-        //.AddEntityFrameworkStores<ApplicationDBContext>();
-
-
+            // Configure Identity
             services.AddIdentity<ApplicationUser, IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDBContext>()
-            .AddDefaultTokenProviders()
-            .AddDefaultUI();
+                .AddEntityFrameworkStores<ApplicationDBContext>()
+                .AddDefaultTokenProviders()
+                .AddDefaultUI();
 
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            services.AddAutoMapper(typeof(MappingProfile));  // Ensure your mapping profile is properly registered
+            // Register AutoMapper
+            services.AddAutoMapper(typeof(MappingProfile));
 
-            // Add necessary services for DB, Blazor, etc.
-            services.AddScoped<HttpClient>(sp =>
-            {
-                var baseAddress = new Uri("https://localhost:4050/"); // Your API base address
-                return new HttpClient { BaseAddress = baseAddress };
-            });
+            // Register Repositories
             services.AddScoped<ILogEntryRepository, LogEntryRepository>();
             services.AddScoped<IVirtualAppointmentRepo, VirtualAppointmentRepo>();
             services.AddScoped<IAccountRepository, AccountRepository>();
@@ -60,56 +53,66 @@ namespace AdminDashboard.Server
             services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
             services.AddScoped<IProductPropertyRepository, ProductPropertyRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
-            
-            services.AddRazorPages();
+
             services.AddHttpContextAccessor();
             services.AddServerSideBlazor();
+            services.AddRazorPages();
             services.AddMudServices();
+
+            // Configure HttpClient
+            services.AddScoped<HttpClient>(sp => new HttpClient
+            {
+                BaseAddress = new Uri("https://localhost:4050/") // Your API base address
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDbInitializer dbInitializer)
         {
-            // Add logging middleware
+            // Add centralized exception logging
+            app.UseExceptionHandler(errorApp =>
+            {
+                errorApp.Run(async context =>
+                {
+                    var exceptionHandlerPathFeature = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerPathFeature>();
+                    if (exceptionHandlerPathFeature?.Error != null)
+                    {
+                        Log.Error(exceptionHandlerPathFeature.Error, "Unhandled Exception occurred.");
+                    }
+                });
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
             else
             {
-                app.UseExceptionHandler("/Error");
-                app.UseHsts(); // Security enhancement for production
+                app.UseHsts();
             }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
-            // Seeding data in a scope to ensure proper disposal
+            // Database Seeding
             Seeding(app.ApplicationServices, dbInitializer);
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapBlazorHub();
-                //endpoints.MapFallbackToPage("/Account/Login");
                 endpoints.MapRazorPages();
             });
         }
 
         private async void Seeding(IServiceProvider serviceProvider, IDbInitializer dbInitializer)
         {
-            // Create a scope to resolve scoped services
-            using (var scope = serviceProvider.CreateScope())
-            {
-                var scopedDbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
-
-                // Ensure seeding is done asynchronously
-                await scopedDbInitializer.Initalize();
-            }
+            using var scope = serviceProvider.CreateScope();
+            var scopedDbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+            await scopedDbInitializer.Initalize();
         }
     }
 }
