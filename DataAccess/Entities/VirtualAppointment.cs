@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataAccess.Entities
 {
@@ -20,9 +18,13 @@ namespace DataAccess.Entities
 
         public string LastName { get; set; }
 
+        public string Designation { get; set; }
+
         public string EmailId { get; set; }
 
-        public string Message { get; set; }
+        public string MobileNumber { get; set; }
+
+        public string Message { get; set; }  // Message for Accept and Reject status 
 
         public string Status { get; set; }
 

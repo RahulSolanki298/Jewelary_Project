@@ -18,6 +18,8 @@ namespace DataAccess.Data
 
         public DbSet<VirtualAppointment> VirtualAppointment { get; set; }
 
+        public DbSet<AcceptedVirtualAppointmentData> AcceptedVirtualAppointmentData { get; set; }
+
         public DbSet<CollectionHistory> CollectionHistory { get; set; }
 
         public DbSet<Category> Category { get; set; }
