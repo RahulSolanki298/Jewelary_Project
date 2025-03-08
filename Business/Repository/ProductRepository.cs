@@ -74,19 +74,19 @@ namespace Business.Repository
                     caratSizeId = caratSizeDict.GetValueOrDefault(product.CaratSizeName);
 
                     #region Create style
-                    if (string.IsNullOrEmpty(product.StyleName) != true)
-                    {
-                        var styleDT = _context.ProductStyles.Where(x => x.StyleName == product.StyleName).FirstOrDefault();
+                    //if (string.IsNullOrEmpty(product.StyleName) != true)
+                    //{
+                    //    var styleDT = _context.ProductStyles.Where(x => x.StyleName == product.StyleName).FirstOrDefault();
 
-                        if (styleDT != null)
-                        {
-                            styleId = styleDT.Id;
-                        }
-                        else
-                        {
+                    //    if (styleDT != null)
+                    //    {
+                    //        styleId = styleDT.Id;
+                    //    }
+                    //    else
+                    //    {
 
-                        }
-                    }
+                    //    }
+                    //}
                     #endregion
                     // Check if a product already exists based on related field IDs
                     existingProduct = await _context.Product

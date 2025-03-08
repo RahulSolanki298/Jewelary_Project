@@ -1,5 +1,11 @@
 ﻿@inherits LayoutComponentBase
 
+<MudProgressCircular 
+    Color="Color.Success" 
+    Rounded="true" 
+    Size="Size.Large" 
+    StrokeWidth="4" 
+    Value="50" />
 
 <MudThemeProvider Theme="_themeManager.Theme" />
 <MudDialogProvider />
@@ -55,7 +61,8 @@
  *@
             </MudToolBar>
         </MudHidden>
-        <MudContainer MaxWidth="MaxWidth.False" Class="mt-4">
+        @* <MudContainer MaxWidth="MaxWidth.False" Class="mt-4"> *@
+        <MudContainer MaxWidth="MaxWidth.False">
             @Body
         </MudContainer>
     </MudMainContent>

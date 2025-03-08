@@ -5,43 +5,13 @@
 
 @inject ICategoryRepositry categoryRepository
 @inject ISnackbar Snackbar
-
-<MudCard>
-    <MudItem>
-        <MudCardHeader>
-            <CardHeaderContent>
-                <MudText Typo="Typo.h6">Add / Edit Category</MudText>
-            </CardHeaderContent>
-        </MudCardHeader>
-        <MudCardContent>
-            <MudForm Model="@category" IsValid="@isValid" Validated="OnValidated">
-                <MudTextField @bind-Value="category.Id" InputType="InputType.Hidden"></MudTextField>
-
-                <MudTextField @bind-Value="category.Name" Placeholder="Please enter category name."
-                              Label="Category Name"
-                              Required="true"
-                              RequiredError="Category name is required.">
-                </MudTextField>
-
-                <MudTextField @bind-Value="category.ProductType" Placeholder="Please enter product type name."
-                              Label="Product Type"
-                              Required="true"
-                              RequiredError="Product type is required.">
-                </MudTextField>
-
-                <br />
-
-                <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="ValidateAndSave">Save Category</MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="ClearAll">Clear</MudButton>
-            </MudForm>
-        </MudCardContent>
-    </MudItem>
-</MudCard>
+@inject NavigationManager _navigationManager
 
 
+<MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4">Category List</MudText>
 <MudTable Elevation="10" Items="categories" Filter="new Func<DataAccess.Entities.Category,bool>(Search)" @bind-category="category" Hover="@hower" Dense="@dense">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Category List</MudText>
+        <MudButton Variant="Variant.Filled" DropShadow="false" OnClick="AddCategory" Color="Color.Primary">Add Category</MudButton>
         <MudToolBarSpacer />
         <MudTextField @bind-Value="searchstring" Placeholder="Search Category..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
@@ -53,13 +23,13 @@
     <RowTemplate>
         <MudTh DataLabel="Name">@context.Name</MudTh>
         <MudTh DataLabel="ProductType">@context.ProductType</MudTh>
-        <MudTd DataLabel=""> 
-            <MudFab @onclick="@(() => Edit(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
+        <MudTd DataLabel="">
+            <MudFab @onclick="@(() => EditCategory(context.Id))" Color="Color.Default" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
             <MudFab @onclick="@(() => Delete(context.Id))" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
         </MudTd>
     </RowTemplate>
     <PagerContent>
-        <MudTablePager PageSizeOptions="new int[]{5,10,20,50,100}"/>
+        <MudTablePager PageSizeOptions="new int[]{5,10,20,50,100}" />
     </PagerContent>
 </MudTable>
 <MudSwitch @bind-Checked="@hower" Color="Color.Primary"></MudSwitch>
@@ -106,7 +76,7 @@
         form.Validate();
         if (isValid)
         {
-           await SaveCategory();
+            await SaveCategory();
         }
     }
 
@@ -117,9 +87,9 @@
 
     private bool Search(DataAccess.Entities.Category category)
     {
-        if (category.Name != null && category.ProductType != null && 
-            category.Name.Contains(searchstring,StringComparison.OrdinalIgnoreCase) ||
-            category.ProductType.Contains(searchstring, StringComparison.OrdinalIgnoreCase) )
+        if (category.Name != null && category.ProductType != null &&
+            category.Name.Contains(searchstring, StringComparison.OrdinalIgnoreCase) ||
+            category.ProductType.Contains(searchstring, StringComparison.OrdinalIgnoreCase))
         {
             return true;
         }
@@ -128,14 +98,10 @@
 
     private async Task SaveCategory()
     {
-        await categoryRepository.SaveCategory(category,category.Id);
-        category = new DataAccess.Entities.Category();  
+        await categoryRepository.SaveCategory(category, category.Id);
+        category = new DataAccess.Entities.Category();
         Snackbar.Add("Category has been saved successfully.", Severity.Success);
         await GetCategoryList();
-    }
-
-    private async Task Edit(int id){
-        category = await categoryRepository.GetCategoryById(id);
     }
 
     private async Task Delete(int id)
@@ -151,9 +117,15 @@
         }
     }
 
-    private void ClearAll()
+    private void EditCategory(int id)
     {
-        category = new DataAccess.Entities.Category();
+        _navigationManager.NavigateTo($"/applications/category/editCategory/{id}");
+
+
+    }
+
+    private void AddCategory(){
+        _navigationManager.NavigateTo($"/applications/category/categoryModel");
     }
 
 }

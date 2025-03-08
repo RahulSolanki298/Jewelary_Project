@@ -1,0 +1,98 @@
+﻿@page "/applications/category/categoryModel"
+@page "/applications/category/editCategory/{Id:int}"
+
+@using Business.Repository
+@using Business.Repository.IRepository
+@using DataAccess.Entities
+
+@inject ICategoryRepositry categoryRepository
+@inject ISnackbar Snackbar
+@inject NavigationManager Navigation
+
+
+<MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4">Add / Edit Category</MudText>
+<MudForm @ref="form">
+    <MudCard>
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText>Add / Edit Category</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudGridItem xs="12" md="12">
+                <MudTextField @bind-Value="category.Name" Label="Category Name" 
+                Variant="Variant.Outlined" InputType="InputType.Text"
+                Required="true" RequiredError="Category Name is required!" />
+            </MudGridItem>
+
+            <MudGridItem xs="12" md="12">
+                <MudSelect @bind-Value="category.ProductType" Label="Product Type" Variant="Variant.Outlined" Required="true">
+                    @foreach (var type in productTypes)
+                    {
+                        <MudSelectItem Value="@type">@type</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudGridItem>
+        </MudCardContent>
+        <MudCardActions Class="pb-4 pl-4">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="ValidateAndSave">Save Category</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="GotoCategoryList">Back To </MudButton>
+        </MudCardActions>
+    </MudCard>
+</MudForm>
+
+@code {
+    private MudForm form;
+    private bool hower = true;
+    private bool dense = true;
+    private bool isValid;
+    private DataAccess.Entities.Category category = new DataAccess.Entities.Category();
+    private List<string> productTypes = new List<string>(){ "Man","Female"};
+    private IEnumerable<DataAccess.Entities.Category> categories { get; set; } = new List<DataAccess.Entities.Category>();
+    private bool IsLoading { get; set; } = false;
+    private int currentPage = 0;
+    private int pageSize = 5;
+    private MudMessageBox _mudMessageBox;
+
+    [Parameter]
+    public int? Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoading = true;
+        if (Id.HasValue && Id > 0)
+        {
+           await Edit(Id.Value);
+        }
+        
+    }
+
+    private async Task ValidateAndSave()
+    {
+        form.Validate();
+        if (form.IsValid)
+        {
+            await SaveCategory();
+        }
+    }
+
+    private async Task SaveCategory()
+    {
+        await categoryRepository.SaveCategory(category, category.Id);
+        category = new DataAccess.Entities.Category();
+        Snackbar.Add("Category has been saved successfully.", Severity.Success);
+        Navigation.NavigateTo("/applications/category/categoryList");
+    }
+
+    private async Task Edit(int id)
+    {
+        category = await categoryRepository.GetCategoryById(id);
+    }
+
+    private void GotoCategoryList()
+    {
+        Navigation.NavigateTo("/applications/category/categoryList");
+
+    }
+
+}
