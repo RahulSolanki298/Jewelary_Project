@@ -2,16 +2,17 @@
 {
     public class SD
     {
+        /* Users*/
         public static string Admin = "Admin";
         public static string Supplier = "Supplier";
         public static string Employee = "Employee";
-
 
         /* Customers for b2c*/
         public static string Customer = "Customer";
 
         /* Customers for b2b*/
         public static string BusinessAccount = "BusinessAccount";
+
 
         public static string Requested = "Requested";
         public static string StartActivationProcess = "Start Activation Process"; // Pending Process
@@ -44,7 +45,7 @@
         public static string Returned = "Returned";
         public static string Refunded = "Refunded";
 
-        public static string BaseApiUrl = "https://localhost:4050";
+        public static string BaseApiUrl = "https://localhost:4050"; // https://jswebapi.com
 
 
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Business.Repository.IRepository;
@@ -26,6 +27,9 @@ namespace Business.Repository
                 // Step 0: Initilize veriable
                 var newProduct = new Product();
                 var existingProduct = new Product();
+                int styleId = 0; 
+                
+                var styleDT = new ProductStyles();
 
                 // Step 1: Fetch all related entities in bulk to avoid repeated database calls
                 var colors = await GetColorList();
@@ -35,6 +39,8 @@ namespace Business.Repository
                 var carats = await GetCaratList();
                 var caratSizes = await _context.ProductCaratSize.ToListAsync();
                 var shapes = await GetShapeList();
+                var goldWeight = await GetGoldPurityList();
+                var goldPurity = await GetGoldPurityList();
 
                 // Step 2: Create dictionaries for fast lookup by Name
                 var colorDict = colors.ToDictionary(x => x.Name, x => x.Id);
@@ -44,13 +50,14 @@ namespace Business.Repository
                 var caratDict = carats.ToDictionary(x => x.Name, x => x.Id);
                 var caratSizeDict = caratSizes.ToDictionary(x => x.Name, x => x.Id);
                 var shapeDict = shapes.ToDictionary(x => x.Name, x => x.Id);
+                var weightDict = shapes.ToDictionary(x => x.Name, x => x.Id);
+                var purityDict = shapes.ToDictionary(x => x.Name, x => x.Id);
 
                 // Lists for insert and update
                 var productList = new List<Product>();
                 var updateList = new List<Product>();
 
-                int colorId, subCategoryId, categoryId, clarityId, caratId, caratSizeId, shapeId, styleId = 0;
-
+                int colorId, subCategoryId, categoryId, clarityId, caratId, caratSizeId, shapeId, goldWeightId, goldPurityId = 0;
                 // Step 3: Process each product
                 foreach (var product in products)
                 {
@@ -72,31 +79,34 @@ namespace Business.Repository
                     caratId = caratDict.GetValueOrDefault(product.CaratName);
                     shapeId = shapeDict.GetValueOrDefault(product.ShapeName);
                     caratSizeId = caratSizeDict.GetValueOrDefault(product.CaratSizeName);
+                    goldWeightId = weightDict.GetValueOrDefault(product.GoldWeight);
+                    goldPurityId = purityDict.GetValueOrDefault(product.GoldPurity);
 
                     #region Create style
-                    //if (string.IsNullOrEmpty(product.StyleName) != true)
-                    //{
-                    //    var styleDT = _context.ProductStyles.Where(x => x.StyleName == product.StyleName).FirstOrDefault();
 
-                    //    if (styleDT != null)
-                    //    {
-                    //        styleId = styleDT.Id;
-                    //    }
-                    //    else
-                    //    {
+                    if (string.IsNullOrEmpty(product.StyleName) != true)
+                    {
+                        styleDT = _context.ProductStyles.Where(x => x.StyleName == product.StyleName).FirstOrDefault();
 
-                    //    }
-                    //}
+                        if (styleDT == null)
+                        {
+                            styleDT = new ProductStyles()
+                            {
+                                StyleName = product.StyleName,
+                                CreatedDate = DateTime.Now,
+                                IsActivated = true
+                            };
+
+                            await _context.ProductStyles.AddAsync(styleDT);
+                            await _context.SaveChangesAsync();
+                        }
+                        styleId = styleDT.Id;
+                    }
                     #endregion
-                    // Check if a product already exists based on related field IDs
+
                     existingProduct = await _context.Product
                         .Where(x => x.ProductType == product.ProductType
                                     && x.CategoryId == categoryId
-                                    && x.SubCategoryId == subCategoryId
-                                    && x.ClarityId == clarityId
-                                    && x.ColorId == colorId
-                                    && x.CaratId == caratId
-                                    && x.CaratSizeId == caratSizeId
                                     && x.Sku == product.Sku)
                         .FirstOrDefaultAsync();
 
@@ -128,8 +138,8 @@ namespace Business.Repository
                             Description = product.Description,
                             IsActivated = product.IsActivated,
                             StyleId = styleId,
-                            //GoldWeightId = product.GoldWeightId,
-                            //GoldPurityId = product.GoldPurity,
+                            GoldWeightId = goldWeightId,
+                            GoldPurityId = goldPurityId,
                             Price = product.Price,
                             UnitPrice = product.UnitPrice,
                             Quantity = product.Quantity,
@@ -482,54 +492,39 @@ namespace Business.Repository
             return result;
         }
 
+        public async Task<int> GetGoldWeightById()
+        {
+            var GoldWeightDT = await _context.ProductProperty.Where(static x => x.Name == "GoldWeight").FirstOrDefaultAsync();
+            return GoldWeightDT.Id;
+        }
+
+        public async Task<List<ProductProperty>> GetGoldWeightList()
+        {
+            int weightId = await GetGoldWeightById();
+            var result = await _context.ProductProperty.Where(x => x.ParentId == weightId).ToListAsync();
+            return result;
+        }
+
+        public async Task<int> GetGoldPurityById()
+        {
+            var GoldWeightDT = await _context.ProductProperty.Where(static x => x.Name == "GoldPurity").FirstOrDefaultAsync();
+            return GoldWeightDT.Id;
+        }
+
+        public async Task<List<ProductProperty>> GetGoldPurityList()
+        {
+            int weightId = await GetGoldWeightById();
+            var result = await _context.ProductProperty.Where(x => x.ParentId == weightId).ToListAsync();
+            return result;
+        }
+
+        
+
         public string ExtractStyleName(string fileName)
         {
             int underscoreIndex = fileName.IndexOf('_');
             return (underscoreIndex > 0) ? fileName.Substring(0, underscoreIndex) : "Unknown";
         }
 
-        //public async Task<List<Product>> GetFilteredProducts(ProductFilters filters)
-        //{
-        //    var query = _context.Set<Product>().AsQueryable();
-
-        //    if (!string.IsNullOrEmpty(filters.Sku))
-        //        query = query.Where(p => p.Sku.Contains(filters.Sku));
-
-        //    if (!string.IsNullOrEmpty(filters.Title))
-        //        query = query.Where(p => p.Title.Contains(filters.Title));
-
-        //    if (!string.IsNullOrEmpty(filters.ProductType))
-        //        query = query.Where(p => p.ProductType == filters.ProductType);
-
-        //    if (filters.MinPrice.HasValue)
-        //        query = query.Where(p => p.Price >= filters.MinPrice.Value);
-
-        //    if (filters.MaxPrice.HasValue)
-        //        query = query.Where(p => p.Price <= filters.MaxPrice.Value);
-
-        //    if (filters.CategoryId.HasValue)
-        //        query = query.Where(p => p.CategoryId == filters.CategoryId.Value);
-
-        //    if (filters.SubCategoryId.HasValue)
-        //        query = query.Where(p => p.SubCategoryId == filters.SubCategoryId.Value);
-
-        //    if (filters.CaratId.HasValue)
-        //        query = query.Where(p => p.CaratId == filters.CaratId.Value);
-
-        //    if (filters.CaratSizeId.HasValue)
-        //        query = query.Where(p => p.CaratSizeId == filters.CaratSizeId.Value);
-
-        //    if (filters.ClarityId.HasValue)
-        //        query = query.Where(p => p.ClarityId == filters.ClarityId.Value);
-
-        //    if (filters.ColorId.HasValue)
-        //        query = query.Where(p => p.ColorId == filters.ColorId.Value);
-
-        //    if (filters.ShapeId.HasValue)
-        //        query = query.Where(p => p.ShapeId == filters.ShapeId.Value);
-
-
-        //    return await query.ToListAsync();
-        //}
     }
 }

@@ -6,7 +6,6 @@ namespace Models
     public class BusinessAccountRegisterDTO
     {
         public CustomerRegisterDTO Customer { get; set; }
-
         public int Id { get; set; }
 
         public string BusinessCode { get; set; }

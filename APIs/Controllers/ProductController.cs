@@ -92,7 +92,6 @@ namespace APIs.Controllers
             }
         }
 
-
         [HttpPost("BulkProductCollectionUpload")]
         public async Task<IActionResult> UploadProductCollectionExcel(IFormFile file)
         {
@@ -159,7 +158,6 @@ namespace APIs.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-
 
         [HttpPost("BulkProductImagesUpload")]
         public async Task<IActionResult> UploadProductImages(IFormFile zipFile)
@@ -262,7 +260,6 @@ namespace APIs.Controllers
             return Ok("Images uploaded and organized successfully.");
         }
 
-
         [HttpPost("GetProductDetailsList")]
         public async Task<IActionResult> GetProductDetailsList()
         {
@@ -270,7 +267,5 @@ namespace APIs.Controllers
 
             return Ok(result);
         }
-
-
     }
 }

@@ -31,6 +31,14 @@ namespace Business.Repository.IRepository
 
         Task<bool> SaveProductCollectionList(List<ProductDTO> products);
 
+        Task<int> GetGoldWeightById();
+
+        Task<List<ProductProperty>> GetGoldWeightList();
+
+        Task<int> GetGoldPurityById();
+
+        Task<List<ProductProperty>> GetGoldPurityList();
+
         string ExtractStyleName(string fileName);
     }
 }
