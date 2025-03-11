@@ -53,6 +53,7 @@ namespace AdminDashboard.Server
             services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
             services.AddScoped<IProductPropertyRepository, ProductPropertyRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IB2BOrdersRepository, B2BOrdersRepository>();
 
             services.AddHttpContextAccessor();
             services.AddServerSideBlazor();

@@ -491,21 +491,20 @@ Input, textarea : 14px/1.6 '', Arial, sans-serif;
 
 /*---------------------------------------------*/
 .icon-header-noti::after {
-  content: attr(data-notify);
-  font-family: Poppins-Regular;
-  font-size: 12px;
-  color: #fff;
-  line-height: 15px;
-  text-align: center;
-
-  display: block;
-  position: absolute;
-  top: -7px;
-  right: 0;
-  min-width: 15px;
-  height: 15px;
-  padding: 0 3px;
-  background-color: #717fe0;
+    content: attr(data-notify);
+    font-family: Poppins-Regular;
+    font-size: 12px;
+    color: #000000;
+    line-height: 15px;
+    text-align: center;
+    display: block;
+    position: absolute;
+    top: -7px;
+    right: 0;
+    min-width: 15px;
+    height: 15px;
+    padding: 0 3px;
+    background-color: #717fe0;
 }
 
 /*---------------------------------------------*/
@@ -3331,4 +3330,61 @@ input.num-product::-webkit-inner-spin-button {
     padding: 20px;
   }
 
+}
+
+/*----------------------------------------------*/
+
+/* Container for the arrow button */
+.layer-slick1 {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Adjust the height of your container */
+}
+
+/* Style the button */
+.btn-arrow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #717fe0; /* Button color */
+    color: white; /* Text color */
+    font-size: 20px;
+    padding: 10px 15px;
+    border-radius: 50%;
+    border: 2px solid #717fe0;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease; /* Smooth transition */
+    text-decoration: none;
+}
+
+    .btn-arrow:hover {
+        background-color: #717fe0; /* Button hover color */
+        transform: translateY(5px); /* Add subtle hover effect */
+        box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+    }
+
+/* Position the arrow below the container */
+.layer-slick1 .btn-arrow {
+    position: absolute;
+    bottom: 20px; /* Adjust as needed to position the arrow below */
+}
+
+/* Add a subtle animation for the arrow to appear */
+.layer-slick1.animated {
+    opacity: 0;
+    animation: fadeInUp 1.5s ease-out 1s forwards; /* Fade-in effect */
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

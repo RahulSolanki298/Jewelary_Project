@@ -1,17 +1,18 @@
-﻿@page "/applications/b2borders/order-list"
+﻿@page "/applications/b2b-orders/order-list"
 
 @using Business.Repository
 @using Business.Repository.IRepository
 @using System.IO
 @using Common
+@using DataAccess.Entities
 @using OfficeOpenXml
 @using global::Models
 
 @inject IDialogService Dialog
-@inject IProductRepository productRepository
+@inject IB2BOrdersRepository _ordersRepository
 @inject ISnackbar Snackbar
 
-<MudTable Elevation="10" Items="productList" Filter="new Func<ProductDTO,bool>(Search)" @bind-category="product" Hover="@hower" Dense="@dense">
+<MudTable Elevation="10" Items="b2borderList" Filter="new Func<Orders,bool>(Search)" @bind-category="b2bOrder" Hover="@hower" Dense="@dense">
 	<ToolBarContent>
 		<MudText Typo="Typo.h6">B2B Order Request List</MudText>
 		<MudToolBarSpacer />
@@ -24,28 +25,24 @@
 		<InputFile OnChange="HandleFileSelected" />
 	</ToolBarContent>
 	<HeaderContent>
-		<MudTh><MudTableSortLabel SortBy="new Func<ProductDTO, object>(x=>x.Title)" InitialDirection="SortDirection.Ascending">Name</MudTableSortLabel></MudTh>
-		<MudTh><MudTableSortLabel SortBy="new Func<ProductDTO, object>(x=>x.CategoryName)">Category</MudTableSortLabel></MudTh>
-		<MudTh><MudTableSortLabel SortBy="new Func<ProductDTO, object>(x=>x.CaratName)">Carat</MudTableSortLabel></MudTh>
-		<MudTh><MudTableSortLabel SortBy="new Func<ProductDTO, object>(x=>x.ClarityName)">Clarity</MudTableSortLabel></MudTh>
-		<MudTh><MudTableSortLabel SortBy="new Func<ProductDTO, object>(x=>x.ColorName)">Color</MudTableSortLabel></MudTh>
-		<MudTh><MudTableSortLabel SortBy="new Func<ProductDTO, object>(x=>x.CaratSizeName)">Size</MudTableSortLabel></MudTh>
-		<MudTh><MudTableSortLabel SortBy="new Func<ProductDTO, object>(x=>x.ShapeName)">Shape</MudTableSortLabel></MudTh>
-		<MudTh><MudTableSortLabel SortBy="new Func<ProductDTO, object>(x=>x.CollectionName)">Collection</MudTableSortLabel></MudTh>
+		<MudTh><MudTableSortLabel SortBy="new Func<Orders, object>(x=>x.OrderDate)" InitialDirection="SortDirection.Ascending">Order Date</MudTableSortLabel></MudTh>
+		<MudTh><MudTableSortLabel SortBy="new Func<Orders, object>(x=>x.OrderCode)">Order Code</MudTableSortLabel></MudTh>
+		<MudTh><MudTableSortLabel SortBy="new Func<Orders, object>(x=>x.BusinessCode)">Business Account Code</MudTableSortLabel></MudTh>
+		<MudTh><MudTableSortLabel SortBy="new Func<Orders, object>(x=>x.NoOfQty)">Qty</MudTableSortLabel></MudTh>
+		<MudTh><MudTableSortLabel SortBy="new Func<Orders, object>(x=>x.NetAmount)">Amount</MudTableSortLabel></MudTh>
+		<MudTh><MudTableSortLabel SortBy="new Func<Orders, object>(x=>x.PaymentStatus)">Payment Status</MudTableSortLabel></MudTh>
 		<MudTh>Actions</MudTh>
 	</HeaderContent>
 	<RowTemplate>
-		<MudTd DataLabel="Name">@context.Title</MudTd>
-		<MudTd DataLabel="Category">@context.CategoryName</MudTd>
-		<MudTd DataLabel="Carat">@context.CaratName</MudTd>
-		<MudTd DataLabel="Clarity">@context.ClarityName</MudTd>
-		<MudTd DataLabel="Color">@context.ColorName</MudTd>
-		<MudTd DataLabel="Size">@context.CaratSizeName</MudTd>
-		<MudTd DataLabel="Shape">@context.ShapeName</MudTd>
-		<MudTd DataLabel="Style">@context.CollectionName</MudTd>
+		<MudTd DataLabel="Name">@context.OrderDate</MudTd>
+		<MudTd DataLabel="Category">@context.OrderCode</MudTd>
+		<MudTd DataLabel="Carat">@context.BusinessCode</MudTd>
+		<MudTd DataLabel="Clarity">@context.NoOfQty</MudTd>
+		<MudTd DataLabel="Color">@context.NetAmount</MudTd>
+		<MudTd DataLabel="Size">@context.PaymentStatus</MudTd>
 		<MudTd>
-			<MudFab @onclick="@(() => Edit(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
-			<MudFab @onclick="@(() => Delete(context.Id))" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
+			<MudFab @onclick="@(() => Edit(context.OrderId))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
+			<MudFab @onclick="@(() => Delete(context.OrderId))" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
 		</MudTd>
 	</RowTemplate>
 	<PagerContent>
@@ -68,14 +65,14 @@
 @code {
 
 	private IBrowserFile selectedFile;
-	private IEnumerable<ProductDTO> productList { get; set; } = new List<ProductDTO>();
+	private IEnumerable<Orders> b2borderList { get; set; } = new List<Orders>();
 
 	private readonly DialogOptions _maxWidth = new() { MaxWidth = MaxWidth.Medium, FullWidth = true };
 	private bool hower = true;
 	private bool dense = true;
 	private string searchstring = "";
 
-	private ProductDTO product = new ProductDTO();
+	private Orders b2bOrder = new Orders();
 
 	private bool IsLoading { get; set; } = false;
 	private int currentPage = 0;
@@ -88,7 +85,7 @@
 	protected override async Task OnInitializedAsync()
 	{
 		IsLoading = true;
-		await GetProductPropertyList();
+		await GetB2BOrderList();
 		IsLoading = false;
 	}
 
@@ -117,7 +114,7 @@
 			if (response.IsSuccessStatusCode)
 			{
 				Snackbar.Add("Product collection uploaded successfully!", Severity.Success);
-				await GetProductPropertyList(); // Refresh the product list after successful upload
+				await GetB2BOrderList(); // Refresh the product list after successful upload
 			}
 			else
 			{
@@ -130,14 +127,14 @@
 		}
 	}
 
-	private async Task GetProductPropertyList()
+	private async Task GetB2BOrderList()
 	{
-		productList = await productRepository.GetProductCollectionList();
+		b2borderList = await _ordersRepository.GetB2BOrderReqs();
 	}
 
-	private bool Search(ProductDTO product)
+	private bool Search(Orders orders)
 	{
-		return product.Title?.Contains(searchstring, StringComparison.OrdinalIgnoreCase) == true;
+		return orders.OrderCode?.Contains(searchstring, StringComparison.OrdinalIgnoreCase) == true;
 	}
 
 	private void Edit(Guid productId)
