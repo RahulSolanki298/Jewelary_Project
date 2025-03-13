@@ -1,0 +1,68 @@
+﻿@using Common
+@inject ISnackbar Snackbar
+
+<MudDialog>
+	<TitleContent>
+		Add Products 
+	</TitleContent>
+	<DialogContent>
+		<InputFile OnChange="HandleFileSelected" />
+		@if (isUploading == true)
+		{
+			<MudProgressCircular Color="Color.Default" Indeterminate="true" />
+		}
+		<MudToolBarSpacer />
+		<p><span style="font-weight:bold">Note :</span></p>
+		<p>Please upload file with the collections. (ex: Essentials, Solitaire Ring, Mini Huggies)</p>
+		<p>Download Excel Format : <MudButton Color="Color.Primary">Download</MudButton></p>
+	</DialogContent>
+	<DialogActions>
+		<MudButton Color="Color.Error">Cancel</MudButton>
+	</DialogActions>
+</MudDialog>
+
+
+
+@code {
+	private IBrowserFile selectedFile;
+	private bool isUploading = false;
+	private async Task HandleFileSelected(InputFileChangeEventArgs e)
+	{
+		if (e.File == null)
+		{
+			Snackbar.Add("No file selected.", Severity.Warning);
+			return;
+		}
+
+		selectedFile = e.File;
+		isUploading = true;     // Start showing the loader
+
+		try
+		{
+			var fileContent = new MultipartFormDataContent();
+			var stream = selectedFile.OpenReadStream(maxAllowedSize: 10_000_000); // Set max size limit (10MB in this case)
+			var fileStreamContent = new StreamContent(stream);
+			fileStreamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+
+			fileContent.Add(fileStreamContent, "file", selectedFile.Name);
+
+			var httpClient = new HttpClient();
+			var response = await httpClient.PostAsync($"{SD.BaseApiUrl}/api/product/BulkProductCollectionUpload", fileContent);
+
+			if (response.IsSuccessStatusCode)
+			{
+				Snackbar.Add("Product collection uploaded successfully!", Severity.Success);
+			}
+			else
+			{
+				Snackbar.Add("Failed to upload products. Please try again.", Severity.Error);
+			}
+			isUploading = false;
+		}
+		catch (Exception ex)
+		{
+			isUploading = false;
+			Snackbar.Add($"Error: {ex.Message}", Severity.Error);
+		}
+	}
+}

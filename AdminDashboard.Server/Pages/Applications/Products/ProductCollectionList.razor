@@ -16,12 +16,10 @@
 		<MudText Typo="Typo.h6">Product List</MudText>
 		<MudToolBarSpacer />
 
-		<!-- Add Products Button -->
-		@* <MudButton Color="Color.Primary" Variant="Variant.Filled">Add Products</MudButton> *@
-
-		<!-- Bulk Add Products Button -->
-		@* <MudButton Color="Color.Secondary" OnChange="HandleFileSelected">Bulk Product Add</MudButton> *@
-		<InputFile OnChange="HandleFileSelected" />
+		<MudButton @onclick="OpenDialog" Variant="Variant.Filled" Color="Color.Primary">
+			Upload File
+		</MudButton>
+		
 	</ToolBarContent>
 	<HeaderContent>
 		<MudTh><MudTableSortLabel SortBy="new Func<ProductDTO, object>(x=>x.Title)" InitialDirection="SortDirection.Ascending">Name</MudTableSortLabel></MudTh>
@@ -154,6 +152,13 @@
 	private void OnBulkAddProductClick()
 	{
 		BulkAddDialog.Show();
+	}
+
+	private void OpenDialog()
+	{
+		 var options = new DialogOptions { CloseButton = true };
+
+		Dialog.Show<UploadCollectionFile>("Show Upload Collection", options);
 	}
 
 }
