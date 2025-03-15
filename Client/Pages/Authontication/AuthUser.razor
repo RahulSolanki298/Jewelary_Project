@@ -1,0 +1,54 @@
+﻿@page "/authontication/client-login"
+
+@using Models
+@inject AuthenticationService authenticationService
+
+
+<section class="bg-img1 txt-center p-lr-15 p-tb-92" style="background-image: url('Project/images/bg-01.jpg');">
+	<h2 class="ltext-105 cl0 txt-center">
+		My Account
+	</h2>
+</section>
+
+<section class="bg0 p-t-23 p-b-130 animated-section">
+	<div class="container mt-5">
+		<div class="card animated-card">
+			<div class="card-header text-center">
+				<h3>Account Login & Registration</h3>
+			</div>
+			<div class="card-body">
+				<div class="row">
+					<!-- Login Form -->
+					<div class="col-md-5">
+						<LoginFrm></LoginFrm>
+					</div>
+
+					<div class="col-md-1">
+						<div class="verticalline"></div>
+					</div>
+
+					<div class="col-md-6">
+						<SignUpFrm></SignUpFrm>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+
+@code
+{
+	CustomerLoginDTO UserForAuthentication = new CustomerLoginDTO();
+	public bool IsProcessing { get; set; } = false;
+	public bool ShowAuthenticationErrors { get; set; }
+	public string Errors { get; set; }
+	public string ReturnUrl { get; set; }
+
+	private async Task LoginUser()
+	{
+		IsProcessing = true;
+		await authenticationService.SignInAsync(UserForAuthentication);
+	}
+}

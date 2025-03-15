@@ -12,7 +12,8 @@ public class AuthenticationService
     private readonly HttpClient _httpClient;
     private readonly ILocalStorageService _localStorageService;
 
-    public AuthenticationService(HttpClient httpClient, ILocalStorageService localStorageService)
+    public AuthenticationService(HttpClient httpClient, 
+        ILocalStorageService localStorageService)
     {
         _httpClient = httpClient;
         _localStorageService = localStorageService;
@@ -30,7 +31,6 @@ public class AuthenticationService
 
             if (authenticationResponse.IsAuthSuccessful)
             {
-                // Save the token to local storage
                 await _localStorageService.SetItemAsync("authToken", authenticationResponse.Token);
             }
 

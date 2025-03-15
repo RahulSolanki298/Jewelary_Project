@@ -224,8 +224,8 @@ Input, textarea : 14px/1.6 '', Arial, sans-serif;
 /*==================================================================
 [ Top bar ]*/
 .top-bar {
-  height: 40px;
-  background-color: #222;
+    height: 40px;
+    background-color: #00377b;
 }
 
 /*---------------------------------------------*/

@@ -1,4 +1,7 @@
+using System.Net.Http;
+using Blazored.LocalStorage;
 using Client.Data;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -20,9 +23,12 @@ namespace Client
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
+            services.AddScoped<HttpClient>();
+            services.AddScoped<AuthenticationService>();
+            services.AddScoped<ILocalStorageService, LocalStorageService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
