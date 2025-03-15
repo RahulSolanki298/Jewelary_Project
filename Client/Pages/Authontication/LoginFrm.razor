@@ -1,0 +1,97 @@
+﻿@page "/authontication/client-login"
+@using Models
+@inject AuthenticationService authenticationService
+
+<section class="bg-img1 txt-center p-lr-15 p-tb-92" style="background-image: url('Project/images/bg-01.jpg');">
+	<h2 class="ltext-105 cl0 txt-center">
+		My Account
+	</h2>
+</section>
+
+<section class="bg0 p-t-23 p-b-130 animated-section">
+	<div class="container mt-5">
+	<div class="card animated-card">
+			<div class="card-header text-center">
+				<h3>Account Login & Registration</h3>
+			</div>
+			<div class="card-body">
+				<div class="row">
+					<!-- Login Form -->
+					<div class="col-md-5">
+						<EditForm Model="UserForAuthentication" OnValidSubmit="LoginUser">
+							<DataAnnotationsValidator />
+							<ValidationSummary />
+
+							@if (ShowAuthenticationErrors)
+							{
+								<p class="text-center text-danger">@Errors</p>
+							}
+
+							<InputText @bind-Value="UserForAuthentication.Username" id="email" placeholder="Email..." class="form-control mb-2" />
+							<ValidationMessage For="(()=>UserForAuthentication.Username)"></ValidationMessage>
+							<InputText @bind-Value="UserForAuthentication.Password" type="password" placeholder="Password..." id="password" class="form-control mb-2" />
+							<ValidationMessage For="(()=>UserForAuthentication.Password)"></ValidationMessage>
+
+							@if (IsProcessing)
+							{
+								<button type="submit" class="btn bg3 text-white btn-block disabled"><i class="fas fa-sign-in-alt"></i> Please Wait...</button>
+							}
+							else
+							{
+								<button type="submit" class="btn bg3 text-white btn-block"> Sign in</button>
+							}
+						</EditForm>
+					</div>
+
+					<div class="col-md-1">
+						<div class="verticalline"></div>
+					</div>
+					
+					<div class="col-md-6">
+						<h4>Register</h4>
+						<form>
+							<div class="form-group">
+								<label for="registerName">First Name</label>
+								<input type="text" class="form-control" id="registerName" placeholder="Enter full name" required>
+							</div>
+
+							<div class="form-group">
+								<label for="registerEmail">Email Address</label>
+								<input type="email" class="form-control" id="registerEmail" placeholder="Enter email" required>
+							</div>
+
+							<div class="form-group">
+								<label for="registerMobileNo">Mobile Number</label>
+								<input type="text" class="form-control" id="registerMobileNo" placeholder="Enter mobile number" required>
+							</div>
+
+							<div class="form-group">
+								<label for="registerPassword">Password</label>
+								<input type="password" class="form-control" id="registerPassword" placeholder="Enter password" required>
+							</div>
+
+							<button type="submit" class="btn btn-success btn-block">Create Account</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+
+@code
+{
+	CustomerLoginDTO UserForAuthentication = new CustomerLoginDTO();
+	public bool IsProcessing { get; set; } = false;
+	public bool ShowAuthenticationErrors { get; set; }
+	public string Errors { get; set; }
+	public string ReturnUrl { get; set; }
+
+	private async Task LoginUser()
+	{
+		IsProcessing = true;
+		await authenticationService.SignInAsync(UserForAuthentication);
+	}
+}
