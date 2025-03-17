@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Models
 {
@@ -13,5 +9,7 @@ namespace Models
         public string LastName { get; set; }
         public string Email { get; set; }
         public string PhoneNo { get; set; }
+
+        public List<string> Roles { get; set; }
     }
 }

@@ -1,6 +1,5 @@
 using System.Net.Http;
 using Blazored.LocalStorage;
-using Client.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

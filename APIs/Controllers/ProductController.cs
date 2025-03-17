@@ -9,6 +9,7 @@ using OfficeOpenXml;
 using Models;
 using System.IO.Compression;
 using Stripe;
+using Microsoft.AspNetCore.Authorization;
 
 namespace APIs.Controllers
 {

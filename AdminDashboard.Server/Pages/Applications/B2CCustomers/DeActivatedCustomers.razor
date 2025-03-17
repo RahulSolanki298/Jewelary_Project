@@ -2,6 +2,7 @@
 @using Business.Repository.IRepository
 @using System.IO
 @using Common
+@using DataAccess.Entities
 @using OfficeOpenXml
 @using global::Models
 
@@ -15,21 +16,21 @@
 		<MudToolBarSpacer />
 	</ToolBarContent>
 	<HeaderContent>
-		<MudTh><MudTableSortLabel SortBy="new Func<CustomerRegisterDTO, object>(x=>x.FirstName)" InitialDirection="SortDirection.Ascending">First Name</MudTableSortLabel></MudTh>
-		<MudTh><MudTableSortLabel SortBy="new Func<CustomerRegisterDTO, object>(x=>x.MiddleName)">Middle Name</MudTableSortLabel></MudTh>
-		<MudTh><MudTableSortLabel SortBy="new Func<CustomerRegisterDTO, object>(x=>x.LastName)">Last Name</MudTableSortLabel></MudTh>
-		<MudTh><MudTableSortLabel SortBy="new Func<CustomerRegisterDTO, object>(x=>x.EmailId)">Email Id</MudTableSortLabel></MudTh>
-		<MudTh><MudTableSortLabel SortBy="new Func<CustomerRegisterDTO, object>(x=>x.PhoneNumber)">Phone Number</MudTableSortLabel></MudTh>
-		<MudTh><MudTableSortLabel SortBy="new Func<CustomerRegisterDTO, object>(x=>x.PancardNo)">Pancard No</MudTableSortLabel></MudTh>
-		<MudTh><MudTableSortLabel SortBy="new Func<CustomerRegisterDTO, object>(x=>x.AadharCardNo)">Aadhar Card No</MudTableSortLabel></MudTh>
-		<MudTh><MudTableSortLabel SortBy="new Func<CustomerRegisterDTO, object>(x=>x.Gender)">Gender</MudTableSortLabel></MudTh>
+		<MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.FirstName)" InitialDirection="SortDirection.Ascending">First Name</MudTableSortLabel></MudTh>
+		<MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.MiddleName)">Middle Name</MudTableSortLabel></MudTh>
+		<MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.LastName)">Last Name</MudTableSortLabel></MudTh>
+		<MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.Email)">Email Id</MudTableSortLabel></MudTh>
+		<MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.PhoneNumber)">Phone Number</MudTableSortLabel></MudTh>
+		<MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.PancardNo)">Pancard No</MudTableSortLabel></MudTh>
+		<MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.AadharCardNo)">Aadhar Card No</MudTableSortLabel></MudTh>
+		<MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.Gender)">Gender</MudTableSortLabel></MudTh>
 		<MudTh>Actions</MudTh>
 	</HeaderContent>
 	<RowTemplate>
 		<MudTd DataLabel="Name">@context.FirstName</MudTd>
 		<MudTd DataLabel="Category">@context.MiddleName</MudTd>
 		<MudTd DataLabel="Carat">@context.LastName</MudTd>
-		<MudTd DataLabel="Clarity">@context.EmailId</MudTd>
+		<MudTd DataLabel="Clarity">@context.Email</MudTd>
 		<MudTd DataLabel="Color">@context.PhoneNumber</MudTd>
 		<MudTd DataLabel="Size">@context.PancardNo</MudTd>
 		<MudTd DataLabel="Shape">@context.AadharCardNo</MudTd>
@@ -59,14 +60,14 @@
 @code {
 
 	private IBrowserFile selectedFile;
-	private IEnumerable<CustomerRegisterDTO> customerList { get; set; } = new List<CustomerRegisterDTO>();
+	private IEnumerable<ApplicationUser> customerList { get; set; } = new List<ApplicationUser>();
 
 	private readonly DialogOptions _maxWidth = new() { MaxWidth = MaxWidth.Medium, FullWidth = true };
 	private bool hower = true;
 	private bool dense = true;
 	private string searchstring = "";
 
-	private CustomerRegisterDTO customerRegister = new CustomerRegisterDTO();
+	private ApplicationUser customerRegister = new ApplicationUser();
 
 	private bool IsLoading { get; set; } = false;
 	private int currentPage = 0;
@@ -79,7 +80,7 @@
 	protected override async Task OnInitializedAsync()
 	{
 		IsLoading = true;
-		await GetActivatedCustomerList();
+		await GetDeactivatedCustomerList();
 		IsLoading = false;
 	}
 
@@ -108,7 +109,7 @@
 			if (response.IsSuccessStatusCode)
 			{
 				Snackbar.Add("Activated customer uploaded successfully!", Severity.Success);
-				await GetActivatedCustomerList(); // Refresh the product list after successful upload
+				await GetDeactivatedCustomerList(); // Refresh the product list after successful upload
 			}
 			else
 			{
@@ -121,9 +122,10 @@
 		}
 	}
 
-	private async Task GetActivatedCustomerList()
+	private async Task GetDeactivatedCustomerList()
 	{
-		var customerList = _accountRepository.GetCustomerData();
+		var data = await _accountRepository.GetCustomerData();
+		customerList = data.Where(x => x.IsCustomer == false).ToList();
 	}
 
 	private bool Search(ProductDTO product)
@@ -131,12 +133,12 @@
 		return product.Title?.Contains(searchstring, StringComparison.OrdinalIgnoreCase) == true;
 	}
 
-	private void Edit(Guid productId)
+	private void Edit(string productId)
 	{
 		// Implement edit logic here
 	}
 
-	private void Delete(Guid productId)
+	private void Delete(string productId)
 	{
 		// Implement delete logic here
 	}

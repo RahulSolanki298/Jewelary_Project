@@ -1,7 +1,8 @@
 ﻿@page "/applications/products/create-product"
+@using DataAccess.Entities
 
 
-@* <MudItem xs="12" sm="12" md="12">
+<MudItem xs="12" sm="12" md="12">
     <MudCard Elevation="25">
         <MudCardHeader>
             <CardHeaderContent>
@@ -11,36 +12,48 @@
         <MudCardContent>
             <MudGrid>
                 <MudItem xs="12" md="6">
-                    <MudTextField @bind-Value="Sku" Label="First Name" Variant="Variant.Outlined" />
+                    <MudTextField @bind-Value="product.Sku" Label="SKU" Variant="Variant.Outlined" />
                 </MudItem>
                 <MudItem xs="12" md="6">
-                    <MudTextField @bind-Value="LastName" Label="First Name" Variant="Variant.Outlined" />
+                    <MudTextField @bind-Value="product.Title" Label="Product Title" Variant="Variant.Outlined" ReadOnly />
                 </MudItem>
                 <MudItem xs="12" md="6">
-                    <MudTextField @bind-Value="JobTitle" Label="Job Title" Variant="Variant.Outlined" />
+                    <MudSelect @bind-Value="categories" Label="Category" Variant="Variant.Outlined" Required="true">
+                        @foreach (var category in categories)
+                        {
+                            <MudSelectItem Value="@category.Id">@category.Name</MudSelectItem>
+                        }
+                    </MudSelect>
                 </MudItem>
                 <MudItem xs="12" md="6">
-                    <MudTextField @bind-Value="Email" Label="Email" Variant="Variant.Outlined" HelperText="Dont worry, we shall not spam!" InputType="InputType.Email" />
-                </MudItem>
-                <MudItem xs="12">
-                    <MudText>
-                        <b>Visible Only To Friends</b>
-                    </MudText>
-                    <MudText Typo="Typo.body2">
-                        Means that only your friends will be able to see your contact details.
-                    </MudText>
-                    <MudSwitch @bind-Checked="@FriendSwitch" Color="Color.Secondary" />
+                    <MudTextField @bind-Value="product.SubCategoryId" Label="Email" Variant="Variant.Outlined" HelperText="Dont worry, we shall not spam!" InputType="InputType.Email" />
                 </MudItem>
             </MudGrid>
         </MudCardContent>
         <MudCardActions Class="pb-4 pl-4">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" @onclick="@(() => SaveChanges("Profile details saved", Severity.Success))">Save Changes</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Save Changes</MudButton>
         </MudCardActions>
     </MudCard>
-</MudItem> *@
+</MudItem>
 
 
 @code {
+
+    private List<Category> categories { get; set; }
+
+    private Product product { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        product = new Product();
+        return base.OnInitializedAsync();
+    }
+
+    private async Task GetCategoryList()
+    {
+        
+    }
+
 
 
 }

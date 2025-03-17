@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace APIs.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     [ApiController]
     [Authorize]
     public class AccountController : ControllerBase
@@ -42,7 +42,7 @@ namespace APIs.Controllers
             _accountRepository = accountRepository;
         }
 
-        [HttpPost("/ClientSignUp")]
+        [HttpPost("customer-sign-up")]
         [AllowAnonymous]
         public async Task<IActionResult> SignUp([FromBody] UserRequestDTO userRequestDTO)
         {
@@ -80,7 +80,7 @@ namespace APIs.Controllers
         }
 
 
-        [HttpPost("/ClientSignIn")]
+        [HttpPost("customer-sign-in")]
         [AllowAnonymous]
         public async Task<ActionResult> SignIn([FromBody] CustomerLoginDTO authenticationDTO)
         {
@@ -136,7 +136,7 @@ namespace APIs.Controllers
             }
         }
 
-        [HttpPost("/B2BSignUp")]
+        [HttpPost("b2b-customer-sign-in")]
         [AllowAnonymous]
         public async Task<ActionResult> CreateBusinessAccount([FromBody] BusinessAccountRegisterDTO buzzRequest)
         {
@@ -162,7 +162,7 @@ namespace APIs.Controllers
             }
         }
 
-        [HttpPost("/SupplierSignUp")]
+        [HttpPost("supplier-sign-up")]
         [AllowAnonymous]
         public async Task<IActionResult> SupplierSignUp([FromBody] UserRequestDTO userRequestDTO)
         {
@@ -199,6 +199,78 @@ namespace APIs.Controllers
             return StatusCode(201);
         }
 
+        [HttpPost("admin-sign-in")]
+        [AllowAnonymous]
+        public async Task<ActionResult> AdminSignIn([FromBody] AdminLoginModel authenticationDTO)
+        {
+            var result = await _signInManager.PasswordSignInAsync(authenticationDTO.UserName,
+                authenticationDTO.Password, false, false);
+
+            if (result.Succeeded)
+            {
+                var user = await _userManager.FindByNameAsync(authenticationDTO.UserName);
+                if (user == null)
+                {
+                    return Unauthorized(new AuthenticationResponseDTO
+                    {
+                        IsAuthSuccessful = false,
+                        ErrorMessage = "Invalid Authentication"
+                    });
+                }
+
+                // Check if the user has roles (Admin, Supplier, Customer)
+                var roles = await _userManager.GetRolesAsync(user);
+                if (roles == null || !roles.Any())
+                {
+                    return Unauthorized(new AuthenticationResponseDTO
+                    {
+                        IsAuthSuccessful = false,
+                        ErrorMessage = "User has no assigned roles."
+                    });
+                }
+
+                // Build the list of claims, including the user's role(s)
+                var claims = await GetClaims(user);
+
+                // Add roles to the claims
+                claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+
+                // Generate JWT Token with roles included
+                var signinCredentials = GetSigningCredentials();
+                var tokenOptions = new JwtSecurityToken(
+                    issuer: _aPISettings.ValidIssuer,
+                    audience: _aPISettings.ValidAudience,
+                    claims: claims,
+                    expires: DateTime.Now.AddDays(30),
+                    signingCredentials: signinCredentials);
+
+                var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+
+                // Send the token and user info back to the client
+                return Ok(new AuthenticationResponseDTO
+                {
+                    IsAuthSuccessful = true,
+                    Token = token,
+                    userDTO = new UserDTO
+                    {
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        Id = user.Id,
+                        Email = user.Email,
+                        PhoneNo = user.PhoneNumber,
+                        Roles = roles.ToList()
+                    }
+                });
+            }
+            else
+            {
+                return Unauthorized(new AuthenticationResponseDTO
+                {
+                    IsAuthSuccessful = false,
+                    ErrorMessage = "Invalid Authentication"
+                });
+            }
+        }
 
         private SigningCredentials GetSigningCredentials()
         {

@@ -16,6 +16,10 @@ using MudBlazor.Services;
 using DataAccess.Entities;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http;
+using AdminDashboard.Server.Service;
+using AdminDashboard.Server.Service.IService;
+using Microsoft.AspNetCore.Components.Authorization;
+using Blazored.LocalStorage;
 
 namespace AdminDashboard.Server
 {
@@ -45,6 +49,7 @@ namespace AdminDashboard.Server
             services.AddAutoMapper(typeof(MappingProfile));
 
             // Register Repositories
+            services.AddScoped<JwtTokenService>();
             services.AddScoped<ILogEntryRepository, LogEntryRepository>();
             services.AddScoped<IVirtualAppointmentRepo, VirtualAppointmentRepo>();
             services.AddScoped<IAccountRepository, AccountRepository>();
@@ -54,7 +59,12 @@ namespace AdminDashboard.Server
             services.AddScoped<IProductPropertyRepository, ProductPropertyRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IB2BOrdersRepository, B2BOrdersRepository>();
+            services.AddBlazoredLocalStorage();
+            services.AddScoped<ILocalStorageService,LocalStorageService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 
+            services.AddAuthorizationCore();
             services.AddHttpContextAccessor();
             services.AddServerSideBlazor();
             services.AddRazorPages();

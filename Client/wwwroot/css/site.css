@@ -266,6 +266,46 @@ a, .btn-link {
         background-color: rgba(0, 0, 0, 0.7);
     }
 
+.product-img {
+    width: 100%;
+    height: auto;
+    max-width: 150px; /* Sets the max width */
+    max-height: 120px; /* Sets the max height */
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .product-img:hover {
+        transform: scale(1.05); /* Slight zoom effect */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+.product-card {
+    text-align: center;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+    .product-card:hover {
+        transform: translateY(-5px); /* Slight lift effect */
+    }
+
+.product-card-name {
+    display: block;
+    margin-top: 10px;
+    color: #333;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+    .product-card-name:hover {
+        color: #ff5722; /* Change color on hover */
+    }
+
 
 
 @keyframes fadeInDown {
