@@ -2643,7 +2643,7 @@ input.num-product::-webkit-inner-spin-button {
 .bg1 {background-color: #717fe0;}
 .bg2 {background-color: #e6e6e6;}
 .bg3 {
-    background-color: #3f5155;
+    background-color: #00377b;
 }
 .bg5 {background-color: rgba(0,0,0,0.5);}
 .bg6 {background-color: #f2f2f2;}
@@ -2672,6 +2672,20 @@ input.num-product::-webkit-inner-spin-button {
   background-repeat: no-repeat;
 }
 
+.custom-arrow {
+    display: inline-block;
+    animation: bounce 1.5s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(10px);
+    }
+}
 
 
 
@@ -3341,6 +3355,47 @@ input.num-product::-webkit-inner-spin-button {
     justify-content: center;
     align-items: center;
     height: 100vh; /* Adjust the height of your container */
+}
+
+.root {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  width: 100%;
+  padding-top: 200px;
+}
+.bounce {
+  display: inline-block;
+  background-color: #2196f3;
+  font-size: 50px;
+  text-align: center;
+  color: #fff;
+  border-radius: 20px;
+  padding: 5px 7px 14px;
+  margin: 0 auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  border: 1px solid #1976d2;
+  opacity: 0.8;
+  transition: all 0.3s ease-in-out;
+  position: relative;
+  top: 0;
+  animation: bounce 0.5s ease-out infinite alternate;
+  text-decoration: none;
+}
+.bounce:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+
+@keyframes bounce {
+  0 {
+    top: 0;
+    color: #fff;
+  }
+  100% {
+    top: 8px;
+    color: #e0e0e0;
+  }
 }
 
 /* Style the button */
