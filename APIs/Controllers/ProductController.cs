@@ -124,15 +124,15 @@ namespace APIs.Controllers
                         var rows = new List<Models.ProductDTO>();
 
                         // Loop through rows and columns
-                        for (int row = 2; row <= worksheet.Dimension.Rows; row++) // Start at row 2 to skip header
+                        for (int row = 5; row <= worksheet.Dimension.Rows; row++) // Start at row 2 to skip header
                         {
                             var data = new ProductDTO
                             {
-                                ProductType = worksheet.Cells[row, 1].Text,  // Column A
-                                CategoryName = worksheet.Cells[row, 2].Text, // Column B
-                                SubCategoryName = worksheet.Cells[row, 3].Text, // Column C
-                                ColorName = worksheet.Cells[row, 4].Text, // Column C
-                                ShapeName = worksheet.Cells[row, 5].Text, // Column C
+                                VenderName = worksheet.Cells[row, 3].Text,  // Column A
+                                StyleName = worksheet.Cells[row, 4].Text, // Column B
+                                GoldPurity = worksheet.Cells[row, 5].Text, // Column C
+                                GoldWeight = worksheet.Cells[row, 6].Text, // Column C
+                                CTW = worksheet.Cells[row, 7].Text, // Column C
                                 CaratName = worksheet.Cells[row, 6].Text,
                                 CaratSizeName = worksheet.Cells[row, 7].Text,
                                 ClarityName = worksheet.Cells[row, 8].Text,
