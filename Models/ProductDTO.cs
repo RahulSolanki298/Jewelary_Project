@@ -68,6 +68,14 @@ namespace Models
 
         public string CollectionName { get; set; }
 
+        public int? CenterShapeId { get; set; }
+
+        public string CenterShapeName { get; set; }
+
+        public int? CenterCaratId { get; set; }
+
+        public string CenterCaratName { get; set; }
+
         public bool IsActivated { get; set; } = false;
     }
 }

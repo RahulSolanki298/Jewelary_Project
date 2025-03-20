@@ -1,0 +1,89 @@
+﻿@model Models.CustomerRegisterDTO
+
+<div class="login-reg-form-wrap sign-up-form">
+    <h5>Signup Form</h5>
+    <form id="signupForm" asp-action="RegisterProcess" method="post">
+        
+        <!-- First Name -->
+        <div class="single-input-item">
+            <label for="FirstName">First Name</label>
+            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = "Enter your first name" })
+            @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
+        </div>
+
+        <!-- Middle Name -->
+        <div class="single-input-item">
+            <label for="MiddleName">Middle Name (Optional)</label>
+            @Html.TextBoxFor(m => m.MiddleName, new { @class = "form-control", placeholder = "Enter your middle name" })
+        </div>
+
+        <!-- Last Name -->
+        <div class="single-input-item">
+            <label for="LastName">Last Name</label>
+            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "Enter your last name" })
+            @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
+        </div>
+
+        <!-- Gender -->
+        <div class="single-input-item">
+            <label for="Gender">Gender</label>
+            @Html.DropDownListFor(m => m.Gender, new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Male", Value = "Male" },
+                new SelectListItem { Text = "Female", Value = "Female" },
+                new SelectListItem { Text = "Other", Value = "Other" }
+            }, "-- Select Gender --", new { @class = "form-control" })
+        </div>
+
+        <!-- Phone Number -->
+        <div class="single-input-item">
+            <label for="PhoneNumber">Phone Number</label>
+            @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", placeholder = "Enter your phone number" })
+        </div>
+
+        <!-- Email -->
+        <div class="single-input-item">
+            <label for="EmailId">Email</label>
+            @Html.TextBoxFor(m => m.EmailId, new { @class = "form-control", placeholder = "Enter your Email" })
+            @Html.ValidationMessageFor(m => m.EmailId, "", new { @class = "text-danger" })
+        </div>
+
+        <!-- Password -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="single-input-item">
+                    <label for="TextPassword">Password</label>
+                    @Html.PasswordFor(m => m.TextPassword, new { @class = "form-control", placeholder = "Enter your Password" })
+                    @Html.ValidationMessageFor(m => m.TextPassword, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="single-input-item">
+                    <label for="ConfirmPassword">Confirm Password</label>
+                    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Repeat your Password" })
+                    @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        @* <!-- Subscribe to Newsletter -->
+        <div class="single-input-item">
+            <div class="login-reg-form-meta">
+                <div class="remember-meta">
+                    <div class="custom-control custom-checkbox">
+                        @Html.CheckBoxFor(m => m.IsBusinessAccount, new { @class = "custom-control-input", id = "subnewsletter" })
+                        <label class="custom-control-label" for="subnewsletter">
+                            Subscribe to Our Newsletter
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div> *@
+
+        <!-- Register Button -->
+        <div class="single-input-item">
+            <button type="submit" id="btnSubmit" class="btn btn-sqr">Register</button>
+        </div>
+    </form>
+</div>
+

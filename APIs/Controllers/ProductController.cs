@@ -8,8 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml;
 using Models;
 using System.IO.Compression;
-using Stripe;
-using Microsoft.AspNetCore.Authorization;
 
 namespace APIs.Controllers
 {
@@ -133,7 +131,9 @@ namespace APIs.Controllers
                                 GoldPurity = worksheet.Cells[row, 5].Text, // Column C
                                 GoldWeight = worksheet.Cells[row, 6].Text, // Column C
                                 CTW = worksheet.Cells[row, 7].Text, // Column C
-                                CaratName = worksheet.Cells[row, 6].Text,
+                                CenterShapeName= worksheet.Cells[row,8].Text,
+                                CenterCaratName = worksheet.Cells[row,9].Text,
+                                ColorName = worksheet.Cells[row, 10].Text,
                                 CaratSizeName = worksheet.Cells[row, 7].Text,
                                 ClarityName = worksheet.Cells[row, 8].Text,
                                 Sku = worksheet.Cells[row, 9].Text,

@@ -1,0 +1,92 @@
+﻿@model Models.CustomerLoginRegistrationDto;
+
+<div class="breadcrumb-area">
+	<div class="container">
+		<div class="row">
+			<div class="col-12">
+				<div class="breadcrumb-wrap">
+					<nav aria-label="breadcrumb">
+						<ul class="breadcrumb">
+							<li class="breadcrumb-item"><a href="index.html"><i class="fa fa-home"></i></a></li>
+							<li class="breadcrumb-item active" aria-current="page">
+								My Account
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="login-register-wrapper section-padding">
+	<div class="container">
+
+		<div class="card">
+			<div class="card-header text-center">
+				My Account
+			</div>
+			<div class="card-body">
+				<div class="member-area-from-wrap">
+					<div class="row">
+
+						<div class="col-lg-6" id="frmLoginPartial">
+							@Html.Partial("LoginPartial", Model.CustomerLogin)
+						</div>
+
+						<div class="col-lg-6" id="frmRegister">
+							@Html.Partial("RegisterPartial", Model.CustomerRegister)
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+@section Scripts {
+	<script type="text/javascript">
+		$(document).ready(function(){
+				$("#frmLoginPartial #loginFrm").on("click","#btnLogin",function(){
+					debugger;
+					var usrName=$("#Username").val();
+					var password=$("#Password").val();
+					var remr = $("#rememberMe").prop("checked"); // Check if the Remember Me checkbox is checked
+											
+							var loginData = {
+								username: usrName,
+								password: password,
+								rememberMe: remr
+							};
+
+							$.ajax({
+								url: '@Url.Action("LoginProcess", "Account")', // Assuming "Account" is the controller
+								type: 'POST',
+								data: loginData,
+								success: function (response) {
+									debugger;
+									if (response.success) {
+										
+										var token = response.token;
+										var user = response.user;
+
+										localStorage.setItem("Token", token);
+										localStorage.setItem("User", JSON.stringify(user));
+
+										window.location.href = "/Home/Index"; 
+									} else {
+										alert(response.message || "An error occurred during login.");
+									}
+								},
+								error: function(xhr, status, error) {
+									// Handle any errors that occur during the AJAX request
+									alert("An error occurred: " + error);
+								}
+							});
+				});
+
+		});
+
+	</script>
+}

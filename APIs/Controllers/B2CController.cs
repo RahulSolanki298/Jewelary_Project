@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using APIs.Helper;
-using Business.Repository;
 using Business.Repository.IRepository;
 using Common;
 using DataAccess.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Models.Helper;
 
 namespace APIs.Controllers
 {

@@ -9,6 +9,7 @@ namespace Models
 
         [Required(ErrorMessage = "Please enter password.")]
         public string Password { get; set; }
+
         public bool RememberMe { get; set; } = false;
     }
 }

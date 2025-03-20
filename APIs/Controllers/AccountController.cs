@@ -1,5 +1,4 @@
-﻿using APIs.Helper;
-using Business.Repository.IRepository;
+﻿using Business.Repository.IRepository;
 using Common;
 using DataAccess.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -8,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Models;
+using Models.Helper;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;

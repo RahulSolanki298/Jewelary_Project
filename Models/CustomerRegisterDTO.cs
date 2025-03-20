@@ -17,24 +17,24 @@ namespace Models
 
         public string Gender { get; set; }
 
+        public string PhoneNumber { get; set; }
+        
         public string EmailId { get; set; }
 
-        public string PhoneNumber { get; set; }
 
-        [Required(ErrorMessage = "Please enter your pancard no.")]
-        public string PancardNo { get; set; }
-
-        [Required(ErrorMessage = "Please enter your aadhar no.")]
-        public string AadharCardNo { get; set; }
-
+        [Required(ErrorMessage = "Please enter a password.")]
+        [StringLength(100, MinimumLength = 8, ErrorMessage = "Password must be at least 8 characters long.")]
+        [RegularExpression(@"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
+        ErrorMessage = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.")]
         public string TextPassword { get; set; }
+
+        [Required(ErrorMessage = "Please confirm your password.")]
+        [Compare("TextPassword", ErrorMessage = "Passwords do not match.")]
+        public string ConfirmPassword { get; set; }
 
         public bool IsBusinessAccount { get; set; } = false;
 
-        public int? BusinessAccId { get; set; }
-
         public string ActivationStatus { get; set; }
-
         
     }
 }
