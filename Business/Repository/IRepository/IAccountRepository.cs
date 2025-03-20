@@ -10,9 +10,9 @@ namespace Business.Repository.IRepository
     {
         Task<IdentityResult> CustomerRegisterAsync(CustomerRegisterDTO customerRegister);
 
-        Task<IdentityResult> EmployeeRegisterAsync(CustomerRegisterDTO customerRegister);
+        Task<IdentityResult> EmployeeRegisterAsync(EmployeeRegisterDTO employeeRegister);
 
-        Task<IdentityResult> SupplierRegisterAsync(CustomerRegisterDTO customerRegister);
+        Task<IdentityResult> SupplierRegisterAsync(SupplierRegisterDTO supplierRegister);
 
         Task<IdentityResult> UpsertBusinessAccountAsync(BusinessAccountRegisterDTO customerRegister);
 

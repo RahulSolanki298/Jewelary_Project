@@ -31,8 +31,6 @@ namespace Business.Repository
                 FirstName = customerRegister.FirstName,
                 MiddleName = customerRegister.MiddleName,
                 LastName = customerRegister.LastName,
-                AadharCardNo = customerRegister.AadharCardNo,
-                PancardNo = customerRegister.PancardNo,
                 TextPassword = customerRegister.TextPassword,
                 Email = customerRegister.EmailId,
                 UserName = customerRegister.EmailId,
@@ -93,6 +91,7 @@ namespace Business.Repository
                 existingBusinessAccount.AddressLine1 = customerRegister.AddressLine1;
                 existingBusinessAccount.AddressLine2 = customerRegister.AddressLine2;
                 existingBusinessAccount.BusinessAadharCardNo = customerRegister.BusinessAadharCardNo;
+                existingBusinessAccount.BusinessPanCardNo = customerRegister.BusinessPanCardNo;
                 existingBusinessAccount.ContactNumber = customerRegister.ContactNumber;
                 existingBusinessAccount.City = customerRegister.City;
                 existingBusinessAccount.CompanyName = customerRegister.CompanyName;
@@ -121,8 +120,6 @@ namespace Business.Repository
                     FirstName = customerRegister.Customer.FirstName,
                     MiddleName = customerRegister.Customer.MiddleName,
                     LastName = customerRegister.Customer.LastName,
-                    AadharCardNo = customerRegister.Customer.AadharCardNo,
-                    PancardNo = customerRegister.Customer.PancardNo,
                     TextPassword = customerRegister.Customer.TextPassword,
                     Email = customerRegister.Customer.EmailId,
                     UserName = customerRegister.Customer.EmailId,
@@ -144,8 +141,6 @@ namespace Business.Repository
                 user.FirstName = customerRegister.Customer.FirstName;
                 user.MiddleName = customerRegister.Customer.MiddleName;
                 user.LastName = customerRegister.Customer.LastName;
-                user.AadharCardNo = customerRegister.Customer.AadharCardNo;
-                user.PancardNo = customerRegister.Customer.PancardNo;
                 user.TextPassword = customerRegister.Customer.TextPassword;
                 user.ActivationStatus = customerRegister.Customer.ActivationStatus;
                 user.Gender = customerRegister.Customer.Gender;
@@ -160,25 +155,25 @@ namespace Business.Repository
             }
         }
 
-        public async Task<IdentityResult> EmployeeRegisterAsync(CustomerRegisterDTO customerRegister)
+        public async Task<IdentityResult> EmployeeRegisterAsync(EmployeeRegisterDTO employeeRegister)
         {
             var user = new ApplicationUser
             {
-                FirstName = customerRegister.FirstName,
-                MiddleName = customerRegister.MiddleName,
-                LastName = customerRegister.LastName,
-                AadharCardNo = customerRegister.AadharCardNo,
-                PancardNo = customerRegister.PancardNo,
-                TextPassword = customerRegister.TextPassword,
-                Email = customerRegister.EmailId,
-                UserName = customerRegister.EmailId,
-                ActivationStatus = customerRegister.ActivationStatus,
-                Gender = customerRegister.Gender,
+                FirstName = employeeRegister.FirstName,
+                MiddleName = employeeRegister.MiddleName,
+                LastName = employeeRegister.LastName,
+                AadharCardNo = employeeRegister.AadharCardNo,
+                PancardNo = employeeRegister.PancardNo,
+                TextPassword = employeeRegister.TextPassword,
+                Email = employeeRegister.EmailId,
+                UserName = employeeRegister.EmailId,
+                ActivationStatus = employeeRegister.ActivationStatus,
+                Gender = employeeRegister.Gender,
                 IsBusinessAccount = false,
-                PhoneNumber = customerRegister.PhoneNumber
+                PhoneNumber = employeeRegister.PhoneNumber
             };
 
-            var result = await _userManager.CreateAsync(user, customerRegister.TextPassword);
+            var result = await _userManager.CreateAsync(user, employeeRegister.TextPassword);
 
             if (result.Succeeded)
             {
@@ -188,27 +183,27 @@ namespace Business.Repository
             return result;
         }
 
-        public async Task<IdentityResult> SupplierRegisterAsync(CustomerRegisterDTO customerRegister)
+        public async Task<IdentityResult> SupplierRegisterAsync(SupplierRegisterDTO supplierRegister)
         {
             try
             {
                 var user = new ApplicationUser
                 {
-                    FirstName = customerRegister.FirstName,
-                    MiddleName = customerRegister.MiddleName,
-                    LastName = customerRegister.LastName,
-                    AadharCardNo = customerRegister.AadharCardNo,
-                    PancardNo = customerRegister.PancardNo,
-                    TextPassword = customerRegister.TextPassword,
-                    Email = customerRegister.EmailId,
-                    UserName = customerRegister.EmailId,
-                    ActivationStatus = customerRegister.ActivationStatus,
-                    Gender = customerRegister.Gender,
+                    FirstName = supplierRegister.FirstName,
+                    MiddleName = supplierRegister.MiddleName,
+                    LastName = supplierRegister.LastName,
+                    AadharCardNo = supplierRegister.AadharCardNo,
+                    PancardNo = supplierRegister.PancardNo,
+                    TextPassword = supplierRegister.TextPassword,
+                    Email = supplierRegister.EmailId,
+                    UserName = supplierRegister.EmailId,
+                    ActivationStatus = supplierRegister.ActivationStatus,
+                    Gender = supplierRegister.Gender,
                     IsBusinessAccount = false,
-                    PhoneNumber = customerRegister.PhoneNumber
+                    PhoneNumber = supplierRegister.PhoneNumber
                 };
 
-                var result = await _userManager.CreateAsync(user, customerRegister.TextPassword);
+                var result = await _userManager.CreateAsync(user, supplierRegister.TextPassword);
 
                 if (result.Succeeded)
                 {
@@ -223,7 +218,6 @@ namespace Business.Repository
                 throw;
             }
         }
-
 
         public async Task<List<ApplicationUser>> GetCustomerData()
         {
