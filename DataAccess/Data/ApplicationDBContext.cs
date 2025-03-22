@@ -51,5 +51,7 @@ namespace DataAccess.Data
         public DbSet<FileManager> FileManager { get; set; }
 
         public DbSet<ProductStyles> ProductStyles { get; set; }
+
+        public DbSet<DiamondProperty> DiamondProperties { get; set; }
     }
 }

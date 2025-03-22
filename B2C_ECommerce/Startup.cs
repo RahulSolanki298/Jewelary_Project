@@ -1,6 +1,8 @@
 using System;
 using B2C_ECommerce.IServices;
 using B2C_ECommerce.Services;
+using Business.Repository;
+using Business.Repository.IRepository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -29,7 +31,6 @@ namespace B2C_ECommerce
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
             });
             services.AddScoped<IAccountService, AccountService>();
-
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

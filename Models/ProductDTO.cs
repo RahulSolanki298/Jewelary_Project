@@ -76,6 +76,8 @@ namespace Models
 
         public string CenterCaratName { get; set; }
 
+        public string DefaultImage { get; set; }
+
         public bool IsActivated { get; set; } = false;
     }
 }

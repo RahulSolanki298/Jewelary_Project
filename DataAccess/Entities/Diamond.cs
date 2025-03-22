@@ -18,17 +18,17 @@ namespace DataAccess.Entities
         public string HA { get; set; }
         public decimal? UnitPrice { get; set; }
         public decimal? Price { get; set; }
-        public int? Quantity { get; set; } = 0;
+        public decimal? Quantity { get; set; } = 0;
         public string Carat { get; set; }
         public string Clarity { get; set; }
         public string Color { get; set; }
         public string Shape { get; set; }
-        public int? Table { get; set; }
-        public int? Depth { get; set; }
+        public decimal? Table { get; set; }
+        public decimal? Depth { get; set; }
         public decimal? Ratio { get; set; }
         public decimal? Length { get; set; }
-        public int? Width { get; set; }
-        public int? Height { get; set; }
+        public decimal? Width { get; set; }
+        public decimal? Height { get; set; }
         public string Location{ get; set; }  // City Name
         public string Status{ get; set; } // Available, Consignment, Hold, In
         public DateTime? INWDate { get; set; }
@@ -52,7 +52,7 @@ namespace DataAccess.Entities
         public decimal? PAngle { get; set; }
         public decimal? PHt { get; set; }
         public decimal? CHt { get; set; }
-        public decimal? Girdle { get; set; }
+        public string Girdle { get; set; }
         public string CrownExFac { get; set; }
         public string PavExFac { get; set; }
         public string TableSpot { get; set; }

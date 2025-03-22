@@ -2,15 +2,15 @@
 
 <div class="login-reg-form-wrap">
     <h5>Sign In</h5>
-    <form id="loginFrm" class="needs-validation" novalidate>
+    <form id="loginFrm" asp-action="LoginProcess" asp-method="post" asp-controller="account" class="needs-validation" novalidate>
         <div class="single-input-item">
             <input asp-for="Username" placeholder="Email or Username" type="email" class="form-control" />
-            <span asp-validation-for="Username" class="text-danger"></span>
+            <span asp-validation-for="Username" id="lblUsername" class="text-danger"></span>
         </div>
 
         <div class="single-input-item">
             <input asp-for="Password" placeholder="Enter your password" type="password" class="form-control" />
-            <span asp-validation-for="Password" class="text-danger"></span>
+            <span asp-validation-for="Password" id="lblPassword" class="text-danger"></span>
         </div>
 
         <div class="single-input-item">
@@ -18,7 +18,7 @@
                 <div class="remember-meta">
                     <div class="custom-control custom-checkbox">
                         <input type="checkbox" class="custom-control-input" asp-for="RememberMe" id="rememberMe" />
-                        <label class="custom-control-label" for="rememberMe">Remember Me</label>
+                        <label class="custom-control-label" id="lblRemebermer" for="rememberMe">Remember Me</label>
                     </div>
                 </div>
                 <a href="#" class="forget-pwd">Forget Password?</a>

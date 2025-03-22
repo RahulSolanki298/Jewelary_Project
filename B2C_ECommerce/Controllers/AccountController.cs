@@ -38,44 +38,52 @@ namespace B2C_ECommerce.Controllers
                 {
                     HttpContext.Response.Cookies.Append("Token", response.Token, new CookieOptions
                     {
-                        HttpOnly = true,          // Makes the cookie inaccessible to JavaScript
-                        Secure = true,            // Ensures the cookie is only sent over HTTPS
-                        SameSite = SameSiteMode.Strict, // Helps mitigate CSRF attacks
-                        Expires = DateTimeOffset.UtcNow.AddDays(7)  // Set cookie expiration
+                        HttpOnly = true,          
+                        Secure = true,            
+                        SameSite = SameSiteMode.Strict, 
+                        Expires = DateTimeOffset.UtcNow.AddDays(7)
                     });
-                    //HttpContext.Session.SetString("User", JsonConvert.SerializeObject(response.userDTO));
-
-
-                    return Json(new
-                    {
-                        success = true,
-                        token = response.Token,
-                        user = response.userDTO
-                    }); 
+                    
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
-                    return Json(new
-                    {
-                        success = false,
-                        message = response?.ErrorMessage ?? "Invalid login attempt."
-                    });
+                    TempData["Status"] = "Error";
+                    TempData["Message"] = "Invalid username or password...";
+
+                    return RedirectToAction("Index");
                 }
             }
 
-            return PartialView("~/Views/Account/LoginPartial.cshtml", loginDT);
+            return RedirectToAction("Index");
         }
 
 
         [HttpPost]
-        public IActionResult RegisterProcess(CustomerRegisterDTO registerDT)
+        public async Task<IActionResult> RegisterProcess(CustomerRegisterDTO registerDT)
         {
             if (ModelState.IsValid)
             {
 
+                var data = new UserRequestDTO()
+                {
+                    Email=registerDT.EmailId,
+                    FirstName=registerDT.FirstName,
+                    LastName=registerDT.LastName,
+                    PhoneNo=registerDT.PhoneNumber,
+                    Password=registerDT.TextPassword,
+                    ConfirmPassword=registerDT.ConfirmPassword
+                };
+
+                var response = await _accountService.CustomerSignUpAsync(data);
+
+                TempData["Status"] = "Success";
+                TempData["Message"] = "your application has been created successfully.";
+
+                return RedirectToAction("Index");
             }
 
-            return PartialView("~/Views/Account/RegisterPartial.cshtml", registerDT);
+            return RedirectToAction("Index");
         }
 
 

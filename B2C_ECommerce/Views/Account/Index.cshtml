@@ -20,7 +20,21 @@
 </div>
 <div class="login-register-wrapper section-padding">
 	<div class="container">
-
+		@if (TempData["Status"] != null)
+		{
+			if (TempData["Status"] == "Success")
+			{
+				<div class="alert alert-success" role="alert">
+					@TempData["Message"].ToString()
+				</div>
+			}
+			else if (TempData["Status"] == "Error")
+			{
+				<div class="alert alert-danger" role="alert">
+					@TempData["Message"].ToString()
+				</div>
+			}
+		}
 		<div class="card">
 			<div class="card-header text-center">
 				My Account
@@ -28,7 +42,7 @@
 			<div class="card-body">
 				<div class="member-area-from-wrap">
 					<div class="row">
-
+						
 						<div class="col-lg-6" id="frmLoginPartial">
 							@Html.Partial("LoginPartial", Model.CustomerLogin)
 						</div>
@@ -48,43 +62,6 @@
 @section Scripts {
 	<script type="text/javascript">
 		$(document).ready(function(){
-				$("#frmLoginPartial #loginFrm").on("click","#btnLogin",function(){
-					debugger;
-					var usrName=$("#Username").val();
-					var password=$("#Password").val();
-					var remr = $("#rememberMe").prop("checked"); // Check if the Remember Me checkbox is checked
-											
-							var loginData = {
-								username: usrName,
-								password: password,
-								rememberMe: remr
-							};
-
-							$.ajax({
-								url: '@Url.Action("LoginProcess", "Account")', // Assuming "Account" is the controller
-								type: 'POST',
-								data: loginData,
-								success: function (response) {
-									debugger;
-									if (response.success) {
-										
-										var token = response.token;
-										var user = response.user;
-
-										localStorage.setItem("Token", token);
-										localStorage.setItem("User", JSON.stringify(user));
-
-										window.location.href = "/Home/Index"; 
-									} else {
-										alert(response.message || "An error occurred during login.");
-									}
-								},
-								error: function(xhr, status, error) {
-									// Handle any errors that occur during the AJAX request
-									alert("An error occurred: " + error);
-								}
-							});
-				});
 
 		});
 
