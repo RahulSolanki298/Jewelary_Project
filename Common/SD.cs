@@ -26,6 +26,13 @@
         public static string DeActived = "DeActived";
         public static string InProcess = "InProcess";
 
+        // Diamond Property
+        public static string Metal = "Metal";
+        public static string Clarity = "Clarity";
+        public static string Shape = "Shape";
+        public static string Carat = "Carat";
+
+
         // Supplier Activation Status
         public static string Approve = "Approve";
         public static string DisApprove = "DisApprove";
@@ -45,7 +52,7 @@
         public static string Returned = "Returned";
         public static string Refunded = "Refunded";
 
-        public static string BaseApiUrl = "https://localhost:44302"; // https://jswebapi.com
+        public static string BaseApiUrl = "https://localhost:4050"; // https://jswebapi.com
 
 
     }

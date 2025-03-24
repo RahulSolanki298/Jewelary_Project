@@ -18,11 +18,13 @@
 <!-- breadcrumb area end -->
 
 <section class="product-area section-padding">
-	<div class="container">
+	<div class="container-fluid">
 		<div class="row">
 			<div class="col-12">
 				<div class="section-title text-center">
-					<h2 class="title">Search Grown Diamonds</h2>
+					<h2 class="title">
+						Shop Lab Created Loose Diamonds
+					</h2>
 				</div>
 			</div>
 		</div>
@@ -35,42 +37,100 @@
 						<div class="row">
 							<!-- Shape Image Links -->
 							<div class="col-4">
-								<a href="#"><img class="img-fluid" src="https://images.grownbrilliance.com/general_images/homeimg/diamond_shape/oval.png" alt="Oval Shape" /></a>
+								<a href="#">
+									<img class="dim-img" src="https://images.grownbrilliance.com/general_images/homeimg/diamond_shape/oval.png" alt="Oval Shape" />
+								</a>
 							</div>
 							<div class="col-4">
-								<a href="#"><img class="img-fluid" src="https://images.grownbrilliance.com/general_images/homeimg/diamond_shape/round.png" alt="Round Shape" /></a>
+								<a href="#"><img class="dim-img" src="https://images.grownbrilliance.com/general_images/homeimg/diamond_shape/round.png" alt="Round Shape" /></a>
 							</div>
 							<div class="col-4">
-								<a href="#"><img class="img-fluid" src="https://images.grownbrilliance.com/general_images/homeimg/diamond_shape/emerald.png" alt="Emerald Shape" /></a>
+								<a href="#"><img class="dim-img" src="https://images.grownbrilliance.com/general_images/homeimg/diamond_shape/emerald.png" alt="Emerald Shape" /></a>
 							</div>
 						</div>
-						<!-- Repeat or add more shapes as necessary -->
+						<div class="row">
+							<!-- Shape Image Links -->
+							<div class="col-4">
+								<a href="#"><img class="dim-img" src="https://images.grownbrilliance.com/general_images/homeimg/diamond_shape/oval.png" alt="Oval Shape" /></a>
+							</div>
+							<div class="col-4">
+								<a href="#"><img class="dim-img" src="https://images.grownbrilliance.com/general_images/homeimg/diamond_shape/round.png" alt="Round Shape" /></a>
+							</div>
+							<div class="col-4">
+								<a href="#"><img class="dim-img" src="https://images.grownbrilliance.com/general_images/homeimg/diamond_shape/emerald.png" alt="Emerald Shape" /></a>
+							</div>
+						</div>
 					</div>
 
 					<!-- Filters Section -->
 					<div class="col-md-4">
-						<h3>Carat Size</h3>
-						<input type="range" class="form-range" id="carat-slider" min="0" max="10" step="0.1" value="5">
-						<p>Selected Carat Size: <span id="carat-value">5</span> Carats</p>
+						<div class="row">
+							<div class="container-fluid d-flex align-items-center justify-content-between">
+								<h3>Carat Size</h3>
+								<div class="d-flex">
+									<input type="number" class="form-control" placeholder="Min Price" style="width: 120px;" />
+									<span class="mx-2">-</span>
+									<input type="number" class="form-control" placeholder="Max Price" style="width: 120px;" />
+								</div>
+							</div>
+							<div class="container-fluid">
+								<input type="range" class="form-range" id="carat-slider" min="0" max="10" step="0.1" value="5">
+								<p>Selected Carat Size: <span id="carat-value">5</span> Carats</p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="container-fluid d-flex align-items-center justify-content-between">
+								<h3>Price</h3>
+								<div class="d-flex">
+									<input type="number" class="form-control" placeholder="Min Price" style="width: 120px;" />
+									<span class="mx-2">-</span>
+									<input type="number" class="form-control" placeholder="Max Price" style="width: 120px;" />
+								</div>
+							</div>
 
-						<h3>Price</h3>
-						<input type="range" class="form-range" id="price-slider" min="590" max="69025" step="0.1" value="590">
-						<p>Selected Price: $<span id="price-value">590</span></p>
+							<div class="container-fluid">
+								<input type="range" class="form-range" id="price-slider" min="590" max="69025" step="0.1" value="590">
+								<p>Selected Price: $<span id="price-value">590</span></p>
+							</div>
+						</div>
 					</div>
 
 					<!-- More Filters -->
 					<div class="col-md-4">
-						<h3>Color</h3>
-						<input type="range" class="form-range" id="color-slider" min="1" max="5" step="0.5" value="5">
-						<p>Selected Color: <span id="color-value">Red</span></p>
+						<div class="row">
+							<div class="container-fluid d-flex align-items-center justify-content-between">
+								<h3>Color</h3>
+								<div class="d-flex">
+									<a href="#" onclick="resetFilters()"><i class="text-reset"></i> Reset Filter</a>
+								</div>
+							</div>
+							<input type="range" class="form-range" id="color-slider" min="1" max="3" step="1" value="3">
+							<div class="slider-labels">
+								<span>F</span>
+								<span>E</span>
+								<span>D</span>
+							</div>
+							<p>Selected Color: <span id="color-value">D</span></p>
 
-						<h3>Cut</h3>
-						<input type="range" class="form-range" id="cut-slider" min="1" max="2" step="0.1" value="2">
-						<p>Selected Cut: <span id="cut-value">1</span></p>
+							<h3>Cut</h3>
+							<input type="range" class="form-range" id="cut-slider" min="1" max="2" step="1" value="2">
+							<div class="slider-labels">
+								<span>Excellent</span>
+								<span>Ideal</span>
+							</div>
+							<p>Selected Cut: <span id="cut-value">Ideal</span></p>
 
-						<h3>Clarity</h3>
-						<input type="range" class="form-range" id="clarity-slider" min="1" max="5" step="0.5" value="5">
-						<p>Selected Clarity: <span id="clarity-value">5</span></p>
+							<h3>Clarity</h3>
+							<input type="range" class="form-range" id="clarity-slider" min="1" max="5" step="1" value="5">
+							<div class="slider-labels">
+								<span>VS2</span>
+								<span>VS1</span>
+								<span>VVS2</span>
+								<span>VVS1</span>
+								<span>FL</span>
+							</div>
+							<p>Selected Clarity: <span id="clarity-value">FL</span></p>
+						</div>
 					</div>
 				</div>
 

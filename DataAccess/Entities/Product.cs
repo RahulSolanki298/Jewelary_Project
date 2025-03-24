@@ -6,6 +6,8 @@ namespace DataAccess.Entities
     {
         public Guid Id { get; set; }
 
+        public DateTime ProductDate { get; set; }
+
         public string VenderId { get; set; }
         public string Sku { get; set; }  // OTN23U01-D300R0B 
         public string Title { get; set; }
@@ -16,16 +18,14 @@ namespace DataAccess.Entities
         public string ProductType { get; set; } // Diamond, Gold
 
         // If Gold
+        public int? LengthId { get; set; }
         public int? GoldPurityId { get; set; } // 18 k
         public int? GoldWeightId { get; set; } // 3.00 GMS
+
         public int? CTW { get; set; }
-
-        //
         public int? CenterShapeId { get; set; }
-
         public int? CenterCaratId { get; set; }
 
-        //  If Diamond
         public int? CategoryId { get; set; }
         public int? SubCategoryId { get; set; }
         public int? CaratId { get; set; }
@@ -35,7 +35,8 @@ namespace DataAccess.Entities
         public int? ShapeId { get; set; }
         public int? StyleId { get; set; }       // Style is brands
         public int? CollectionsId { get; set; } // Group of products
-
+        public decimal? DiaWT { get; set; }
+        public string Grades { get; set; }
         public int NoOfStones { get; set; }
         public bool IsActivated { get; set; } = false;
     }

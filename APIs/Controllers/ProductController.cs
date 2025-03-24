@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml;
 using Models;
 using System.IO.Compression;
+using System.Linq;
 
 namespace APIs.Controllers
 {
@@ -32,64 +33,74 @@ namespace APIs.Controllers
             try
             {
                 // Ensure the file is an Excel file
-                if (!file.FileName.EndsWith(".xlsx"))
+                if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
                 {
                     return BadRequest("Invalid file format. Please upload an Excel (.xlsx) file.");
                 }
 
-                // Read the file using EPPlus
                 using (var stream = new MemoryStream())
                 {
-
                     await file.CopyToAsync(stream);
+                    stream.Position = 0; // Reset stream position for reading
+
                     ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
                     using (var package = new ExcelPackage(stream))
                     {
-                        var workbook = package.Workbook;
+                        var worksheet = package.Workbook.Worksheets.FirstOrDefault();
+                        if (worksheet == null) return BadRequest("The Excel file is empty.");
 
-                        var worksheet = workbook.Worksheets[0]; // Assuming you want the first sheet
+                        int rowCount = worksheet.Dimension.Rows;
+                        List<ProductDTO> products = new();
 
-                        var rows = new List<Models.ProductDTO>();
-
-                        // Loop through rows and columns
-                        for (int row = 2; row <= worksheet.Dimension.Rows; row++) // Start at row 2 to skip header
+                        for (int row = 5; row <= rowCount; row++)
                         {
-                            var data = new ProductDTO
+                            var product = new ProductDTO
                             {
-                                VenderName = worksheet.Cells[row, 1].Text,  // Column A
-                                StyleName = worksheet.Cells[row, 2].Text,  // Column A
-                                ProductType = worksheet.Cells[row, 3].Text, // Column B
-                                CategoryName = worksheet.Cells[row,4].Text, // Column C
-                                SubCategoryName = worksheet.Cells[row,5].Text, // Column C
-                                GoldPurity= worksheet.Cells[row, 6].Text,
+                                Id = Guid.NewGuid(),
+                                CategoryName = worksheet.Name,
+                                VenderName = worksheet.Cells[row, 3].Text,
+                                StyleName = worksheet.Cells[row, 4].Text,
+                                Sku = worksheet.Cells[row, 4].Text,
+                                LengthName = worksheet.Cells[row, 5].Text,
+                                GoldPurity = worksheet.Cells[row, 6].Text,
                                 GoldWeight = worksheet.Cells[row, 7].Text,
-                                CTW = worksheet.Cells[row, 8].Text, // Column C
-                                ColorName = worksheet.Cells[row, 9].Text, // Column C
-                                ShapeName = worksheet.Cells[row, 10].Text, // Column C
-                                CaratName = worksheet.Cells[row, 11].Text,
-                                CaratSizeName = worksheet.Cells[row, 12].Text,
-                                ClarityName = worksheet.Cells[row, 13].Text,
-                                Sku = worksheet.Cells[row, 14].Text,
-                                Price = Convert.ToDecimal(worksheet.Cells[row, 15].Text),
-                                UnitPrice = Convert.ToDecimal(worksheet.Cells[row, 16].Text),
-                                Quantity = Convert.ToInt32(worksheet.Cells[row, 17].Text),
-                                Id = Guid.NewGuid()
+                                CTW = worksheet.Cells[row, 8].Text,
+                                CenterShapeName = worksheet.Cells[row, 9].Text,
+                                CenterCaratName = worksheet.Cells[row, 10].Text,
+                                ColorName = worksheet.Cells[row, 11].Text,
+                                ShapeName = worksheet.Cells[row, 12].Text,
+                                CaratSizeName = worksheet.Cells[row, 13].Text,
+                                Grades = worksheet.Cells[row, 16].Text,
+                                WebsiteImagesLink = worksheet.Cells[row, 18].Text
                             };
-                            rows.Add(data);
+
+                            // Convert numeric values safely
+                            if (decimal.TryParse(worksheet.Cells[row, 14].Text, out var diaWt))
+                                product.DiaWT = diaWt;
+
+                            if (int.TryParse(worksheet.Cells[row, 15].Text, out var noOfStones))
+                                product.NoOfStones = noOfStones;
+
+                            if (decimal.TryParse(worksheet.Cells[row, 17].Text, out var price))
+                            {
+                                product.Price = price;
+                                product.UnitPrice = price;
+                            }
+                            products.Add(product);
                         }
 
-                        await _productRepository.SaveProductList(rows);
-
+                        await _productRepository.SaveProductList(products);
                     }
                 }
 
                 return Ok("File uploaded and processed successfully.");
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
 
         [HttpPost("BulkProductCollectionUpload")]
         public async Task<IActionResult> UploadProductCollectionExcel(IFormFile file)
@@ -126,13 +137,15 @@ namespace APIs.Controllers
                         {
                             var data = new ProductDTO
                             {
+                                ProductDate = Convert.ToDateTime(worksheet.Cells[row, 1].Text),
                                 VenderName = worksheet.Cells[row, 3].Text,  // Column A
                                 StyleName = worksheet.Cells[row, 4].Text, // Column B
+                                CategoryName = workbook.Worksheets[0].Name,
                                 GoldPurity = worksheet.Cells[row, 5].Text, // Column C
                                 GoldWeight = worksheet.Cells[row, 6].Text, // Column C
                                 CTW = worksheet.Cells[row, 7].Text, // Column C
-                                CenterShapeName= worksheet.Cells[row,8].Text,
-                                CenterCaratName = worksheet.Cells[row,9].Text,
+                                CenterShapeName = worksheet.Cells[row, 8].Text,
+                                CenterCaratName = worksheet.Cells[row, 9].Text,
                                 ColorName = worksheet.Cells[row, 10].Text,
                                 CaratSizeName = worksheet.Cells[row, 7].Text,
                                 ClarityName = worksheet.Cells[row, 8].Text,
@@ -170,7 +183,7 @@ namespace APIs.Controllers
             if (zipFile == null || zipFile.Length == 0)
                 return BadRequest("No file uploaded.");
 
-            var extractedFolder = Path.Combine("UploadedFiles", "Styles"); 
+            var extractedFolder = Path.Combine("UploadedFiles", "Styles");
             Directory.CreateDirectory(extractedFolder);
 
             var zipPath = Path.Combine(extractedFolder, zipFile.FileName);

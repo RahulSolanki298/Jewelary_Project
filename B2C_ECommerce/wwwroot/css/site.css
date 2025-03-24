@@ -69,3 +69,76 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+.slider-container {
+    position: relative;
+    margin: 20px 0;
+}
+
+.form-range {
+    width: 100%;
+    appearance: none;
+    background: transparent;
+    position: relative;
+    z-index: 1;
+}
+
+    /* Custom Red Thumb */
+    .form-range::-webkit-slider-thumb {
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        background: red;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    .form-range::-moz-range-thumb {
+        width: 18px;
+        height: 18px;
+        background: red;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+/* Tick Marks */
+.slider-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-top: 5px;
+    position: absolute;
+    width: 100%;
+    top: 20px;
+    pointer-events: none;
+}
+
+    .slider-labels span {
+        position: relative;
+        font-weight: bold;
+    }
+
+/* Active Line */
+.slider-track {
+    position: absolute;
+    height: 6px;
+    background: linear-gradient(to right, #ff0000, #ff4d4d);
+    border-radius: 5px;
+    top: 6px;
+    left: 0;
+    right: 0;
+    z-index: 0;
+}
+
+/* Reset Button */
+.reset-btn {
+    cursor: pointer;
+    font-size: 14px;
+    color: red;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+    .reset-btn:hover {
+        text-decoration: underline;
+    }

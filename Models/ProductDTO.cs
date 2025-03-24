@@ -6,6 +6,7 @@ namespace Models
     {
         public Guid Id { get; set; }
 
+        public DateTime ProductDate { get; set; }
         public string VenderId { get; set; }
 
         public string VenderName { get; set; }
@@ -60,6 +61,10 @@ namespace Models
 
         public string ShapeName { get; set; }
 
+        public int? LengthId { get; set; }
+
+        public string LengthName { get; set; }
+
         public int? StyleId { get; set; }       // Style is brands
 
         public string StyleName { get; set; }
@@ -77,6 +82,11 @@ namespace Models
         public string CenterCaratName { get; set; }
 
         public string DefaultImage { get; set; }
+        public int NoOfStones { get; set; }
+        public decimal? DiaWT { get; set; }
+        public string Grades { get; set; }
+
+        public string WebsiteImagesLink { get; set; }
 
         public bool IsActivated { get; set; } = false;
     }

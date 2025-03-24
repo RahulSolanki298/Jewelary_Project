@@ -1,4 +1,7 @@
 ﻿using System.Threading.Tasks;
+using Business.Repository.IRepository;
+using DataAccess.Entities;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APIs.Controllers
@@ -7,18 +10,109 @@ namespace APIs.Controllers
     [ApiController]
     public class DiamondPropertyController : ControllerBase
     {
-        
+        private readonly IDiamondPropertyRepository _diamondProperty;
+        private readonly IWebHostEnvironment _env;
 
-        public DiamondPropertyController()
+        public DiamondPropertyController(IDiamondPropertyRepository diamondProperty, IWebHostEnvironment env)
         {
-
+            _diamondProperty = diamondProperty;
+            _env = env;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetDiamondProperies()
+        #region GET Diamond Properties
+
+        [HttpGet("diamond-property-list")]
+        public async Task<ActionResult> GetDiamondProperies()
         {
-            return Ok();
+            var result = await _diamondProperty.GetAllAsync();
+            return Ok(result);
         }
+
+        [HttpGet("diamond-property/diamond-property-id/{id}")]
+        public async Task<ActionResult> GetDiamondPropery(int id)
+        {
+            var result = await _diamondProperty.GetByIdAsync(id);
+            return Ok(result);
+        }
+
+
+        [HttpGet("diamond-property/get-metal-list")]
+        public async Task<ActionResult> GetDiamondMetal()
+        {
+            var result = await _diamondProperty.GetMetalListAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("diamond-property/get-carat-list")]
+        public async Task<ActionResult> GetDiamondCarat()
+        {
+            var result = await _diamondProperty.GetCaratListAsync();
+            return Ok(result);
+        }
+
+
+        [HttpGet("diamond-property/get-clarity-list")]
+        public async Task<ActionResult> GetClarityListAsync()
+        {
+            var result = await _diamondProperty.GetClarityListAsync();
+            return Ok(result);
+        }
+
+
+
+        [HttpGet("diamond-property/get-shape-list")]
+        public async Task<ActionResult> GetShapeListAsync()
+        {
+            var result = await _diamondProperty.GetShapeListAsync();
+            return Ok(result);
+        }
+
+        #endregion
+
+        [HttpPost("add-diamond-property")]
+        public async Task<ActionResult> AddDiamondProperty([FromForm] DiamondProperty diamondProperty)
+        {
+            try
+            {
+                var result= await _diamondProperty.AddAsync(diamondProperty);
+                return Ok(result);
+            }
+            catch (System.Exception ex)
+            {
+
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpPost("update-diamond-property")]
+        public async Task<ActionResult> UpdateDiamondProperty(DiamondProperty diamondProperty)
+        {
+            try
+            {
+                var result = _diamondProperty.UpdateAsync(diamondProperty);
+                return Ok(result);
+            }
+            catch (System.Exception ex)
+            {
+
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpPost("delete-diamond-property")]
+        public async Task<ActionResult> DeleteDiamondProperty(int id)
+        {
+            try
+            {
+                var result = _diamondProperty.DeleteAsync(id);
+                return Ok(result);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex);
+            }    
+        }
+
 
     }
 }

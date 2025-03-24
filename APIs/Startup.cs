@@ -78,6 +78,7 @@ namespace APIs
             services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
             services.AddScoped<IProductPropertyRepository, ProductPropertyRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IDiamondPropertyRepository, DiamondPropertyRepository>();
 
             services.AddCors(o => o.AddPolicy("AllowAllOrigins", builder =>
             {
