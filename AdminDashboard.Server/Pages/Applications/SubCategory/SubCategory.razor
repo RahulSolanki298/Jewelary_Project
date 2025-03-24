@@ -4,6 +4,7 @@
 @using Business.Repository.IRepository
 
 @inject ISubCategoryRepository _subcategoryRepository
+@inject ICategoryRepositry _categoryRepository
 @inject ISnackbar Snackbar
 
 <MudCard>
@@ -14,9 +15,14 @@
             </CardHeaderContent>
         </MudCardHeader>
         <MudCardContent>
-            <MudText @bind-Value="subCategory.Id" InputType="InputType.Hidden" ></MudText>
-            <MudTextField @bind-Value="subCategory.Name" Placeholder="Please enter subcategory name."></MudTextField>
-            <MudTextField @bind-Value="subCategory.CategoryId" Placeholder="Please enter category no."></MudTextField>
+            <MudText @bind-Value="subCategory.Id" InputType="InputType.Hidden"></MudText>
+            <MudTextField @bind-Value="subCategory.Name" Label="Subcategory Name" Placeholder="Please enter subcategory name." Variant="Variant.Outlined"></MudTextField>
+            <MudSelect @bind-Value="subCategory.CategoryId" Label="Category" Variant="Variant.Outlined">
+                @foreach (var cat in categories)
+                {
+                    <MudSelectItem Value="@cat.Id">@cat.Name</MudSelectItem>
+                }
+            </MudSelect>
             <br/>
             <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="SaveCategory">Save Category</MudButton>
             <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="ClearAll">Clear</MudButton>
@@ -73,18 +79,20 @@
     private int pageSize = 5;
     private MudMessageBox _mudMessageBox;
     private string _state = "";
+    private IEnumerable<DataAccess.Entities.Category> categories = new List<DataAccess.Entities.Category>();
 
     protected override async Task OnInitializedAsync()
     {
         IsLoading = true;
-        await GetCategoryList();
+        await GetSubCategoryList();
+        await GetCategory();
         if (subCategories.Count() == 0)
         {
             IsLoading = false;
         }
     }
 
-    private async Task GetCategoryList()
+    private async Task GetSubCategoryList()
     {
         subCategories = await _subcategoryRepository.GetSubCategoryList();
     }
@@ -104,7 +112,7 @@
         await _subcategoryRepository.SaveSubCategory(subCategory, subCategory.Id);
         subCategory = new DataAccess.Entities.SubCategory();
         Snackbar.Add("Sub Category has been saved successfully.", Severity.Success);
-        await GetCategoryList();
+        await GetSubCategoryList();
     }
 
     private async Task Edit(int id){
@@ -120,7 +128,7 @@
         {
             await _subcategoryRepository.DeleteSubCategoryById(id);
             Snackbar.Add("Subcategory deleted successfully.", Severity.Success);
-            await GetCategoryList();
+            await GetSubCategoryList();
         }
     }
 
@@ -129,4 +137,8 @@
         subCategory = new DataAccess.Entities.SubCategory();
     }
 
+    private async Task GetCategory()
+    {
+        categories = await _categoryRepository.GetCategoryList();
+    }
 }

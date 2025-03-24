@@ -2,67 +2,40 @@
 @page "/pages/authentication/login"
 @layout LoginLayout
 
-@using System.Net.Http
-@using AdminDashboard.Server
-@using AdminDashboard.Server.Service
+@using System.ComponentModel.DataAnnotations
 @using AdminDashboard.Server.Service.IService
-@using Microsoft.JSInterop;
-@using MudBlazor
 @using global::Models
-
 
 @inject IAuthenticationService AdminLoginService
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
 
 
-<MudText Typo="Typo.h4" GutterBottom="true">Sign In</MudText>
+<EditForm Model="@loginModel" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <MudGrid>
+        <MudItem xs="12" sm="12">
+            <MudCard>
+                <MudCardContent>
+                    <MudTextField Label="Email" Class="mt-3"
+                                  @bind-Value="loginModel.UserName" For="@(() => loginModel.UserName)" Variant="Variant.Outlined" />
+                    <MudTextField Label="Password" Class="mt-3"
+                                  @bind-Value="loginModel.Password" For="@(() => loginModel.Password)" InputType="InputType.Password" Variant="Variant.Outlined" />
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Login</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+     </MudGrid>
+</EditForm>
 
-<MudText>Don't have an account? <MudLink Href="/pages/authentication/register">Sign Up</MudLink></MudText>
-
-<MudTextField T="string" @bind-Value="loginModel.UserName" Label="E-mail" Variant="Variant.Outlined" Class="my-6"></MudTextField>
-
-<MudTextField @bind-Value="loginModel.Password" Label="Password" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="TogglePasswordVisibility" />
-
-<div Class="d-flex justify-space-between align-center">
-    <MudCheckBox T="bool" Label="Remember me?" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
-    <MudLink Href="/pages/authentication/forgot-password">Forgot pwd?</MudLink>
-</div>
-
-
-<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@((e)=>HandleClick(e))" Size="Size.Large" FullWidth="true">Sign In</MudButton>
-@* <MudButton Variant="Variant.Filled" Color="Color.Primary" Link="/personal/dashboard" Size="Size.Large" FullWidth="true">Sign In</MudButton> *@
 
 @code {
-    string Password { get; set; }
-    private AdminLoginModel loginModel;
-    bool PasswordVisibility;
-    InputType PasswordInput = InputType.Password;
-    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+    private AdminLoginModel loginModel = new AdminLoginModel();
+    bool success;
 
-    protected override async Task OnInitializedAsync()
-    {
-        loginModel = new AdminLoginModel();
-    }
-
-
-    void TogglePasswordVisibility()
-    {
-        @if (PasswordVisibility)
-        {
-            PasswordVisibility = false;
-            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
-            PasswordInput = InputType.Password;
-        }
-        else
-        {
-            PasswordVisibility = true;
-            PasswordInputIcon = Icons.Material.Filled.Visibility;
-            PasswordInput = InputType.Text;
-        }
-    }
-
-    private async Task HandleClick(MouseEventArgs e)
+    private async Task OnValidSubmit(EditContext context)
     {
         try
         {
@@ -72,16 +45,14 @@
             {
                 await JSRuntime.InvokeVoidAsync("localStorage.setItem", "token", response.Token);
 
+                success = true;
+                StateHasChanged();
                 NavigationManager.NavigateTo("/personal/dashboard");
-            }
-            else
-            {
-
             }
         }
         catch (Exception ex)
         {
-          
+
         }
     }
 }

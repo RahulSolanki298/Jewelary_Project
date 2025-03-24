@@ -11,35 +11,32 @@
 
 
 <MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4">Add / Edit Category</MudText>
-<MudForm @ref="form">
-    <MudCard>
-        <MudCardHeader>
-            <CardHeaderContent>
-                <MudText>Add / Edit Category</MudText>
-            </CardHeaderContent>
-        </MudCardHeader>
-        <MudCardContent>
-            <MudGridItem xs="12" md="12">
-                <MudTextField @bind-Value="category.Name" Label="Category Name" 
-                Variant="Variant.Outlined" InputType="InputType.Text"
-                Required="true" RequiredError="Category Name is required!" />
-            </MudGridItem>
+<MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText>Add / Edit Category</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudForm @ref="form">
+            <MudTextField @bind-Value="category.Name" Label="Category Name"
+                          Variant="Variant.Outlined" InputType="InputType.Text"
+                          Required="true" RequiredError="Category Name is required!" />
 
-            <MudGridItem xs="12" md="12">
-                <MudSelect @bind-Value="category.ProductType" Label="Product Type" Variant="Variant.Outlined" Required="true">
-                    @foreach (var type in productTypes)
-                    {
-                        <MudSelectItem Value="@type">@type</MudSelectItem>
-                    }
-                </MudSelect>
-            </MudGridItem>
-        </MudCardContent>
-        <MudCardActions Class="pb-4 pl-4">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="ValidateAndSave">Save Category</MudButton>
-            <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="GotoCategoryList">Back To </MudButton>
-        </MudCardActions>
-    </MudCard>
-</MudForm>
+            <MudSelect @bind-Value="category.ProductType" Label="Product Type" Variant="Variant.Outlined" Required="true">
+                @foreach (var type in productTypes)
+                {
+                    <MudSelectItem Value="@type">@type</MudSelectItem>
+                }
+            </MudSelect>
+        </MudForm>
+    </MudCardContent>
+    <MudCardActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="ValidateAndSave" Class="me-2">Save</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="GotoCategoryList">Back To List</MudButton>
+    </MudCardActions>
+</MudCard>
+
 
 @code {
     private MudForm form;
@@ -47,7 +44,7 @@
     private bool dense = true;
     private bool isValid;
     private DataAccess.Entities.Category category = new DataAccess.Entities.Category();
-    private List<string> productTypes = new List<string>(){ "Man","Female"};
+    private List<string> productTypes = new List<string>() { "Man", "Female" };
     private IEnumerable<DataAccess.Entities.Category> categories { get; set; } = new List<DataAccess.Entities.Category>();
     private bool IsLoading { get; set; } = false;
     private int currentPage = 0;
@@ -62,9 +59,9 @@
         IsLoading = true;
         if (Id.HasValue && Id > 0)
         {
-           await Edit(Id.Value);
+            await Edit(Id.Value);
         }
-        
+
     }
 
     private async Task ValidateAndSave()

@@ -20,6 +20,7 @@ using AdminDashboard.Server.Service;
 using AdminDashboard.Server.Service.IService;
 using Microsoft.AspNetCore.Components.Authorization;
 using Blazored.LocalStorage;
+using Common;
 
 namespace AdminDashboard.Server
 {
@@ -73,7 +74,7 @@ namespace AdminDashboard.Server
             // Configure HttpClient
             services.AddScoped<HttpClient>(sp => new HttpClient
             {
-                BaseAddress = new Uri("https://localhost:4050/") // Your API base address
+                BaseAddress = new Uri($"{SD.BaseApiUrl}") // Your API base address
             });
         }
 
