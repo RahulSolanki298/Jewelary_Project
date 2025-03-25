@@ -88,7 +88,7 @@ body {
         appearance: none;
         width: 18px;
         height: 18px;
-        background: red;
+        background: #c29958;
         border-radius: 50%;
         cursor: pointer;
     }
@@ -96,49 +96,169 @@ body {
     .form-range::-moz-range-thumb {
         width: 18px;
         height: 18px;
-        background: red;
+        background: #c29958;
         border-radius: 50%;
         cursor: pointer;
     }
 
-/* Tick Marks */
-.slider-labels {
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-    margin-top: 5px;
-    position: absolute;
+    .shape-btn {
+        border: 2px solid transparent;
+        padding: 3px;
+        display: inline-block;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: border-color 0.3s;
+    }
+
+    .shape-btn img {
+        width: 35px; /* Adjust size */
+        height: 30px;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+
+    .shape-btn.selected {
+        border: 2px solid #007bff; /* Outline when selected */
+    }
+
+    .shape-btn:hover {
+         border:2px solid #000000;
+    }
+
+
+    /* header video page */
+
+.video-area 
+{
+    position: relative;
     width: 100%;
-    top: 20px;
-    pointer-events: none;
+    height: 85vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-    .slider-labels span {
-        position: relative;
-        font-weight: bold;
-    }
+.video-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
 
-/* Active Line */
-.slider-track {
+.bg-video {
     position: absolute;
-    height: 6px;
-    background: linear-gradient(to right, #ff0000, #ff4d4d);
-    border-radius: 5px;
-    top: 6px;
+    top: 0;
     left: 0;
-    right: 0;
-    z-index: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(1) contrast(1);
 }
 
-/* Reset Button */
-.reset-btn {
-    cursor: pointer;
-    font-size: 14px;
-    color: red;
+.video-content {
+    position: absolute;
+    top: 50%;
+    left: 75%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #fff;
+    z-index: 2;
+    /*background: rgba(0, 0, 0, 0.3);*/
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.video-title {
+    font-size: 3rem;
     font-weight: bold;
-    text-decoration: none;
 }
 
-    .reset-btn:hover {
-        text-decoration: underline;
+.video-desc {
+    font-size: 1.5rem;
+    margin: 10px 0;
+}
+
+.btn-video {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    background: #ffcc00;
+    color: #000;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+    .video-title {
+        font-size: 2rem;
     }
+
+    .video-desc {
+        font-size: 1rem;
+    }
+
+    .btn-video {
+        font-size: 1rem;
+        padding: 8px 16px;
+    }
+}
+
+.down-arrow {
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 2;
+    padding: 3px;
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    background-color: transparent;
+    animation: bounce 1s infinite, pulse 2s infinite;
+}
+
+    .down-arrow::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%) rotate(45deg);
+        width: 0;
+        height: 0;
+        border-left: 20px solid transparent;
+        border-right: 20px solid transparent;
+        border-top: 20px solid transparent;
+        border-bottom: 20px solid transparent;
+        border-left-color: #c29958; /* Orange */
+        border-right-color: #fff;
+        border-top-color: #c29958;
+        border-bottom-color: #fff;
+    }
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-10px);
+    }
+
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: translateX(-50%) scale(1);
+    }
+
+    50% {
+        transform: translateX(-50%) scale(1.2);
+    }
+}

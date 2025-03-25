@@ -26,73 +26,89 @@ namespace APIs.Controllers
         public async Task<IActionResult> UploadExcel(IFormFile file)
         {
             if (file == null || file.Length == 0)
-            {
                 return BadRequest("No file uploaded.");
-            }
+
+            if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
+                return BadRequest("Invalid file format. Please upload an Excel (.xlsx) file.");
 
             try
             {
-                // Ensure the file is an Excel file
-                if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
-                {
-                    return BadRequest("Invalid file format. Please upload an Excel (.xlsx) file.");
-                }
+                using var stream = new MemoryStream();
+                await file.CopyToAsync(stream);
 
-                using (var stream = new MemoryStream())
-                {
-                    await file.CopyToAsync(stream);
-                    stream.Position = 0; // Reset stream position for reading
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                using var package = new ExcelPackage(stream);
+                var worksheet = package.Workbook.Worksheets.FirstOrDefault();
+                if (worksheet == null)
+                    return BadRequest("The Excel file is empty.");
 
-                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-                    using (var package = new ExcelPackage(stream))
+                int rowCount = worksheet.Dimension.Rows;
+                List<ProductDTO> products = new();
+
+                for (int row = 5; row <= rowCount; row++)
+                {
+                    var product = new ProductDTO
                     {
-                        var worksheet = package.Workbook.Worksheets.FirstOrDefault();
-                        if (worksheet == null) return BadRequest("The Excel file is empty.");
+                        Id = Guid.NewGuid(),
+                        CategoryName = worksheet.Name,
+                        VenderName = worksheet.Cells[row, 3].Text,
+                        StyleName = worksheet.Cells[row, 4].Text,
+                        Sku = worksheet.Cells[row, 4].Text,
+                        LengthName = worksheet.Cells[row, 5].Text,
+                        GoldPurity = worksheet.Cells[row, 6].Text,
+                        GoldWeight = worksheet.Cells[row, 7].Text,
+                        CTW = worksheet.Cells[row, 8].Text,
+                        CenterShapeName = worksheet.Cells[row, 9].Text,
+                        CenterCaratName = worksheet.Cells[row, 10].Text,
+                        ColorName = worksheet.Cells[row, 11].Text,
+                        ShapeName = worksheet.Cells[row, 12].Text,
+                        CaratSizeName = worksheet.Cells[row, 13].Text,
+                        Grades = worksheet.Cells[row, 16].Text,
+                        WebsiteImagesLink = worksheet.Cells[row, 18].Text
+                    };
 
-                        int rowCount = worksheet.Dimension.Rows;
-                        List<ProductDTO> products = new();
+                    // Convert numeric values safely
+                    product.DiaWT = decimal.TryParse(worksheet.Cells[row, 14].Text, out var diaWt) ? diaWt : 0;
+                    product.NoOfStones = int.TryParse(worksheet.Cells[row, 15].Text, out var noOfStones) ? noOfStones : 0;
+                    product.Price = decimal.TryParse(worksheet.Cells[row, 17].Text, out var price) ? price : 0;
+                    product.UnitPrice = product.Price;
 
-                        for (int row = 5; row <= rowCount; row++)
+                    // Handling multiple metal colors
+                    var productMetals = product.ColorName.Split(",");
+                    if (productMetals.Length > 0)
+                    {
+                        string carat = productMetals[0]; // Store carat separately
+                        foreach (var metal in productMetals.Skip(1)) // Skip first item (carat)
                         {
-                            var product = new ProductDTO
+                            products.Add(new ProductDTO
                             {
-                                Id = Guid.NewGuid(),
-                                CategoryName = worksheet.Name,
-                                VenderName = worksheet.Cells[row, 3].Text,
-                                StyleName = worksheet.Cells[row, 4].Text,
-                                Sku = worksheet.Cells[row, 4].Text,
-                                LengthName = worksheet.Cells[row, 5].Text,
-                                GoldPurity = worksheet.Cells[row, 6].Text,
-                                GoldWeight = worksheet.Cells[row, 7].Text,
-                                CTW = worksheet.Cells[row, 8].Text,
-                                CenterShapeName = worksheet.Cells[row, 9].Text,
-                                CenterCaratName = worksheet.Cells[row, 10].Text,
-                                ColorName = worksheet.Cells[row, 11].Text,
-                                ShapeName = worksheet.Cells[row, 12].Text,
-                                CaratSizeName = worksheet.Cells[row, 13].Text,
-                                Grades = worksheet.Cells[row, 16].Text,
-                                WebsiteImagesLink = worksheet.Cells[row, 18].Text
-                            };
-
-                            // Convert numeric values safely
-                            if (decimal.TryParse(worksheet.Cells[row, 14].Text, out var diaWt))
-                                product.DiaWT = diaWt;
-
-                            if (int.TryParse(worksheet.Cells[row, 15].Text, out var noOfStones))
-                                product.NoOfStones = noOfStones;
-
-                            if (decimal.TryParse(worksheet.Cells[row, 17].Text, out var price))
-                            {
-                                product.Price = price;
-                                product.UnitPrice = price;
-                            }
-                            products.Add(product);
+                                Id = product.Id,
+                                CategoryName = product.CategoryName,
+                                VenderName = product.VenderName,
+                                StyleName = product.StyleName,
+                                Sku = product.Sku,
+                                LengthName = product.LengthName,
+                                GoldPurity = product.GoldPurity,
+                                GoldWeight = product.GoldWeight,
+                                CTW = product.CTW,
+                                CenterShapeName = product.CenterShapeName,
+                                CenterCaratName = product.CenterCaratName,
+                                CaratSizeName = product.CaratSizeName,
+                                ShapeName = product.ShapeName,
+                                Grades = product.Grades,
+                                WebsiteImagesLink = product.WebsiteImagesLink,
+                                DiaWT = product.DiaWT,
+                                NoOfStones = product.NoOfStones,
+                                Price = product.Price,
+                                UnitPrice = product.UnitPrice,
+                                CaratName = carat,
+                                ColorName = metal.Trim()
+                            });
                         }
-
-                        await _productRepository.SaveProductList(products);
                     }
                 }
 
+                await _productRepository.SaveProductList(products);
                 return Ok("File uploaded and processed successfully.");
             }
             catch (Exception ex)
@@ -100,6 +116,7 @@ namespace APIs.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
 
 
         [HttpPost("BulkProductCollectionUpload")]
