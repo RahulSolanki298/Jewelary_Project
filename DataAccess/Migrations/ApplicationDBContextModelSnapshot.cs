@@ -769,8 +769,8 @@ namespace DataAccess.Migrations
                     b.Property<bool>("IsActivated")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("LengthId")
-                        .HasColumnType("int");
+                    b.Property<string>("Length")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NoOfStones")
                         .HasColumnType("int");

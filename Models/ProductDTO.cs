@@ -61,9 +61,7 @@ namespace Models
 
         public string ShapeName { get; set; }
 
-        public int? LengthId { get; set; }
-
-        public string LengthName { get; set; }
+        public string Length { get; set; }
 
         public int? StyleId { get; set; }       // Style is brands
 

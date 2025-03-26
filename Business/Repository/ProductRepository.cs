@@ -27,8 +27,8 @@ namespace Business.Repository
                 // Step 0: Initilize veriable
                 var newProduct = new Product();
                 var existingProduct = new Product();
-                int styleId = 0; 
-                
+                int styleId = 0;
+
                 var styleDT = new ProductStyles();
 
                 // Step 1: Fetch all related entities in bulk to avoid repeated database calls
@@ -105,8 +105,7 @@ namespace Business.Repository
                     #endregion
 
                     existingProduct = await _context.Product
-                        .Where(x => x.ProductType == product.ProductType
-                                    && x.CategoryId == categoryId
+                        .Where(x => x.CategoryId == categoryId
                                     && x.Sku == product.Sku)
                         .FirstOrDefaultAsync();
 
@@ -134,6 +133,7 @@ namespace Business.Repository
                             CaratSizeId = caratSizeId,
                             CaratId = caratId,
                             ClarityId = clarityId,
+                            Length = product.Length,
                             ColorId = colorId,
                             Description = product.Description,
                             IsActivated = product.IsActivated,
@@ -145,11 +145,12 @@ namespace Business.Repository
                             Quantity = product.Quantity,
                             ProductType = product.ProductType,
                             ShapeId = shapeId,
-                            Id = product.Id
+                            Id = Guid.NewGuid()
                         };
 
                         productList.Add(newProduct);
                     }
+
                 }
 
                 // Step 4: Bulk insert new products and update existing products
@@ -518,7 +519,7 @@ namespace Business.Repository
             return result;
         }
 
-        
+
 
         public string ExtractStyleName(string fileName)
         {

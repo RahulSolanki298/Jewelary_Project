@@ -18,7 +18,7 @@ namespace DataAccess.Entities
         public string ProductType { get; set; } // Diamond, Gold
 
         // If Gold
-        public int? LengthId { get; set; }
+        public string Length { get; set; }
         public int? GoldPurityId { get; set; } // 18 k
         public int? GoldWeightId { get; set; } // 3.00 GMS
 

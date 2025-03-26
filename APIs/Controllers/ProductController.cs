@@ -54,7 +54,7 @@ namespace APIs.Controllers
                         VenderName = worksheet.Cells[row, 3].Text,
                         StyleName = worksheet.Cells[row, 4].Text,
                         Sku = worksheet.Cells[row, 4].Text,
-                        LengthName = worksheet.Cells[row, 5].Text,
+                        Length = worksheet.Cells[row, 5].Text,
                         GoldPurity = worksheet.Cells[row, 6].Text,
                         GoldWeight = worksheet.Cells[row, 7].Text,
                         CTW = worksheet.Cells[row, 8].Text,
@@ -87,7 +87,7 @@ namespace APIs.Controllers
                                 VenderName = product.VenderName,
                                 StyleName = product.StyleName,
                                 Sku = product.Sku,
-                                LengthName = product.LengthName,
+                                Length = product.Length,
                                 GoldPurity = product.GoldPurity,
                                 GoldWeight = product.GoldWeight,
                                 CTW = product.CTW,
@@ -193,10 +193,6 @@ namespace APIs.Controllers
         [HttpPost("BulkProductImagesUpload")]
         public async Task<IActionResult> UploadProductImages(IFormFile zipFile)
         {
-            string fileName = string.Empty;
-            string[] fileNameParts;
-            string productType, category, color, shape, indexNumber, ext, style, skuNumber;
-
             if (zipFile == null || zipFile.Length == 0)
                 return BadRequest("No file uploaded.");
 
@@ -245,10 +241,6 @@ namespace APIs.Controllers
         [HttpPost("BulkProductCollectionImagesUpload")]
         public async Task<IActionResult> UploadProductCollectionImages(IFormFile zipFile)
         {
-            string fileName = string.Empty;
-            string[] fileNameParts;
-            string productType, category, color, shape, indexNumber, ext, style, skuNumber;
-
             if (zipFile == null || zipFile.Length == 0)
                 return BadRequest("No file uploaded.");
 
