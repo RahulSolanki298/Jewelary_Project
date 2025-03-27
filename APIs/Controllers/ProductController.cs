@@ -286,7 +286,7 @@ namespace APIs.Controllers
         [HttpPost("GetProductDetailsList")]
         public async Task<IActionResult> GetProductDetailsList()
         {
-            var result = await _productRepository.GetProductCollectionList();
+            var result = await _productRepository.GetProductStyleList();
 
             return Ok(result);
         }

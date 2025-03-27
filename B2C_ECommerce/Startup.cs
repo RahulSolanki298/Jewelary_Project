@@ -3,6 +3,7 @@ using B2C_ECommerce.IServices;
 using B2C_ECommerce.Services;
 using Business.Repository;
 using Business.Repository.IRepository;
+using Common;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -27,7 +28,7 @@ namespace B2C_ECommerce
             services.AddControllersWithViews();
             services.AddHttpClient("API", client =>
             {
-                client.BaseAddress = new Uri("https://localhost:4050"); 
+                client.BaseAddress = new Uri(SD.BaseApiUrl); 
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
             });
             services.AddScoped<IAccountService, AccountService>();

@@ -48,11 +48,12 @@
         public static string InTransit = "InTransit";
         public static string OutForDelivery = "OutForDelivery";
         public static string Delivered = "Delivered";
+        public static string Complated = "Complated";
         public static string Cancelled = "Cancelled";
         public static string Returned = "Returned";
         public static string Refunded = "Refunded";
 
-        public static string BaseApiUrl = "https://localhost:4050"; // https://jswebapi.com
+        public static string BaseApiUrl = "https://localhost:44302"; // https://jswebapi.com
 
 
     }

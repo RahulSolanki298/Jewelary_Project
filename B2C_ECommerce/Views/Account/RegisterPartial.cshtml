@@ -2,66 +2,65 @@
 
 <div class="login-reg-form-wrap sign-up-form">
     <h5>Signup Form</h5>
-    <form id="signupForm" asp-action="RegisterProcess" method="post">
+    <form id="signupForm">
         
         <!-- First Name -->
         <div class="single-input-item">
-            <label for="FirstName">First Name</label>
-            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = "Enter your first name" })
-            @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
+            <label asp-for="FirstName"></label>
+            <input asp-for="FirstName" class="form-control" placeholder="Enter your first name" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
         </div>
 
         <!-- Middle Name -->
         <div class="single-input-item">
-            <label for="MiddleName">Middle Name (Optional)</label>
-            @Html.TextBoxFor(m => m.MiddleName, new { @class = "form-control", placeholder = "Enter your middle name" })
+            <label asp-for="MiddleName"></label>
+            <input asp-for="MiddleName" class="form-control" placeholder="Enter your middle name" />
         </div>
 
         <!-- Last Name -->
         <div class="single-input-item">
-            <label for="LastName">Last Name</label>
-            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "Enter your last name" })
-            @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
+            <label asp-for="LastName"></label>
+            <input asp-for="LastName" class="form-control" placeholder="Enter your last name" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
         </div>
 
         <!-- Gender -->
         <div class="single-input-item">
-            <label for="Gender">Gender</label>
-            @Html.DropDownListFor(m => m.Gender, new List<SelectListItem>
-            {
-                new SelectListItem { Text = "Male", Value = "Male" },
-                new SelectListItem { Text = "Female", Value = "Female" },
-                new SelectListItem { Text = "Other", Value = "Other" }
-            }, "-- Select Gender --", new { @class = "form-control" })
+            <label asp-for="Gender"></label>
+            <select asp-for="Gender" class="form-control">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="">-- Select Gender --</option>
+            </select>
         </div>
 
         <!-- Phone Number -->
         <div class="single-input-item">
-            <label for="PhoneNumber">Phone Number</label>
-            @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", placeholder = "Enter your phone number" })
+            <label asp-for="PhoneNumber"></label>
+            <input asp-for="PhoneNumber" class="form-control" placeholder="Enter your phone number" />
         </div>
 
         <!-- Email -->
         <div class="single-input-item">
-            <label for="EmailId">Email</label>
-            @Html.TextBoxFor(m => m.EmailId, new { @class = "form-control", placeholder = "Enter your Email" })
-            @Html.ValidationMessageFor(m => m.EmailId, "", new { @class = "text-danger" })
+            <label asp-for="EmailId"></label>
+            <input asp-for="EmailId" class="form-control" placeholder="Enter your Email" />
+            <span asp-validation-for="EmailId" class="text-danger"></span>
         </div>
 
         <!-- Password -->
         <div class="row">
             <div class="col-lg-6">
                 <div class="single-input-item">
-                    <label for="TextPassword">Password</label>
-                    @Html.PasswordFor(m => m.TextPassword, new { @class = "form-control", placeholder = "Enter your Password" })
-                    @Html.ValidationMessageFor(m => m.TextPassword, "", new { @class = "text-danger" })
+                    <label asp-for="TextPassword"></label>
+                    <input asp-for="TextPassword" type="password" class="form-control" placeholder="Enter your Password" />
+                    <span asp-validation-for="TextPassword" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-lg-6">
                 <div class="single-input-item">
-                    <label for="ConfirmPassword">Confirm Password</label>
-                    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Repeat your Password" })
-                    @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
+                    <label asp-for="ConfirmPassword"></label>
+                    <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Repeat your Password" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                 </div>
             </div>
         </div>
@@ -71,4 +70,5 @@
         </div>
     </form>
 </div>
+
 

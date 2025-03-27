@@ -57,5 +57,12 @@ namespace APIs.Controllers
             }
         }
 
+        [HttpPost("Order-Request-List")]
+        [AllowAnonymous]
+        public async Task<ActionResult> GetOrderRequestListAsync()
+        {
+            return Ok();
+        }
+
     }
 }

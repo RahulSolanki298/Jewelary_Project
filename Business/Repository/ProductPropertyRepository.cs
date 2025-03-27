@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Business.Repository.IRepository;
 using DataAccess.Data;
@@ -16,8 +17,11 @@ namespace Business.Repository
             _context = context;
         }
 
+        public async Task<IEnumerable<ProductProperty>> GetMainPropertyList() => await _context.ProductProperty.Where(x=>x.ParentId == null).ToListAsync();
         public async Task<IEnumerable<ProductProperty>> GetProductPropertyList() => await _context.ProductProperty.ToListAsync();
+
         public async Task<ProductProperty> GetProductPropertyById(int Id) => await _context.ProductProperty.FirstOrDefaultAsync(x=>x.Id==Id);
+        
         public async Task<bool> DeleteProductProperty(int Id)
         {
             try

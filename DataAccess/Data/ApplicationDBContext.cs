@@ -24,6 +24,12 @@ namespace DataAccess.Data
 
         public DbSet<Category> Category { get; set; }
 
+        public DbSet<CustomerOrders> CustomerOrders { get; set; }
+
+        public DbSet<CustomerOrderItems> CustomerOrderItems { get; set; }
+
+        public DbSet<CustomerOrderStatus> CustomerOrderStatus { get; set; }
+
         public DbSet<SubCategory> SubCategory { get; set; }
 
         public DbSet<ProductCollections> ProductCollections { get; set; }

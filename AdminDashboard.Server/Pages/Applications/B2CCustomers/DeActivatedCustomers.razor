@@ -17,7 +17,6 @@
 	</ToolBarContent>
 	<HeaderContent>
 		<MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.FirstName)" InitialDirection="SortDirection.Ascending">First Name</MudTableSortLabel></MudTh>
-		<MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.MiddleName)">Middle Name</MudTableSortLabel></MudTh>
 		<MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.LastName)">Last Name</MudTableSortLabel></MudTh>
 		<MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.Email)">Email Id</MudTableSortLabel></MudTh>
 		<MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.PhoneNumber)">Phone Number</MudTableSortLabel></MudTh>
@@ -28,7 +27,6 @@
 	</HeaderContent>
 	<RowTemplate>
 		<MudTd DataLabel="Name">@context.FirstName</MudTd>
-		<MudTd DataLabel="Category">@context.MiddleName</MudTd>
 		<MudTd DataLabel="Carat">@context.LastName</MudTd>
 		<MudTd DataLabel="Clarity">@context.Email</MudTd>
 		<MudTd DataLabel="Color">@context.PhoneNumber</MudTd>

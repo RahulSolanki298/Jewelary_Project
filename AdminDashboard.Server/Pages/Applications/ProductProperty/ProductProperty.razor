@@ -4,6 +4,7 @@
 @using Business.Repository.IRepository
 
 @inject IProductPropertyRepository _productPropertyRepo
+@inject ICategoryRepositry _categoryRepository
 @inject ISnackbar Snackbar
 
 <MudCard>
@@ -16,8 +17,12 @@
         <MudCardContent>
             <MudText @bind-Value="productProperty.Id" InputType="InputType.Hidden" ></MudText>
             <MudTextField @bind-Value="productProperty.Name" Placeholder="Please enter product property type."></MudTextField>
-            <MudTextField @bind-Value="productProperty.CategoryId" Placeholder="Please enter category no."></MudTextField>
-
+            <MudSelect @bind-Value="productProperty.CategoryId" Label="CategoryId" Variant="Variant.Outlined">
+                @foreach (var cat in Categories)
+                {
+                    <MudSelectItem Value="@cat.Id">@cat.Name</MudSelectItem>
+                }
+            </MudSelect>
             <MudTextField @bind-Value="productProperty.ParentId" Placeholder="Please enter parent id."></MudTextField>
             <MudTextField @bind-Value="productProperty.Description" Placeholder="Please enter description."></MudTextField>
             <br/>
@@ -71,8 +76,10 @@
     private bool hower = true;
     private bool dense = true;
     private string searchstring = "";
+    private IEnumerable<DataAccess.Entities.Category> Categories { get; set; } = new List<DataAccess.Entities.Category>();
     private DataAccess.Entities.ProductProperty productProperty = new DataAccess.Entities.ProductProperty();
     private IEnumerable<DataAccess.Entities.ProductProperty> productPropertyList { get; set; } = new List<DataAccess.Entities.ProductProperty>();
+    private IEnumerable<DataAccess.Entities.ProductProperty> parentPropertyList { get; set; } = new List<DataAccess.Entities.ProductProperty>();
     private bool IsLoading { get; set; } = false;
     private int currentPage = 0;
     private int pageSize = 5;
@@ -82,6 +89,8 @@
     protected override async Task OnInitializedAsync()
     {
         IsLoading = true;
+        await GetParentDropDownList();
+        await GetCategoryList();
         await GetProductPropertyList();
         if (productPropertyList.Count() == 0)
         {
@@ -136,8 +145,17 @@
         productProperty = new DataAccess.Entities.ProductProperty();
     }
 
-    private void GetParentDropDownList(){
+    private async Task GetParentDropDownList()
+    {
+        parentPropertyList = await _productPropertyRepo.GetMainPropertyList();
+        StateHasChanged(); // Ensure UI updates after data is fetched
+    }
 
+
+    private async Task GetCategoryList()
+    {
+        Categories = await _categoryRepository.GetCategoryList();
+        StateHasChanged();
     }
 
 }

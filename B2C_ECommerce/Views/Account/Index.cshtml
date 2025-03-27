@@ -62,8 +62,71 @@
 @section Scripts {
 	<script type="text/javascript">
 		$(document).ready(function(){
+			$("#frmRegister #signupForm").on("click","#btnSubmit",function(){
+				if ($("#signupForm").valid()) {
+				$("#btnSubmit").prop("disabled", true).text("Processing...");
 
+				var formData = {
+					FirstName: $("#FirstName").val(),
+					MiddleName: $("#MiddleName").val(),
+					LastName: $("#LastName").val(),
+					Gender: $("#Gender").val(),
+					PhoneNumber: $("#PhoneNumber").val(),
+					EmailId: $("#EmailId").val(),
+					TextPassword: $("#TextPassword").val(),
+					ConfirmPassword: $("#ConfirmPassword").val()
+				};
+
+				$.ajax({
+					type: "POST",
+					url: "/api/auth/register", // Change to your API URL
+					contentType: "application/json",
+					data: JSON.stringify(formData),
+					success: function (response) {
+						alert("Registration Successful!");
+						$("#signupForm")[0].reset();
+					},
+					error: function (xhr) {
+						$("#btnSubmit").prop("disabled", false).text("Register");
+
+						var errors = xhr.responseJSON.errors;
+						if (errors) {
+							$.each(errors, function (key, value) {
+								$("#" + key + "Error").html(value);
+							});
+						} else {
+							alert("An error occurred while processing your request.");
+						}
+					}
+				});
+			}
+
+			});
+
+			$("#frmRegister #signupForm").validate({
+			rules: {
+				FirstName: { required: true },
+				LastName: { required: true },
+				Gender: { required: true },
+				PhoneNumber: { required: true, digits: true, minlength: 10 },
+				EmailId: { required: true, email: true },
+				TextPassword: { required: true, minlength: 6 },
+				ConfirmPassword: { required: true, equalTo: "#TextPassword" }
+			},
+			messages: {
+				FirstName: { required: "First Name is required" },
+				LastName: { required: "Last Name is required" },
+				Gender: { required: "Please select a gender" },
+				PhoneNumber: { required: "Phone Number is required", digits: "Enter a valid phone number", minlength: "Enter at least 10 digits" },
+				EmailId: { required: "Email is required", email: "Enter a valid email" },
+				TextPassword: { required: "Password is required", minlength: "Password must be at least 6 characters" },
+				ConfirmPassword: { required: "Confirm Password is required", equalTo: "Passwords do not match" }
+			},
+			errorPlacement: function (error, element) {
+				var id = element.attr("id") + "Error";
+				$("#" + id).html(error);
+			}
 		});
-
+		});
 	</script>
 }
