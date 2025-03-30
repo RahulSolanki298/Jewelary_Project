@@ -25,7 +25,7 @@ namespace B2C_ECommerce
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpClient();
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddHttpClient("API", client =>
             {
                 client.BaseAddress = new Uri(SD.BaseApiUrl); 
