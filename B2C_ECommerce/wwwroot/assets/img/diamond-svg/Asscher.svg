@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="34px" height="32px" viewBox="0 0 34 32" version="1.1">
+  <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+  <title>Asscher</title>
+  <desc>Created with Sketch.</desc>
+  <defs></defs>
+  <g id="Ring-Builder" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linejoin="round">
+      <g id="Step-2-(Filter-View)" transform="translate(-532.000000, -281.000000)" stroke="#A3A3A3" stroke-width="0.5">
+          <g id="Filter-By-Shape">
+              <g id="Group-10" transform="translate(475.000000, 123.000000)">
+                  <g id="Shapes" transform="translate(36.000000, 80.000000)">
+                      <g id="Asscher" transform="translate(0.000000, 67.000000)">
+                          <g id="Page-1" transform="translate(22.000000, 11.000000)">
+                              <polygon id="Stroke-1" points="7.15711045 0.687808955 0.210722388 7.51909254 0.210722388 24.4222567 7.15711045 31.6007642 24.4657672 31.6007642 31.8754388 24.7699582 31.8754388 7.69246567 24.812991 0.687808955"></polygon>
+                              <polygon id="Stroke-3" points="11.4920119 8.57351642 8.08329552 12.0629493 8.08329552 20.6976955 11.4920119 24.3648 19.9849075 24.3648 23.6209672 20.8753672 23.6209672 12.1513075 20.1554149 8.57351642"></polygon>
+                              <g id="Group-20" transform="translate(0.000000, 0.288669)">
+                                  <path d="M7.15711045,0.399140299 L11.4919164,8.28499104" id="Stroke-4"></path>
+                                  <path d="M0.210531343,7.2302806 L8.08300896,11.7742806" id="Stroke-6"></path>
+                                  <path d="M0.210531343,24.1337313 L8.08300896,20.4088358" id="Stroke-8"></path>
+                                  <path d="M11.4920119,24.0758925 L7.15720597,31.3117134" id="Stroke-10"></path>
+                                  <path d="M23.6209672,11.8627343 L31.8755343,7.40374925" id="Stroke-18"></path>
+                                  <polygon id="Stroke-21" points="9.32456119 4.34225672 22.484203 4.34225672 27.7484418 9.50237612 27.7484418 22.5340179 22.484203 28.1120478 8.95536716 28.1120478 3.85733731 22.5340179 3.85733731 9.31419701"></polygon>
+                                  <polygon id="Stroke-22" points="10.4710209 6.42760597 21.1752597 6.42760597 25.6337672 10.7757851 25.6337672 21.4422925 21.0138269 25.7374567 10.601409 25.7374567 6.12045373 21.3376955 6.12045373 10.7614567"></polygon>
+                                  <path d="M19.985003,24.0758925 L24.4659582,31.3117134" id="Stroke-12"></path>
+                                  <path d="M31.8756299,24.4812418 L23.6210627,20.586794" id="Stroke-14"></path>
+                                  <path d="M20.1554627,8.28484776 L24.8131343,0.398997015" id="Stroke-16"></path>
+                              </g>
+                          </g>
+                      </g>
+                  </g>
+              </g>
+          </g>
+      </g>
+  </g>
+</svg>

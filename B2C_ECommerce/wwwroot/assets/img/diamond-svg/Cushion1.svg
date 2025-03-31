@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW 2021 (64-Bit) -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="12.3847mm" height="16.8476mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 2664.06 3624.07"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .str0 {stroke:black;stroke-width:72.86;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:22.9256}
+    .fil0 {fill:none}
+   ]]>
+  </style>
+ </defs>
+ <g id="Layer_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <g id="_2268952684720">
+   <path class="fil0 str0" d="M1310.53 36.44l-398.17 0c-544.16,8.56 -813.37,415.1 -868.55,1131.45l-7.38 620.44 0 676.84c18.16,844.6 474.17,1179.77 1274.09,1114.87 459.17,27.75 806.94,-70.92 1030.5,-310.47 164.45,-176.26 261.74,-428.8 286.61,-763.44l-3.18 -677.98 0 -637.07c-73.18,-687.42 -349.27,-1094.26 -875.97,-1154.64l-437.96 0z"/>
+   <polygon class="fil0 str0" points="514.24,2584.62 2341.03,3269.57 1828.15,1828.15 2342.26,359.75 1708.7,514.24 1310.53,673.46 912.36,832.75 554.01,1031.81 36.91,1750.47 "/>
+   <polygon class="fil0 str0" points="912.36,3102.24 315.11,3221.69 549.13,2597.66 792.91,1867.94 537.13,1055.37 315.11,354.95 952.18,554.01 1310.53,673.46 1708.7,872.57 2113.08,1014.18 2624.46,1828.15 2067.05,2624.46 1748.49,2743.91 1343.44,2895.52 "/>
+   <polygon class="fil0 str0" points="1708.7,3062.42 1838.97,1797.17 1741.52,884.1 1741.52,547.11 1310.53,36.44 920.86,522.65 878.98,851.32 792.91,1788.33 885.37,2723.73 912.36,3102.24 1310.53,3541.62 "/>
+   <line class="fil0 str0" x1="1708.7" y1="3062.42" x2="1863.23" y2= "3538.98" />
+   <line class="fil0 str0" x1="912.36" y1="3142.08" x2="769.06" y2= "3550.27" />
+   <line class="fil0 str0" x1="47.39" y1="2642.34" x2="549.13" y2= "2597.66" />
+   <line class="fil0 str0" x1="76.23" y1="992.02" x2="554.01" y2= "1015.4" />
+   <line class="fil0 str0" x1="787.26" y1="46.03" x2="920.86" y2= "522.65" />
+   <line class="fil0 str0" x1="1902.56" y1="65.82" x2="1708.7" y2= "514.24" />
+   <line class="fil0 str0" x1="2596.15" y1="992.11" x2="2120.85" y2= "992.11" />
+   <line class="fil0 str0" x1="2584.62" y1="2664.3" x2="2096.5" y2= "2582.32" />
+  </g>
+ </g>
+</svg>

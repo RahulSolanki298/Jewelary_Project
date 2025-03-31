@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="33px" height="33px" viewBox="0 0 33 33" version="1.1" style="overflow:visible;">
+  <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+  <title>Round</title>
+  <desc>Created with Sketch.</desc>
+  <g id="Ring-Builder" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+      <g id="Step-2-(Filter-View)" transform="translate(-532.000000, -213.000000)" stroke="#A3A3A3" stroke-width="0.5">
+          <g id="Filter-By-Shape">
+              <g id="Group-10" transform="translate(475.000000, 123.000000)">
+                  <g id="Shapes" transform="translate(36.000000, 80.000000)">
+                      <g id="Round">
+                          <g id="Page-1" transform="translate(22.000000, 11.000000)">
+                              <path d="M31.3562057,15.7787886 C31.3562057,24.38176 24.3820343,31.3563886 15.7786057,31.3563886 C7.17563429,31.3563886 0.201462857,24.38176 0.201462857,15.7787886 C0.201462857,7.17581714 7.17563429,0.201188571 15.7786057,0.201188571 C24.3820343,0.201188571 31.3562057,7.17581714 31.3562057,15.7787886 Z" id="Stroke-1" stroke="#A3A3A3" stroke-width="0.5" stroke-linejoin="round"></path>
+                              <polygon id="Stroke-3" stroke="#A3A3A3" stroke-width="0.5" stroke-linejoin="round" mask="url(#mask-2)" points="7.11497143 24.1898514 24.4425143 24.1898514 24.4425143 7.36836571 7.11497143 7.36836571"></polygon>
+                              <polygon id="Stroke-5" stroke="#A3A3A3" stroke-width="0.5" stroke-linejoin="round" mask="url(#mask-2)" points="27.8524343 15.5997714 15.5996343 27.8525714 3.70523429 15.9577143 15.9575771 3.70491429"></polygon>
+                              <polyline id="Stroke-6" stroke="#A3A3A3" stroke-width="0.5" stroke-linejoin="round" mask="url(#mask-2)" points="15.95776 0.201325714 15.95776 3.70532571 9.22678857 1.64544 7.11478857 7.36795429 4.57444571 4.96155429"></polyline>
+                              <polyline id="Stroke-7" stroke="#A3A3A3" stroke-width="0.5" stroke-linejoin="round" mask="url(#mask-2)" points="15.95776 3.70514286 21.92256 1.46148571 24.4427886 7.36822857 27.05216 5.03451429"></polyline>
+                              <polyline id="Stroke-8" stroke="#A3A3A3" stroke-width="0.5" stroke-linejoin="round" mask="url(#mask-2)" points="7.11492571 7.36809143 1.12132571 10.4944914 3.70509714 15.9578057 0.201097143 15.9578057"></polyline>
+                              <polyline id="Stroke-9" stroke="#A3A3A3" stroke-width="0.5" stroke-linejoin="round" mask="url(#mask-2)" points="24.4426057 7.36809143 30.4202057 10.4510629 27.8524343 15.5998629 31.3564343 15.5998629"></polyline>
+                              <polyline id="Stroke-10" stroke="#A3A3A3" stroke-width="0.5" stroke-linejoin="round" mask="url(#mask-2)" points="27.8524343 15.5997714 29.9904914 22.1643429 24.4426057 24.1899429 26.5770057 27.0050286"></polyline>
+                              <polyline id="Stroke-11" stroke="#A3A3A3" stroke-width="0.5" stroke-linejoin="round" mask="url(#mask-2)" points="3.70509714 15.9578057 1.30692571 21.5536914 7.11492571 24.1895771 4.82189714 26.8506057"></polyline>
+                              <polyline id="Stroke-12" stroke="#A3A3A3" stroke-width="0.5" stroke-linejoin="round" mask="url(#mask-2)" points="7.11492571 24.18976 10.0264686 30.2583314 15.5999543 27.8523886 15.5999543 31.3563886"></polyline>
+                              <polyline id="Stroke-13" stroke="#A3A3A3" stroke-width="0.5" stroke-linejoin="round" mask="url(#mask-2)" points="15.5997257 27.85248 21.9224686 30.0975086 24.4426971 24.1898514"></polyline>
+                          </g>
+                      </g>
+                  </g>
+              </g>
+          </g>
+      </g>
+  </g>
+</svg>

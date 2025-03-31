@@ -1,4 +1,4 @@
-/*------------------------------------------------------------------
+    /*------------------------------------------------------------------
 Table of content
 -------------------
 1. Start Header Area
@@ -6109,8 +6109,8 @@ blockquote {
   position: fixed;  /* Makes the loader stay in the same position */
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 35px;
+  height: 35px;
   background-color: rgba(255, 255, 255, 0.7);  /* Semi-transparent background */
   display: flex;
   justify-content: center;  /* Center the loader horizontally */
@@ -6123,3 +6123,12 @@ blockquote {
   width: 100px;  /* Adjust the size of your loader */
   height: auto;
 }
+
+
+a {
+    display: inline-block;
+    text-decoration: none;
+}
+
+
+

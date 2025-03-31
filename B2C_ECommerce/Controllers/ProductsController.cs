@@ -9,5 +9,11 @@ namespace B2C_ECommerce.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public IActionResult ProductDetails(string id)
+        {
+            return View();
+        }
     }
 }

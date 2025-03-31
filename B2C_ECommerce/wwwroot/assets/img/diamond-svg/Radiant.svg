@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25px" height="33px" viewBox="0 0 25 33" version="1.1">
+  <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+  <title>Radiant</title>
+  <desc>Created with Sketch.</desc>
+  <defs></defs>
+  <g id="Ring-Builder" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linejoin="round">
+      <g id="Step-2-(Filter-View)" transform="translate(-611.000000, -280.000000)" stroke="#A3A3A3" stroke-width="0.5">
+          <g id="Filter-By-Shape">
+              <g id="Group-10" transform="translate(475.000000, 123.000000)">
+                  <g id="Shapes" transform="translate(36.000000, 80.000000)">
+                      <g id="Radiant" transform="translate(74.649573, 67.000000)">
+                          <g id="Page-1" transform="translate(26.000000, 11.000000)">
+                              <g id="Group-11" transform="translate(0.000000, 0.041934)">
+                                  <polygon id="Stroke-1" points="3.59294222 0.168358209 0.215697778 3.55510448 0.215697778 27.8808358 4.12632 31.312 19.8587644 31.312 23.4139644 27.8808358 23.4139644 4.11104478 19.9472533 0.168358209"></polygon>
+                                  <polyline id="Stroke-3" points="3.59294222 0.168358209 6.61525333 5.94889552 0.215697778 3.55510448"></polyline>
+                                  <polyline id="Stroke-5" points="19.9473022 0.168358209 17.0144578 5.552 23.4140133 4.11104478"></polyline>
+                                  <polyline id="Stroke-7" points="4.12622222 31.3120478 7.05955556 25.5066746 0.2156 27.8808836"></polyline>
+                                  <polygon id="Stroke-9" points="16.3923467 25.5065313 23.4137689 27.8812179 19.8585689 31.3119045"></polygon>
+                              </g>
+                              <polyline id="Stroke-12" points="20.2141867 26.8408836 20.2141867 4.8736 17.0144089 5.59431642 20.1975644 26.930197"></polyline>
+                              <polyline id="Stroke-13" points="2.89256 26.9938627 5.41669333 28.800191 18.3336267 28.800191 20.2143822 26.9938627 20.2143822 26.8410269"></polyline>
+                              <polyline id="Stroke-14" points="18.3335778 28.8003343 7.05931111 25.5482746 2.89251111 4.59830448 2.89251111 26.994006 6.61491111 5.99054328 18.6723778 2.55030448"></polyline>
+                              <polyline id="Stroke-15" points="5.41674222 28.8003343 16.3922978 25.5482746 20.2144311 4.87340896 18.6724756 2.55030448 4.81638667 2.55030448 2.89260889 4.59830448"></polyline>
+                              <path d="M4.81658222,2.55030448 L17.01436,5.59412537" id="Stroke-16"></path>
+                          </g>
+                      </g>
+                  </g>
+              </g>
+          </g>
+      </g>
+  </g>
+</svg>

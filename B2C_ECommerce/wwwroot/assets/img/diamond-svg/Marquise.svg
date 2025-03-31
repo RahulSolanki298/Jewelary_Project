@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="17px" height="34px" viewBox="0 0 17 34" version="1.1">
+  <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+  <title>Marquise</title>
+  <desc>Created with Sketch.</desc>
+  <defs></defs>
+  <g id="Ring-Builder" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linejoin="round">
+      <g id="Step-2-(Filter-View)" transform="translate(-840.000000, -280.000000)" stroke="#A3A3A3" stroke-width="0.5">
+          <g id="Filter-By-Shape">
+              <g id="Group-10" transform="translate(475.000000, 123.000000)">
+                  <g id="Shapes" transform="translate(36.000000, 80.000000)">
+                      <g id="Marquise" transform="translate(299.649573, 67.000000)">
+                          <g id="Page-1" transform="translate(30.000000, 11.000000)">
+                              <path d="M15.7991771,16.03424 C15.7991771,24.7784686 8.00032,31.8669257 8.00032,31.8669257 C8.00032,31.8669257 0.201462857,24.7784686 0.201462857,16.03424 C0.201462857,7.29001143 8.00032,0.201554286 8.00032,0.201554286 C8.00032,0.201554286 15.7991771,7.29001143 15.7991771,16.03424 Z" id="Stroke-1"></path>
+                              <polyline id="Stroke-3" points="5.31565714 28.8891429 15.7993143 15.4939429 6.27062857 5.47885714 3.85645714 20.1856"></polyline>
+                              <polyline id="Stroke-5" points="9.36836571 27.34496 0.20128 15.4386743 9.76150857 5.47890286 12.1994514 20.2034743 13.2417371 25.0491886 9.42413714 27.4171886"></polyline>
+                              <path d="M10.5573943,28.8891429 L9.36836571,27.3449143" id="Stroke-7"></path>
+                              <polyline id="Stroke-9" points="3.39222857 12.1143771 6.10308571 23.1036343 6.52457143 27.3450057 3.19474286 25.8076343 3.85622857 20.1856914 0.956114286 20.85632"></polyline>
+                              <polyline id="Stroke-11" points="6.52438857 27.34496 8.00050286 31.8670171 9.42404571 27.4171886 9.84370286 23.1035886 12.8023314 12.3447314 13.4130743 7.33490286 9.76141714 5.47890286 8.00050286 0.201645714 6.27067429 5.47890286 2.58747429 7.33490286 3.39204571 12.1143314 0.915702857 11.3440457"></polyline>
+                              <path d="M12.19936,20.2036571 L15.1424457,20.5209071" id="Stroke-13"></path>
+                              <path d="M12.8025143,12.3445029 L15.1426286,11.5422171" id="Stroke-15"></path>
+                          </g>
+                      </g>
+                  </g>
+              </g>
+          </g>
+      </g>
+  </g>
+</svg>

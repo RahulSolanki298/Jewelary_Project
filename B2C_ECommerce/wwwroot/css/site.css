@@ -268,7 +268,7 @@ body {
     /*background-color: #f9f9f9;*/ /* Light background */
     padding: 10px;
     border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+    /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);*/ /* Light shadow for depth */
 }
 
 .product-title h5 {
@@ -290,9 +290,6 @@ body {
         padding: 8px;
     }
 }
-
-
-
 
 @keyframes bounce {
     0%, 20%, 50%, 80%, 100% {
@@ -317,3 +314,152 @@ body {
         transform: translateX(-50%) scale(1.2);
     }
 }
+
+
+/* Resize the diamond icons */
+.small-diamond-icon {
+    width: 45%; /* Adjust size as needed */
+    height: auto;
+}
+
+/* Style the image for the coverpage look */
+/* Gray left slider */
+.left-slider {
+    background-color: gray;
+    height: 100vh; /* Full height of the viewport */
+    color: white;
+    padding: 20px;
+}
+
+/* Right product slider */
+.product-slider {
+    background-color: #4169e1; /* Light background for the product section */
+    height: 100vh; /* Full height of the viewport */
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    /* Optional: Add styles for the product slider itself */
+    .product-slider p {
+        font-size: 24px;
+        color: #333;
+    }
+
+/* Styling for the product box */
+.product-box {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .product-box:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+.product-image img {
+    width: 100%;
+    max-width: 100px;
+    transition: transform 0.3s ease;
+}
+
+.product-box:hover .product-image img {
+    transform: scale(1.1);
+}
+
+.product-title h5 {
+    font-size: 1.1rem;
+    color: #333;
+    transition: color 0.3s ease;
+}
+
+.product-box:hover .product-title h5 {
+    color: #4169e1; /* Highlight color on hover */
+}
+
+/* Styling for the category image */
+.category-image {
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Ensure product grid is responsive */
+@media (max-width: 768px) {
+    .col-lg-4, .col-lg-8 {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .product-row {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+        .product-row .col-md-2 {
+            flex: 1 0 48%; /* Adjust to make product items more flexible */
+            margin-bottom: 15px;
+        }
+}
+
+
+
+/* Styling for the section */
+.useful-info-area {
+    /*background-color: #f8f8f8;*/
+    padding-top: 50px;
+    padding-bottom: 50px;
+    /*border-top: 3px solid #4169e1;*/
+}
+
+    /* Title Styling */
+    .useful-info-area .title {
+        font-size: 2rem;
+        color: #333;
+        font-weight: 600;
+        margin-bottom: 30px;
+    }
+
+/* Styling for each carousel item */
+.carousel-item {
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Info Card Style */
+.info-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .info-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+.info-title {
+    font-size: 1.5rem;
+    color: #4169e1;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.info-description {
+    font-size: 1rem;
+    color: #555;
+}
+
+/* Carousel Controls */
+.carousel-control-prev-icon, .carousel-control-next-icon {
+    background-color: #4169e1;
+    border-radius: 50%;
+    padding: 10px;
+}
+
+.carousel-control-prev-icon:hover, .carousel-control-next-icon:hover {
+    background-color: #4169e1;
+}
+
+/* Range */
+
