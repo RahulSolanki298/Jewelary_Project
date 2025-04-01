@@ -105,19 +105,40 @@ body {
     }
 
 .shape-btn {
-    border: 2px solid transparent;
-    padding: 3px;
+    width: 16%;
+    height: auto;
+    padding: 0px 2px 10px;
+    /*margin:10px;*/
+    margin: 5px;
     display: inline-block;
     cursor: pointer;
     border-radius: 5px;
     transition: border-color 0.3s;
+    border: solid dashed 1px;
 }
 
     .shape-btn img {
-        width: 35px; /* Adjust size */
-        height: 30px;
+        /* 
+        height: auto;
         object-fit: cover;
         border-radius: 5px;
+        padding: 7px;*/
+        width: 43px;
+        vertical-align: middle;
+        border-style: none;
+        max-width: 100%;
+        height: auto;
+        text-align: center;
+        position: relative;
+        overflow-clip-margin: content-box;
+        overflow: clip;
+    }
+
+    .shape-btn span {
+        padding: 1px 1px;
+        width: 100%;
+        display:block;
+        /*display: none;*/
     }
 
     .shape-btn.selected {
@@ -125,8 +146,17 @@ body {
     }
 
     .shape-btn:hover {
-        border: 2px solid #000000;
+        border: 1px solid gray;
+        display: block;
     }
+
+.shape-btn:hover span {
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight:bolder;
+    display: block;
+}
+
+
 
 
 /* header video page */
@@ -316,11 +346,7 @@ body {
 }
 
 
-/* Resize the diamond icons */
-.small-diamond-icon {
-    width: 45%; /* Adjust size as needed */
-    height: auto;
-}
+
 
 /* Style the image for the coverpage look */
 /* Gray left slider */
@@ -332,32 +358,32 @@ body {
 }
 
 /* Right product slider */
-.product-slider {
-    background-color: #4169e1; /* Light background for the product section */
-    height: 100vh; /* Full height of the viewport */
-    padding: 20px;
+/*.product-slider {
+    background-color: #4169e1;*/ /* Light background for the product section */
+/*height: 100vh;*/ /* Full height of the viewport */
+/*padding: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-}
+}*/
 
-    /* Optional: Add styles for the product slider itself */
-    .product-slider p {
+/* Optional: Add styles for the product slider itself */
+/*.product-slider p {
         font-size: 24px;
         color: #333;
-    }
+    }*/
 
 /* Styling for the product box */
-.product-box {
+/*.product-box {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
     .product-box:hover {
         transform: translateY(-10px);
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
+    }*/
 
-.product-image img {
+/*.product-image img {
     width: 100%;
     max-width: 100px;
     transition: transform 0.3s ease;
@@ -374,17 +400,17 @@ body {
 }
 
 .product-box:hover .product-title h5 {
-    color: #4169e1; /* Highlight color on hover */
-}
+    color: #4169e1;*/ /* Highlight color on hover */
+/*}*/
 
 /* Styling for the category image */
-.category-image {
+/*.category-image {
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
+}*/
 
 /* Ensure product grid is responsive */
-@media (max-width: 768px) {
+/*@media (max-width: 768px) {
     .col-lg-4, .col-lg-8 {
         margin-bottom: 20px;
     }
@@ -397,10 +423,10 @@ body {
     }
 
         .product-row .col-md-2 {
-            flex: 1 0 48%; /* Adjust to make product items more flexible */
-            margin-bottom: 15px;
+            flex: 1 0 48%;*/ /* Adjust to make product items more flexible */
+/*margin-bottom: 15px;
         }
-}
+}*/
 
 
 
@@ -457,9 +483,165 @@ body {
     padding: 10px;
 }
 
-.carousel-control-prev-icon:hover, .carousel-control-next-icon:hover {
-    background-color: #4169e1;
+    .carousel-control-prev-icon:hover, .carousel-control-next-icon:hover {
+        background-color: #4169e1;
+    }
+
+
+
+/* Section Styling Home page Diamond Section */
+.latest-blog-area {
+    padding: 60px 0;
+    background-color: #f9f9f9;
 }
 
-/* Range */
+.section-title h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #333;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
 
+/* Diamond Grid */
+.diamond-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+    padding: 10px;
+}
+
+.diamond-item {
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+    .diamond-item:hover {
+        transform: translateY(-10px);
+    }
+
+.diamond-icon {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 7px;
+    transition: transform 0.3s ease;
+    display: inline-flex;
+}
+
+.diamond-item:hover .diamond-icon {
+    transform: scale(1.1);
+}
+
+.diamond-item h5 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+    margin-top: 10px;
+    text-transform: capitalize;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .diamond-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .diamond-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+
+    .diamond-icon {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+
+
+/* Filter for filter box */
+
+.filter-top-image {
+    vertical-align: middle;
+    border-style: none;
+    max-width: 100%;
+    height: auto;
+}
+
+.filter-bg-shadow {
+    box-shadow: 0px 4px 15px rgba(112, 112, 112, 0.53);
+}
+
+.filter-cover-container {
+    padding-right: var(--bs-gutter-x, 15px);
+    padding-left: var(--bs-gutter-x, 15px);
+
+}
+
+/*.filter-top-container {
+    padding-right: 15px;
+    padding-left: 15px;
+}*/
+
+.gap-icon-filter {
+    gap: 0.3rem !important;
+}
+
+@media only screen and (min-width: 1200px) {
+    .filter-cover-container {
+        max-width: 1400px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+}
+
+.filter-scroll-bg {
+    background: #151542 !important;
+    height:8px;
+    margin:15px 0px;
+}
+
+.range_slider {
+    height: 30px !important;
+    width: 85px !important;
+    text-align:center;
+}
+
+.filter-label{
+    width:112px!important;
+}
+
+/*#color-slider {
+    color:#000000;
+    width: 80%;
+    margin: 20px auto;
+}*/
+
+.btn-dark {
+    color: black !important;
+    padding: .375rem .75rem !important;
+    border: 1px solid #151542 !important;
+    background-color: #fff !important
+}
+    .btn-dark:hover {
+        color: white !important;
+        background-color: #151542 !important
+    }
+
+.text-upper {
+    text-transform:uppercase;
+}
+.text-lower {
+    text-transform: lowercase;
+}
+.text-capitalize {
+    text-transform: capitalize;
+}
+
+.width-85{
+    width:85%;
+}
+.d-inline-block{
+    display:inline-block;
+}
