@@ -13,8 +13,13 @@
 	<link rel="stylesheet" href="/assets/css/plugins/animate.css">
 	<link rel="stylesheet" href="/assets/css/plugins/nice-select.css">
 	<link rel="stylesheet" href="/assets/css/plugins/jqueryui.min.css">
+
+	<link href="~/assets/css/bootstrap-multiselect.css" rel="stylesheet" />
+	<link href="~/assets/css/bootstrap-select.min.css" rel="stylesheet" />
+
 	<link rel="stylesheet" href="/assets/css/style.css">
 	<link rel="stylesheet" href="/css/site.css">
+	
 </head>
 <body>
 	@Html.Partial("_Header")
@@ -26,7 +31,7 @@
 	<div class="scroll-top not-visible">
 		<i class="fa fa-angle-up"></i>
 	</div>
-	
+
 	@Html.Partial("_Footer")
 	<!-- footer area end -->
 	<!-- Quick view modal start -->
@@ -234,6 +239,9 @@
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfmCVTjRI007pC1Yk2o2d_EhgkjTsFVN8"></script>
 	<!-- google map active js -->
 	<script src="/assets/js/plugins/google-map.js"></script>
+
+	<script src="~/assets/js/bootstrap-multiselect.js"></script>
+	<script src="~/assets/js/bootstrap-select.min.js"></script>
 	<!-- Main JS -->
 	<script src="/assets/js/main.js"></script>
 	@await RenderSectionAsync("Scripts", required: false)

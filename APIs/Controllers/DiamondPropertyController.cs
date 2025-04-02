@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Business.Repository.IRepository;
 using DataAccess.Entities;
 using Microsoft.AspNetCore.Hosting;
@@ -77,7 +78,7 @@ namespace APIs.Controllers
                 var result= await _diamondProperty.AddAsync(diamondProperty);
                 return Ok(result);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
 
                 return BadRequest(ex);
@@ -92,7 +93,7 @@ namespace APIs.Controllers
                 var result = _diamondProperty.UpdateAsync(diamondProperty);
                 return Ok(result);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
 
                 return BadRequest(ex);
@@ -107,7 +108,7 @@ namespace APIs.Controllers
                 var result = _diamondProperty.DeleteAsync(id);
                 return Ok(result);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex);
             }    
