@@ -15,4 +15,8 @@
     <PackageReference Include="System.IO.Compression" Version="4.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Models\Models.csproj" />
+  </ItemGroup>
+
 </Project>

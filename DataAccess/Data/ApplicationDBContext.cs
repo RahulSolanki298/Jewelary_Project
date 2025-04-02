@@ -1,6 +1,9 @@
-﻿using DataAccess.Entities;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using DataAccess.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Models;
 
 namespace DataAccess.Data
 {
@@ -59,5 +62,13 @@ namespace DataAccess.Data
         public DbSet<ProductStyles> ProductStyles { get; set; }
 
         public DbSet<DiamondProperty> DiamondProperties { get; set; }
+
+        public DbSet<DiamondData> DiamondData { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<DiamondData>().ToTable("Diamond").HasNoKey(); 
+        }
     }
 }
