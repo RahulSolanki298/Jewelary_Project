@@ -10,18 +10,29 @@
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
 
+<MudGrid>
 
 <EditForm Model="@loginModel" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
-    <MudGrid>
-        <MudItem xs="6" sm="6">
-            <MudCard>
+        <!-- Left Side Image Column -->
+        <MudItem xs="12" sm="6" lg="12">
+            <MudCard Style="background-color:lightgray;text-align:center;">
                 <MudCardContent>
-                    NEW TEXT
+                    <h2>Admin Panel</h2>
                 </MudCardContent>
             </MudCard>
         </MudItem>
-        <MudItem xs="6" sm="6">
+
+        <MudItem xs="12" sm="6" lg="12">
+            <MudCard Style="background-color:lightgray;">
+                <MudCardContent>
+                    <img src="images/logo-text-min.png" alt="Cool Image" style="width: 100%; height: 100%; object-fit: cover;" />
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <!-- Right Side Form Column -->
+        <MudItem xs="12" sm="6" lg="12">
             <MudCard>
                 <MudCardContent>
                     <MudTextField Label="Email" Class="mt-3"
@@ -34,8 +45,9 @@
                 </MudCardActions>
             </MudCard>
         </MudItem>
-     </MudGrid>
 </EditForm>
+
+</MudGrid>
 
 
 @code {

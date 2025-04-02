@@ -1,35 +1,43 @@
 ﻿using System;
-using Microsoft.Kiota.Abstractions;
 
-namespace DataAccess.Entities
+namespace Models
 {
-    public class Diamond
+    public class DiamondData
     {
         public int Id { get; set; }
         public string ReportType { get; set; }
         public string LotNo { get; set; }
-        public DateTime? LabDate { get; set; }
         public int? LabId { get; set; }
+        public string LabName { get; set; }
+        public DateTime? LabDate { get; set; }
         public string Quality { get; set; }
         public string LotType { get; set; }
         public int? CutId { get; set; }
+        public string CutName { get; set; }
         public int? PolishId { get; set; }
+        public string PolishName { get; set; }
         public string Sku { get; set; }
         public int? SymmetryId { get; set; }
+        public string SymmetryName { get; set; }
         public string Shade { get; set; }
         public string HA { get; set; }
         public decimal? UnitPrice { get; set; }
         public decimal? Price { get; set; }
         public decimal? Quantity { get; set; } = 0;
-        public int CaratSizeId { get; set; }
-        public string CaratSize { get; set; }
+        public int? CaratSizeId { get; set; }
+        public string CaratSizeName { get; set; }
         public int? ClarityId { get; set; }
-        public string Clarity { get; set; }
-        public int ColorId { get; set; }
-        public int ShapeId { get; set; }
+        public string ClarityName { get; set; }
+        public int? ColorId { get; set; }
+        public string ColorName { get; set; }
+        public int? ShapeId { get; set; }
+        public string ShapeName { get; set; }
         public int? TableId { get; set; }
+        public string TableName { get; set; }
         public int? DepthId { get; set; }
+        public string DepthName { get; set; }
         public int? RatioId { get; set; }
+        public string RatioName { get; set; }
         public decimal? Length { get; set; }
         public decimal? Width { get; set; }
         public decimal? Height { get; set; }
@@ -37,13 +45,17 @@ namespace DataAccess.Entities
         public string Status { get; set; } // Available, Consignment, Hold, In
         public DateTime? INWDate { get; set; }
         public DateTime? MarketDate { get; set; }
+
+        public string MDisc { get; set; }
+        public string MRate { get; set; }
+        public string MAmt { get; set; }
+
         public DateTime? ReportDate { get; set; }
         public string Type { get; set; }
         public string CertificateNo { get; set; }
         public string Stock { get; set; }
         public string CertiType { get; set; }
         public string DisplayOrder { get; set; }
-        public string Flo { get; set; }
 
         // Advance Search
         public decimal? Dia { get; set; }
@@ -55,9 +67,10 @@ namespace DataAccess.Entities
         public decimal? GirdleOpen { get; set; }
         public decimal? CAngle { get; set; }
         public decimal? PAngle { get; set; }
-        public decimal? PHt { get; set; }
-        public decimal? CHt { get; set; }
+        public decimal? PHt { get; set; } 
+        public decimal? CHt { get; set; } //C.Height
         public string Girdle { get; set; }
+        public string GirdleDesc { get; set; }
         public string CrownExFac { get; set; }
         public string PavExFac { get; set; }
         public string TableSpot { get; set; }
@@ -65,6 +78,7 @@ namespace DataAccess.Entities
         public string NT_INT { get; set; }
         public string Culet { get; set; }
         public int? FluorId { get; set; }
+        public string FluorName { get; set; }
         public string Milky { get; set; }
         public string Luster { get; set; }
         public string Graining { get; set; }
@@ -74,15 +88,15 @@ namespace DataAccess.Entities
         public decimal? Amount { get; set; }
         public string DiamondImagePath { get; set; }
         public string DiamondVideoPath { get; set; }
-        public string Diam { get; set; }
         public string OLD_PID { get; set; }
         public string ORAP { get; set; }
         public string MfgRemark { get; set; }
+        public DateTime? InwDate { get; set; }
         public int? PriceNameId { get; set; }
-        public string MDisc { get; set; }
-        public string MRate { get; set; }
-        public string MAmt { get; set; }
+        public string PriceName { get; set; }
         public string EyeClean { get; set; }
+        public string Diam { get; set; }
+        public bool? IsActivated { get; set; } = false;
         public string StrLan { get; set; }
         public string LrHalf { get; set; }
         public string KeyToSymbol { get; set; }
@@ -92,13 +106,8 @@ namespace DataAccess.Entities
         public string OpenCrown { get; set; }
         public string OpenPavallion { get; set; }
         public string OpenGirdle { get; set; }
-
         public string NT_OR_INT { get; set; }
-
         public string Pav_Ex_Fac { get; set; }
 
-        public string GirdleDesc { get; set; }
-
-        public bool? IsActivated { get; set; } = false;
     }
 }

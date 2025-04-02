@@ -64,6 +64,7 @@ namespace AdminDashboard.Server
             services.AddScoped<ILocalStorageService,LocalStorageService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+            services.AddScoped<IDiamondRepository, DiamondRepository>();
 
             services.AddAuthorizationCore();
             services.AddHttpContextAccessor();
