@@ -9,24 +9,25 @@
 		</div>
 	</div>
 </section>
+
 <!-- Product Section -->
-<section class="product-area section-padding">
+<section class="product-area filter-page-section-padding">
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-12 text-center">
-				<h2 class="title">Shop Lab Created Loose Diamonds</h2>
+				<h2 class="title font-sans-serif">Shop Lab Created Loose Diamonds</h2>
 			</div>
 		</div>
 	</div>
 	<hr />
 	<div class="container-fluid">
 		<div class="card border-1 filter-bg-shadow">
-			<div class="card-body p-4">
+			<div class="card-body p-3">
 				<div class="row g-4">
 					<!-- Shapes Section -->
 					<div class="col-lg-4">
 						<h4>Shapes</h4>
-						<div class="diamond-icon-dt pt-5">
+						<div class="diamond-icon-dt pt-4">
 							<div class="d-flex flex-wrap gap-icon-filter">
 								<div class="shape-btn text-center">
 									<img src="/assets/img/shape-svg/Oval.svg" alt="Oval" />
@@ -87,87 +88,81 @@
 						<!-- Carat Size Filter -->
 
 						<div class="row filter-cls">
-							<div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6">
+							<div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
 								<div class="d-flex mb-2">
 									<div class="filter-label">
-										<label for="minCaratSize" class="form-label" style="padding-right:8px;">Carat Size <span><img src="~/assets/img/icon/diamond-icon.png" style="width:25px;" /></span> </label>
+										<label for="minCaratSize" class="form-label" style="padding-right:2px;">CaratSize <span><img src="~/assets/img/icon/diamond-icon.png" style="width:25px;" /></span> </label>
 									</div>
 									<div class="d-flex">
 										<input type="text" class="form-control txt-bolder me-2 range_slider" placeholder="Min Carat" id="minCaratSize" />
-										- &nbsp;<input type="text" class="form-control txt-bolder range_slider" placeholder="Max Carat" id="maxCaratSize" />
+										- <input type="text" class="form-control txt-bolder range_slider margin-left-2" placeholder="Max Carat" id="maxCaratSize" />
 									</div>
 
 								</div>
 								<div id="carat-size-slider" class="slider filter-scroll-bg"></div>
 							</div>
 
-							<div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6">
-								<div class="d-flex mb-2">
-									<div class="filter-label">
-										<label for="minColor" class="form-label" style="padding-right:8px;">Color </label>
-									</div>
+							<div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
+                                <div class="d-flex mb-2">
+                                    <div class="filter-label">
+                                        <label for="minColor" class="form-label" style="padding-right: 2px;">Color </label>
+                                    </div>
 
-									<div class="d-flex">
-										<select class="form-control txt-bolder range_slider" id="drpColor">
-											<option>D</option>
-											<option>F</option>
-											<option>E</option>
-										</select>
-									</div>
-								</div>
+                                    <div class="d-flex">
+                                        <input type="text" class="form-control txt-bolder me-2 range_slider" id="minColor" />
+                                        - <input type="text" class="form-control txt-bolder range_slider margin-left-2"  id="maxColor" />
+                                    </div>
+                                    
+                                </div>
 								<div id="color-slider" class="slider filter-scroll-bg"></div>
 							</div>
 
-							<div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6">
+							<div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
 								<div class="d-flex mb-2">
 									<div class="filter-label">
-										<label for="minCut" class="form-label" style="padding-right:8px;">Cut</label>
+										<label for="minCut" class="form-label" style="padding-right: 2px;">Cut</label>
 									</div>
-									<div class="d-flex">
-										<select class="form-control txt-bolder range_slider" id="drpCut">
-											<option>ID</option>
-											<option>EX</option>
-											<option>VG</option>
-										</select>
-									</div>
+                                    <div class="d-flex">
+                                        <input type="text" class="form-control txt-bolder me-2 range_slider" id="minCut" />
+                                        - <input type="text" class="form-control txt-bolder range_slider margin-left-2"  id="maxCut" />
+                                    </div>
 								</div>
 								<div id="Cut-slider" class="slider filter-scroll-bg"></div>
 							</div>
 
-							<div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6">
+							<div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
 								<div class="d-flex mb-2">
 									<div class="filter-label">
-										<label for="minPrice" class="form-label" style="padding-right:8px;">Price <span>$</span></label>
+										<label for="minPrice" class="form-label" style="padding-right: 2px;">Price <span>$</span></label>
 									</div>
 									<div class="d-flex">
 										<input type="text" class="form-control txt-bolder me-2 range_slider" placeholder="Min Price" id="minPrice" />
-										- &nbsp;<input type="text" class="form-control txt-bolder range_slider" placeholder="Max Price" id="maxPrice" />
+										- &nbsp;<input type="text" class="form-control txt-bolder range_slider margin-left-2" placeholder="Max Price" id="maxPrice" />
 									</div>
 								</div>
 								<div id="price-slider" class="slider filter-scroll-bg"></div>
 							</div>
 
-							<div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6">
+							<div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
 								<div class="d-flex mb-2">
 									<div class="filter-label">
-										<label for="minClarity" class="form-label" style="padding-right:8px;">Clarity</label>
+										<label for="minClarity" class="form-label" style="padding-right: 2px;">Clarity</label>
 									</div>
-									<select class="form-control txt-bolder range_slider" id="drpClarity">
-										<option>ID</option>
-										<option>EX</option>
-										<option>VG</option>
-									</select>
+                                    <div class="d-flex">
+                                        <input type="text" class="form-control txt-bolder me-2 range_slider" id="minClarity" />
+                                        - <input type="text" class="form-control txt-bolder range_slider margin-left-2" id="maxClarity" />
+                                    </div>
 								</div>
 								<div id="Clarity-slider" class="slider filter-scroll-bg"></div>
 							</div>
 
 
-							<div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ds_fbox_inner_main6 ds_fbox_inner">
+							<div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6 ds_fbox_inner_main6 ds_fbox_inner">
 								<!-- What metter Filter [START] -->
 								<div class="what-matter-dtlmain">
 									<input type="hidden" name="sel_matter_box_txt" id="sel_matter_box_txt" value="">
 									<div class="ds_opsun">
-										<label for="minClarity" class="form-label" style="padding-right:8px;">What matters to you most?</label>
+										<label class="form-label" style="padding-right: 2px;">What matters to you most?</label>
 										<div class="content">
 											<button class="btn btn-dark text-capitalize" id="btnPrice">Price</button>
 											<button class="btn btn-dark text-capitalize" id="btnQuality">Quality</button>
@@ -184,8 +179,8 @@
 				</div>
 
 				<div class="row">
-					<div class="col-xxl-9 col-xl-8 col-lg-8 col-md-12">
-						<div class="d-flex gap-3 mt-3">
+					<div class="col-xxl-8 col-xl-8 col-lg-7 col-md-12">
+						<div class="d-flex chk-filter gap-3 mt-3">
 							<label><input type="checkbox" id="chkAetherDiamonds" class="text-capitalize"> Aether Diamonds</label>
 							<label><input type="checkbox" id="chkQuickShip" class="text-capitalize"> QUICK SHIP</label>
 							<label><input type="checkbox" id="chkReport" class="text-capitalize"> Report</label>
@@ -193,10 +188,12 @@
 							<label><input type="checkbox" id="chkGIA" class="text-capitalize"> GIA</label>
 						</div>
 					</div>
-					<div class="col-xxl-3 col-xl-4 col-lg-4 col-md-12">
-						<button class="btn btn-dark text-capitalize" id="btnCompareDiamonds">Compare Diamonds</button>
-						<button class="btn btn-dark text-capitalize" id="btnTakeQUIZ">Take A QUIZ</button>
-						<button class="btn btn-dark text-capitalize" id="btnMoreFilter">MoreFilter</button>
+					<div class="col-xxl-4 col-xl-4 col-lg-5 col-md-12">
+                        <div class="mt-3">
+                            <button class="btn btn-dark text-capitalize" id="btnCompareDiamonds">Compare Diamonds</button>
+                            <button class="btn btn-dark text-capitalize" id="btnTakeQUIZ">Take A QUIZ</button>
+                            <button class="btn btn-dark text-capitalize" id="btnMoreFilter">MoreFilter</button>
+                        </div>
 					</div>
 				</div>
 				<!-- Additional Filters -->
@@ -247,16 +244,22 @@
 	</div>
 </div>
 
-@section Scripts {
+@section Scripts {    
 	<script>
-		$(function() {
+        
+		$(function () {
+
+			var fixColors = ["D", "E", "F"];
+            var fixClarity = ["IF", "VVS1", "VVS2", "VS1","VS2"];
+            var fixCut = ["IDEAL", "EXCELLENT","VERY GOOD","GOOD","FAIR"];
+
 			$("#carat-size-slider").slider({
 				range: true,
 				min: 0,
 				max: 10,
-				step:0.1,
+				step: 0.1,
 				values: [2, 8],
-				slide: function(event, ui) {
+				slide: function (event, ui) {
 					$("#minCaratSize").val(ui.values[0]);
 					$("#maxCaratSize").val(ui.values[1]);
 				}
@@ -266,52 +269,81 @@
 				range: true,
 				min: 500,
 				max: 50000,
-				step:0.01,
+				step: 0.01,
 				values: [5000, 30000],
-				slide: function(event, ui) {
-					$("#minPrice").val("$"+ui.values[0]);
-					$("#maxPrice").val("$"+ui.values[1]);
+				slide: function (event, ui) {
+					$("#minPrice").val("$" + ui.values[0]);
+					$("#maxPrice").val("$" + ui.values[1]);
 				}
 			});
-
-		// 	$("#color-slider").slider({
-		// 		range: true,
-		// 		min: 500,
-		// 		max: 50000,
-		// 		step: 1, // Default step (we'll change it dynamically)
-		// 		slide: function(event, ui) {
-		// 		// Calculate step based on the slider value
-		// 		let currentValue = ui.value;
-
-		// 		// Define your custom steps
-		// 		const F = 500;
-		// 		const M = 1000;
-		// 		const T = 5000;
-
-		// 		let step = 1; // Default step
-
-		// 		if (currentValue <= F) {
-		// 		  step = F;
-		// 		} else if (currentValue <= M) {
-		// 		  step = M;
-		// 		} else {
-		// 		  step = T;
-		// 		}
-
-		// 		// Log the step to see the behavior
-		// 		console.log("Current step: ", step);
-
-		// 		// Optionally, update the slider step value dynamically here (not necessary but possible)
-		// 		$(this).slider('option', 'step', step);
-		// 		}
-		// });
+						
+            
+            $("#color-slider").slider({
+                range: true,
+                min: 0,
+                max: fixColors.length - 1,
+                step: 1,
+                values: [0,1], 
+                slide: function (event, ui) {
+                    $("#minColor").val(fixColors[ui.values[0]]);
+                    $("#maxColor").val(fixColors[ui.values[1]]);
+                }
+            });
 
 
+            $("#color-slider").slider({
+                range: true,
+                min: 0,
+                max: fixColors.length - 1,
+                step: 1,
+                values: [0, 1],
+                slide: function (event, ui) {
+                    $("#minColor").val(fixColors[ui.values[0]]);
+                    $("#maxColor").val(fixColors[ui.values[1]]);
+                }
+			});
+
+
+            $("#Cut-slider").slider({
+                range: true,
+                min: 0,
+                max: fixCut.length - 1,
+                step: 1,
+                values: [0, 1],
+				slide: function (event, ui) {
+					$("#minCut").val(fixCut[ui.values[0]]);
+                    $("#maxCut").val(fixCut[ui.values[1]]);
+                }
+			});
+
+
+            $("#Clarity-slider").slider({
+                range: true,
+                min: 0,
+                max: fixClarity.length - 1,
+                step: 1,
+                values: [0, 1],
+                slide: function (event, ui) {
+                    $("#minClarity").val(fixClarity[ui.values[0]]);
+                    $("#maxClarity").val(fixClarity[ui.values[1]]);
+                }
+            });
+            
 
 			$("#minPrice").val("$ "+$("#price-slider").slider("values", 0));
 			$("#maxPrice").val("$ "+$("#price-slider").slider("values", 1));
 			$("#minCaratSize").val($("#carat-size-slider").slider("values",0));
-			$("#maxCaratSize").val($("#carat-size-slider").slider("values",1));
+			$("#maxCaratSize").val($("#carat-size-slider").slider("values", 1));
+
+            $("#minColor").val(fixColors[$("#color-slider").slider("values", 0)]);
+			$("#maxColor").val(fixColors[$("#color-slider").slider("values", 1)]);
+
+            $("#minCut").val(fixCut[$("#Cut-slider").slider("values", 0)]);
+            $("#maxCut").val(fixCut[$("#Cut-slider").slider("values", 1)]);
+
+            $("#minClarity").val(fixClarity[$("#Clarity-slider").slider("values", 0)]);
+            $("#maxClarity").val(fixClarity[$("#Clarity-slider").slider("values", 1)]);
 		});
+		        
 	</script>
 }

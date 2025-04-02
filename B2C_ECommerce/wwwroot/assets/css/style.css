@@ -27,11 +27,11 @@ Table of content
 -------------------------------------------------------------------*/
 /*------ Typography Style Start ------*/
 body {
-  color: #555555;
-  line-height: 1.7;
-  font-size: 14px;
-  font-weight: 400;
-  font-family: "Lato", sans-serif;
+    color: #555555;
+    line-height: 1.7;
+    font-size: 14px;
+    font-weight: 400;
+    font-family: "Lato", sans-serif;    
 }
 
 a {
@@ -1012,7 +1012,8 @@ textarea:focus {
 }
 
 .header-second {
-    padding: 15px 0;
+    /* padding: 15px 0;*/
+    padding: 15px 0 0px;
 }
 
 .header-top-settings ul li {
@@ -1268,6 +1269,7 @@ textarea:focus {
   font-weight: 500;
   display: block;
   text-transform: uppercase;
+  
 }
 
 .main-menu ul li a i {
@@ -1362,15 +1364,19 @@ textarea:focus {
 .main-menu ul li ul.dropdown li:last-child a {
   border-bottom: none;
 }
-.main-menu ul li ul.megamenu {
-  width: 100%;
+    .main-menu ul li ul.megamenu {
+        /*width: 100%;
   max-width: 100%;
   padding: 30px;
-  left: 50%;
-  -webkit-transform: translate(-50%, 20px);
-      -ms-transform: translate(-50%, 20px);
-          transform: translate(-50%, 20px);
-}
+  left: 50%;*/
+        width: 100%;
+        max-width: 100%;
+        padding: 30px;
+        left: 50%;
+        -webkit-transform: translate(-50%, 20px);
+        -ms-transform: translate(-50%, 20px);
+        transform: translate(-50%, 20px);
+    }
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
     .main-menu ul li ul.megamenu {
         max-width: 100%;
@@ -5997,7 +6003,7 @@ blockquote {
 }
 .contact-block li a:hover {
   color: #151542;
-  letter-spacing: 1.1px;
+  /*letter-spacing: 1.1px;*/
 }
 
 .info-list {

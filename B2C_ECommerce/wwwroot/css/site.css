@@ -62,7 +62,7 @@ html {
 
 body {
     /* Margin bottom by footer height */
-    margin-bottom: 60px;
+    /*margin-bottom: 60px;*/
 }
 
 .footer {
@@ -105,11 +105,11 @@ body {
     }
 
 .shape-btn {
-    width: 16%;
+    width: 15%;
     height: auto;
     padding: 0px 2px 10px;
     /*margin:10px;*/
-    margin: 5px;
+    margin: 5px 0px;
     display: inline-block;
     cursor: pointer;
     border-radius: 5px;
@@ -164,7 +164,8 @@ body {
 .video-area {
     position: relative;
     width: 100%;
-    height: 85vh;
+    /* height: 85vh;*/
+    height: 80vh;
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -201,7 +202,7 @@ body {
 }
 
 .video-title {
-    font-size: 3rem;
+    font-size: 32px;
     font-weight: bold;
 }
 
@@ -212,7 +213,7 @@ body {
 
 .video-down-arrow {
     position: absolute;
-    top: 80%;
+    top: 85%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
@@ -233,9 +234,6 @@ body {
 }
 
 @media (max-width: 768px) {
-    .video-title {
-        font-size: 2rem;
-    }
 
     .video-desc {
         font-size: 1rem;
@@ -245,6 +243,7 @@ body {
         font-size: 1rem;
         padding: 8px 16px;
     }
+
 }
 
 .down-arrow {
@@ -506,9 +505,13 @@ body {
 /* Diamond Grid */
 .diamond-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    /*grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 20px;
-    padding: 10px;
+    padding: 10px;*/
+
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+    padding: 0px;
 }
 
 .diamond-item {
@@ -604,12 +607,14 @@ body {
 
 .range_slider {
     height: 30px !important;
-    width: 85px !important;
+    width: 105px !important;
     text-align:center;
+    font-size:13px;
+    font-weight:200;
 }
 
 .filter-label{
-    width:112px!important;
+    width:95px!important;
 }
 
 /*#color-slider {
@@ -644,4 +649,247 @@ body {
 }
 .d-inline-block{
     display:inline-block;
+}
+.margin-left-2{
+    margin-left:2px !important;
+}
+
+.ui-slider-horizontal .ui-slider-range {
+    background: black; /* Change slider fill color */
+}
+
+.ui-slider-horizontal .ui-slider-handle {
+    background: white;
+    border: 2px solid black;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+}
+
+.filter-page-section-padding {
+    padding-top: 24px;
+    padding-bottom: 50px;
+}
+
+.padding-top-10 {
+    padding-top: 10px !important;
+}
+.padding-top-20 {
+    padding-top: 20px !important;
+}
+.padding-top-30 {
+    padding-top: 30px !important;
+}
+.padding-top-40 {
+    padding-top: 40px !important;
+}
+.padding-top-50 {
+    padding-top: 50px !important;
+}
+.padding-top-60 {
+    padding-top: 60px !important;
+}
+
+.padding-bottom-10 {
+    padding-bottom: 10px !important;
+}
+
+.padding-bottom-20 {
+    padding-bottom: 20px !important;
+}
+
+.padding-bottom-30 {
+    padding-bottom: 30px !important;
+}
+
+.padding-bottom-40 {
+    padding-bottom: 40px !important;
+}
+
+.padding-bottom-50 {
+    padding-bottom: 50px !important;
+}
+
+.padding-bottom-60 {
+    padding-bottom: 60px !important;
+}
+
+.font-sans-serif {
+    font-family: sans-serif !important;
+}
+
+.font-arial {
+    font-family: Arial !important;
+}
+
+.font-arial {
+    font-family: Arial !important;
+}
+
+.jewelry-mega-menu-display {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.font-size14{
+    font-size:14px;
+}
+
+.font-size16 {
+    font-size: 16px;
+}
+
+.font-size18 {
+    font-size: 18px;
+}
+
+.text-white{
+    color : white !important;
+}
+
+.bg-theme-color {
+    background-color: #151542;
+}
+
+.gift-thumb:hover img{
+    -webkit-transform: scale(0.95);
+    -ms-transform: scale(0.95);
+    transform: scale(0.95);
+    opacity: 0.7;
+}
+
+.btn-dark-style-2 {
+    color:white;
+    padding: .375rem .75rem !important;
+    border: 1px solid #fff !important;
+    background-color: #151542
+}
+
+    .btn-dark-style-2:hover {
+        color: white;
+        border: 1px solid #fff;
+    }
+
+.product-type-box {
+    width: 300px;
+}
+
+.product-type-padding-section{
+    padding:0px 250px;
+}
+
+.product-type-detail-section{
+    margin:20px 20px;
+}
+
+.border-radius-15 {
+    border-radius: 15px;
+    border-style: ridge;
+    border-color: white;
+}
+
+@media only screen and (max-width: 1440px) {
+    .range_slider{
+        width:85px !important;
+    }
+    .shape-btn{
+        width:19%;
+    }
+
+    .diamond-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+
+    .jewelry-mega-menu-display {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+
+    .product-type-padding-section {
+        padding: 0px 50px;
+    }
+
+    .product-type-box {
+        width: 300px;
+    }
+}
+
+@media only screen and (max-width: 1024px) {
+    .gap-icon-filter {
+        gap: 0.1rem !important;
+    }
+
+    .shape-btn {
+        width: 29%;
+    }
+    .range_slider {
+        width: 90px !important;
+    }
+
+    .diamond-grid {
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    }
+
+    .jewelry-mega-menu-display {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+
+    .product-type-padding-section {
+        padding: 0px 50px;
+    }
+
+    .product-type-box {
+        width: 200px;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .gap-icon-filter {
+        gap: 0.1rem !important;
+    }
+
+    .shape-btn {
+        width: 15%;
+    }
+
+    .range_slider {
+        width: 110px !important;
+    }
+
+    .product-type-padding-section {
+        padding: 0px 50px;
+    }
+
+    .product-type-box {
+        width: 135px;
+    }
+}
+
+@media only screen and (max-width: 440px) {
+    .gap-icon-filter {
+        gap: 0 !important;
+    }
+    .shape-btn{
+        width:29%;
+    }
+    .chk-filter{
+        display:inline-block !important;
+    }
+
+    .width-85{
+        width:60%;
+    }
+
+    .range_slider {
+        width: 95px !important;
+    }
+
+    .video-title {
+        font-size: 22px;
+    }
+    .video-content {
+        left: 65%;
+    }
+
 }
