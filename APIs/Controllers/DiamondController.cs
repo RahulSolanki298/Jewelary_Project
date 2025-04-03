@@ -9,6 +9,8 @@ using Models;
 using OfficeOpenXml;
 using DataAccess.Entities;
 using Business.Repository.IRepository;
+using Common;
+using Newtonsoft.Json;
 
 namespace APIs.Controllers
 {
@@ -17,15 +19,17 @@ namespace APIs.Controllers
     public class DiamondController : ControllerBase
     {
         private readonly IDiamondRepository _diamondRepository;
-        public DiamondController(IDiamondRepository diamondRepository)
+        private readonly IDiamondPropertyRepository _diamondPPTY;
+        public DiamondController(IDiamondRepository diamondRepository, IDiamondPropertyRepository diamondPPTY)
         {
             _diamondRepository = diamondRepository;
+            _diamondPPTY = diamondPPTY;
         }
 
         [HttpPost("GetDiamondList")]
         public async Task<ActionResult> GetDiamondByFilterData(DiamondFilters diamondFilters)
         {
-            var response = _diamondRepository.GetDiamondsAsync(diamondFilters,1,10);
+            var response = await _diamondRepository.GetDiamondsAsync(diamondFilters, 1, 10);
             return Ok(response);
         }
 
@@ -51,17 +55,31 @@ namespace APIs.Controllers
                     return BadRequest("The Excel file is empty.");
 
                 int rowCount = worksheet.Dimension.Rows;
-                List<ProductDTO> products = new();
-                List<DiamondData> diamondList = new();
-                var diamondData = new DiamondData();
+                List<Diamond> diamondsDTList = new();
+                Diamond diamond = new();
+                int labId, colorId, shapeId, caratSizeId, clarityId, cutId, polishId, symmId, fluorId, tableId, depthId, ratioId;
 
                 for (int row = 2; row <= 96; row++)
                 {
-                    diamondData = new DiamondData()
+
+                    labId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 4].Text, SD.Lab);
+                    colorId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 14].Text, SD.Color);
+                    shapeId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 12].Text, SD.Shape);
+                    caratSizeId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 13].Text, SD.CaratSize);
+                    clarityId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 15].Text, SD.Clarity);
+                    cutId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 19].Text, SD.Cut);
+                    polishId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 20].Text, SD.Polish);
+                    symmId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 21].Text, SD.Symmetry);
+                    fluorId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 22].Text, SD.Fluor);
+                    tableId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 28].Text, SD.Table);
+                    depthId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 29].Text, SD.Depth);
+                    ratioId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 30].Text, SD.Ratio);
+
+                    diamond = new Diamond()
                     {
                         LotNo = worksheet.Cells[row, 2].Text,
                         //SrNo= worksheet.Cells[row, 3].Text,
-                        LabName = worksheet.Cells[row, 4].Text,
+                        LabId = labId > 0 ? labId : null,
                         LotType = worksheet.Cells[row, 5].Text,
                         CertificateNo = worksheet.Cells[row, 6].Text,
                         // Inscription = worksheet.Cells[row, 7].Text,
@@ -69,25 +87,25 @@ namespace APIs.Controllers
                         //LabDate = Convert.ToDateTime(worksheet.Cells[row, 9].Text),
                         //OrderNo = worksheet.Cells[row, 10].Text,
                         // Remark = worksheet.Cells[row, 11].Text,
-                        ShapeName = worksheet.Cells[row, 12].Text,
-                        CaratSizeName = worksheet.Cells[row, 13].Text,
-                        ColorName = worksheet.Cells[row, 14].Text,
-                        ClarityName = worksheet.Cells[row, 15].Text,
+                        ShapeId = shapeId > 0 ? shapeId : null,
+                        CaratSizeId = caratSizeId > 0 ? caratSizeId : null,
+                        ColorId = colorId > 0 ? colorId : null,
+                        ClarityId = clarityId > 0 ? clarityId : null,
                         MDisc = worksheet.Cells[row, 16].Text,
                         MRate = worksheet.Cells[row, 17].Text,
                         MAmt = worksheet.Cells[row, 18].Text,
-                        CutName = worksheet.Cells[row, 19].Text,
-                        PolishName = worksheet.Cells[row, 20].Text,
-                        SymmetryName = worksheet.Cells[row, 21].Text,
-                        FluorName = worksheet.Cells[row, 22].Text,
+                        CutId = cutId > 0 ? cutId : null,
+                        PolishId = polishId > 0 ? polishId : null,
+                        SymmetryId = symmId > 0 ? symmId : null,
+                        FluorId = fluorId > 0 ? fluorId : null,
                         Shade = worksheet.Cells[row, 23].Text,
                         HA = worksheet.Cells[row, 24].Text,
                         EyeClean = worksheet.Cells[row, 25].Text,
                         Luster = worksheet.Cells[row, 26].Text,
                         Milky = worksheet.Cells[row, 27].Text,
-                        TableName = worksheet.Cells[row, 28].Text,
-                        DepthName = worksheet.Cells[row, 29].Text,
-                        RatioName = worksheet.Cells[row, 30].Text,
+                        TableId = tableId > 0 ? tableId : null,
+                        DepthId = depthId > 0 ? depthId : null,
+                        RatioId = ratioId > 0 ? ratioId : null,
                         Diam = worksheet.Cells[row, 31].Text,
                         Length = Convert.ToDecimal(worksheet.Cells[row, 32].Text),
                         Width = Convert.ToDecimal(worksheet.Cells[row, 33].Text),
@@ -121,20 +139,19 @@ namespace APIs.Controllers
                         ORAP = worksheet.Cells[row, 61].Text,
                         MfgRemark = worksheet.Cells[row, 62].Text,
                         CrownExFac = worksheet.Cells[row, 63].Text,
-                        InwDate = string.IsNullOrEmpty(worksheet.Cells[row, 65].Text) == true ? null : Convert.ToDateTime(worksheet.Cells[row, 65].Text)
-                    };
-                    diamondList.Add(diamondData);
-                }
+                        //INWDate = string.IsNullOrEmpty(worksheet.Cells[row, 65].Text) == true ? null : Convert.ToDateTime(worksheet.Cells[row, 65].Text)
 
-                //await _productRepository.SaveProductList(products);
-                return Ok(diamondList);
+                    };
+                    diamondsDTList.Add(diamond);
+                }
+                string jsonData = JsonConvert.SerializeObject(diamondsDTList);
+                var result = await _diamondRepository.BulkInsertDiamondsAsync(jsonData);
+                return Ok(result);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-
-
     }
 }

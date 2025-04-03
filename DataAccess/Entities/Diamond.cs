@@ -21,12 +21,12 @@ namespace DataAccess.Entities
         public decimal? UnitPrice { get; set; }
         public decimal? Price { get; set; }
         public decimal? Quantity { get; set; } = 0;
-        public int CaratSizeId { get; set; }
+        public int? CaratSizeId { get; set; }
         public string CaratSize { get; set; }
         public int? ClarityId { get; set; }
         public string Clarity { get; set; }
-        public int ColorId { get; set; }
-        public int ShapeId { get; set; }
+        public int? ColorId { get; set; }
+        public int? ShapeId { get; set; }
         public int? TableId { get; set; }
         public int? DepthId { get; set; }
         public int? RatioId { get; set; }

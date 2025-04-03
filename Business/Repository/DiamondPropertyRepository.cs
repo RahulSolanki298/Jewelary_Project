@@ -172,6 +172,31 @@ namespace Business.Repository
             return result;
         }
 
+        public async Task<IEnumerable<DiamondPropertyDTO>> GetRatioListAsync()
+        {
+            var result = await _context.DiamondProperties
+                .GroupJoin(
+                    _context.DiamondProperties,
+                    dimPro => dimPro.ParentId,
+                    propG => propG.Id,
+                    (dimPro, dimGroup) => new { dimPro, dimGroup })
+                .SelectMany(
+                    x => x.dimGroup.DefaultIfEmpty(),
+                    (x, propG) => new DiamondPropertyDTO
+                    {
+                        Id = x.dimPro.Id,
+                        Name = x.dimPro.Name,
+                        Description = x.dimPro.Description,
+                        SymbolName = x.dimPro.SymbolName,
+                        IconPath = x.dimPro.IconPath,
+                        ParentId = x.dimPro.ParentId,
+                        ParentProperty = propG.Name,  // Avoid null reference
+                        IsActivated = x.dimPro.IsActivated
+                    }).Where(x => x.ParentProperty == $"{SD.Clarity}").ToListAsync();
+
+            return result;
+        }
+
         public async Task<DiamondPropertyDTO> GetByIdAsync(int id)
         {
             var result = await _context.DiamondProperties
@@ -211,6 +236,55 @@ namespace Business.Repository
 
                 return false;
             }
+        }
+
+        public async Task<int> GetDiamondPropertyId(string diamondPropertyName, string properyName)
+        {
+            var diamondPrt = new DiamondProperty();
+            if (!string.IsNullOrEmpty(diamondPropertyName))
+            {
+                var parentId = await GetParentIdByName(properyName);
+                diamondPrt = await _context.DiamondProperties.Where(x => x.Name == diamondPrt.Name && x.ParentId == parentId).FirstOrDefaultAsync();
+
+                if (diamondPrt == null)
+                {
+                    diamondPrt = new DiamondProperty()
+                    {
+                        Name = diamondPropertyName,
+                        ParentId = parentId,
+                        IsActivated = true
+                    };
+                    await _context.DiamondProperties.AddAsync(diamondPrt);
+                    await _context.SaveChangesAsync();
+                }
+                return diamondPrt.Id;
+            }
+
+            return 0;
+
+        }
+
+        public async Task<int> GetParentIdByName(string parentName)
+        {
+            if (!string.IsNullOrEmpty(parentName))
+            {
+                var parentDT = new DiamondProperty();
+                parentDT = await _context.DiamondProperties.Where(x => x.Name == parentName && string.IsNullOrEmpty(x.ParentId.ToString())).FirstOrDefaultAsync();
+
+                if (parentDT == null)
+                {
+                    parentDT = new DiamondProperty()
+                    {
+                        Name = parentName,
+                        IsActivated = true
+                    };
+                    await _context.DiamondProperties.AddAsync(parentDT);
+                    await _context.SaveChangesAsync();
+                }
+
+                return parentDT.Id;
+            }
+            return 0;
         }
     }
 }

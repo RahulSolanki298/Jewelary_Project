@@ -26,12 +26,24 @@
         public static string DeActived = "DeActived";
         public static string InProcess = "InProcess";
 
-        // Diamond Property
+        // Jewelary Property
         public static string Metal = "Metal";
+
+
+        // Diamond Property
+        public static string Color = "Color";
         public static string Clarity = "Clarity";
         public static string Shape = "Shape";
         public static string Carat = "Carat";
-
+        public static string Ratio = "Ratio";
+        public static string Fluor = "Fluor";
+        public static string Polish = "Polish";
+        public static string Symmetry = "Symmetry";
+        public static string Table = "Table";
+        public static string CaratSize = "CaratSize";
+        public static string Depth="Depth";
+        public static string Lab  ="Lab";
+        public static string Cut = "Cut";   
 
         // Supplier Activation Status
         public static string Approve = "Approve";

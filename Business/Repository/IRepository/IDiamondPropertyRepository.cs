@@ -16,5 +16,7 @@ namespace Business.Repository.IRepository
         Task<bool> AddAsync(DiamondProperty entity);
         Task<bool> UpdateAsync(DiamondProperty entity);
         Task<bool> DeleteAsync(int id);
+        Task<int> GetDiamondPropertyId(string diamondPropertyName, string properyName);
+        Task<int> GetParentIdByName(string parentName);
     }
 }

@@ -36,7 +36,6 @@ namespace APIs.Controllers
             return Ok(result);
         }
 
-
         [HttpGet("diamond-property/get-metal-list")]
         public async Task<ActionResult> GetDiamondMetal()
         {
@@ -51,15 +50,12 @@ namespace APIs.Controllers
             return Ok(result);
         }
 
-
         [HttpGet("diamond-property/get-clarity-list")]
         public async Task<ActionResult> GetClarityListAsync()
         {
             var result = await _diamondProperty.GetClarityListAsync();
             return Ok(result);
         }
-
-
 
         [HttpGet("diamond-property/get-shape-list")]
         public async Task<ActionResult> GetShapeListAsync()
@@ -90,7 +86,7 @@ namespace APIs.Controllers
         {
             try
             {
-                var result = _diamondProperty.UpdateAsync(diamondProperty);
+                var result = await _diamondProperty.UpdateAsync(diamondProperty);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -105,7 +101,7 @@ namespace APIs.Controllers
         {
             try
             {
-                var result = _diamondProperty.DeleteAsync(id);
+                var result = await _diamondProperty.DeleteAsync(id);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -114,6 +110,19 @@ namespace APIs.Controllers
             }    
         }
 
+        [HttpPost("Get-diamond-property/propertyValue/{propertyValue}/diamondProperty/{diamondProperty}")]
+        public async Task<ActionResult> UpsertDiamondProperty(string propertyValue, string diamondProperty)
+        {
+            try
+            {
+                var result = await _diamondProperty.GetDiamondPropertyId(propertyValue, diamondProperty);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
 
     }
 }

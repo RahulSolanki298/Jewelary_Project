@@ -53,7 +53,24 @@ namespace Business.Repository
             }
         }
 
-        
+        public async Task<bool> BulkInsertDiamondsAsync(string jsonData)
+        {
+            try
+            {
+                if (jsonData == null || !jsonData.Any()) return false;
+
+                // Create a SQL parameter
+                var jsonParam = new SqlParameter("@JsonData", jsonData);
+
+                // Call the stored procedure
+                await _context.Database.ExecuteSqlRawAsync("EXEC InsertDiamondsFromJson @JsonData", jsonParam);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
 
     }
 }
