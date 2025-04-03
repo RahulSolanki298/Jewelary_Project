@@ -1,4 +1,5 @@
-﻿<section>
+﻿@using Common
+<section>
 	<div class="listingpage">
 		<div class="home-giftbanner-main position-relative left-text-banner">
 			<a href="#" aria-label="" class="d-block">
@@ -22,248 +23,55 @@
 	<hr />
 	<div class="container-fluid">
 		<div class="card border-1 filter-bg-shadow">
-			<div class="card-body p-3">
-				<div class="row g-4">
-					<!-- Shapes Section -->
-					<div class="col-lg-4">
-						<h4>Shapes</h4>
-						<div class="diamond-icon-dt pt-4">
-							<div class="d-flex flex-wrap gap-icon-filter">
-								<div class="shape-btn text-center">
-									<img src="/assets/img/shape-svg/Oval.svg" alt="Oval" />
-									<span>Oval</span>
-								</div>
-								<div class="shape-btn text-center">
-									<img src="/assets/img/shape-svg/Round.svg" alt="Round" />
-									<span>Round</span>
-								</div>
-								<div class="shape-btn text-center">
-									<img src="/assets/img/shape-svg/emerald.svg" alt="Emerald" />
-									<span>Emerald</span>
-								</div>
-								<div class="shape-btn text-center">
-									<img src="/assets/img/shape-svg/Princess.svg" alt="Princess" />
-									<span>Princess</span>
-								</div>
-								<div class="shape-btn text-center">
-									<img src="/assets/img/shape-svg/heart.svg" alt="Heart" />
-									<span>Heart</span>
-								</div>
-								<div class="shape-btn text-center">
-									<img src="/assets/img/shape-svg/Asscher.svg" alt="Asscher" />
-									<span>Asscher</span>
-								</div>
-								<div class="shape-btn text-center">
-									<img src="/assets/img/shape-svg/cushion.svg" alt="Cushion" />
-									<span>Cushion</span>
-								</div>
-								<div class="shape-btn text-center">
-									<img src="/assets/img/shape-svg/Marquise.svg" alt="Marquise" />
-									<span>Marquise</span>
-								</div>
-								<div class="shape-btn text-center">
-									<img src="/assets/img/shape-svg/Radiant.svg" alt="Radiant" />
-									<span>Radiant</span>
-								</div>
-								<div class="shape-btn text-center">
-									<img src="/assets/img/shape-svg/pear.svg" alt="pear" />
-									<span>Pear</span>
-								</div>
-								<div class="shape-btn text-center">
-									<img src="/assets/img/shape-svg/elongated cushion.svg" alt="elongated cushion" />
-									<span>Elongated Cushion</span>
-
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<!-- Filters Section -->
-					<div class="col-lg-8">
-						<div class="d-flex">
-							<h4 class="mb-4 width-85">Filters</h4>
-							<span class="text-right d-inline-block" id="btnReset"><i class="fa fa-refresh"></i> Reset Filters</span>
-						</div>
-
-						<!-- Carat Size Filter -->
-
-						<div class="row filter-cls">
-							<div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
-								<div class="d-flex mb-2">
-									<div class="filter-label">
-										<label for="minCaratSize" class="form-label" style="padding-right:2px;">CaratSize <span><img src="~/assets/img/icon/diamond-icon.png" style="width:25px;" /></span> </label>
-									</div>
-									<div class="d-flex">
-										<input type="text" class="form-control txt-bolder me-2 range_slider" placeholder="Min Carat" id="minCaratSize" />
-										- <input type="text" class="form-control txt-bolder range_slider margin-left-2" placeholder="Max Carat" id="maxCaratSize" />
-									</div>
-
-								</div>
-								<div id="carat-size-slider" class="slider filter-scroll-bg"></div>
-							</div>
-
-							<div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
-                                <div class="d-flex mb-2">
-                                    <div class="filter-label">
-                                        <label for="minColor" class="form-label" style="padding-right: 2px;">Color </label>
-                                    </div>
-
-                                    <div class="d-flex">
-                                        <input type="text" class="form-control txt-bolder me-2 range_slider" id="minColor" />
-                                        - <input type="text" class="form-control txt-bolder range_slider margin-left-2"  id="maxColor" />
-                                    </div>
-                                    
-                                </div>
-								<div id="color-slider" class="slider filter-scroll-bg"></div>
-							</div>
-
-							<div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
-								<div class="d-flex mb-2">
-									<div class="filter-label">
-										<label for="minCut" class="form-label" style="padding-right: 2px;">Cut</label>
-									</div>
-                                    <div class="d-flex">
-                                        <input type="text" class="form-control txt-bolder me-2 range_slider" id="minCut" />
-                                        - <input type="text" class="form-control txt-bolder range_slider margin-left-2"  id="maxCut" />
-                                    </div>
-								</div>
-								<div id="Cut-slider" class="slider filter-scroll-bg"></div>
-							</div>
-
-							<div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
-								<div class="d-flex mb-2">
-									<div class="filter-label">
-										<label for="minPrice" class="form-label" style="padding-right: 2px;">Price <span>$</span></label>
-									</div>
-									<div class="d-flex">
-										<input type="text" class="form-control txt-bolder me-2 range_slider" placeholder="Min Price" id="minPrice" />
-										- &nbsp;<input type="text" class="form-control txt-bolder range_slider margin-left-2" placeholder="Max Price" id="maxPrice" />
-									</div>
-								</div>
-								<div id="price-slider" class="slider filter-scroll-bg"></div>
-							</div>
-
-							<div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
-								<div class="d-flex mb-2">
-									<div class="filter-label">
-										<label for="minClarity" class="form-label" style="padding-right: 2px;">Clarity</label>
-									</div>
-                                    <div class="d-flex">
-                                        <input type="text" class="form-control txt-bolder me-2 range_slider" id="minClarity" />
-                                        - <input type="text" class="form-control txt-bolder range_slider margin-left-2" id="maxClarity" />
-                                    </div>
-								</div>
-								<div id="Clarity-slider" class="slider filter-scroll-bg"></div>
-							</div>
-
-
-							<div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6 ds_fbox_inner_main6 ds_fbox_inner">
-								<!-- What metter Filter [START] -->
-								<div class="what-matter-dtlmain">
-									<input type="hidden" name="sel_matter_box_txt" id="sel_matter_box_txt" value="">
-									<div class="ds_opsun">
-										<label class="form-label" style="padding-right: 2px;">What matters to you most?</label>
-										<div class="content">
-											<button class="btn btn-dark text-capitalize" id="btnPrice">Price</button>
-											<button class="btn btn-dark text-capitalize" id="btnQuality">Quality</button>
-											<button class="btn btn-dark text-capitalize" id="btnViewAll">View All</button>
-										</div>
-									</div>
-								</div>
-							</div>
-
-						</div>
-
-					</div>
-
-				</div>
-
-				<div class="row">
-					<div class="col-xxl-8 col-xl-8 col-lg-7 col-md-12">
-						<div class="d-flex chk-filter gap-3 mt-3">
-							<label><input type="checkbox" id="chkAetherDiamonds" class="text-capitalize"> Aether Diamonds</label>
-							<label><input type="checkbox" id="chkQuickShip" class="text-capitalize"> QUICK SHIP</label>
-							<label><input type="checkbox" id="chkReport" class="text-capitalize"> Report</label>
-							<label><input type="checkbox" id="chkIGI" class="text-capitalize"> IGI</label>
-							<label><input type="checkbox" id="chkGIA" class="text-capitalize"> GIA</label>
-						</div>
-					</div>
-					<div class="col-xxl-4 col-xl-4 col-lg-5 col-md-12">
-                        <div class="mt-3">
-                            <button class="btn btn-dark text-capitalize" id="btnCompareDiamonds">Compare Diamonds</button>
-                            <button class="btn btn-dark text-capitalize" id="btnTakeQUIZ">Take A QUIZ</button>
-                            <button class="btn btn-dark text-capitalize" id="btnMoreFilter">MoreFilter</button>
-                        </div>
-					</div>
-				</div>
-				<!-- Additional Filters -->
-
+			<div class="card-body p-3" id="filter-box">
+				@Html.Partial("_FilterBox")
 			</div>
 		</div>
 	</div>
 </section>
 
 <!-- Product Table -->
-<div class="container-fluid">
-	<div class="table-responsive">
-		<table class="table table-bordered table-hover">
-			<thead class="bg-light">
-				<tr>
-					<th>Actions</th>
-					<th>Shape</th>
-					<th>Carat</th>
-					<th>Color</th>
-					<th>Clarity</th>
-					<th>Cut</th>
-					<th>CERT.</th>
-					<th>Polish</th>
-					<th>Symmetry</th>
-					<th>Depth</th>
-					<th>Price</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>
-						<i class="fa fa-heart text-danger"></i>
-						<i class="fa fa-exchange-alt text-primary ms-2"></i>
-					</td>
-					<td>Emerald</td>
-					<td>10.67 ct</td>
-					<td>F</td>
-					<td>VS1</td>
-					<td>Ideal</td>
-					<td>GIA</td>
-					<td>Excellent</td>
-					<td>Excellent</td>
-					<td>67.40%</td>
-					<td>$26,995</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+<div class="container-fluid" id="diamond-list-container">
 </div>
 
-@section Scripts {    
+@section Scripts {
 	<script>
-        
+
 		$(function () {
+			GetShapeDesign();
+			GetCaratSize();
+			GetColorData();
+			var diamondFilters =
+			{
+				Colors: $('#colors').val() ? $('#colors').val() : [],
+				Carats: $('#carats').val() ? $('#carats').val() : [],
+				Shapes: $('#shapes').val() ? $('#shapes').val() : [],
+				Clarities: $('#clarities').val() ? $('#clarities').val() : [],
+				Prices: $('#prices').val() ? $('#prices').val() : [],
+				Ratios: $('#ratios').val() ? $('#ratios').val() : [],
+				Tables: $('#tables').val() ? $('#tables').val() : [],
+				Depthes: $('#depthes').val() ? $('#depthes').val() : [],
+				Polishes: $('#polishes').val() ? $('#polishes').val() : [],
+				Fluors: $('#fluors').val() ? $('#fluors').val() : [],
+				Symmetries: $('#symmetries').val() ? $('#symmetries').val() : []
+			};
+			getDiamondDataList(diamondFilters,1,10);
 
 			var fixColors = ["D", "E", "F"];
-            var fixClarity = ["IF", "VVS1", "VVS2", "VS1","VS2"];
-            var fixCut = ["IDEAL", "EXCELLENT","VERY GOOD","GOOD","FAIR"];
+			var fixClarity = ["IF", "VVS1", "VVS2", "VS1","VS2"];
+			var fixCut = ["IDEAL", "EXCELLENT","VERY GOOD","GOOD","FAIR"];
 
-			$("#carat-size-slider").slider({
-				range: true,
-				min: 0,
-				max: 10,
-				step: 0.1,
-				values: [2, 8],
-				slide: function (event, ui) {
-					$("#minCaratSize").val(ui.values[0]);
-					$("#maxCaratSize").val(ui.values[1]);
-				}
-			});
+			// $("#carat-size-slider").slider({
+			// 	range: true,
+			// 	min: 0,
+			// 	max: 10,
+			// 	step: 0.1,
+			// 	values: [2, 8],
+			// 	slide: function (event, ui) {
+			// 		$("#minCaratSize").val(ui.values[0]);
+			// 		$("#maxCaratSize").val(ui.values[1]);
+			// 	}
+			// });
 
 			$("#price-slider").slider({
 				range: true,
@@ -276,74 +84,184 @@
 					$("#maxPrice").val("$" + ui.values[1]);
 				}
 			});
-						
-            
-            $("#color-slider").slider({
-                range: true,
-                min: 0,
-                max: fixColors.length - 1,
-                step: 1,
-                values: [0,1], 
-                slide: function (event, ui) {
-                    $("#minColor").val(fixColors[ui.values[0]]);
-                    $("#maxColor").val(fixColors[ui.values[1]]);
-                }
-            });
 
 
-            $("#color-slider").slider({
-                range: true,
-                min: 0,
-                max: fixColors.length - 1,
-                step: 1,
-                values: [0, 1],
-                slide: function (event, ui) {
-                    $("#minColor").val(fixColors[ui.values[0]]);
-                    $("#maxColor").val(fixColors[ui.values[1]]);
-                }
-			});
+			// $("#color-slider").slider({
+			// 	range: true,
+			// 	min: 0,
+			// 	max: fixColors.length - 1,
+			// 	step: 1,
+			// 	values: [0,1],
+			// 	slide: function (event, ui) {
+			// 		$("#minColor").val(fixColors[ui.values[0]]);
+			// 		$("#maxColor").val(fixColors[ui.values[1]]);
+			// 	}
+			// });
 
 
-            $("#Cut-slider").slider({
-                range: true,
-                min: 0,
-                max: fixCut.length - 1,
-                step: 1,
-                values: [0, 1],
+			// $("#color-slider").slider({
+			// 	range: true,
+			// 	min: 0,
+			// 	max: fixColors.length - 1,
+			// 	step: 1,
+			// 	values: [0, 1],
+			// 	slide: function (event, ui) {
+			// 		$("#minColor").val(fixColors[ui.values[0]]);
+			// 		$("#maxColor").val(fixColors[ui.values[1]]);
+			// 	}
+			// });
+
+
+			$("#Cut-slider").slider({
+				range: true,
+				min: 0,
+				max: fixCut.length - 1,
+				step: 1,
+				values: [0, 1],
 				slide: function (event, ui) {
 					$("#minCut").val(fixCut[ui.values[0]]);
-                    $("#maxCut").val(fixCut[ui.values[1]]);
-                }
+					$("#maxCut").val(fixCut[ui.values[1]]);
+				}
 			});
 
 
-            $("#Clarity-slider").slider({
-                range: true,
-                min: 0,
-                max: fixClarity.length - 1,
-                step: 1,
-                values: [0, 1],
-                slide: function (event, ui) {
-                    $("#minClarity").val(fixClarity[ui.values[0]]);
-                    $("#maxClarity").val(fixClarity[ui.values[1]]);
-                }
-            });
-            
+			$("#Clarity-slider").slider({
+				range: true,
+				min: 0,
+				max: fixClarity.length - 1,
+				step: 1,
+				values: [0, 1],
+				slide: function (event, ui) {
+					$("#minClarity").val(fixClarity[ui.values[0]]);
+					$("#maxClarity").val(fixClarity[ui.values[1]]);
+				}
+			});
 
 			$("#minPrice").val("$ "+$("#price-slider").slider("values", 0));
 			$("#maxPrice").val("$ "+$("#price-slider").slider("values", 1));
 			$("#minCaratSize").val($("#carat-size-slider").slider("values",0));
 			$("#maxCaratSize").val($("#carat-size-slider").slider("values", 1));
 
-            $("#minColor").val(fixColors[$("#color-slider").slider("values", 0)]);
+			$("#minColor").val(fixColors[$("#color-slider").slider("values", 0)]);
 			$("#maxColor").val(fixColors[$("#color-slider").slider("values", 1)]);
 
-            $("#minCut").val(fixCut[$("#Cut-slider").slider("values", 0)]);
-            $("#maxCut").val(fixCut[$("#Cut-slider").slider("values", 1)]);
+			$("#minCut").val(fixCut[$("#Cut-slider").slider("values", 0)]);
+			$("#maxCut").val(fixCut[$("#Cut-slider").slider("values", 1)]);
 
-            $("#minClarity").val(fixClarity[$("#Clarity-slider").slider("values", 0)]);
-            $("#maxClarity").val(fixClarity[$("#Clarity-slider").slider("values", 1)]);
+			$("#minClarity").val(fixClarity[$("#Clarity-slider").slider("values", 0)]);
+			$("#maxClarity").val(fixClarity[$("#Clarity-slider").slider("values", 1)]);
+
 		});
-		        
+
+		async function GetShapeDesign() {
+		  try {
+			const response = await $.ajax({
+			  url: '@(SD.BaseApiUrl)/api/diamondproperty/get-shape-list', // API endpoint
+			  method: 'GET', // Using GET request
+			  dataType: 'json', // Expecting JSON response
+			});
+
+			if (Array.isArray(response) && response.length > 0) {
+			  response.forEach(function (shape) {
+				var shapeButton = '<div class="shape-btn text-center">';
+				shapeButton += '<img src="' + shape.IconPath + '" alt="' + shape.Name + '" />';
+				shapeButton += '<span>' + shape.Name + '</span>';
+				shapeButton += '</div>';
+
+				$('#filter-box #shape-list').append(shapeButton);
+			  });
+			} else {
+			  $('#filter-box #shape-list').html('<p>No shapes available</p>');
+			}
+		  } catch (error) {
+			console.error('Error fetching data: ', error);
+			$('#filter-box #shape-list').html('<p>Failed to load shapes</p>');
+		  }
+		}
+
+		async function GetCaratSize() {
+			try {
+				var response = await $.ajax({
+					url: '@(SD.BaseApiUrl)/api/diamondproperty/get-carat-size-ranges', // API endpoint
+					method: 'GET', // Using GET request
+					dataType: 'json', // Expecting JSON response
+				});
+
+				// Initialize the slider with API response
+				$("#carat-size-slider").slider({
+					range: true,
+					min: response.MinCaratSize,  // Set minimum from API response
+					max: response.MaxCaratSize,  // Set maximum from API response
+					step: 0.1, // Adjust step size as needed
+					values: [response.MinCaratSize, response.MaxCaratSize / 2], // Default values
+					slide: function (event, ui) {
+						$("#minCaratSize").val(ui.values[0]);
+						$("#maxCaratSize").val(ui.values[1]);
+					}
+				});
+
+				// Set initial values
+				$("#minCaratSize").val(response.MinCaratSize);
+				$("#maxCaratSize").val(response.MaxCaratSize / 2);
+
+			} catch (error) {
+				console.error('Error fetching data: ', error);
+				$('#filter-box #shape-list').html('<p>Failed to load shapes</p>');
+			}
+		}
+
+		async function GetColorData() {
+			try {
+				var response = await $.ajax({
+					url: '@(SD.BaseApiUrl)/api/diamondproperty/diamond-property/get-color-list', // API endpoint
+					method: 'GET', // Using GET request
+					dataType: 'json', // Expecting JSON response
+				});
+
+				var dataCount = Array.isArray(response) ? response.length : (response.data ? response.data.length : 0);
+
+				// Initialize the slider with API response
+				$("#color-slider").slider({
+					range: true,
+					min: 0,  // Set minimum from API response
+					max: dataCount,  // Set maximum from API response
+					step: 0.5, // Adjust step size as needed
+					values: ["D", "E", "F"], // Default values
+					slide: function (event, ui) {
+						$("#minColor").val(0);
+						$("#maxColor").val(dataCount);
+					}
+				});
+
+				// Set initial values
+				$("#minColor").val(response.MinCaratSize);
+				$("#maxColor").val(response.MaxCaratSize / 2);
+
+			} catch (error) {
+				console.error('Error fetching data: ', error);
+				$('#filter-box #shape-list').html('<p>Failed to load shapes</p>');
+			}
+		}
+
+		async function getDiamondDataList(diamondFilters, pageNumber = 1, pageSize = 10) {
+			debugger;
+			return $.ajax({
+				url: '/diamond/GetDiamondList', // Change this to your actual route
+				type: 'POST',
+				data: {
+					diamondFilters: diamondFilters,
+					pageNumber: pageNumber,
+					pageSize: pageSize
+				},
+				success: function (data) {
+					$('#diamond-list-container').html(data);
+				},
+				error: function (error) {
+					console.error('Error fetching data:', error);
+				}
+			});
+		}
+
+
 	</script>
 }

@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Models.DiamondData>
+
+
+<div class="table-responsive">
+	<table class="table table-bordered table-hover">
+		<thead class="bg-light">
+			<tr>
+				<th>Actions</th>
+				<th>Shape</th>
+				<th>Carat</th>
+				<th>Color</th>
+				<th>Clarity</th>
+				<th>Cut</th>
+				<th>CERT.</th>
+				<th>Polish</th>
+				<th>Symmetry</th>
+				<th>Depth</th>
+				<th>Price</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td>
+						<a href="#">
+							<img src="~/diamonds/Round.jpg" class="img-fluid" style="height:50px;width:50px;align-content:center;" />
+						</a>
+						@* <i class="fa fa-heart text-danger"></i>
+						<i class="fa fa-exchange-alt text-primary ms-2"></i> *@
+					</td>
+					<td>@item.ShapeName</td>
+					<td>@item.CaratSizeName</td>
+					<td>@item.ColorName</td>
+					<td>@item.ClarityName</td>
+					<td>@item.CutName</td>
+					<td>@item.CertificateNo</td>
+					<td>@item.PolishName</td>
+					<td>@item.SymmetryName</td>
+					<td>@item.DepthName</td>
+					<td>@item.MAmt</td>
+				</tr>
+			}
+
+		</tbody>
+	</table>
+</div>
+
+

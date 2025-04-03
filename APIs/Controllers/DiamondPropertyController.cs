@@ -36,17 +36,24 @@ namespace APIs.Controllers
             return Ok(result);
         }
 
-        [HttpGet("diamond-property/get-metal-list")]
+        [HttpGet("diamond-property/get-color-list")]
         public async Task<ActionResult> GetDiamondMetal()
         {
             var result = await _diamondProperty.GetMetalListAsync();
             return Ok(result);
         }
 
-        [HttpGet("diamond-property/get-carat-list")]
+        [HttpGet("get-carat-list")]
         public async Task<ActionResult> GetDiamondCarat()
         {
             var result = await _diamondProperty.GetCaratListAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("get-carat-size-ranges")]
+        public async Task<ActionResult> GetDiamondCaratRanges()
+        {
+            var result = await _diamondProperty.GetCaratSizeRangeAsync();
             return Ok(result);
         }
 
@@ -57,7 +64,7 @@ namespace APIs.Controllers
             return Ok(result);
         }
 
-        [HttpGet("diamond-property/get-shape-list")]
+        [HttpGet("get-shape-list")]
         public async Task<ActionResult> GetShapeListAsync()
         {
             var result = await _diamondProperty.GetShapeListAsync();

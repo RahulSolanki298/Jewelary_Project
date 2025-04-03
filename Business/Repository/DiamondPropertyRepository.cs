@@ -92,7 +92,7 @@ namespace Business.Repository
                         ParentId = x.dimPro.ParentId,
                         ParentProperty = propG.Name,  // Avoid null reference
                         IsActivated = x.dimPro.IsActivated
-                    }).Where(x => x.ParentProperty == $"{SD.Metal}").ToListAsync();
+                    }).Where(x => x.ParentProperty == $"{SD.Color}" && x.IsActivated == true).ToListAsync();
 
             return result;
         }
@@ -117,35 +117,61 @@ namespace Business.Repository
                         ParentId = x.dimPro.ParentId,
                         ParentProperty = propG.Name,  // Avoid null reference
                         IsActivated = x.dimPro.IsActivated
-                    }).Where(x => x.ParentProperty == $"{SD.Carat}").ToListAsync();
+                    }).Where(x => x.ParentProperty == $"{SD.CaratSize}" && x.IsActivated == true).ToListAsync();
 
             return result;
+        }
+
+        public async Task<CaratSizeRanges> GetCaratSizeRangeAsync()
+        {
+            var ParentId = await GetParentIdByName(SD.CaratSize);
+            var caratSizes = await _context.DiamondProperties
+                .Where(x => x.ParentId == ParentId && x.IsActivated == true)
+                .Select(x => x.Name)  // Name represents carat size
+                .ToListAsync();
+
+            if (!caratSizes.Any())
+            {
+                return null;
+            }
+
+            // Convert to decimal
+            var caratValues = caratSizes
+                .Select(x => decimal.TryParse(x, out var val) ? val : (decimal?)null)
+                .Where(x => x.HasValue)
+                .Select(x => x.Value)
+                .ToList();
+
+            var Response = new CaratSizeRanges()
+            {
+                MinCaratSize = caratValues.Min(),
+                MaxCaratSize = caratValues.Max()
+            };
+
+            return Response;
         }
 
         public async Task<IEnumerable<DiamondPropertyDTO>> GetShapeListAsync()
         {
-            var result = await _context.DiamondProperties
-                .GroupJoin(
-                    _context.DiamondProperties,
-                    dimPro => dimPro.ParentId,
-                    propG => propG.Id,
-                    (dimPro, dimGroup) => new { dimPro, dimGroup })
-                .SelectMany(
-                    x => x.dimGroup.DefaultIfEmpty(),
-                    (x, propG) => new DiamondPropertyDTO
-                    {
-                        Id = x.dimPro.Id,
-                        Name = x.dimPro.Name,
-                        Description = x.dimPro.Description,
-                        SymbolName = x.dimPro.SymbolName,
-                        IconPath = x.dimPro.IconPath,
-                        ParentId = x.dimPro.ParentId,
-                        ParentProperty = propG.Name,  // Avoid null reference
-                        IsActivated = x.dimPro.IsActivated
-                    }).Where(x => x.ParentProperty == $"{SD.Shape}").ToListAsync();
+            var result = await (from dimPro in _context.DiamondProperties
+                                join parent in _context.DiamondProperties on dimPro.ParentId equals parent.Id into parentGroup
+                                from parentProp in parentGroup.DefaultIfEmpty()
+                                where parentProp.Name == SD.Shape && dimPro.IsActivated
+                                select new DiamondPropertyDTO
+                                {
+                                    Id = dimPro.Id,
+                                    Name = dimPro.Name,
+                                    Description = dimPro.Description,
+                                    SymbolName = dimPro.SymbolName,
+                                    IconPath = dimPro.IconPath,
+                                    ParentId = dimPro.ParentId,
+                                    ParentProperty = parentProp.Name,  // Avoid null reference
+                                    IsActivated = dimPro.IsActivated
+                                }).ToListAsync();
 
             return result;
         }
+
 
         public async Task<IEnumerable<DiamondPropertyDTO>> GetClarityListAsync()
         {
@@ -167,7 +193,7 @@ namespace Business.Repository
                         ParentId = x.dimPro.ParentId,
                         ParentProperty = propG.Name,  // Avoid null reference
                         IsActivated = x.dimPro.IsActivated
-                    }).Where(x => x.ParentProperty == $"{SD.Clarity}").ToListAsync();
+                    }).Where(x => x.ParentProperty == $"{SD.Clarity}" && x.IsActivated == true).ToListAsync();
 
             return result;
         }
@@ -192,7 +218,7 @@ namespace Business.Repository
                         ParentId = x.dimPro.ParentId,
                         ParentProperty = propG.Name,  // Avoid null reference
                         IsActivated = x.dimPro.IsActivated
-                    }).Where(x => x.ParentProperty == $"{SD.Clarity}").ToListAsync();
+                    }).Where(x => x.ParentProperty == $"{SD.Clarity}" && x.IsActivated == true).ToListAsync();
 
             return result;
         }
@@ -244,7 +270,7 @@ namespace Business.Repository
             if (!string.IsNullOrEmpty(diamondPropertyName))
             {
                 var parentId = await GetParentIdByName(properyName);
-                diamondPrt = await _context.DiamondProperties.Where(x => x.Name == diamondPrt.Name && x.ParentId == parentId).FirstOrDefaultAsync();
+                diamondPrt = await _context.DiamondProperties.Where(x => x.Name == diamondPropertyName && x.ParentId == parentId).FirstOrDefaultAsync();
 
                 if (diamondPrt == null)
                 {

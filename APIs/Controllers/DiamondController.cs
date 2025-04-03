@@ -27,9 +27,9 @@ namespace APIs.Controllers
         }
 
         [HttpPost("GetDiamondList")]
-        public async Task<ActionResult> GetDiamondByFilterData(DiamondFilters diamondFilters)
+        public async Task<ActionResult> GetDiamondByFilterData(DiamondFilters diamondFilters, int pageNumber = 1, int pageSize = 10)
         {
-            var response = await _diamondRepository.GetDiamondsAsync(diamondFilters, 1, 10);
+            var response = await _diamondRepository.GetDiamondsAsync(diamondFilters, pageNumber, pageSize);
             return Ok(response);
         }
 
@@ -59,7 +59,7 @@ namespace APIs.Controllers
                 Diamond diamond = new();
                 int labId, colorId, shapeId, caratSizeId, clarityId, cutId, polishId, symmId, fluorId, tableId, depthId, ratioId;
 
-                for (int row = 2; row <= 96; row++)
+                for (int row = 2; row <= 95; row++)
                 {
 
                     labId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 4].Text, SD.Lab);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Models
 {
@@ -43,7 +44,8 @@ namespace Models
         public decimal? Height { get; set; }
         public string Location { get; set; }  // City Name
         public string Status { get; set; } // Available, Consignment, Hold, In
-        public DateTime? INWDate { get; set; }
+
+        //public DateTime? INWDate { get; set; }
         public DateTime? MarketDate { get; set; }
 
         public string MDisc { get; set; }

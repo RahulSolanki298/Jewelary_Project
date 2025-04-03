@@ -32,6 +32,9 @@ namespace B2C_ECommerce
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
             });
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IDiamondService, DiamondService>();
+
+            
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
