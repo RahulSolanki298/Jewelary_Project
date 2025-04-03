@@ -2,7 +2,7 @@
 
 
 <div class="table-responsive">
-	<table class="table table-bordered table-hover">
+	<table class="table table-bordered table-hover text-center">
 		<thead class="bg-light">
 			<tr>
 				<th>Actions</th>
@@ -16,18 +16,20 @@
 				<th>Symmetry</th>
 				<th>Depth</th>
 				<th>Price</th>
+				<th>Compare</th>
+				<th>Wishlist</th>
+				<th></th>
 			</tr>
 		</thead>
-		<tbody>
+		<tbody >
 			@foreach (var item in Model)
 			{
 				<tr>
-					<td>
+					<td >
 						<a href="#">
-							<img src="~/diamonds/Round.jpg" class="img-fluid" style="height:50px;width:50px;align-content:center;" />
+							<img src="/assets/img/shape-svg/Round.svg" class="img-fluid" style="height:70px;width:70px;align-content:center;" />
 						</a>
-						@* <i class="fa fa-heart text-danger"></i>
-						<i class="fa fa-exchange-alt text-primary ms-2"></i> *@
+						<img src="~/assets/img/360-degrees.png" style="height:35px;width:30px;align-content:center;" />
 					</td>
 					<td>@item.ShapeName</td>
 					<td>@item.CaratSizeName</td>
@@ -39,6 +41,11 @@
 					<td>@item.SymmetryName</td>
 					<td>@item.DepthName</td>
 					<td>@item.MAmt</td>
+					<th><input type="checkbox" style="width:25px;height:25px;"/></th>
+					<th>
+						<img src="~/assets/img/heart.png" style="width:25px;height:25px;"/>
+					</th>
+					<th><button class="btn btn-dark text-capitalize">Details</button></th>
 				</tr>
 			}
 
