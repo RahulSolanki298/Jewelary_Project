@@ -41,11 +41,11 @@ namespace Business.Repository
                     new SqlParameter("@PageSize", SqlDbType.Int) { Value = pageSize }
                 };
 
-                var diamonds = await _context.DiamondData
-                    .FromSqlRaw("EXEC SP_GetDiamondDataBY_DiamondFilters @Color, @Carats, @Shapes, @Clarity, @Price, @Ratio, @Table, @Depth, @Polish, @Fluor, @Symmetry, @PageNumber, @PageSize", parameters)
-                    .ToListAsync();
+                //var diamonds = await _context.DiamondData
+                //    .FromSqlRaw("EXEC SP_GetDiamondDataBY_DiamondFilters @Color, @Carats, @Shapes, @Clarity, @Price, @Ratio, @Table, @Depth, @Polish, @Fluor, @Symmetry, @PageNumber, @PageSize", parameters)
+                //    .ToListAsync();
 
-                return diamonds;
+                return null;
             }
             catch (Exception)
             {
