@@ -1262,15 +1262,15 @@ textarea:focus {
 .main-menu ul li {
   position: relative;
 }
-.main-menu ul li a {
-  color: #222222;
-  font-size: 20px;
-  padding: 25px 35px;
-  font-weight: 500;
-  display: block;
-  text-transform: uppercase;
-  
-}
+    .main-menu ul li a {
+        color: #222222;
+        /*font-size: 20px;*/
+        font-size: 16px;
+        padding: 25px 35px;
+        font-weight: 700;
+        display: block;
+        text-transform: uppercase;
+    }
 
 .main-menu ul li a i {
   font-size: 14px;
@@ -1488,7 +1488,8 @@ textarea:focus {
 
 @media only screen and (max-width: 1440px) {
     .main-menu ul li a {
-        font-size: 16px; /* Increase font size */
+        /*font-size: 16px;*/ /* Increase font size */
+        font-size: 14px;
         padding: 20px 20px; /* Increase padding for better spacing */
     }
 }
@@ -4722,16 +4723,17 @@ blockquote {
   border-radius: 40px;
   float: left;
 }
-.product-details-des .quantity .pro-qty .qtybtn {
-  width: 15px;
-  display: block;
-  float: left;
-  line-height: 40px;
-  cursor: pointer;
-  text-align: center;
-  font-size: 16px;
-  color: #555555;
-}
+    .product-details-des .quantity .pro-qty .qtybtn {
+        width: 15px;
+        /*display: block;*/
+        display: none;
+        float: left;
+        line-height: 40px;
+        cursor: pointer;
+        text-align: center;
+        font-size: 16px;
+        color: #555555;
+    }
 .product-details-des .quantity .pro-qty input {
   width: 28px;
   float: left;
