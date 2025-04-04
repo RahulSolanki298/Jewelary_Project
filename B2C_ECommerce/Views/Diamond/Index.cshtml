@@ -61,7 +61,12 @@
 
 			var fixColors = ["D", "E", "F"];
 			var fixClarity = ["IF", "VVS1", "VVS2", "VS1","VS2"];
-			var fixCut = ["IDEAL", "EXCELLENT","VERY GOOD","GOOD","FAIR"];
+			var fixCut = ["IDEAL", "EXCELLENT", "VERY GOOD", "GOOD", "FAIR"];
+
+			var fixPolish = ["IDEAL", "EXCELLENT", "VERY GOOD", "GOOD", "FAIR"];
+			var fixFluor = ["IDEAL", "EXCELLENT", "VERY GOOD", "GOOD", "FAIR"];
+            var fixSym = ["IDEAL", "EXCELLENT", "VERY GOOD", "GOOD", "FAIR"];
+
 
 			// $("#carat-size-slider").slider({
 			// 	range: true,
@@ -75,6 +80,18 @@
 			// 	}
 			// });
 
+            $("#btnMoreFilter").click(function () {
+                $("#divMoreFilter").show();
+                $("#btnLessFilter").show();
+                $("#btnMoreFilter").hide();
+            });
+
+            $("#btnLessFilter").click(function () {
+                $("#divMoreFilter").hide();
+                $("#btnLessFilter").hide();
+                $("#btnMoreFilter").show();
+            });
+
 			$("#price-slider").slider({
 				range: true,
 				min: 500,
@@ -86,7 +103,6 @@
 					$("#maxPrice").val("$" + ui.values[1]);
 				}
 			});
-
 
 			$("#Cut-slider").slider({
 				range: true,
@@ -112,6 +128,42 @@
 				}
 			});
 
+            $("#Polish-slider").slider({
+                range: true,
+                min: 0,
+                max: fixPolish.length - 1,
+                step: 1,
+                values: [0, 1],
+                slide: function (event, ui) {
+                    $("#minPolish").val(fixPolish[ui.values[0]]);
+                    $("#maxPolish").val(fixPolish[ui.values[1]]);
+                }
+			});
+
+            $("#Fluor-slider").slider({
+                range: true,
+                min: 0,
+                max: fixFluor.length - 1,
+                step: 1,
+                values: [0, 1],
+                slide: function (event, ui) {
+                    $("#minFluor").val(fixFluor[ui.values[0]]);
+                    $("#maxFluor").val(fixFluor[ui.values[1]]);
+                }
+			});
+
+            $("#Symmetry-slider").slider({
+                range: true,
+                min: 0,
+                max: fixSym.length - 1,
+                step: 1,
+                values: [0, 1],
+                slide: function (event, ui) {
+                    $("#minSymmetry").val(fixSym[ui.values[0]]);
+                    $("#maxSymmetry").val(fixSym[ui.values[1]]);
+                }
+            });
+
 			$("#minPrice").val("$ "+$("#price-slider").slider("values", 0));
 			$("#maxPrice").val("$ "+$("#price-slider").slider("values", 1));
 			$("#minCaratSize").val($("#carat-size-slider").slider("values",0));
@@ -125,7 +177,15 @@
 
 			$("#minClarity").val(fixClarity[$("#Clarity-slider").slider("values", 0)]);
 			$("#maxClarity").val(fixClarity[$("#Clarity-slider").slider("values", 1)]);
+			            
+            $("#minPolish").val(fixPolish[$("#Polish-slider").slider("values", 0)]);
+			$("#maxPolish").val(fixPolish[$("#Polish-slider").slider("values", 1)]);
 
+            $("#minFluor").val(fixFluor[$("#Fluor-slider").slider("values", 0)]);
+			$("#maxFluor").val(fixFluor[$("#Fluor-slider").slider("values", 1)]);
+
+            $("#minSymmetry").val(fixSym[$("#Symmetry-slider").slider("values", 0)]);
+            $("#maxSymmetry").val(fixSym[$("#Symmetry-slider").slider("values", 1)]);
 		});
 
 		async function GetShapeDesign() {
@@ -185,7 +245,7 @@
 			}
 		}
 
-		async function GetColorData() {
+		@*async function GetColorData() {
 			try {
 				var response = await $.ajax({
 					url: '@(SD.BaseApiUrl)/api/diamondproperty/diamond-property/get-color-list', // API endpoint
@@ -216,7 +276,7 @@
 				console.error('Error fetching data: ', error);
 				$('#filter-box #shape-list').html('<p>Failed to load shapes</p>');
 			}
-		}
+		}*@
 
 		async function getDiamondDataList(diamondFilters, pageNumber = 1, pageSize = 10) {
 			debugger;
