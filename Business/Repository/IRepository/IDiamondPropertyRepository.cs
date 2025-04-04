@@ -19,7 +19,6 @@ namespace Business.Repository.IRepository
         Task<int> GetDiamondPropertyId(string diamondPropertyName, string properyName);
         Task<int> GetParentIdByName(string parentName);
 
-
         Task<CaratSizeRanges> GetCaratSizeRangeAsync();
     }
 }

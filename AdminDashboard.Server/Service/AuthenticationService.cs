@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using AdminDashboard.Server.Service.IService;
 using Blazored.LocalStorage;
+using Common;
 using Microsoft.AspNetCore.Components.Authorization;
 using Models;
 
@@ -27,7 +28,7 @@ namespace AdminDashboard.Server.Service
             try
             {
                 var jsonContent = new StringContent(JsonSerializer.Serialize(loginDTO), Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync("/api/account/admin-sign-in", jsonContent);
+                var response = await _httpClient.PostAsync($"{SD.BaseApiUrl}/api/account/admin-sign-in", jsonContent);
 
                 if (response.IsSuccessStatusCode)
                 {

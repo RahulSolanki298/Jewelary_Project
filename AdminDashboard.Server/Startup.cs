@@ -68,8 +68,8 @@ namespace AdminDashboard.Server
 
             services.AddAuthorizationCore();
             services.AddHttpContextAccessor();
+            services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddServerSideBlazor();
-            services.AddRazorPages();
             services.AddMudServices();
 
             // Configure HttpClient

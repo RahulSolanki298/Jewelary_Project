@@ -20,16 +20,19 @@ namespace APIs.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly APISettings _aPISettings;
         private readonly IAccountRepository _accountRepository;
+        private readonly IB2COrdersRepository _ordersRepository;
 
         public B2CController(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             RoleManager<IdentityRole> roleManager,
-            IAccountRepository accountRepository)
+            IAccountRepository accountRepository,
+            IB2COrdersRepository ordersRepository)
         {
             _roleManager = roleManager;
             _userManager = userManager;
             _signInManager = signInManager;
             _accountRepository = accountRepository;
+            _ordersRepository = ordersRepository;
         }
 
         [HttpPost("Customer-List")]
@@ -61,8 +64,57 @@ namespace APIs.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> GetOrderRequestListAsync()
         {
-            return Ok();
+            var response = await _ordersRepository.GetB2COrderRequestList();
+            return Ok(response);
         }
 
+        [HttpPost("Order-Accept-List")]
+        [AllowAnonymous]
+        public async Task<ActionResult> GetOrderAcceptListAsync()
+        {
+            var response = await _ordersRepository.GetB2COrderAcceptList();
+            return Ok(response);
+        }
+
+        [HttpPost("Order-Reject-List")]
+        [AllowAnonymous]
+        public async Task<ActionResult> GetOrderRejectListAsync()
+        {
+            var response = await _ordersRepository.GetB2COrderRejectList();
+            return Ok(response);
+        }
+
+
+        [HttpPost("Order-Processing-List")]
+        [AllowAnonymous]
+        public async Task<ActionResult> GetOrderProcessingAsync()
+        {
+            var response = await _ordersRepository.GetB2COrderProcessingList();
+            return Ok(response);
+        }
+
+        [HttpPost("Order-Shipped-List")]
+        [AllowAnonymous]
+        public async Task<ActionResult> GetOrderShippedAsync()
+        {
+            var response = await _ordersRepository.GetB2COrderShippedList();
+            return Ok(response);
+        }
+
+        [HttpPost("Order-ReadyForShipment-List")]
+        [AllowAnonymous]
+        public async Task<ActionResult> GetOrderReadyForShipmentAsync()
+        {
+            var response = await _ordersRepository.GetB2COrderReadyForShipmentList();
+            return Ok(response);
+        }
+
+        [HttpPost("Order-Complated-List")]
+        [AllowAnonymous]
+        public async Task<ActionResult> GetOrderComplatedAsync()
+        {
+            var response = await _ordersRepository.GetB2COrderComplatedList();
+            return Ok(response);
+        }
     }
 }

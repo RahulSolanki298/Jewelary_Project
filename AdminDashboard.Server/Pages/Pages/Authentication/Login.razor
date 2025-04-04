@@ -11,40 +11,38 @@
 @inject NavigationManager NavigationManager
 
 <MudGrid>
+    <MudItem xs="12" sm="6" lg="12">
+        <img src="images/_login_process.jpg" alt="Cool Image" style="width: 100%; height: 100%; object-fit: cover;" />
+    </MudItem>
+    <MudItem xs="12" sm="6" lg="12">
 
-<EditForm Model="@loginModel" OnValidSubmit="OnValidSubmit">
-    <DataAnnotationsValidator />
-        <MudItem xs="12" sm="6" lg="12">
-            <MudCard Style="background-color:lightgray;text-align:center;">
-                <MudCardContent>
-                    <h2>Admin Panel</h2>
-                </MudCardContent>
-            </MudCard>
-        </MudItem>
-
-        <MudItem xs="12" sm="6" lg="12">
-            <MudCard Style="background-color:lightgray;">
-                <MudCardContent>
-                    <img src="images/logo-text-min.png" alt="Cool Image" style="width: 100%; height: 100%; object-fit: cover;" />
-                </MudCardContent>
-            </MudCard>
-        </MudItem>
-
-        <!-- Right Side Form Column -->
-        <MudItem xs="12" sm="6" lg="12">
+        <EditForm Model="@loginModel" OnValidSubmit="OnValidSubmit">
+            <DataAnnotationsValidator />
             <MudCard>
                 <MudCardContent>
+                    <h2>Admin Panel</h2>
+                    @if (isLoading)
+                    {
+                        <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
+                    }
+
+                </MudCardContent>
+                <MudCardContent>
+                    @if (success != true)
+                    {
+                        <span style="color:red;">@Message</span>
+                    }
                     <MudTextField Label="Email" Class="mt-3"
-                                  @bind-Value="loginModel.UserName" For="@(() => loginModel.UserName)" Variant="Variant.Outlined" />
+                    @bind-Value="loginModel.UserName" For="@(() => loginModel.UserName)" Variant="Variant.Outlined" />
                     <MudTextField Label="Password" Class="mt-3"
-                                  @bind-Value="loginModel.Password" For="@(() => loginModel.Password)" InputType="InputType.Password" Variant="Variant.Outlined" />
+                    @bind-Value="loginModel.Password" For="@(() => loginModel.Password)" InputType="InputType.Password" Variant="Variant.Outlined" />
                 </MudCardContent>
                 <MudCardActions>
                     <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Login</MudButton>
                 </MudCardActions>
             </MudCard>
-        </MudItem>
-</EditForm>
+        </EditForm>
+    </MudItem>
 
 </MudGrid>
 
@@ -52,11 +50,16 @@
 @code {
     private AdminLoginModel loginModel = new AdminLoginModel();
     bool success;
+    string Message;
+    bool isLoading = false;
 
     private async Task OnValidSubmit(EditContext context)
     {
         try
         {
+            isLoading = true;
+            StateHasChanged();
+
             var response = await AdminLoginService.AdminSignInAsync(loginModel);
 
             if (response.IsAuthSuccessful)
@@ -66,10 +69,23 @@
                 success = true;
                 StateHasChanged();
                 NavigationManager.NavigateTo("/personal/dashboard");
+            }else{
+                success = false;
+
+            }
+
+            if (success==false)
+            {
+                Message = "Invalid Username or Password. Please try again.";
             }
         }
         catch (Exception ex)
         {
+            success = false;
+            Message = "Something went wrong. Please try again later.";
+        }finally{
+            isLoading = false;
+            StateHasChanged();
 
         }
     }

@@ -56,6 +56,24 @@ namespace Business.Repository
                           select ord).ToListAsync();
         }
 
+        public async Task<IEnumerable<CustomerOrders>> GetB2COrderReadyForShipmentList()
+        {
+            return await (from ord in _context.CustomerOrders
+                          join sts in _context.CustomerOrderStatus on ord.OrderId.ToString() equals sts.OrderId
+                          join status in _context.OrderStatus on sts.CurrentStatusId equals status.Id
+                          where status.Name == SD.ReadyForShipment
+                          select ord).ToListAsync();
+        }
+
+        public async Task<IEnumerable<CustomerOrders>> GetB2COrderShippedList()
+        {
+            return await (from ord in _context.CustomerOrders
+                          join sts in _context.CustomerOrderStatus on ord.OrderId.ToString() equals sts.OrderId
+                          join status in _context.OrderStatus on sts.CurrentStatusId equals status.Id
+                          where status.Name == SD.Shipped
+                          select ord).ToListAsync();
+        }
+
         public async Task<IEnumerable<CustomerOrders>> GetB2COrderDeliveredList()
         {
             return await (from ord in _context.CustomerOrders

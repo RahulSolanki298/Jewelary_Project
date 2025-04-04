@@ -99,6 +99,23 @@ namespace Business.Repository
             }
         }
 
+        public async Task<IEnumerable<DiamondData>> GetDiamondList()
+        {
+            try
+            {
+                var diamonds = await _context.DiamondData
+                    .FromSqlRaw("EXEC SP_GetDiamondDataBY_DiamondFilters")
+                    .ToListAsync();
+
+                
+                return diamonds;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<bool> BulkInsertDiamondsAsync(string jsonData)
         {
             try

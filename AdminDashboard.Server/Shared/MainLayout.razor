@@ -1,40 +1,54 @@
 ﻿@inherits LayoutComponentBase
 
-<MudProgressCircular 
-    Color="Color.Success" 
-    Rounded="true" 
-    Size="Size.Large" 
-    StrokeWidth="4" 
-    Value="50" />
-
 <MudThemeProvider Theme="_themeManager.Theme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <MudLayout>
+
+    <!-- AppBar -->
     <MudAppBar Elevation="4">
         <MudHidden Breakpoint="Breakpoint.SmAndDown">
             <MudIcon Icon="@Icons.Custom.Brands.MudBlazor" Size="Size.Large" />
         </MudHidden>
         <MudHidden Breakpoint="Breakpoint.MdAndUp">
-            <MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+            <MudIconButton Icon="@Icons.Material.Outlined.Menu"
+                           Color="Color.Inherit"
+                           Edge="Edge.Start"
+                           OnClick="@DrawerToggle" />
         </MudHidden>
+
         <MudHidden Breakpoint="Breakpoint.Xs">
             <MudText Typo="Typo.h6" Class="ml-4">Admin Dashboard</MudText>
         </MudHidden>
         <MudHidden Breakpoint="Breakpoint.Xs" Invert="true">
             <MudText Typo="Typo.subtitle2">Admin Dashboard</MudText>
         </MudHidden>
+
         <MudAppBarSpacer />
-        <MudMenu Icon="@Icons.Material.Outlined.Translate" Color="Color.Inherit" Direction="Direction.Bottom" OffsetY="true" Dense="true">
+
+        <!-- Language Selector -->
+        <MudMenu Icon="@Icons.Material.Outlined.Translate"
+                 Color="Color.Inherit"
+                 Direction="Direction.Bottom"
+                 OffsetY="true"
+                 Dense="true">
             <MudMenuItem>English</MudMenuItem>
             <MudMenuItem>Swedish</MudMenuItem>
             <MudMenuItem>Old Norse</MudMenuItem>
         </MudMenu>
-        <MudMenu Icon="@Icons.Material.Outlined.Widgets" Color="Color.Inherit" Direction="Direction.Bottom" OffsetY="true" Dense="true">
-            <MudMenuItem Link="https://mudblazor.com/">MudBlazor</MudMenuItem>
-            <MudMenuItem Link="https://github.com/Garderoben/MudBlazor.Templates">Source Code</MudMenuItem>
+
+        <!-- Links -->
+        <MudMenu Icon="@Icons.Material.Outlined.Widgets"
+                 Color="Color.Inherit"
+                 Direction="Direction.Bottom"
+                 OffsetY="true"
+                 Dense="true">
+            <MudMenuItem Href="https://mudblazor.com/">MudBlazor</MudMenuItem>
+            <MudMenuItem Href="https://github.com/Garderoben/MudBlazor.Templates">Source Code</MudMenuItem>
         </MudMenu>
+
+        <!-- User Menu -->
         <MudMenu Direction="Direction.Left" OffsetX="true" Dense="true" Class="mt-1 ml-4">
             <ActivatorContent>
                 <MudAvatar Image="images/avatar_jonny.jpg" />
@@ -47,64 +61,95 @@
             </ChildContent>
         </MudMenu>
     </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" Elevation="25" ClipMode="_themeManager.DrawerClipMode">
+
+    <!-- Drawer -->
+    <MudDrawer @bind-Open="_drawerOpen"
+               Elevation="25"
+               ClipMode="_themeManager.DrawerClipMode">
         <NavMenu />
     </MudDrawer>
+
+    <!-- Main Content -->
     <MudMainContent>
         <MudHidden Breakpoint="Breakpoint.SmAndDown">
             <MudToolBar DisableGutters="true">
-                <MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Inherit" OnClick="@((e) => DrawerToggle())" Class="ml-3" />
-                @* <MudBreadcrumbs Items="_items"></MudBreadcrumbs> *@
+                <MudIconButton Icon="@Icons.Material.Outlined.Menu"
+                               Color="Color.Inherit"
+                               OnClick="@DrawerToggle"
+                               Class="ml-3" />
+
+                <MudBreadcrumbs Items="_items" />
+
                 <MudToolBarSpacer />
-               @*  <MudButton Variant="Variant.Text" Link="https://mudblazor.com/" Style="color:#594AE2;">MudBlazor</MudButton>
-                <MudButton Variant="Variant.Text" Link="https://github.com/Garderoben/MudBlazor.Templates" Style="color:#424242;" Class="mr-3">Source Code</MudButton>
- *@
+
+                <MudButton Variant="Variant.Text"
+                           Href="https://mudblazor.com/"
+                           Style="color:#594AE2;">MudBlazor</MudButton>
+
+                <MudButton Variant="Variant.Text"
+                           Href="https://github.com/Garderoben/MudBlazor.Templates"
+                           Style="color:#424242;"
+                           Class="mr-3">Source Code</MudButton>
             </MudToolBar>
         </MudHidden>
-        @* <MudContainer MaxWidth="MaxWidth.False" Class="mt-4"> *@
-        <MudContainer MaxWidth="MaxWidth.False">
+
+        <!-- Page Body -->
+        <MudContainer>
+            @if (_isLoading)
+            {
+                <MudProgressCircular Indeterminate="true" Color="Color.Primary" Size="Size.Large" Class="loader-overlay" />
+            }
             @Body
         </MudContainer>
     </MudMainContent>
 </MudLayout>
 
-<MudThemeManagerButton OnClick="@((e) => OpenThemeManager(true))" />
-<MudThemeManager Open="_themeManagerOpen" OpenChanged="OpenThemeManager" Theme="_themeManager" ThemeChanged="UpdateTheme" />
-
+<!-- Theme Manager Controls -->
+<MudThemeManagerButton OnClick="@(() => OpenThemeManager(true))" />
+<MudThemeManager Open="_themeManagerOpen"
+                 OpenChanged="OpenThemeManager"
+                 Theme="_themeManager"
+                 ThemeChanged="UpdateTheme" />
 
 @code {
-    private ThemeManagerTheme _themeManager = new ThemeManagerTheme();
+    #region Fields
+    private ThemeManagerTheme _themeManager = new();
+    private bool _drawerOpen = true;
+    private bool _themeManagerOpen = false;
+    private bool _isLoading = false;
 
-    public bool _drawerOpen = true;
-    public bool _themeManagerOpen = false;
+    #endregion
 
-    void DrawerToggle()
+    #region Lifecycle
+    protected override void OnInitialized()
     {
-        _drawerOpen = !_drawerOpen;
+        _themeManager = new ThemeManagerTheme
+            {
+                Theme = new MudBlazorAdminDashboard(),
+                DrawerClipMode = DrawerClipMode.Always,
+                FontFamily = "Montserrat",
+                DefaultBorderRadius = 3
+            };
     }
+    #endregion
 
-    void OpenThemeManager(bool value)
-    {
-        _themeManagerOpen = value;
-    }
+    #region Methods
+    private void DrawerToggle() => _drawerOpen = !_drawerOpen;
 
-    void UpdateTheme(ThemeManagerTheme value)
+    private void OpenThemeManager(bool value) => _themeManagerOpen = value;
+
+    private void UpdateTheme(ThemeManagerTheme value)
     {
         _themeManager = value;
         StateHasChanged();
     }
+    #endregion
 
-    protected override void OnInitialized()
-    {
-        _themeManager.Theme = new MudBlazorAdminDashboard();
-        _themeManager.DrawerClipMode = DrawerClipMode.Always;
-        _themeManager.FontFamily = "Montserrat";
-        _themeManager.DefaultBorderRadius = 3;
-    }
-
-    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    #region Breadcrumbs
+    private readonly List<BreadcrumbItem> _items = new()
     {
         new BreadcrumbItem("Personal", href: "#"),
         new BreadcrumbItem("Dashboard", href: "#"),
     };
+    #endregion
 }

@@ -33,6 +33,13 @@ namespace APIs.Controllers
             return Ok(response);
         }
 
+        [HttpPost("GetAllDiamond")]
+        public async Task<ActionResult> GetDiamondList()
+        {
+            var response = await _diamondRepository.GetDiamondList();
+            return Ok(response);
+        }
+
         [HttpPost("BulkDiamondUpload")]
         public async Task<IActionResult> UploadDiamondWithExcel(IFormFile file)
         {

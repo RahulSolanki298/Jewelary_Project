@@ -41,6 +41,8 @@
 			GetShapeDesign();
 			GetCaratSize();
 			GetColorData();
+			
+
 			var diamondFilters =
 			{
 				Colors: $('#colors').val() ? $('#colors').val() : [],
@@ -86,32 +88,6 @@
 			});
 
 
-			// $("#color-slider").slider({
-			// 	range: true,
-			// 	min: 0,
-			// 	max: fixColors.length - 1,
-			// 	step: 1,
-			// 	values: [0,1],
-			// 	slide: function (event, ui) {
-			// 		$("#minColor").val(fixColors[ui.values[0]]);
-			// 		$("#maxColor").val(fixColors[ui.values[1]]);
-			// 	}
-			// });
-
-
-			// $("#color-slider").slider({
-			// 	range: true,
-			// 	min: 0,
-			// 	max: fixColors.length - 1,
-			// 	step: 1,
-			// 	values: [0, 1],
-			// 	slide: function (event, ui) {
-			// 		$("#minColor").val(fixColors[ui.values[0]]);
-			// 		$("#maxColor").val(fixColors[ui.values[1]]);
-			// 	}
-			// });
-
-
 			$("#Cut-slider").slider({
 				range: true,
 				min: 0,
@@ -123,7 +99,6 @@
 					$("#maxCut").val(fixCut[ui.values[1]]);
 				}
 			});
-
 
 			$("#Clarity-slider").slider({
 				range: true,

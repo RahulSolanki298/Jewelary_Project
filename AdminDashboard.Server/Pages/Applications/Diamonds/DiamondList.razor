@@ -1,10 +1,170 @@
 ﻿@page "/applications/diamonds/diamond-list"
 
-<h3>Diamond List</h3>
+@using AdminDashboard.Server.Pages.Applications.Products
+@using Business.Repository
+@using Business.Repository.IRepository
+@using System.IO
+@using Common
+@using OfficeOpenXml
+@using global::Models
+
+@inject IDialogService Dialog
+@inject IDiamondRepository _diamondRepo
+@inject ISnackbar Snackbar
+
+<MudPaper Class="p-6 mx-auto mt-4" Elevation="12" Style="max-width: 1300px; border-radius: 16px; background: linear-gradient(to right, #4facfe, #00f2fe);">
+    <MudGrid>
+        <!-- Header Section -->
+        <MudItem xs="12" class="d-flex justify-between align-center mb-4">
+            <MudText Typo="Typo.h4" Color="Color.Inherit" Class="font-weight-bold" Style="font-size: 1.5rem; letter-spacing: 1px;">
+                💎 Diamond List
+            </MudText>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.UploadFile" OnClick="OpenUploadDialog" Class="transition-all duration-300 ease-in-out transform hover:scale-105">
+                Upload File
+            </MudButton>
+        </MudItem>
+
+        <!-- Search Bar Section -->
+        <MudItem xs="12">
+            <MudTextField @bind-Value="searchString" Placeholder="🔍 Search diamonds..." Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Search" Class="mb-4" Immediate="true"
+                          Style="border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);" />
+        </MudItem>
+
+        <!-- Diamond Table -->
+        <MudItem xs="12">
+            <MudTable Elevation="6" Items="@diamondList" Filter="Search" Hover="@hover" Dense="@dense" Bordered="true" Striped="true">
+                <HeaderContent>
+                    @foreach (var column in tableColumns)
+                    {
+                        <MudTh Style="color: #00796b; font-weight: bold;">
+                            <MudTableSortLabel SortBy="@column.SortExpression">@column.Label</MudTableSortLabel>
+                        </MudTh>
+                    }
+                    <MudTh>Actions</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    @foreach (var column in tableColumns)
+                    {
+                        <MudTd DataLabel="@column.Label" Style="font-size: 1rem; font-weight: 500; color: #333;">
+                            @context.GetType().GetProperty(column.Property)?.GetValue(context)
+                        </MudTd>
+                    }
+                    <MudTd>
+                        <MudIconButton OnClick="() => Edit(context.Id)" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit"
+                                       Class="transition-all duration-200 hover:scale-110" />
+                        <MudIconButton OnClick="() => ConfirmDelete(context.Id)" Color="Color.Error" Icon="@Icons.Material.Filled.Delete"
+                                       Class="transition-all duration-200 hover:scale-110" />
+                    </MudTd>
+                </RowTemplate>
+                <PagerContent>
+                    <MudTablePager PageSizeOptions="new int[] {5, 10, 20, 50}" />
+                </PagerContent>
+            </MudTable>
+        </MudItem>
+
+        <!-- Table Settings Section -->
+        <MudItem xs="12" class="d-flex gap-4 mt-4">
+            <MudSwitch @bind-Checked="@hover" Color="Color.Primary" Label="Row Hover" Class="transition-all duration-300" />
+            <MudSwitch @bind-Checked="@dense" Color="Color.Secondary" Label="Dense Table" Class="transition-all duration-300" />
+        </MudItem>
+    </MudGrid>
+</MudPaper>
 
 
 
+<MudMessageBox @ref="mudMessageBox" Title="Confirm Delete" CancelText="Cancel">
+    <MessageContent>Are you sure you want to delete this diamond?</MessageContent>
+    <YesButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever">Delete!</MudButton>
+    </YesButton>
+</MudMessageBox>
 
 @code {
+    private bool hover = true;
+    private bool dense = true;
+    private string searchString = "";
+    private IEnumerable<DiamondData> diamondList = new List<DiamondData>();
+    private MudMessageBox mudMessageBox;
+    private IBrowserFile selectedFile;
+    private MudDialog BulkAddDialog;
 
+    private readonly List<(string Label, string Property, Func<DiamondData, object> SortExpression)> tableColumns = new()
+    {
+        ("Name", "ShapeName", x => x.ShapeName),
+        ("Carat", "CaratSizeName", x => x.CaratSizeName),
+        ("Color", "ColorName", x => x.ColorName),
+        ("Clarity", "ClarityName", x => x.ClarityName),
+        ("Cut", "CutName", x => x.CutName),
+        ("Certificate No", "CertificateNo", x => x.CertificateNo),
+        ("Polish", "PolishName", x => x.PolishName),
+        ("Symmetry", "SymmetryName", x => x.SymmetryName),
+        ("Depth", "DepthName", x => x.DepthName),
+        ("Price", "Price", x => x.Price)
+    };
+
+    protected override async Task OnInitializedAsync() => await LoadDiamondList();
+
+    private async Task LoadDiamondList()
+    {
+        try
+        {
+            diamondList = await _diamondRepo.GetDiamondList();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error loading diamond list: {ex.Message}", Severity.Error);
+        }
+    }
+
+    private bool Search(DiamondData data) =>
+        string.IsNullOrWhiteSpace(searchString) ||
+        data.ClarityName?.Contains(searchString, StringComparison.OrdinalIgnoreCase) == true ||
+        data.ShapeName?.Contains(searchString, StringComparison.OrdinalIgnoreCase) == true;
+
+    private void OpenUploadDialog()
+    {
+        var options = new DialogOptions { CloseButton = true };
+        Dialog.Show<UploadDiamond>("Upload Diamond File", options);
+    }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        selectedFile = e.File ?? throw new Exception("No file selected.");
+
+        try
+        {
+            using var stream = selectedFile.OpenReadStream(maxAllowedSize: 10_000_000);
+            using var fileContent = new MultipartFormDataContent
+            {
+                { new StreamContent(stream), "file", selectedFile.Name }
+            };
+
+            using var httpClient = new HttpClient();
+            var response = await httpClient.PostAsync($"{SD.BaseApiUrl}/api/diamond/BulkDiamondUpload", fileContent);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Snackbar.Add("Diamond uploaded successfully!", Severity.Success);
+                await LoadDiamondList();
+            }
+            else
+            {
+                Snackbar.Add("Failed to upload diamonds. Please try again.", Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Upload failed: {ex.Message}", Severity.Error);
+        }
+    }
+
+    private void Edit(int diamondId) => Snackbar.Add($"Edit action triggered for ID: {diamondId}", Severity.Info);
+
+    private void ConfirmDelete(int diamondId) => Snackbar.Add($"Delete action triggered for ID: {diamondId}", Severity.Warning);
+
+    private void OnBulkAddProductClick()
+    {
+        BulkAddDialog.Show();
+    }
 }

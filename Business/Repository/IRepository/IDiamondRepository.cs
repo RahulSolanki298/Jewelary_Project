@@ -10,5 +10,8 @@ namespace Business.Repository.IRepository
         Task<IEnumerable<DiamondData>> GetDiamondsAsync(DiamondFilters filters, int pageNumber, int pageSize);
 
         Task<bool> BulkInsertDiamondsAsync(string jsonData);
+
+
+        Task<IEnumerable<DiamondData>> GetDiamondList();
     }
 }
