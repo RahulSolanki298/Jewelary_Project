@@ -4,9 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Business.Repository.IRepository;
-using Common;
 using DataAccess.Data;
-using DataAccess.Entities;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Models;
@@ -36,7 +34,7 @@ namespace Business.Repository
                     query = query.Where(d => filters.Colors.Contains(d.ColorId)).ToList();
                 }
 
-                if (filters.Carats != null && filters.Carats.Any(c=>c.HasValue && c.Value != 0))
+                if (filters.Carats != null && filters.Carats.Any(c => c.HasValue && c.Value != 0))
                 {
                     query = query.Where(d => filters.Carats.Contains(d.CaratSizeId)).ToList();
                 }
@@ -86,7 +84,7 @@ namespace Business.Repository
                     query = query.Where(d => filters.Symmetries.Contains(d.SymmetryId)).ToList();
                 }
 
- 
+
                 query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
                 var diamondList = query.ToList();
@@ -107,7 +105,7 @@ namespace Business.Repository
                     .FromSqlRaw("EXEC SP_GetDiamondDataBY_DiamondFilters")
                     .ToListAsync();
 
-                
+
                 return diamonds;
             }
             catch (Exception)
@@ -135,5 +133,22 @@ namespace Business.Repository
             }
         }
 
+        public DiamondData GetDiamondById(int diamondId)
+        {
+            try
+            {
+                var diamond = _context.DiamondData
+                    .FromSqlRaw($"EXEC SP_GetDiamondDataById {diamondId}")
+                    .AsEnumerable()  // Forces LINQ operations to happen in-memory (on the client side)
+                    .FirstOrDefault();
+
+                return diamond;
+            }
+            catch (Exception ex)
+            {
+                // Optionally log the exception or handle it
+                throw new Exception("An error occurred while fetching the diamond data.", ex);
+            }
+        }
     }
 }

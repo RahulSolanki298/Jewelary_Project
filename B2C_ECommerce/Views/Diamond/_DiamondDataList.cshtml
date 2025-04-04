@@ -21,15 +21,17 @@
 				<th></th>
 			</tr>
 		</thead>
-		<tbody >
+		<tbody>
 			@foreach (var item in Model)
 			{
 				<tr>
-					<td >
-						<a href="#">
+					<td>
+						<a href="/Diamond/GetSingleDiamond?diamondId=@item.Id&&diamondProparty=image">
 							<img src="/assets/img/shape-svg/Round.svg" class="img-fluid" style="height:70px;width:70px;align-content:center;" />
 						</a>
-						<img src="~/assets/img/360-degrees.png" style="height:35px;width:30px;align-content:center;" />
+						<a href="/Diamond/GetSingleDiamond?diamondId=@item.Id&&diamondProparty=v360">
+							<img src="~/assets/img/360-degrees.png" style="height:35px;width:30px;align-content:center;" />
+						</a>
 					</td>
 					<td>@item.ShapeName</td>
 					<td>@item.CaratSizeName</td>
@@ -41,11 +43,11 @@
 					<td>@item.SymmetryName</td>
 					<td>@item.DepthName</td>
 					<td>@item.MAmt</td>
-					<th><input type="checkbox" style="width:25px;height:25px;"/></th>
+					<th><input type="checkbox" style="width:25px;height:25px;" /></th>
 					<th>
-						<img src="~/assets/img/heart.png" style="width:25px;height:25px;"/>
+						<img src="~/assets/img/heart.png" style="width:25px;height:25px;" />
 					</th>
-					<th><button class="btn btn-dark text-capitalize">Details</button></th>
+					<th><a class="btn btn-dark text-capitalize" href="/Diamond/GetSingleDiamond?diamondId=@item.Id">Details</a></th>
 				</tr>
 			}
 

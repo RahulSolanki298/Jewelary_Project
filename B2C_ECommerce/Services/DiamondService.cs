@@ -47,6 +47,32 @@ namespace B2C_ECommerce.Services
             }
         }
 
+        public async Task<DiamondData> GetDiamondById(int diamondId)
+        {
+            try
+            {
+                var requestUrl = $"{SD.BaseApiUrl}/api/diamond/GetDiamond/diamondId/{diamondId}";
+
+                var response = await _httpClient.GetFromJsonAsync<DiamondData>(requestUrl);
+
+                
+                if (response == null)
+                {
+                    throw new Exception("API response is null.");
+                }
+
+                return response;
+            }
+            catch (HttpRequestException httpEx)
+            {
+                throw new Exception($"HTTP request error: {httpEx.Message}", httpEx);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching diamond data: {ex.Message}", ex);
+            }
+        }
+
 
     }
 }

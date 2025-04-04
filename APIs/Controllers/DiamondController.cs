@@ -160,5 +160,12 @@ namespace APIs.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        [HttpGet("GetDiamond/diamondId/{diamondId}")]
+        public ActionResult GetDiamondById(int diamondId)
+        {
+            var response = _diamondRepository.GetDiamondById(diamondId);
+            return Ok(response);
+        }
     }
 }
