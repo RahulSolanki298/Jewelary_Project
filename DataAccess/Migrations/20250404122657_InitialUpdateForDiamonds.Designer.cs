@@ -4,14 +4,16 @@ using DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250404122657_InitialUpdateForDiamonds")]
+    partial class InitialUpdateForDiamonds
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -482,9 +484,6 @@ namespace DataAccess.Migrations
                     b.Property<decimal?>("CHt")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("CaratId")
-                        .HasColumnType("int");
-
                     b.Property<string>("CaratSize")
                         .HasColumnType("nvarchar(max)");
 
@@ -492,9 +491,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CertiType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Certificate")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CertificateNo")
@@ -524,8 +520,8 @@ namespace DataAccess.Migrations
                     b.Property<string>("DaysType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("Depth")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int?>("DepthId")
+                        .HasColumnType("int");
 
                     b.Property<decimal?>("Dia")
                         .HasColumnType("decimal(18,2)");
@@ -740,11 +736,11 @@ namespace DataAccess.Migrations
                     b.Property<int?>("SymmetryId")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("Table")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("TableBlack")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TableId")
+                        .HasColumnType("int");
 
                     b.Property<string>("TableSpot")
                         .HasColumnType("nvarchar(max)");
@@ -755,8 +751,8 @@ namespace DataAccess.Migrations
                     b.Property<string>("Type")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TypeId")
-                        .HasColumnType("int");
+                    b.Property<string>("TypeId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("UnitPrice")
                         .HasColumnType("decimal(18,2)");
@@ -1377,13 +1373,22 @@ namespace DataAccess.Migrations
                     b.Property<decimal?>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("CaratId")
+                    b.Property<decimal?>("CAngle")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("CHt")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("CaratSizeId")
                         .HasColumnType("int");
 
-                    b.Property<string>("CaratName")
+                    b.Property<string>("CaratSizeName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Certificate")
+                    b.Property<string>("CertiType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CertificateNo")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ClarityId")
@@ -1398,17 +1403,32 @@ namespace DataAccess.Migrations
                     b.Property<string>("ColorName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CrownExFac")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Culet")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("CutId")
                         .HasColumnType("int");
 
                     b.Property<string>("CutName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DNA")
+                    b.Property<string>("DaysType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("Depth")
+                    b.Property<int?>("DepthId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DepthName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("Dia")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Diam")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DiamondImagePath")
                         .HasColumnType("nvarchar(max)");
@@ -1419,17 +1439,53 @@ namespace DataAccess.Migrations
                     b.Property<decimal?>("Discount")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("DisplayOrder")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EyeClean")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("FluorId")
                         .HasColumnType("int");
 
                     b.Property<string>("FluorName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Girdle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GirdleDesc")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("GirdleOpen")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Graining")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HA")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("Height")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("Id")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("InwDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool?>("IsActivated")
                         .HasColumnType("bit");
+
+                    b.Property<string>("KeyToSymbol")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LabComment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LabDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int?>("LabId")
                         .HasColumnType("int");
@@ -1440,7 +1496,79 @@ namespace DataAccess.Migrations
                     b.Property<string>("LabShape")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Measurement")
+                    b.Property<decimal?>("Length")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LotNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LotType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LrHalf")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Luster")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MAmt")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MDisc")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MRate")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("MarketDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("MfgRemark")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Milky")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NT_INT")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NT_OR_INT")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OLD_PID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ORAP")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OpenCrown")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OpenGirdle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OpenPavallion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OpenTable")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("PAngle")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("PHt")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("PavExFac")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PavOpen")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Pav_Ex_Fac")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("PolishId")
@@ -1452,13 +1580,16 @@ namespace DataAccess.Migrations
                     b.Property<decimal?>("Price")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("PriceName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PriceNameId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Quality")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal?>("Quantity")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("RAP")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("RapAmount")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal?>("RatePct")
@@ -1470,6 +1601,12 @@ namespace DataAccess.Migrations
                     b.Property<string>("RatioName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("ReportDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ReportType")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Shade")
                         .HasColumnType("nvarchar(max)");
 
@@ -1479,10 +1616,25 @@ namespace DataAccess.Migrations
                     b.Property<string>("ShapeName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Step")
+                    b.Property<string>("SideBlack")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("StoneId")
+                    b.Property<string>("SideSpot")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SideWhite")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sku")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Stock")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StrLan")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("SymmetryId")
@@ -1491,14 +1643,29 @@ namespace DataAccess.Migrations
                     b.Property<string>("SymmetryName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("Table")
+                    b.Property<string>("TableBlack")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TableId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TableName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TableSpot")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TableWhite")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("UnitPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("TypeId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TypeName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal?>("Width")
+                        .HasColumnType("decimal(18,2)");
 
                     b.ToTable("Diamond");
                 });

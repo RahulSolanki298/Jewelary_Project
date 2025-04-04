@@ -42,7 +42,6 @@
 			GetCaratSize();
 			GetColorData();
 			
-
 			var diamondFilters =
 			{
 				Colors: $('#colors').val() ? $('#colors').val() : [],
@@ -247,22 +246,22 @@
 			}
 		}
 
-		@*async function GetColorData() {
+		async function GetColorData() {
 			try {
 				var response = await $.ajax({
-					url: '@(SD.BaseApiUrl)/api/diamondproperty/diamond-property/get-color-list', // API endpoint
-					method: 'GET', // Using GET request
-					dataType: 'json', // Expecting JSON response
+					url: '@(SD.BaseApiUrl)/api/diamondproperty/diamond-property/get-color-list', //API endpoint
+					method: 'GET', //Using GET request
+					dataType: 'json',// Expecting JSON response
 				});
 
 				var dataCount = Array.isArray(response) ? response.length : (response.data ? response.data.length : 0);
 
-				// Initialize the slider with API response
+				//Initialize the slider with API response
 				$("#color-slider").slider({
 					range: true,
-					min: 0,  // Set minimum from API response
-					max: dataCount,  // Set maximum from API response
-					step: 0.5, // Adjust step size as needed
+					min: 0, // Set minimum from API response
+					max: dataCount,  //Set maximum from API response
+					step: 0.5, //Adjust step size as needed
 					values: ["D", "E", "F"], // Default values
 					slide: function (event, ui) {
 						$("#minColor").val(0);
@@ -270,7 +269,7 @@
 					}
 				});
 
-				// Set initial values
+				//Set initial values
 				$("#minColor").val(response.MinCaratSize);
 				$("#maxColor").val(response.MaxCaratSize / 2);
 
@@ -278,7 +277,7 @@
 				console.error('Error fetching data: ', error);
 				$('#filter-box #shape-list').html('<p>Failed to load shapes</p>');
 			}
-		}*@
+		}
 
 		async function getDiamondDataList(diamondFilters, pageNumber = 1, pageSize = 10) {
 			debugger;

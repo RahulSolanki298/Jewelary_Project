@@ -92,14 +92,14 @@
     private readonly List<(string Label, string Property, Func<DiamondData, object> SortExpression)> tableColumns = new()
     {
         ("Name", "ShapeName", x => x.ShapeName),
-        ("Carat", "CaratSizeName", x => x.CaratSizeName),
+        ("Carat", "CaratName", x => x.CaratName),
         ("Color", "ColorName", x => x.ColorName),
         ("Clarity", "ClarityName", x => x.ClarityName),
         ("Cut", "CutName", x => x.CutName),
-        ("Certificate No", "CertificateNo", x => x.CertificateNo),
+        ("Certificate", "Certificate", x => x.Certificate),
         ("Polish", "PolishName", x => x.PolishName),
         ("Symmetry", "SymmetryName", x => x.SymmetryName),
-        ("Depth", "DepthName", x => x.DepthName),
+        ("Depth", "Depth", x => x.Depth),
         ("Price", "Price", x => x.Price)
     };
 

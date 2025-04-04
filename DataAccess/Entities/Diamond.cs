@@ -1,11 +1,27 @@
 ﻿using System;
-using Microsoft.Kiota.Abstractions;
 
 namespace DataAccess.Entities
 {
     public class Diamond
     {
         public int Id { get; set; }
+
+        public string StoneId { get; set; }
+
+        public string DNA { get; set; }
+
+        public string Step { get; set; }
+
+        public int? TypeId { get; set; }
+
+        public string Measurement { get; set; }
+
+        public string LabShape { get; set; }
+
+        public decimal? RAP { get; set; }
+
+        public decimal? RapAmount { get; set; }
+
         public string ReportType { get; set; }
         public string LotNo { get; set; }
         public DateTime? LabDate { get; set; }
@@ -25,10 +41,12 @@ namespace DataAccess.Entities
         public string CaratSize { get; set; }
         public int? ClarityId { get; set; }
         public string Clarity { get; set; }
+
+        public int? CaratId { get; set; }
         public int? ColorId { get; set; }
         public int? ShapeId { get; set; }
-        public int? TableId { get; set; }
-        public int? DepthId { get; set; }
+        public decimal? Table { get; set; }
+        public decimal? Depth { get; set; }
         public int? RatioId { get; set; }
         public decimal? Length { get; set; }
         public decimal? Width { get; set; }
@@ -40,6 +58,7 @@ namespace DataAccess.Entities
         public DateTime? ReportDate { get; set; }
         public string Type { get; set; }
         public string CertificateNo { get; set; }
+        public string Certificate { get; set; }
         public string Stock { get; set; }
         public string CertiType { get; set; }
         public string DisplayOrder { get; set; }
@@ -87,7 +106,6 @@ namespace DataAccess.Entities
         public string LrHalf { get; set; }
         public string KeyToSymbol { get; set; }
         public string LabComment { get; set; }
-        public string LabShape { get; set; }
         public string OpenTable { get; set; }
         public string OpenCrown { get; set; }
         public string OpenPavallion { get; set; }

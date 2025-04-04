@@ -44,6 +44,7 @@
         public static string Depth="Depth";
         public static string Lab  ="Lab";
         public static string Cut = "Cut";   
+        public static string _TYPE = "TYPE";
 
         // Supplier Activation Status
         public static string Approve = "Approve";

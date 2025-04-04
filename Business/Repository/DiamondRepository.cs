@@ -36,7 +36,7 @@ namespace Business.Repository
 
                 if (filters.Carats != null && filters.Carats.Any(c => c.HasValue && c.Value != 0))
                 {
-                    query = query.Where(d => filters.Carats.Contains(d.CaratSizeId)).ToList();
+                    query = query.Where(d => filters.Carats.Contains(d.CaratId)).ToList();
                 }
 
                 if (filters.Shapes != null && filters.Shapes.Any(c => c.HasValue && c.Value != 0))
@@ -49,25 +49,25 @@ namespace Business.Repository
                     query = query.Where(d => filters.Clarities.Contains(d.ClarityId)).ToList();
                 }
 
-                if (filters.Prices != null && filters.Prices.Any(c => c.HasValue && c.Value != 0))
-                {
-                    query = query.Where(d => filters.Prices.Contains(d.PriceNameId)).ToList();
-                }
+                //if (filters.Prices != null && filters.Prices.Any(c => c.HasValue && c.Value != 0))
+                //{
+                //    query = query.Where(d => filters.Prices.Contains(d.PriceNameId)).ToList();
+                //}
 
                 if (filters.Ratios != null && filters.Ratios.Any(c => c.HasValue && c.Value != 0))
                 {
                     query = query.Where(d => filters.Ratios.Contains(d.RatioId)).ToList();
                 }
 
-                if (filters.Tables != null && filters.Tables.Any(c => c.HasValue && c.Value != 0))
-                {
-                    query = query.Where(d => filters.Tables.Contains(d.TableId)).ToList();
-                }
+                //if (filters.Tables != null && filters.Tables.Any(c => c.HasValue && c.Value != 0))
+                //{
+                //    query = query.Where(d => filters.Tables.Contains(d.TableId)).ToList();
+                //}
 
-                if (filters.Depthes != null && filters.Depthes.Any(c => c.HasValue && c.Value != 0))
-                {
-                    query = query.Where(d => filters.Depthes.Contains(d.DepthId)).ToList();
-                }
+                //if (filters.Depthes != null && filters.Depthes.Any(c => c.HasValue && c.Value != 0))
+                //{
+                //    query = query.Where(d => filters.Depthes.Contains(d.DepthId)).ToList();
+                //}
 
                 if (filters.Polishes != null && filters.Polishes.Any(c => c.HasValue && c.Value != 0))
                 {
