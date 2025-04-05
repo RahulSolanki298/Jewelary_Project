@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Threading.Tasks;
 using Business.Repository.IRepository;
 using DataAccess.Entities;
@@ -50,7 +50,7 @@ namespace APIs.Controllers
             return Ok(result);
         }
 
-        [HttpGet("get-carat-size-ranges")]
+        [HttpGet("get-carat-ranges")]
         public async Task<ActionResult> GetDiamondCaratRanges()
         {
             var result = await _diamondProperty.GetCaratSizeRangeAsync();
@@ -70,6 +70,65 @@ namespace APIs.Controllers
             var result = await _diamondProperty.GetShapeListAsync();
             return Ok(result);
         }
+
+        [HttpGet("get-cut-list")]
+        public async Task<ActionResult> GetCutListAsync()
+        {
+            var result = await _diamondProperty.GetCutListAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("get-price-ranges")]
+        public async Task<ActionResult> GetPriceRangesAsync()
+        {
+            var result = await _diamondProperty.GetPriceRangeAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("get-table-ranges")]
+        public async Task<ActionResult> GetTableRangesAsync()
+        {
+            var result = await _diamondProperty.GetTableRangeAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("get-depth-ranges")]
+        public async Task<ActionResult> GetDepthRangesAsync()
+        {
+            var result = await _diamondProperty.GetDepthRangeAsync();
+            return Ok(result);
+        }
+
+
+        [HttpGet("get-ratio-list")]
+        public async Task<ActionResult> GetRatioListAsync()
+        {
+            var result = await _diamondProperty.GetRatioListAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("get-fluor-list")]
+        public async Task<ActionResult> GetFluorListAsync()
+        {
+            var result = await _diamondProperty.GetFluorListAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("get-polish-list")]
+        public async Task<ActionResult> GetPolishListAsync()
+        {
+            var result = await _diamondProperty.GetPolishListAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("get-symmetry-list")]
+        public async Task<ActionResult> GetSymmetryListAsync()
+        {
+            var result = await _diamondProperty.GetSymmetryListAsync();
+            return Ok(result);
+        }
+
+
 
         #endregion
 

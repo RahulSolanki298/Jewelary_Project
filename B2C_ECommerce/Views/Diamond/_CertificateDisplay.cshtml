@@ -1,0 +1,20 @@
+﻿<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="dimCertiLabel">DIAMOND CERTIFICATE</h5>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+		<div class="modal-body">
+			<div class="container-fluid">
+				@if (ViewBag.Certificate != null)
+				{
+					<iframe src="@ViewBag.Certificate" style="width:100%;height:auto;padding:5px 5px;"></iframe>
+				}
+				else
+				{
+					<p>No Certificate Found</p>
+				}
+			</div>
+		</div>
+	</div>
+</div>

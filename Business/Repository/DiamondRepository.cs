@@ -23,79 +23,53 @@ namespace Business.Repository
         {
             try
             {
+                // Construct the SQL parameters
+                var parameters = new[]
+                {
+                    new SqlParameter("@Shapes", SqlDbType.NVarChar) { Value = filters.Shapes != null ? string.Join(",", filters.Shapes) : (object)DBNull.Value },
+                    new SqlParameter("@FromColor", SqlDbType.NVarChar) { Value = filters.FromColor ?? (object)DBNull.Value },
+                    new SqlParameter("@ToColor", SqlDbType.NVarChar) { Value = filters.ToColor ?? (object)DBNull.Value },
+                    new SqlParameter("@FromCarat", SqlDbType.NVarChar) { Value = filters.FromCarat ?? (object)DBNull.Value },
+                    new SqlParameter("@ToCarat", SqlDbType.NVarChar) { Value = filters.ToCarat ?? (object)DBNull.Value },
+                    new SqlParameter("@FromPrice", SqlDbType.Decimal) { Value = filters.FromPrice ?? (object)DBNull.Value },
+                    new SqlParameter("@ToPrice", SqlDbType.Decimal) { Value = filters.ToPrice ?? (object)DBNull.Value },
+                    new SqlParameter("@FromCut", SqlDbType.NVarChar) { Value = filters.FromCut ?? (object)DBNull.Value },
+                    new SqlParameter("@ToCut", SqlDbType.NVarChar) { Value = filters.ToCut ?? (object)DBNull.Value },
+                    new SqlParameter("@FromClarity", SqlDbType.NVarChar) { Value = filters.FromClarity ?? (object)DBNull.Value },
+                    new SqlParameter("@ToClarity", SqlDbType.NVarChar) { Value = filters.ToClarity ?? (object)DBNull.Value },
+                    new SqlParameter("@FromRatio", SqlDbType.NVarChar) { Value = filters.FromRatio ?? (object)DBNull.Value },
+                    new SqlParameter("@ToRatio", SqlDbType.NVarChar) { Value = filters.ToRatio ?? (object)DBNull.Value },
+                    new SqlParameter("@FromTable", SqlDbType.NVarChar) { Value = filters.FromTable ?? (object)DBNull.Value },
+                    new SqlParameter("@ToTable", SqlDbType.NVarChar) { Value = filters.ToTable ?? (object)DBNull.Value },
+                    new SqlParameter("@FromDepth", SqlDbType.NVarChar) { Value = filters.FromDepth ?? (object)DBNull.Value },
+                    new SqlParameter("@ToDepth", SqlDbType.NVarChar) { Value = filters.ToDepth ?? (object)DBNull.Value },
+                    new SqlParameter("@FromPolish", SqlDbType.NVarChar) { Value = filters.FromPolish ?? (object)DBNull.Value },
+                    new SqlParameter("@ToPolish", SqlDbType.NVarChar) { Value = filters.ToPolish ?? (object)DBNull.Value },
+                    new SqlParameter("@FromFluor", SqlDbType.NVarChar) { Value = filters.FromFluor ?? (object)DBNull.Value },
+                    new SqlParameter("@ToFluor", SqlDbType.NVarChar) { Value = filters.ToFluor ?? (object)DBNull.Value },
+                    new SqlParameter("@FromSymmety", SqlDbType.NVarChar) { Value = filters.FromSymmety ?? (object)DBNull.Value },
+                    new SqlParameter("@ToSymmety", SqlDbType.NVarChar) { Value = filters.ToSymmety ?? (object)DBNull.Value }
+                };
+
+                // Execute the stored procedure with parameters and get the result
+                // SP_GetDiamondDataBY_DiamondFilters
                 var diamonds = await _context.DiamondData
-                    .FromSqlRaw("EXEC SP_GetDiamondDataBY_DiamondFilters")
+                    .FromSqlRaw("EXEC SP_GetDiamondDataBY_NEW_DiamondFilters @Shapes, @FromColor, @ToColor, @FromCarat, @ToCarat, @FromPrice, @ToPrice, @FromCut, @ToCut, @FromClarity, @ToClarity, @FromRatio, @ToRatio, @FromTable, @ToTable, @FromDepth, @ToDepth, @FromPolish, @ToPolish, @FromFluor, @ToFluor, @FromSymmety, @ToSymmety", parameters)
                     .ToListAsync();
 
-                var query = diamonds.ToList();
+                // Pagination logic (skip and take)
+                var query = diamonds.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
-                if (filters.Colors != null && filters.Colors.Any(c => c.HasValue && c.Value != 0))
-                {
-                    query = query.Where(d => filters.Colors.Contains(d.ColorId)).ToList();
-                }
-
-                if (filters.Carats != null && filters.Carats.Any(c => c.HasValue && c.Value != 0))
-                {
-                    query = query.Where(d => filters.Carats.Contains(d.CaratId)).ToList();
-                }
-
-                if (filters.Shapes != null && filters.Shapes.Any(c => c.HasValue && c.Value != 0))
-                {
-                    query = query.Where(d => filters.Shapes.Contains(d.ShapeId)).ToList();
-                }
-
-                if (filters.Clarities != null && filters.Clarities.Any(c => c.HasValue && c.Value != 0))
-                {
-                    query = query.Where(d => filters.Clarities.Contains(d.ClarityId)).ToList();
-                }
-
-                //if (filters.Prices != null && filters.Prices.Any(c => c.HasValue && c.Value != 0))
-                //{
-                //    query = query.Where(d => filters.Prices.Contains(d.PriceNameId)).ToList();
-                //}
-
-                if (filters.Ratios != null && filters.Ratios.Any(c => c.HasValue && c.Value != 0))
-                {
-                    query = query.Where(d => filters.Ratios.Contains(d.RatioId)).ToList();
-                }
-
-                //if (filters.Tables != null && filters.Tables.Any(c => c.HasValue && c.Value != 0))
-                //{
-                //    query = query.Where(d => filters.Tables.Contains(d.TableId)).ToList();
-                //}
-
-                //if (filters.Depthes != null && filters.Depthes.Any(c => c.HasValue && c.Value != 0))
-                //{
-                //    query = query.Where(d => filters.Depthes.Contains(d.DepthId)).ToList();
-                //}
-
-                if (filters.Polishes != null && filters.Polishes.Any(c => c.HasValue && c.Value != 0))
-                {
-                    query = query.Where(d => filters.Polishes.Contains(d.PolishId)).ToList();
-                }
-
-                if (filters.Fluors != null && filters.Fluors.Any(c => c.HasValue && c.Value != 0))
-                {
-                    query = query.Where(d => filters.Fluors.Contains(d.FluorId)).ToList();
-                }
-
-                if (filters.Symmetries != null && filters.Symmetries.Any(c => c.HasValue && c.Value != 0))
-                {
-                    query = query.Where(d => filters.Symmetries.Contains(d.SymmetryId)).ToList();
-                }
-
-
-                query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-
-                var diamondList = query.ToList();
-
-                return diamondList;
+                return query;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                // Log the error and rethrow
+                // Consider logging the exception message for debugging purposes
+                throw new Exception("An error occurred while fetching diamonds.", ex);
             }
         }
+
 
         public async Task<IEnumerable<DiamondData>> GetDiamondList()
         {

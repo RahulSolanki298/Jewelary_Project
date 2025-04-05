@@ -2,16 +2,40 @@
 {
     public class DiamondFilters
     {
-        public int?[] Colors { get; set; } 
-        public int?[] Carats { get; set; } 
         public int?[] Shapes { get; set; }
-        public int?[] Clarities { get; set; }
-        public int?[] Prices { get; set; }
-        public int?[] Ratios { get; set; }
-        public int?[] Tables { get; set; }
-        public int?[] Depthes { get; set; }
-        public int?[] Polishes { get; set; }
-        public int?[] Fluors { get; set; }
-        public int?[] Symmetries { get; set; }
+
+        public string FromColor { get; set; } 
+        public string ToColor { get; set; }
+
+        public string FromCarat { get; set; } 
+        public string ToCarat { get; set; }
+
+        public decimal? FromPrice { get; set; }
+        public decimal? ToPrice { get; set; }
+
+        public string FromCut { get; set; }
+        public string ToCut { get; set; }
+
+        public string FromClarity { get; set; }
+        public string ToClarity { get; set; }
+
+        public string FromRatio { get; set; }
+        public string ToRatio { get; set; }
+
+        public string FromTable { get; set; }
+        public string ToTable { get; set; }
+
+        public string FromDepth { get; set; }
+        public string ToDepth { get; set; }
+
+        public string FromPolish { get; set; }
+        public string ToPolish { get; set; }
+
+        public string FromFluor { get; set; }
+        public string ToFluor { get; set; }
+
+        public string FromSymmety { get; set; }
+        public string ToSymmety { get; set; }
+
     }
 }

@@ -83,10 +83,19 @@ namespace APIs.Controllers
                     depthId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 29].Text, SD.Depth);
                     ratioId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 20].Text, SD.Ratio);
 
+                    var DNA_Cell = worksheet.Cells[row, 3];
+                    var DNA_NewVal = DNA_Cell.Hyperlink?.AbsoluteUri;
+
+                    var Video_Cell = worksheet.Cells[row, 26];
+                    var Video_NewVal = DNA_Cell.Hyperlink?.AbsoluteUri;
+
+                    var Certi_Cell = worksheet.Cells[row, 27];
+                    var Certi_NewVal = DNA_Cell.Hyperlink?.AbsoluteUri;
+
                     diamond = new Diamond()
                     {
                         StoneId= worksheet.Cells[row, 2].Text,
-                        DNA= worksheet.Cells[row, 3].Text,
+                        DNA= DNA_NewVal,
                         Step= worksheet.Cells[row, 4].Text,
                         TypeId= typeId > 0 ? typeId : null,
                         LabId = labId > 0 ? labId : null,
@@ -109,8 +118,8 @@ namespace APIs.Controllers
                         Shade = worksheet.Cells[row, 23].Text,
                         LabShape = worksheet.Cells[row, 24].Text,
                         RapAmount= Convert.ToDecimal(worksheet.Cells[row, 25].Text),
-                        DiamondVideoPath = worksheet.Cells[row, 26].Text,
-                        Certificate = worksheet.Cells[row, 27].Text,
+                        DiamondVideoPath = Video_NewVal,
+                        Certificate = Certi_NewVal,
                         IsActivated=true
                     };
                     diamondsDTList.Add(diamond);

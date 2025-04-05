@@ -6,7 +6,7 @@
         public string StoneId { get; set; }
         public string DNA { get; set; }
         public string Step { get; set; }
-        public string TypeId { get; set; }
+        public int? TypeId { get; set; }
         public string TypeName { get; set; }
         public string Measurement { get; set; }
         public string LabShape { get; set; }

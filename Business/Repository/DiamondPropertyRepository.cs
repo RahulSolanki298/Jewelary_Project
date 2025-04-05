@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Business.Repository.IRepository;
@@ -124,7 +125,7 @@ namespace Business.Repository
 
         public async Task<CaratSizeRanges> GetCaratSizeRangeAsync()
         {
-            var ParentId = await GetParentIdByName(SD.CaratSize);
+            var ParentId = await GetParentIdByName(SD.Carat);
             var caratSizes = await _context.DiamondProperties
                 .Where(x => x.ParentId == ParentId && x.IsActivated == true)
                 .Select(x => x.Name)  // Name represents carat size
@@ -157,6 +158,27 @@ namespace Business.Repository
                                 join parent in _context.DiamondProperties on dimPro.ParentId equals parent.Id into parentGroup
                                 from parentProp in parentGroup.DefaultIfEmpty()
                                 where parentProp.Name == SD.Shape && dimPro.IsActivated
+                                select new DiamondPropertyDTO
+                                {
+                                    Id = dimPro.Id,
+                                    Name = dimPro.Name,
+                                    Description = dimPro.Description,
+                                    SymbolName = dimPro.SymbolName,
+                                    IconPath = dimPro.IconPath,
+                                    ParentId = dimPro.ParentId,
+                                    ParentProperty = parentProp.Name,  // Avoid null reference
+                                    IsActivated = dimPro.IsActivated
+                                }).ToListAsync();
+
+            return result;
+        }
+
+        public async Task<IEnumerable<DiamondPropertyDTO>> GetCutListAsync()
+        {
+            var result = await (from dimPro in _context.DiamondProperties
+                                join parent in _context.DiamondProperties on dimPro.ParentId equals parent.Id into parentGroup
+                                from parentProp in parentGroup.DefaultIfEmpty()
+                                where parentProp.Name == SD.Cut && dimPro.IsActivated
                                 select new DiamondPropertyDTO
                                 {
                                     Id = dimPro.Id,
@@ -218,7 +240,82 @@ namespace Business.Repository
                         ParentId = x.dimPro.ParentId,
                         ParentProperty = propG.Name,  // Avoid null reference
                         IsActivated = x.dimPro.IsActivated
-                    }).Where(x => x.ParentProperty == $"{SD.Clarity}" && x.IsActivated == true).ToListAsync();
+                    }).Where(x => x.ParentProperty == $"{SD.Ratio}" && x.IsActivated == true).ToListAsync();
+
+            return result;
+        }
+
+        public async Task<IEnumerable<DiamondPropertyDTO>> GetFluorListAsync()
+        {
+            var result = await _context.DiamondProperties
+                .GroupJoin(
+                    _context.DiamondProperties,
+                    dimPro => dimPro.ParentId,
+                    propG => propG.Id,
+                    (dimPro, dimGroup) => new { dimPro, dimGroup })
+                .SelectMany(
+                    x => x.dimGroup.DefaultIfEmpty(),
+                    (x, propG) => new DiamondPropertyDTO
+                    {
+                        Id = x.dimPro.Id,
+                        Name = x.dimPro.Name,
+                        Description = x.dimPro.Description,
+                        SymbolName = x.dimPro.SymbolName,
+                        IconPath = x.dimPro.IconPath,
+                        ParentId = x.dimPro.ParentId,
+                        ParentProperty = propG.Name,  // Avoid null reference
+                        IsActivated = x.dimPro.IsActivated
+                    }).Where(x => x.ParentProperty == $"{SD.Fluor}" && x.IsActivated == true).ToListAsync();
+
+            return result;
+        }
+
+        public async Task<IEnumerable<DiamondPropertyDTO>> GetPolishListAsync()
+        {
+            var result = await _context.DiamondProperties
+                .GroupJoin(
+                    _context.DiamondProperties,
+                    dimPro => dimPro.ParentId,
+                    propG => propG.Id,
+                    (dimPro, dimGroup) => new { dimPro, dimGroup })
+                .SelectMany(
+                    x => x.dimGroup.DefaultIfEmpty(),
+                    (x, propG) => new DiamondPropertyDTO
+                    {
+                        Id = x.dimPro.Id,
+                        Name = x.dimPro.Name,
+                        Description = x.dimPro.Description,
+                        SymbolName = x.dimPro.SymbolName,
+                        IconPath = x.dimPro.IconPath,
+                        ParentId = x.dimPro.ParentId,
+                        ParentProperty = propG.Name,  // Avoid null reference
+                        IsActivated = x.dimPro.IsActivated
+                    }).Where(x => x.ParentProperty == $"{SD.Polish}" && x.IsActivated == true).ToListAsync();
+
+            return result;
+        }
+
+        public async Task<IEnumerable<DiamondPropertyDTO>> GetSymmetryListAsync()
+        {
+            var result = await _context.DiamondProperties
+                .GroupJoin(
+                    _context.DiamondProperties,
+                    dimPro => dimPro.ParentId,
+                    propG => propG.Id,
+                    (dimPro, dimGroup) => new { dimPro, dimGroup })
+                .SelectMany(
+                    x => x.dimGroup.DefaultIfEmpty(),
+                    (x, propG) => new DiamondPropertyDTO
+                    {
+                        Id = x.dimPro.Id,
+                        Name = x.dimPro.Name,
+                        Description = x.dimPro.Description,
+                        SymbolName = x.dimPro.SymbolName,
+                        IconPath = x.dimPro.IconPath,
+                        ParentId = x.dimPro.ParentId,
+                        ParentProperty = propG.Name,  // Avoid null reference
+                        IsActivated = x.dimPro.IsActivated
+                    }).Where(x => x.ParentProperty == $"{SD.Symmetry}" && x.IsActivated == true).ToListAsync();
 
             return result;
         }
@@ -311,6 +408,35 @@ namespace Business.Repository
                 return parentDT.Id;
             }
             return 0;
+        }
+
+        public async Task<PriceRanges> GetPriceRangeAsync()
+        {
+            var data = await _context.Diamonds.ToListAsync();
+            var priceRange = new PriceRanges();
+            priceRange.MaxPrice = Convert.ToDecimal(data.Max(x => x.Amount));
+            priceRange.MinPrice = Convert.ToDecimal(data.Min(x => x.Amount));
+
+            return priceRange;
+        }
+
+        public async Task<DepthDTO> GetDepthRangeAsync()
+        {
+            var data = await _context.Diamonds.ToListAsync();
+            var depthRange = new DepthDTO();
+            depthRange.MaxValue = Convert.ToDecimal(data.Max(x => x.Depth));
+            depthRange.MinValue = Convert.ToDecimal(data.Min(x => x.Amount));
+            return depthRange;
+        }
+
+        public async Task<TableRangeDTO> GetTableRangeAsync()
+        {
+            var data = await _context.Diamonds.ToListAsync();
+            var tableRange = new TableRangeDTO();
+            tableRange.MaxValue = Convert.ToDecimal(data.Max(x => x.Table));
+            tableRange.MinValue = Convert.ToDecimal(data.Min(x => x.Table));
+
+            return tableRange;
         }
     }
 }
