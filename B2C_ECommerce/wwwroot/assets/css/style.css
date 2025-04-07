@@ -5972,7 +5972,9 @@ blockquote {
 /*------ contact info area end -------*/
 /*----- footer area start -----*/
 .footer-top {
-  background-color: #f7f7f7;
+    /*background-color: #f7f7f7;*/
+    background-color: #151542;
+    color:white;
 }
 @media only screen and (min-width: 768px) and (max-width: 991px), only screen and (max-width: 767.98px) {
   .footer-top [class*=col-] .widget-item {
@@ -6000,13 +6002,15 @@ blockquote {
   padding-right: 5px;
   vertical-align: middle;
 }
-.contact-block li a {
-  color: #555555;
-}
-.contact-block li a:hover {
-  color: #151542;
-  /*letter-spacing: 1.1px;*/
-}
+    .contact-block li a {
+        /*color: #555555;*/
+        color: #fff;
+    }
+        .contact-block li a:hover {
+            /*color: #151542;*/
+            color: #fff;
+            /*letter-spacing: 1.1px;*/
+        }
 
 .info-list {
   display: grid;
@@ -6015,14 +6019,16 @@ blockquote {
 .info-list li {
   margin-bottom: 8px;
 }
-.info-list li a {
-  font-size: 14px;
-  color: #555555;
-  text-transform: capitalize;
-}
-.info-list li a:hover {
-  color: #151542;
-}
+    .info-list li a {
+        font-size: 14px;
+        /*color: #555555;*/
+        color: #fff;
+        text-transform: capitalize;
+    }
+        .info-list li a:hover {
+            /* color: #151542;*/
+            color: #fff;
+        }
 
 .social-link {
   margin-top: 30px;
@@ -6043,11 +6049,12 @@ blockquote {
 .social-link a:last-child {
   margin-right: 0;
 }
-.social-link a:hover {
-  color: #fff;
-  background-color: #151542;
-  border-color: #151542;
-}
+    .social-link a:hover {
+        color: #fff;
+        background-color: #151542;
+        /*border-color: #151542;*/
+        border-color: #fff;
+    }
 
 @media only screen and (max-width: 767.98px) {
   .newsletter-wrapper {
