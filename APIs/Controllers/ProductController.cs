@@ -70,7 +70,7 @@ namespace APIs.Controllers
                     // Convert numeric values safely
                     product.DiaWT = decimal.TryParse(worksheet.Cells[row, 14].Text, out var diaWt) ? diaWt : 0;
                     product.NoOfStones = int.TryParse(worksheet.Cells[row, 15].Text, out var noOfStones) ? noOfStones : 0;
-                    product.Price = decimal.TryParse(worksheet.Cells[row, 17].Text, out var price) ? price : 0;
+                    product.Price = string.IsNullOrEmpty(worksheet.Cells[row, 17].Text) != true ? Convert.ToDecimal(worksheet.Cells[row, 17].Text) : 0;
                     product.UnitPrice = product.Price;
 
                     // Handling multiple metal colors
@@ -102,7 +102,8 @@ namespace APIs.Controllers
                                 Price = product.Price,
                                 UnitPrice = product.UnitPrice,
                                 CaratName = carat,
-                                ColorName = metal.Trim()
+                                ColorName = metal.Trim(),
+                                IsActivated=true
                             });
                         }
                     }
@@ -116,8 +117,6 @@ namespace APIs.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-
-
 
         [HttpPost("BulkProductCollectionUpload")]
         public async Task<IActionResult> UploadProductCollectionExcel(IFormFile file)

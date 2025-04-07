@@ -2,15 +2,20 @@
 
 
 <div class="container-fluid mt-4">
+    <div class="row" id="txtLoader" style="display:block;">
+        <div class="text-center">
+            <img src="/diamonds/jf_loader.gif" style="width:75px;">
+        </div>
+    </div>
     <div class="row mb-3">
         <div class="col-md-4">
             <input type="text" id="diamondFilter" class="form-control shadow-sm" placeholder="Search Diamonds..." />
         </div>
     </div>
-
+   
     <div class="table-responsive">
-        <table id="diamondTable" class="table table-bordered table-hover align-middle shadow-sm">
-            <thead class="table-light text-center">
+        <table id="diamondTable" class="table table-bordered border-dark table-hover align-middle shadow-sm">
+            <thead class="table-light border-dark text-center" style="background-color:#d2d2d2;">
                 <tr>
                     <th>Actions</th>
                     <th>Shape</th>
@@ -70,11 +75,11 @@
 
         
     </div>
-    <div class="row mt-3">
+   @*  <div class="row mt-3">
         <div class="col-md-12 text-center">
-            <button id="showMoreBtn" class="btn btn-primary">Show More</button>
+            <button id="showMoreBtn" class="btn btn btn-outline-dark">Show More</button>
         </div>
-    </div>
+    </div> *@
 </div>
 
 

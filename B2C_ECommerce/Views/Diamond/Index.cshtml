@@ -81,9 +81,18 @@
                 ToSymmety: getValue('#maxSymmetry')
             };
 
+            function showLoader() {
+                $('#txtLoader').show(); // This shows the loader
+            }
+
+            // Function to hide the loader
+            function hideLoader() {
+                $('#txtLoader').hide(); // This hides the loader
+            }
+
         $(function () {
             // Initial Data Fetch
-            getDiamondDataList(diamondFilters, page, rangeVal);
+
             GetShapeDesign();
             GetCarat();
             const fixCut =GetCutData();
@@ -96,6 +105,7 @@
             GetTableData();
             GetDepthData();
             GetRatioData();
+            getDiamondDataList(diamondFilters, page, rangeVal);
 
             // Shape button click
             $("#shape-list").on("click", ".shape-btn", function () {
@@ -127,7 +137,7 @@
                 $("#btnMoreFilter").show();
             });
 
-             $('#showMoreBtn').click(()=> {
+             $('#diamondTable #showMoreBtn').click(()=> {
                 pageSize += 10;
                 getDiamondDataList(diamondFilters, page, rangeVal); // Reload the table with new page size
             });
@@ -269,6 +279,7 @@
                     console.error('Error fetching data:', error);
                     shapeListContainer.html('<p>Failed to load shapes</p>');
                   }
+
                 }
                 async function GetCarat() {
                     try {
@@ -300,8 +311,6 @@
                         // Set initial values
                         $("#minCarat").val(response.MinCaratSize);
                         $("#maxCarat").val(response.MaxCaratSize);
-
-
 
                     } catch (error) {
                         console.error('Error fetching data: ', error);
@@ -416,8 +425,6 @@
                             $('#filter-box #cut-slider').html('<p>Failed to load cuts</p>');
                         }
                     }
-
-
                 async function GetClarityData() {
                   try {
                     // Fetching data from the API
@@ -452,10 +459,10 @@
 
                     $("#Clarity-slider").slider({
                       range: true,
-                      min: clarityList[0],
-                      max: clarityList.length - 1,
+                      min: minClarity,
+                      max: maxClarity,
                       step: StepCount,
-                      values: [clarityList[0], clarityList.length - 1],
+                      values: [minClarity, maxClarity],
                       slide: function (event, ui) {
                         // Update the min and max values dynamically based on the slider
                             $("#minClarity").val(clarityList[ui.values[0]]);
@@ -818,8 +825,10 @@
                             }
 
                 async function getDiamondDataList(diamondFilters, pageNumber = 1, pageSize = 10) {
+                    showLoader();
                     return $.ajax({
-                        url: '@Url.Action("GetDiamondList", "Diamond")', // Change this to your actual route
+                        //url: '@Url.Action("GetDiamondList", "Diamond")', // Change this to your actual route
+                        url: '/Diamond/GetDiamondList', // Change this to your actual route
                         type: 'POST',
                         data: {
                             diamondFilters: diamondFilters,
@@ -828,16 +837,19 @@
                         },
                         success: function (data) {
                             $('#diamond-list-container').html(data);
+                            setTimeout(() => {
+                                hideLoader();
+                            }, 10000);
+                            
                         },
                         error: function (error) {
                             console.error('Error fetching data:', error);
+                              setTimeout(() => {
+                                hideLoader();
+                            }, 10000);
                         }
+                       
                     });
-                }
-
-                function ShowCertificate(certificate)
-                {
-
                 }
     </script>
 }
