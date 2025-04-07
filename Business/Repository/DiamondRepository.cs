@@ -14,6 +14,7 @@ namespace Business.Repository
     public class DiamondRepository : IDiamondRepository
     {
         private readonly ApplicationDBContext _context;
+
         public DiamondRepository(ApplicationDBContext context)
         {
             _context = context;
@@ -69,8 +70,7 @@ namespace Business.Repository
                 throw new Exception("An error occurred while fetching diamonds.", ex);
             }
         }
-
-
+        
         public async Task<IEnumerable<DiamondData>> GetDiamondList()
         {
             try
