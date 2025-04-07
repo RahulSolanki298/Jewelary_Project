@@ -776,8 +776,14 @@ namespace DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("ColorType")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DispOrder")
+                        .HasColumnType("int");
 
                     b.Property<string>("IconPath")
                         .HasColumnType("nvarchar(max)");
@@ -1425,6 +1431,9 @@ namespace DataAccess.Migrations
                     b.Property<string>("FluorName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("IconPath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Id")
                         .HasColumnType("int");
 
@@ -1488,14 +1497,14 @@ namespace DataAccess.Migrations
                     b.Property<int?>("SymmetryId")
                         .HasColumnType("int");
 
-                    b.Property<string>("SymmetryName")
+                    b.Property<string>("SymmetyName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("Table")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("TypeId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("TypeId")
+                        .HasColumnType("int");
 
                     b.Property<string>("TypeName")
                         .HasColumnType("nvarchar(max)");

@@ -2,80 +2,82 @@
 
 
 <div class="container-fluid mt-4">
-    <div class="row" id="txtLoader" style="display:block;">
-        <div class="text-center">
-            <img src="/diamonds/jf_loader.gif" style="width:75px;">
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-md-4">
-            <input type="text" id="diamondFilter" class="form-control shadow-sm" placeholder="Search Diamonds..." />
-        </div>
-    </div>
-   
-    <div class="table-responsive">
-        <table id="diamondTable" class="table table-bordered border-dark table-hover align-middle shadow-sm">
-            <thead class="table-light border-dark text-center" style="background-color:#d2d2d2;">
-                <tr>
-                    <th>Actions</th>
-                    <th>Shape</th>
-                    <th>Carat</th>
-                    <th>Color</th>
-                    <th>Clarity</th>
-                    <th>Cut</th>
-                    <th>CERT.</th>
-                    <th>Polish</th>
-                    <th>Symmetry</th>
-                    <th>Depth</th>
-                    <th>Price</th>
-                    <th>Compare</th>
-                    <th>Wishlist</th>
-                    <th>Details</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr class="text-center">
-                        <td>
-                            <a href="/Diamond/GetSingleDiamond?diamondId=@item.Id&&diamondProparty=image">
-                                <img src="@item.IconPath" class="rounded shadow-sm" style="height:40px;width:40px;" />
-                            </a>
-                            <a href="/Diamond/GetSingleDiamond?diamondId=@item.Id&&diamondProparty=v360">
-                                <img src="~/assets/img/360-degrees.png" class="rounded" style="height:35px;width:35px;" />
-                            </a>
-                        </td>
-                        <td>@item.ShapeName</td>
-                        <td>@item.CaratName</td>
-                        <td>@item.ColorName</td>
-                        <td>@item.ClarityName</td>
-                        <td>@item.CutName</td>
-                        <td>
-                            <a href="#" data-certi="@item.Certificate" class="text-decoration-none text-dark clsCertificate">
-                                @item.LabName
-                            </a>
-                        </td>
-                        <td>@item.PolishName</td>
-                        <td>@item.SymmetyName</td>
-                        <td>@item.Depth</td>
-                        <td>@item.Amount</td>
-                        <td><input type="checkbox" style="width:20px;height:20px;" /></td>
-                        <td>
-                            <img src="~/assets/img/heart.png" class="img-fluid" style="width:25px;height:25px;" />
-                        </td>
-                        <td>
-                            <a class="btn btn-sm btn-dark rounded-pill" href="/Diamond/GetSingleDiamond?diamondId=@item.Id">
-                                Details
-                            </a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+	<div class="row">
+		<div class="col-xl-12">
+			<div class="text-center" id="txtLoader" style="display:block;">
+				<img src="~/assets/loader/JF-WEB-LOADER.gif" style="width:250px;">
+			</div>
+		</div>
+	</div>
+	<div class="row mb-3">
+		<div class="col-md-4">
+			<input type="text" id="diamondFilter" class="form-control shadow-sm" placeholder="Search Diamonds..." />
+		</div>
+	</div>
 
-        
-    </div>
-   @*  <div class="row mt-3">
+	<div class="table-responsive">
+		<table id="diamondTable" class="table table-bordered border-dark table-hover align-middle shadow-sm">
+			<thead class="table-light border-dark text-center" style="background-color:#d2d2d2;">
+				<tr>
+					<th>Actions</th>
+					<th>Shape</th>
+					<th>Carat</th>
+					<th>Color</th>
+					<th>Clarity</th>
+					<th>Cut</th>
+					<th>CERT.</th>
+					<th>Polish</th>
+					<th>Symmetry</th>
+					<th>Depth</th>
+					<th>Price</th>
+					<th>Compare</th>
+					<th>Wishlist</th>
+					<th>Details</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr class="text-center">
+						<td>
+							<a href="/Diamond/GetSingleDiamond?diamondId=@item.Id&&diamondProparty=image">
+								<img src="@item.IconPath" class="rounded shadow-sm" style="height:40px;width:40px;" />
+							</a>
+							<a href="/Diamond/GetSingleDiamond?diamondId=@item.Id&&diamondProparty=v360">
+								<img src="~/assets/img/360-degrees.png" class="rounded" style="height:35px;width:35px;" />
+							</a>
+						</td>
+						<td>@item.ShapeName</td>
+						<td>@item.CaratName</td>
+						<td>@item.ColorName</td>
+						<td>@item.ClarityName</td>
+						<td>@item.CutName</td>
+						<td>
+							<a href="#" data-certi="@item.Certificate" class="text-decoration-none text-dark clsCertificate">
+								@item.LabName
+							</a>
+						</td>
+						<td>@item.PolishName</td>
+						<td>@item.SymmetyName</td>
+						<td>@item.Depth</td>
+						<td>@item.Amount</td>
+						<td><input type="checkbox" style="width:20px;height:20px;" /></td>
+						<td>
+							<img src="~/assets/img/heart.png" class="img-fluid" style="width:25px;height:25px;" />
+						</td>
+						<td>
+							<a class="btn btn-sm btn-dark rounded-pill" href="/Diamond/GetSingleDiamond?diamondId=@item.Id">
+								Details
+							</a>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+
+
+	</div>
+	@*  <div class="row mt-3">
         <div class="col-md-12 text-center">
             <button id="showMoreBtn" class="btn btn btn-outline-dark">Show More</button>
         </div>

@@ -66,8 +66,8 @@
         public static string Returned = "Returned";
         public static string Refunded = "Refunded";
 
-        public static string BaseApiUrl = "https://localhost:44302"; // https://jswebapi.com
-       // public static string BaseApiUrl = "https://localhost:4050"; // https://jswebapi.com
+       // public static string BaseApiUrl = "https://localhost:44302"; // https://jswebapi.com
+        public static string BaseApiUrl = "https://localhost:4050"; // https://jswebapi.com
 
 
 

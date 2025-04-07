@@ -14,6 +14,10 @@
         
         public string SymbolName { get; set; }
 
+        public string ColorType { get; set; }
+
+        public int DispOrder { get; set; }
+
         public bool IsActivated { get; set; }
     }
 }
