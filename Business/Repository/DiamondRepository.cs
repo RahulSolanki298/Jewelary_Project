@@ -28,29 +28,24 @@ namespace Business.Repository
                 var parameters = new[]
                 {
                     new SqlParameter("@Shapes", SqlDbType.NVarChar) { Value = filters.Shapes != null ? string.Join(",", filters.Shapes) : (object)DBNull.Value },
-                    new SqlParameter("@FromColor", SqlDbType.NVarChar) { Value = filters.FromColor ?? (object)DBNull.Value },
-                    new SqlParameter("@ToColor", SqlDbType.NVarChar) { Value = filters.ToColor ?? (object)DBNull.Value },
+                    new SqlParameter("@Colors", SqlDbType.NVarChar) { Value = filters.Colors != null ? string.Join(",", filters.Colors) : (object)DBNull.Value },
                     new SqlParameter("@FromCarat", SqlDbType.NVarChar) { Value = filters.FromCarat ?? (object)DBNull.Value },
                     new SqlParameter("@ToCarat", SqlDbType.NVarChar) { Value = filters.ToCarat ?? (object)DBNull.Value },
                     new SqlParameter("@FromPrice", SqlDbType.Decimal) { Value = filters.FromPrice ?? (object)DBNull.Value },
                     new SqlParameter("@ToPrice", SqlDbType.Decimal) { Value = filters.ToPrice ?? (object)DBNull.Value },
-                    new SqlParameter("@FromCut", SqlDbType.NVarChar) { Value = filters.FromCut ?? (object)DBNull.Value },
-                    new SqlParameter("@ToCut", SqlDbType.NVarChar) { Value = filters.ToCut ?? (object)DBNull.Value },
-                    new SqlParameter("@FromClarity", SqlDbType.NVarChar) { Value = filters.FromClarity ?? (object)DBNull.Value },
-                    new SqlParameter("@ToClarity", SqlDbType.NVarChar) { Value = filters.ToClarity ?? (object)DBNull.Value },
-                    new SqlParameter("@FromRatio", SqlDbType.NVarChar) { Value = filters.FromRatio ?? (object)DBNull.Value },
-                    new SqlParameter("@ToRatio", SqlDbType.NVarChar) { Value = filters.ToRatio ?? (object)DBNull.Value },
-                    new SqlParameter("@FromTable", SqlDbType.NVarChar) { Value = filters.FromTable ?? (object)DBNull.Value },
-                    new SqlParameter("@ToTable", SqlDbType.NVarChar) { Value = filters.ToTable ?? (object)DBNull.Value },
-                    new SqlParameter("@FromDepth", SqlDbType.NVarChar) { Value = filters.FromDepth ?? (object)DBNull.Value },
-                    new SqlParameter("@ToDepth", SqlDbType.NVarChar) { Value = filters.ToDepth ?? (object)DBNull.Value },
-                    new SqlParameter("@FromPolish", SqlDbType.NVarChar) { Value = filters.FromPolish ?? (object)DBNull.Value },
-                    new SqlParameter("@ToPolish", SqlDbType.NVarChar) { Value = filters.ToPolish ?? (object)DBNull.Value },
-                    new SqlParameter("@FromFluor", SqlDbType.NVarChar) { Value = filters.FromFluor ?? (object)DBNull.Value },
-                    new SqlParameter("@ToFluor", SqlDbType.NVarChar) { Value = filters.ToFluor ?? (object)DBNull.Value },
-                    new SqlParameter("@FromSymmety", SqlDbType.NVarChar) { Value = filters.FromSymmety ?? (object)DBNull.Value },
-                    new SqlParameter("@ToSymmety", SqlDbType.NVarChar) { Value = filters.ToSymmety ?? (object)DBNull.Value }
+                    new SqlParameter("@Cuts", SqlDbType.NVarChar) { Value = filters.Cuts != null ? string.Join(",", filters.Cuts) : (object)DBNull.Value },
+                    new SqlParameter("@Clarities", SqlDbType.NVarChar) { Value = filters.Clarities != null ? string.Join(",", filters.Clarities) : (object)DBNull.Value },
+                    new SqlParameter("@FromRatio", SqlDbType.Decimal) { Value = filters.FromRatio ?? (object)DBNull.Value },  // Should be decimal type, not NVarChar
+                    new SqlParameter("@ToRatio", SqlDbType.Decimal) { Value = filters.ToRatio ?? (object)DBNull.Value },  // Should be decimal type, not NVarChar
+                    new SqlParameter("@FromTable", SqlDbType.Decimal) { Value = filters.FromTable ?? (object)DBNull.Value },  // Should be decimal type, not NVarChar
+                    new SqlParameter("@ToTable", SqlDbType.Decimal) { Value = filters.ToTable ?? (object)DBNull.Value },  // Should be decimal type, not NVarChar
+                    new SqlParameter("@FromDepth", SqlDbType.Decimal) { Value = filters.FromDepth ?? (object)DBNull.Value },  // Should be decimal type, not NVarChar
+                    new SqlParameter("@ToDepth", SqlDbType.Decimal) { Value = filters.ToDepth ?? (object)DBNull.Value },  // Should be decimal type, not NVarChar
+                    new SqlParameter("@Polishes", SqlDbType.NVarChar) { Value = filters.Polish != null ? string.Join(",", filters.Polish) : (object)DBNull.Value },  // Fixed typo "Polish" -> "Polishes"
+                    new SqlParameter("@Fluors", SqlDbType.NVarChar) { Value = filters.Fluor != null ? string.Join(",", filters.Fluor) : (object)DBNull.Value },  // Fixed typo "Fluor" -> "Fluors"
+                    new SqlParameter("@Symmetries", SqlDbType.NVarChar) { Value = filters.Symmeties != null ? string.Join(",", filters.Symmeties) : (object)DBNull.Value },  // Fixed typo "Symmeties" -> "Symmetries"
                 };
+
 
                 // Execute the stored procedure with parameters and get the result
                 // SP_GetDiamondDataBY_DiamondFilters

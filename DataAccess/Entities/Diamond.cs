@@ -37,17 +37,14 @@ namespace DataAccess.Entities
         public decimal? UnitPrice { get; set; }
         public decimal? Price { get; set; }
         public decimal? Quantity { get; set; } = 0;
-        public int? CaratSizeId { get; set; }
-        public string CaratSize { get; set; }
         public int? ClarityId { get; set; }
         public string Clarity { get; set; }
-
-        public int? CaratId { get; set; }
+        public decimal? Carat { get; set; }
         public int? ColorId { get; set; }
         public int? ShapeId { get; set; }
         public decimal? Table { get; set; }
         public decimal? Depth { get; set; }
-        public int? RatioId { get; set; }
+        public decimal? Ratio { get; set; }
         public decimal? Length { get; set; }
         public decimal? Width { get; set; }
         public decimal? Height { get; set; }

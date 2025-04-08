@@ -16,6 +16,8 @@
 
         public string SymbolName { get; set; }
 
+        public int DispOrder { get; set; }
+
         public bool IsActivated { get; set; }
 
     }

@@ -91,6 +91,7 @@ namespace Business.Repository
                         SymbolName = x.dimPro.SymbolName,
                         IconPath = x.dimPro.IconPath,
                         ParentId = x.dimPro.ParentId,
+                        DispOrder=x.dimPro.DispOrder,
                         ParentProperty = propG.Name,  // Avoid null reference
                         IsActivated = x.dimPro.IsActivated
                     }).Where(x => x.ParentProperty == $"{SD.Color}" && x.IsActivated == true).ToListAsync();
@@ -117,6 +118,7 @@ namespace Business.Repository
                         IconPath = x.dimPro.IconPath,
                         ParentId = x.dimPro.ParentId,
                         ParentProperty = propG.Name,  // Avoid null reference
+                        DispOrder = x.dimPro.DispOrder,
                         IsActivated = x.dimPro.IsActivated
                     }).Where(x => x.ParentProperty == $"{SD.CaratSize}" && x.IsActivated == true).ToListAsync();
 
@@ -166,6 +168,7 @@ namespace Business.Repository
                                     SymbolName = dimPro.SymbolName,
                                     IconPath = dimPro.IconPath,
                                     ParentId = dimPro.ParentId,
+                                    DispOrder = dimPro.DispOrder,
                                     ParentProperty = parentProp.Name,  // Avoid null reference
                                     IsActivated = dimPro.IsActivated
                                 }).ToListAsync();
@@ -187,6 +190,7 @@ namespace Business.Repository
                                     SymbolName = dimPro.SymbolName,
                                     IconPath = dimPro.IconPath,
                                     ParentId = dimPro.ParentId,
+                                    DispOrder = dimPro.DispOrder,
                                     ParentProperty = parentProp.Name,  // Avoid null reference
                                     IsActivated = dimPro.IsActivated
                                 }).ToListAsync();
@@ -213,6 +217,7 @@ namespace Business.Repository
                         SymbolName = x.dimPro.SymbolName,
                         IconPath = x.dimPro.IconPath,
                         ParentId = x.dimPro.ParentId,
+                        DispOrder = x.dimPro.DispOrder,
                         ParentProperty = propG.Name,  // Avoid null reference
                         IsActivated = x.dimPro.IsActivated
                     }).Where(x => x.ParentProperty == $"{SD.Clarity}" && x.IsActivated == true).ToListAsync();
@@ -288,6 +293,7 @@ namespace Business.Repository
                         SymbolName = x.dimPro.SymbolName,
                         IconPath = x.dimPro.IconPath,
                         ParentId = x.dimPro.ParentId,
+                        DispOrder = x.dimPro.DispOrder,
                         ParentProperty = propG.Name,  // Avoid null reference
                         IsActivated = x.dimPro.IsActivated
                     }).Where(x => x.ParentProperty == $"{SD.Polish}" && x.IsActivated == true).ToListAsync();
@@ -314,6 +320,7 @@ namespace Business.Repository
                         IconPath = x.dimPro.IconPath,
                         ParentId = x.dimPro.ParentId,
                         ParentProperty = propG.Name,  // Avoid null reference
+                        DispOrder= x.dimPro.DispOrder,
                         IsActivated = x.dimPro.IsActivated
                     }).Where(x => x.ParentProperty == $"{SD.Symmetry}" && x.IsActivated == true).ToListAsync();
 

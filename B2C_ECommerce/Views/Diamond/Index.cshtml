@@ -283,42 +283,42 @@
 				  }
 
 				}
-				async function GetCarat() {
-					try {
-						var response = await $.ajax({
-							url: '@(SD.BaseApiUrl)/api/diamondproperty/get-carat-ranges', // API endpoint
-							method: 'GET', // Using GET request
-							dataType: 'json', // Expecting JSON response
-						});
+				// async function GetCarat() {
+				// 	try {
+				// 		var response = await $.ajax({
+				// 			url: '@(SD.BaseApiUrl)/api/diamondproperty/get-carat-ranges', // API endpoint
+				// 			method: 'GET', // Using GET request
+				// 			dataType: 'json', // Expecting JSON response
+				// 		});
 
-						// Initialize the slider with API response
-						$("#carat-size-slider").slider({
-							range: true,
-							min: response.MinCaratSize,  // Set minimum from API response
-							max: response.MaxCaratSize,  // Set maximum from API response
-							step: 0.1, // Adjust step size as needed
-							values: [response.MinCaratSize, response.MaxCaratSize / 2], // Default values
-							slide: function (event, ui) {
-								debugger;
-								$("#minCarat").val(ui.values[0]);
-								$("#maxCarat").val(ui.values[1]);
+				// 		// Initialize the slider with API response
+				// 		$("#carat-size-slider").slider({
+				// 			range: true,
+				// 			min: response.MinCaratSize,  // Set minimum from API response
+				// 			max: response.MaxCaratSize,  // Set maximum from API response
+				// 			step: 0.1, // Adjust step size as needed
+				// 			values: [response.MinCaratSize, response.MaxCaratSize / 2], // Default values
+				// 			slide: function (event, ui) {
+				// 				debugger;
+				// 				$("#minCarat").val(ui.values[0]);
+				// 				$("#maxCarat").val(ui.values[1]);
 
-								diamondFilters.FromCarat=ui.values[0];
-								diamondFilters.ToCarat=ui.values[1];
+				// 				diamondFilters.FromCarat=ui.values[0];
+				// 				diamondFilters.ToCarat=ui.values[1];
 
-								getDiamondDataList(diamondFilters,page,rangeVal);
-							}
-						});
+				// 				getDiamondDataList(diamondFilters,page,rangeVal);
+				// 			}
+				// 		});
 
-						// Set initial values
-						$("#minCarat").val(response.MinCaratSize);
-						$("#maxCarat").val(response.MaxCaratSize);
+				// 		// Set initial values
+				// 		$("#minCarat").val(response.MinCaratSize);
+				// 		$("#maxCarat").val(response.MaxCaratSize);
 
-					} catch (error) {
-						console.error('Error fetching data: ', error);
-						$('#filter-box #shape-list').html('<p>Failed to load shapes</p>');
-					}
-				}
+				// 	} catch (error) {
+				// 		console.error('Error fetching data: ', error);
+				// 		$('#filter-box #shape-list').html('<p>Failed to load shapes</p>');
+				// 	}
+				// }
 				async function GetColorData() {
 					try {
 						// Fetching data from API
@@ -857,7 +857,7 @@
 					});
 				}
 
-				async function loadAllFunctions() {
+		async function loadAllFunctions() {
 			showLoader();
 			try {
 				await Promise.all([
@@ -881,14 +881,6 @@
 			}
 			hideLoader();
 		}
-
-
-	</script>
-
-
-	<script>
-
-
 
 
 	</script>

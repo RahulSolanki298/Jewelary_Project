@@ -65,7 +65,7 @@ namespace APIs.Controllers
                 int rowCount = worksheet.Dimension.Rows;
                 List<Diamond> diamondsDTList = new();
                 Diamond diamond = new();
-                int labId,typeId, colorId, shapeId, caratId, clarityId, cutId, polishId, symmId, fluorId, tableId, depthId, ratioId;
+                int labId,typeId, colorId, shapeId, clarityId, cutId, polishId, symmId, fluorId, tableId, depthId, ratioId;
 
                 for (int row = 6; row <= rowCount; row++)
                 {
@@ -74,7 +74,7 @@ namespace APIs.Controllers
                     labId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row,6].Text, SD.Lab);
                     colorId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 9].Text, SD.Color);
                     shapeId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 7].Text, SD.Shape);
-                    caratId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 8].Text, SD.Carat);
+                    
                     clarityId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 10].Text, SD.Clarity);
                     cutId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 11].Text, SD.Cut);
                     polishId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 12].Text, SD.Polish);
@@ -101,7 +101,7 @@ namespace APIs.Controllers
                         TypeId= typeId > 0 ? typeId : null,
                         LabId = labId > 0 ? labId : null,
                         ShapeId = shapeId > 0 ? shapeId : null,
-                        CaratId= caratId > 0 ? caratId : null,
+                        Carat= worksheet.Cells[row, 8].Text != null ? Convert.ToDecimal(worksheet.Cells[row, 8].Text) : 0,
                         ClarityId = clarityId > 0 ? clarityId : null,
                         ColorId = colorId > 0 ? colorId : null,
                         CutId = cutId > 0 ? cutId : null,
@@ -113,9 +113,9 @@ namespace APIs.Controllers
                         Price= Convert.ToDecimal(worksheet.Cells[row, 17].Text),
                         Amount= Convert.ToDecimal(worksheet.Cells[row, 18].Text),
                         Measurement= worksheet.Cells[row, 19].Text,
-                        RatioId = ratioId > 0 ? ratioId : null,
-                        Depth = Convert.ToDecimal(worksheet.Cells[row, 21].Text),
-                        Table = Convert.ToDecimal(worksheet.Cells[row, 22].Text),
+                        Ratio = worksheet.Cells[row, 20].Text != null ? Convert.ToDecimal(worksheet.Cells[row, 20].Text) : 0,
+                        Depth = worksheet.Cells[row, 21].Text != null ? Convert.ToDecimal(worksheet.Cells[row, 21].Text) : 0,
+                        Table = worksheet.Cells[row, 22].Text != null ? Convert.ToDecimal(worksheet.Cells[row, 22].Text) : 0,
                         Shade = worksheet.Cells[row, 23].Text,
                         LabShape = worksheet.Cells[row, 24].Text,
                         RapAmount= Convert.ToDecimal(worksheet.Cells[row, 25].Text),
