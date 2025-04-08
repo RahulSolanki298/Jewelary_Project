@@ -6,8 +6,8 @@
 
         public int?[] Colors { get; set; } 
 
-        public string FromCarat { get; set; } 
-        public string ToCarat { get; set; }
+        public decimal? FromCarat { get; set; } 
+        public decimal? ToCarat { get; set; }
 
         public decimal? FromPrice { get; set; }
         public decimal? ToPrice { get; set; }
@@ -16,14 +16,13 @@
 
         public int[] Clarities { get; set; }
 
-        public string FromRatio { get; set; }
-        public string ToRatio { get; set; }
+        public decimal? FromRatio { get; set; }
+        public decimal? ToRatio { get; set; }
 
-        public string FromTable { get; set; }
-        public string ToTable { get; set; }
-
-        public string FromDepth { get; set; }
-        public string ToDepth { get; set; }
+        public decimal? FromTable { get; set; }
+        public decimal? ToTable { get; set; }
+        public decimal? FromDepth { get; set; }
+        public decimal? ToDepth { get; set; }
 
         public int?[] Polish { get; set; }
 

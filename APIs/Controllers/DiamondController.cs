@@ -80,18 +80,15 @@ namespace APIs.Controllers
                     polishId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 12].Text, SD.Polish);
                     symmId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 13].Text, SD.Symmetry);
                     fluorId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 14].Text, SD.Fluor);
-                    tableId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 28].Text, SD.Table);
-                    depthId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 29].Text, SD.Depth);
-                    ratioId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 20].Text, SD.Ratio);
 
                     var DNA_Cell = worksheet.Cells[row, 3];
                     var DNA_NewVal = DNA_Cell.Hyperlink?.AbsoluteUri;
 
                     var Video_Cell = worksheet.Cells[row, 26];
-                    var Video_NewVal = DNA_Cell.Hyperlink?.AbsoluteUri;
+                    var Video_NewVal = Video_Cell.Hyperlink?.AbsoluteUri;
 
                     var Certi_Cell = worksheet.Cells[row, 27];
-                    var Certi_NewVal = DNA_Cell.Hyperlink?.AbsoluteUri;
+                    var Certi_NewVal = Certi_Cell.Hyperlink?.AbsoluteUri;
 
                     diamond = new Diamond()
                     {
@@ -119,6 +116,7 @@ namespace APIs.Controllers
                         Shade = worksheet.Cells[row, 23].Text,
                         LabShape = worksheet.Cells[row, 24].Text,
                         RapAmount= Convert.ToDecimal(worksheet.Cells[row, 25].Text),
+                        DiamondImagePath = "-",
                         DiamondVideoPath = Video_NewVal,
                         Certificate = Certi_NewVal,
                         IsActivated=true

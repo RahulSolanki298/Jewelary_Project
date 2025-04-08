@@ -94,7 +94,7 @@ namespace Business.Repository
                         DispOrder=x.dimPro.DispOrder,
                         ParentProperty = propG.Name,  // Avoid null reference
                         IsActivated = x.dimPro.IsActivated
-                    }).Where(x => x.ParentProperty == $"{SD.Color}" && x.IsActivated == true).ToListAsync();
+                    }).OrderBy(x => x.DispOrder).Where(x => x.ParentProperty == $"{SD.Color}" && x.IsActivated == true).ToListAsync();
 
             return result;
         }
@@ -120,38 +120,26 @@ namespace Business.Repository
                         ParentProperty = propG.Name,  // Avoid null reference
                         DispOrder = x.dimPro.DispOrder,
                         IsActivated = x.dimPro.IsActivated
-                    }).Where(x => x.ParentProperty == $"{SD.CaratSize}" && x.IsActivated == true).ToListAsync();
+                    }).OrderBy(x => x.DispOrder).Where(x => x.ParentProperty == $"{SD.CaratSize}" && x.IsActivated == true).ToListAsync();
 
             return result;
         }
 
         public async Task<CaratSizeRanges> GetCaratSizeRangeAsync()
         {
-            var ParentId = await GetParentIdByName(SD.Carat);
-            var caratSizes = await _context.DiamondProperties
-                .Where(x => x.ParentId == ParentId && x.IsActivated == true)
-                .Select(x => x.Name)  // Name represents carat size
+            var caratValues = await _context.Diamonds
+                .Where(d => d.Carat != null)
+                .Select(d => Convert.ToDecimal(d.Carat))
                 .ToListAsync();
 
-            if (!caratSizes.Any())
-            {
-                return null;
-            }
+            if (!caratValues.Any())
+                return new CaratSizeRanges(); // Return default or handle as needed
 
-            // Convert to decimal
-            var caratValues = caratSizes
-                .Select(x => decimal.TryParse(x, out var val) ? val : (decimal?)null)
-                .Where(x => x.HasValue)
-                .Select(x => x.Value)
-                .ToList();
-
-            var Response = new CaratSizeRanges()
+            return new CaratSizeRanges
             {
                 MinCaratSize = caratValues.Min(),
                 MaxCaratSize = caratValues.Max()
             };
-
-            return Response;
         }
 
         public async Task<IEnumerable<DiamondPropertyDTO>> GetShapeListAsync()
@@ -171,7 +159,7 @@ namespace Business.Repository
                                     DispOrder = dimPro.DispOrder,
                                     ParentProperty = parentProp.Name,  // Avoid null reference
                                     IsActivated = dimPro.IsActivated
-                                }).ToListAsync();
+                                }).OrderBy(x=>x.DispOrder).ToListAsync();
 
             return result;
         }
@@ -193,7 +181,7 @@ namespace Business.Repository
                                     DispOrder = dimPro.DispOrder,
                                     ParentProperty = parentProp.Name,  // Avoid null reference
                                     IsActivated = dimPro.IsActivated
-                                }).ToListAsync();
+                                }).OrderBy(x => x.DispOrder).ToListAsync();
 
             return result;
         }
@@ -220,7 +208,7 @@ namespace Business.Repository
                         DispOrder = x.dimPro.DispOrder,
                         ParentProperty = propG.Name,  // Avoid null reference
                         IsActivated = x.dimPro.IsActivated
-                    }).Where(x => x.ParentProperty == $"{SD.Clarity}" && x.IsActivated == true).ToListAsync();
+                    }).OrderBy(x => x.DispOrder).Where(x => x.ParentProperty == $"{SD.Clarity}" && x.IsActivated == true).ToListAsync();
 
             return result;
         }
@@ -244,8 +232,9 @@ namespace Business.Repository
                         IconPath = x.dimPro.IconPath,
                         ParentId = x.dimPro.ParentId,
                         ParentProperty = propG.Name,  // Avoid null reference
+                        DispOrder=x.dimPro.DispOrder,
                         IsActivated = x.dimPro.IsActivated
-                    }).Where(x => x.ParentProperty == $"{SD.Ratio}" && x.IsActivated == true).ToListAsync();
+                    }).OrderBy(x => x.DispOrder).Where(x => x.ParentProperty == $"{SD.Ratio}" && x.IsActivated == true).ToListAsync();
 
             return result;
         }
@@ -270,7 +259,7 @@ namespace Business.Repository
                         ParentId = x.dimPro.ParentId,
                         ParentProperty = propG.Name,  // Avoid null reference
                         IsActivated = x.dimPro.IsActivated
-                    }).Where(x => x.ParentProperty == $"{SD.Fluor}" && x.IsActivated == true).ToListAsync();
+                    }).OrderBy(x => x.DispOrder).Where(x => x.ParentProperty == $"{SD.Fluor}" && x.IsActivated == true).ToListAsync();
 
             return result;
         }
@@ -296,7 +285,7 @@ namespace Business.Repository
                         DispOrder = x.dimPro.DispOrder,
                         ParentProperty = propG.Name,  // Avoid null reference
                         IsActivated = x.dimPro.IsActivated
-                    }).Where(x => x.ParentProperty == $"{SD.Polish}" && x.IsActivated == true).ToListAsync();
+                    }).OrderBy(x => x.DispOrder).Where(x => x.ParentProperty == $"{SD.Polish}" && x.IsActivated == true).ToListAsync();
 
             return result;
         }
@@ -322,7 +311,7 @@ namespace Business.Repository
                         ParentProperty = propG.Name,  // Avoid null reference
                         DispOrder= x.dimPro.DispOrder,
                         IsActivated = x.dimPro.IsActivated
-                    }).Where(x => x.ParentProperty == $"{SD.Symmetry}" && x.IsActivated == true).ToListAsync();
+                    }).OrderBy(x => x.DispOrder).Where(x => x.ParentProperty == $"{SD.Symmetry}" && x.IsActivated == true).ToListAsync();
 
             return result;
         }

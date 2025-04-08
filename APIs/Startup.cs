@@ -35,7 +35,11 @@ namespace APIs
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDBContext>(options =>
-           options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+           options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+            sqlOptions =>
+            {
+                sqlOptions.CommandTimeout(300); // Timeout in seconds (5 minutes)
+            }));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDBContext>().AddDefaultTokenProviders();

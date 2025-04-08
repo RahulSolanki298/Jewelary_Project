@@ -1,4 +1,4 @@
-﻿    using System;
+﻿using System;
 using System.Threading.Tasks;
 using Business.Repository.IRepository;
 using DataAccess.Entities;
@@ -137,7 +137,7 @@ namespace APIs.Controllers
         {
             try
             {
-                var result= await _diamondProperty.AddAsync(diamondProperty);
+                var result = await _diamondProperty.AddAsync(diamondProperty);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -173,7 +173,7 @@ namespace APIs.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex);
-            }    
+            }
         }
 
         [HttpPost("Get-diamond-property/propertyValue/{propertyValue}/diamondProperty/{diamondProperty}")]

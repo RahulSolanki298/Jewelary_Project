@@ -1,14 +1,6 @@
 ﻿@model IEnumerable<Models.DiamondData>
 
 
-<div class="container-fluid mt-4">
-	<div class="row">
-		<div class="col-xl-12">
-			<div class="text-center" id="txtLoader" style="display:block;">
-				<img src="~/assets/loader/JF-WEB-LOADER.gif" style="width:250px;">
-			</div>
-		</div>
-	</div>
 	<div class="row mb-3">
 		<div class="col-md-4">
 			<input type="text" id="diamondFilter" class="form-control shadow-sm" placeholder="Search Diamonds..." />
@@ -40,15 +32,15 @@
 				{
 					<tr class="text-center">
 						<td>
-							<a href="/Diamond/GetSingleDiamond?diamondId=@item.Id&&diamondProparty=image">
+						<a href="@item.DiamondVideoPath" target="_blank">
 								<img src="@item.IconPath" class="rounded shadow-sm" style="height:40px;width:40px;" />
 							</a>
-							<a href="/Diamond/GetSingleDiamond?diamondId=@item.Id&&diamondProparty=v360">
+							<a href="@item.DiamondVideoPath" target="_blank">
 								<img src="~/assets/img/360-degrees.png" class="rounded" style="height:35px;width:35px;" />
 							</a>
 						</td>
 						<td>@item.ShapeName</td>
-						<td>@item.CaratName</td>
+						<td>@item.Carat</td>
 						<td>@item.ColorName</td>
 						<td>@item.ClarityName</td>
 						<td>@item.CutName</td>
@@ -77,12 +69,7 @@
 
 
 	</div>
-	@*  <div class="row mt-3">
-        <div class="col-md-12 text-center">
-            <button id="showMoreBtn" class="btn btn btn-outline-dark">Show More</button>
-        </div>
-    </div> *@
-</div>
+	
 
 
 

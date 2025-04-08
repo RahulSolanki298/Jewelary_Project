@@ -25,6 +25,7 @@
 	<div class="container-fluid">
 		<div class="card border-1 filter-bg-shadow">
 			<div class="card-body p-3" id="filter-box">
+
 				@Html.Partial("_FilterBox")
 			</div>
 		</div>
@@ -32,7 +33,31 @@
 </section>
 
 <!-- Product Table -->
-<div class="container-fluid" id="diamond-list-container">
+<div class="container-fluid">
+	<div class="row mt-3">
+		<div class="col-md-12 text-center">
+			<div class="row">
+				<div class="col-xl-12">
+					@* <div class="text-center" id="txtLoader" style="display:block;">
+						<img src="~/assets/loader/JF-WEB-LOADER.gif" style="width:150px;">
+					</div> *@
+					<div id="loader-overlay">
+						<div class="text-center" id="txtLoader">
+							<img src="~/assets/loader/JF-WEB-LOADER.gif" style="width:100px;">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="" id="diamond-list-container">
+	</div>
+	<div class="row">
+		<div class="col-xl-12 text-center">
+			<button id="showMoreBtn" class="btn btn-dark text-capitalize">Show More</button>
+		</div>
+	</div>
+
 </div>
 
 <!-- Certificate Modal -->
@@ -94,19 +119,19 @@
 			// Initial Data Fetch
 			loadAllFunctions();
 
-            GetShapeDesign();
-            GetCarat();
-            const fixCut =GetCutData();
-            const fixColors =GetColorData();
-            const fixClarity =GetClarityData();
-            const fixPrice =GetPriceData();
-            const fixPolish =GetPolishData();
-            const fixFluor =GetFluorData();
-            const fixSym =GetSymmetryData();
-            GetTableData();
-            GetDepthData();
-            GetRatioData();
-            getDiamondDataList(diamondFilters, page, rangeVal);
+			// GetShapeDesign();
+			//	GetCarat();
+			// const fixCut =GetCutData();
+			// const fixColors =GetColorData();
+			// const fixClarity =GetClarityData();
+			// const fixPrice =GetPriceData();
+			// const fixPolish =GetPolishData();
+			// const fixFluor =GetFluorData();
+			// const fixSym =GetSymmetryData();
+			// GetTableData();
+			// GetDepthData();
+			// GetRatioData();
+			//getDiamondDataList(diamondFilters, page, rangeVal);
 
 
 			// Shape button click
@@ -139,26 +164,13 @@
 				$("#btnMoreFilter").show();
 			});
 
-			 $('#diamondTable #showMoreBtn').click(()=> {
-				pageSize += 10;
+			 $('#showMoreBtn').click(()=> {
+				rangeVal += 10;
 				getDiamondDataList(diamondFilters, page, rangeVal); // Reload the table with new page size
 			});
 
 			$("#btnReset").on("click",function(){
-				GetShapeDesign();
-				GetCarat();
-				GetCutData();
-				GetColorData();
-				GetClarityData();
-				GetPriceData();
-				GetPolishData();
-				GetFluorData();
-				GetSymmetryData();
-				GetTableData();
-				GetDepthData();
-				GetRatioData();
-				diamondFilters = [];
-				getDiamondDataList(diamondFilters, page, rangeVal);
+				ResetAllData();
 			});
 
 			// Generic slider initializer
@@ -186,6 +198,10 @@
 			// 		$("#maxCut").val(ui.values[1]);
 			// 	}
 			// });
+			$(" #btnViewAll").on("click",function(){
+				ResetAllData();
+			});
+
 
 			//clsCertificate
 			$("#diamond-list-container #diamondTable").on("click",".clsCertificate",function(){
@@ -256,69 +272,69 @@
 
 				async function GetShapeDesign() {
 				  const shapeListContainer = $('#filter-box #shape-list'); // Cache the DOM selector
-				  shapeListContainer.empty(); // Clear the previous content
+					  try {
+						const response = await fetch('@SD.BaseApiUrl/api/diamondproperty/get-shape-list'); // Using native fetch
+						const data = await response.json();
 
-				  try {
-					const response = await fetch('@SD.BaseApiUrl/api/diamondproperty/get-shape-list'); // Using native fetch
-					const data = await response.json();
+						if (Array.isArray(data) && data.length > 0) {
+						  const shapeButtons = data.map(shape => {
+							return `
+								 <div class="shape-btn text-center" shapeId='${shape.Id}'>
+								<input type="hidden" value="${shape.Id}" />
+								<img src="${shape.IconPath}" alt="${shape.Name}" style="height:60px;" />
+								<span>${shape.Name}</span>
+							  </div>
+							`;
+						  }).join(''); // Concatenate all the buttons in a single string
 
-					if (Array.isArray(data) && data.length > 0) {
-					  const shapeButtons = data.map(shape => {
-						return `
-							 <div class="shape-btn text-center" shapeId='${shape.Id}'>
-							<input type="hidden" value="${shape.Id}" />
-							<img src="${shape.IconPath}" alt="${shape.Name}" style="height:60px;" />
-							<span>${shape.Name}</span>
-						  </div>
-						`;
-					  }).join(''); // Concatenate all the buttons in a single string
-
-					  shapeListContainer.html(shapeButtons); // Append all the shapes at once
-					} else {
-					  shapeListContainer.html('<p>No shapes available</p>');
-					}
-				  } catch (error) {
-					console.error('Error fetching data:', error);
-					shapeListContainer.html('<p>Failed to load shapes</p>');
-				  }
+						  shapeListContainer.html(shapeButtons); // Append all the shapes at once
+						} else {
+						  shapeListContainer.html('<p>No shapes available</p>');
+						}
+					  } catch (error) {
+						console.error('Error fetching data:', error);
+						shapeListContainer.html('<p>Failed to load shapes</p>');
+					  }
 
 				}
-				// async function GetCarat() {
-				// 	try {
-				// 		var response = await $.ajax({
-				// 			url: '@(SD.BaseApiUrl)/api/diamondproperty/get-carat-ranges', // API endpoint
-				// 			method: 'GET', // Using GET request
-				// 			dataType: 'json', // Expecting JSON response
-				// 		});
 
-				// 		// Initialize the slider with API response
-				// 		$("#carat-size-slider").slider({
-				// 			range: true,
-				// 			min: response.MinCaratSize,  // Set minimum from API response
-				// 			max: response.MaxCaratSize,  // Set maximum from API response
-				// 			step: 0.1, // Adjust step size as needed
-				// 			values: [response.MinCaratSize, response.MaxCaratSize / 2], // Default values
-				// 			slide: function (event, ui) {
-				// 				debugger;
-				// 				$("#minCarat").val(ui.values[0]);
-				// 				$("#maxCarat").val(ui.values[1]);
 
-				// 				diamondFilters.FromCarat=ui.values[0];
-				// 				diamondFilters.ToCarat=ui.values[1];
+				async function GetCarat() {
+					try {
+						var response = await $.ajax({
+							url: '@(SD.BaseApiUrl)/api/diamondproperty/get-carat-ranges', // API endpoint
+							method: 'GET', // Using GET request
+							dataType: 'json', // Expecting JSON response
+						});
 
-				// 				getDiamondDataList(diamondFilters,page,rangeVal);
-				// 			}
-				// 		});
+						$("#carat-size-slider").slider({
+							range: true,
+							min: response.MinCaratSize,  // Set minimum from API response
+							max: response.MaxCaratSize,  // Set maximum from API response
+							step: 0.1, // Adjust step size as needed
+							values: [response.MinCaratSize, response.MaxCaratSize / 2], // Default values
+							slide: function (event, ui) {
+								debugger;
+								$("#minCarat").val(ui.values[0]);
+								$("#maxCarat").val(ui.values[1]);
 
-				// 		// Set initial values
-				// 		$("#minCarat").val(response.MinCaratSize);
-				// 		$("#maxCarat").val(response.MaxCaratSize);
+								diamondFilters.FromCarat=ui.values[0];
+								diamondFilters.ToCarat=ui.values[1];
 
-				// 	} catch (error) {
-				// 		console.error('Error fetching data: ', error);
-				// 		$('#filter-box #shape-list').html('<p>Failed to load shapes</p>');
-				// 	}
-				// }
+								getDiamondDataList(diamondFilters,page,rangeVal);
+							}
+						});
+
+						// Set initial values
+						$("#minCarat").val(response.MinCaratSize);
+						$("#maxCarat").val(response.MaxCaratSize);
+
+					} catch (error) {
+						console.error('Error fetching data: ', error);
+						$('#filter-box #shape-list').html('<p>Failed to load shapes</p>');
+					}
+				}
+
 				async function GetColorData() {
 					try {
 						// Fetching data from API
@@ -329,7 +345,8 @@
 						});
 
 						// Extract color names
-						const colorList = response.map(item => item.Name);
+						// const colorList = response.map(item => item.Name);
+						const colorList = response.map();
 
 						// Ensure that there's at least one color to avoid errors
 						if (colorList.length === 0) {
@@ -476,7 +493,7 @@
 									getDiamondDataList(diamondFilters, page, rangeVal);
 								}
 							});
-					 
+
 
 					// Set initial values for the min and max cut fields
 							$("#minClarity").val(minClarity);
@@ -777,7 +794,7 @@
 								}
 							}
 				async function GetSymmetryData()
-							{
+				{
 									try {
 										// Fetching data from API
 										var response = await $.ajax({
@@ -829,7 +846,6 @@
 
 				async function getDiamondDataList(diamondFilters, pageNumber = 1, pageSize = 10) {
 					showLoader();
-
 					return $.ajax({
 						//url: '@Url.Action("GetDiamondList", "Diamond")', // Change this to your actual route
 						url: '/Diamond/GetDiamondList', // Change this to your actual route
@@ -857,29 +873,75 @@
 					});
 				}
 
-		async function loadAllFunctions() {
-			showLoader();
-			try {
-				await Promise.all([
+				async function loadAllFunctions() {
+					showLoader();
+					try {
+						await Promise.all([
 
-					GetShapeDesign(),
-					GetCarat(),
-					GetCutData(),
-					GetColorData(),
-					GetClarityData(),
-					GetPriceData(),
-					GetPolishData(),
-					GetFluorData(),
-					GetSymmetryData(),
-					GetTableData(),
-					GetDepthData(),
-					GetRatioData(),
-				]);
-				  await  getDiamondDataList(diamondFilters, page, rangeVal);
-			} catch (error) {
-				console.error("An error occurred while loading data:", error);
-			}
-			hideLoader();
+							GetShapeDesign(),
+							GetCarat(),
+							GetCutData(),
+							GetColorData(),
+							GetClarityData(),
+							GetPriceData(),
+							GetPolishData(),
+							GetFluorData(),
+							GetSymmetryData(),
+							GetTableData(),
+							GetDepthData(),
+							GetRatioData(),
+						]);
+						  await  getDiamondDataList(diamondFilters, page, rangeVal);
+					} catch (error) {
+						console.error("An error occurred while loading data:", error);
+					}
+					hideLoader();
+				}
+
+				async function getDiamondDataList(diamondFilters, pageNumber = 1, pageSize = 10) {
+					showLoader();
+					return $.ajax({
+						//url: '@Url.Action("GetDiamondList", "Diamond")', // Change this to your actual route
+						url: '/Diamond/GetDiamondList', // Change this to your actual route
+						type: 'POST',
+						data: {
+							diamondFilters: diamondFilters,
+							pageNumber: pageNumber,
+							pageSize: pageSize
+						},
+						success: function (data) {
+							$('#diamond-list-container').html(data);
+							// setTimeout(() => {
+							//     hideLoader();
+							// }, 10000);
+							hideLoader();
+						},
+						error: function (error) {
+							console.error('Error fetching data:', error);
+							//   setTimeout(() => {
+							//     hideLoader();
+							// }, 10000);
+							hideLoader();
+						}
+
+					});
+				}
+
+		function ResetAllData(){
+				GetShapeDesign();
+				GetCarat();
+				GetCutData();
+				GetColorData();
+				GetClarityData();
+				GetPriceData();
+				GetPolishData();
+				GetFluorData();
+				GetSymmetryData();
+				GetTableData();
+				GetDepthData();
+				GetRatioData();
+				diamondFilters = [];
+				getDiamondDataList(diamondFilters, page, rangeVal);
 		}
 
 

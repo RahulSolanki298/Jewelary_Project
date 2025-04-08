@@ -16,8 +16,7 @@
             public string ShapeName { get; set; }
             public decimal? RAP { get; set; }
             public decimal? RapAmount { get; set; }
-            public int? CaratId { get; set; }
-            public string CaratName { get; set; }
+            public decimal? Carat { get; set; }
             public int? ClarityId { get; set; }
             public string ClarityName { get; set; }
             public int? ColorId { get; set; }
@@ -33,8 +32,7 @@
             public decimal? Price { get; set; }
             public decimal? Table { get; set; }
             public decimal? Depth { get; set; }
-            public int? RatioId { get; set; }
-            public string RatioName { get; set; }
+            public decimal? Ratio { get; set; }
             public decimal? Quantity { get; set; } = 0;
             public string Shade { get; set; }
             public string Certificate { get; set; }
