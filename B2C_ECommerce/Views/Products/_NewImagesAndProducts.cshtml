@@ -1,0 +1,57 @@
+﻿@model List<DataAccess.Entities.Product>
+@{
+
+}
+
+
+	@foreach (var item in Model)
+	{
+		<div class="col-md-3">
+			<div class="product-single-card">
+				<div class="product-top-area">
+					<div class="product-discount">
+						$55.00
+					</div>
+
+					<div class="product-img">
+						<div class="first-view">
+							<img src="/assets/img/placeholder/dummy2.png" alt="logo" class="img-fluid" onerror="this.src='https://i.ibb.co/qpB9ZCZ/placeholder.png'">
+						</div>
+						<div class="hover-view">
+							<img src="/assets/img/placeholder/dummy.jpg" alt="logo" class="img-fluid" onerror="this.src='https://i.ibb.co/qpB9ZCZ/placeholder.png'">
+						</div>
+					</div>
+					<div class="sideicons">
+						<button class="sideicons-btn">
+							<i class="fa-solid fa-cart-plus"></i>
+						</button>
+						<button class="sideicons-btn">
+							<i class="fa-solid fa-eye"></i>
+						</button>
+						<button class="sideicons-btn">
+							<i class="fa-solid fa-heart"></i>
+						</button>
+						<button class="sideicons-btn">
+							<i class="fa-solid fa-shuffle"></i>
+						</button>
+					</div>
+				</div>
+				<div class="product-info">
+					<h6 class="product-category"><a href="#">@item.CategoryId</a></h6>
+					<h6 class="product-title text-truncate"><a href="#">@item.Title</a></h6>
+					
+					<div class="d-flex flex-wrap align-items-center py-2">
+						<div class="old-price">
+							@item.Price
+						</div>
+						<div class="new-price">
+							@item.Price
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+
+   

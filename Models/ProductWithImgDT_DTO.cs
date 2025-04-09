@@ -2,23 +2,24 @@
 
 namespace Models
 {
-    public class ProductDTO
+    public class ProductWithImgDT_DTO
     {
         public Guid Id { get; set; }
 
         public DateTime ProductDate { get; set; }
-        
+
         public string VenderId { get; set; }
 
         public string VenderName { get; set; }
-        
+
         public string DesignNo { get; set; }
-        
+
         public string ParentDesignNo { get; set; }
+
         public string ParentDesign { get; set; }
 
         public string ProductSize { get; set; }
-        
+
         public string Gender { get; set; }
 
         public string Sku { get; set; }  // OTN23U01-D300R0B 
@@ -92,11 +93,11 @@ namespace Models
         public string CenterCaratName { get; set; }
 
         public string DefaultImage { get; set; }
-        
+
         public int NoOfStones { get; set; }
-        
+
         public decimal? DiaWT { get; set; }
-        
+
         public string Grades { get; set; }
 
         public string WebsiteImagesLink { get; set; }
@@ -104,15 +105,17 @@ namespace Models
         public bool IsActivated { get; set; } = true;
 
         public string Occasion { get; set; }
-        
+
         public string Remarks { get; set; }
-        
+
         public string Package { get; set; }
-        
+
         public string MfgDesign { get; set; }
 
         public string Designer { get; set; }
 
         public string CadDesigner { get; set; }
+
+
     }
 }

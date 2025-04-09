@@ -7,6 +7,7 @@ using Business.Repository.IRepository;
 using DataAccess.Data;
 using DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Graph.Models;
 using Models;
 
 namespace Business.Repository
@@ -318,6 +319,169 @@ namespace Business.Repository
             }
         }
 
+        public async Task<bool> SaveNewProductCollectionList(List<ProductDTO> products)
+        {
+            try
+            {
+                // Step 0: Initilize veriable
+                var newProduct = new Product();
+                var existingProduct = new Product();
+
+                // Step 1: Fetch all related entities in bulk to avoid repeated database calls
+
+                var categories = await _context.Category.ToListAsync();
+                var subCategories = await _context.SubCategory.ToListAsync();
+
+
+                // Step 2: Create dictionaries for fast lookup by Name
+                var categoryDict = categories.ToDictionary(x => x.Name, x => x.Id);
+                var subCategoryDict = subCategories.ToDictionary(x => x.Name, x => x.Id);
+
+                // Lists for insert and update
+                var productList = new List<Product>();
+                var updateList = new List<Product>();
+
+                int subCategoryId, categoryId, collectionId, StyleId;
+
+                // Step 3: Process each product
+                foreach (var product in products)
+                {
+                    if (string.IsNullOrEmpty(product.DesignNo)
+                        || string.IsNullOrEmpty(product.CategoryName)
+                        || string.IsNullOrEmpty(product.SubCategoryName)
+                        || string.IsNullOrEmpty(product.StyleName)
+                        || string.IsNullOrEmpty(product.Occasion))
+                    {
+                        continue;
+                    }
+
+                    categoryId = categoryDict.GetValueOrDefault(product.CategoryName);
+                    subCategoryId = subCategoryDict.GetValueOrDefault(product.SubCategoryName);
+
+                    if (string.IsNullOrEmpty(product.CollectionName) != true)
+                    {
+                        var collDT = _context.ProductCollections.Where(x => x.CollectionName == product.CollectionName).FirstOrDefault();
+                        if (collDT != null)
+                        {
+                            collectionId = collDT.Id;
+                        }
+                        else
+                        {
+                            ProductCollections collection = new ProductCollections();
+                            collection.CollectionName = product.CollectionName;
+                            await _context.ProductCollections.AddAsync(collection);
+                            await _context.SaveChangesAsync();
+                            StyleId = collection.Id;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(product.StyleName) != true)
+                    {
+                        var styleDT = _context.ProductStyles.Where(x => x.StyleName == product.StyleName).FirstOrDefault();
+                        if (styleDT != null)
+                        {
+                            StyleId = styleDT.Id;
+                        }
+                        else
+                        {
+                            ProductStyles style = new ProductStyles();
+                            style.StyleName = product.StyleName;
+                            await _context.ProductStyles.AddAsync(style);
+                            await _context.SaveChangesAsync();
+                            StyleId = style.Id;
+                        }
+
+
+                    }
+
+                    // Check if a product already exists based on related field IDs
+                    existingProduct = await _context.Product
+                        .Where(x => x.ProductType == product.ProductType
+                                    && x.CategoryId == categoryId
+                                    && x.SubCategoryId == subCategoryId
+                                    && x.DesignNo == product.DesignNo)
+                        .FirstOrDefaultAsync();
+
+                    if (existingProduct != null)
+                    {
+                        // Update existing product
+                        existingProduct.DesignNo = product.DesignNo;
+                        existingProduct.Title = product.Title;
+                        existingProduct.ProductDate = product.ProductDate;
+                        existingProduct.Designer = product.Designer;
+                        existingProduct.CadDesigner = product.CadDesigner;
+                        existingProduct.Remarks = product.Remarks;
+                        existingProduct.Carat = product.CaratName;
+                        existingProduct.Gender = product.Gender;
+                        existingProduct.MfgDesign = product.MfgDesign;
+                        existingProduct.Package = product.Package;
+                        existingProduct.Occasion = product.Occasion;
+                        existingProduct.ParentDesign = product.ParentDesign;
+                        existingProduct.IsActivated = product.IsActivated;
+                        existingProduct.CollectionsId = product.CollectionsId;
+                        existingProduct.ProductType = product.ProductType;
+                        updateList.Add(existingProduct);
+                    }
+                    else
+                    {
+                        // Insert new product
+                        newProduct = new Product
+                        {
+                            Id = product.Id,
+                            DesignNo = product.DesignNo,
+                            Title = product.Title,
+                            ProductDate = product.ProductDate,
+                            Designer = product.Designer,
+                            CadDesigner = product.CadDesigner,
+                            Remarks = product.Remarks,
+                            Carat = product.CaratName,
+                            Gender = product.Gender,
+                            Package = product.Package,
+                            Occasion = product.Occasion,
+                            IsActivated = product.IsActivated,
+                            CollectionsId = product.CollectionsId,
+                            ParentDesign = product.ParentDesign,
+                            ProductType = product.ProductType,
+                            MfgDesign = product.MfgDesign,
+                            Vendor = product.VenderName,
+                        };
+
+                        productList.Add(newProduct);
+                    }
+                }
+
+                // Step 4: Bulk insert new products and update existing products
+                if (productList.Count > 0)
+                {
+                    await _context.Product.AddRangeAsync(productList);
+                }
+
+                if (updateList.Count > 0)
+                {
+                    _context.Product.UpdateRange(updateList);
+                }
+
+                // Step 5: Save changes to the database
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (You can replace this with your actual logging mechanism)
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+
+                // You can add more handling if needed (e.g., rethrow or return false)
+                return false;
+            }
+        }
+
+        public async Task<IEnumerable<Product>> GetProductCollectionNewList()
+        {
+            var products = await _context.Product.ToListAsync();
+            return products;
+        }
+
         public async Task<IEnumerable<ProductDTO>> GetProductStyleList()
         {
             var colors = await GetColorList();
@@ -518,8 +682,6 @@ namespace Business.Repository
             var result = await _context.ProductProperty.Where(x => x.ParentId == weightId).ToListAsync();
             return result;
         }
-
-
 
         public string ExtractStyleName(string fileName)
         {

@@ -9,6 +9,7 @@ using OfficeOpenXml;
 using Models;
 using System.IO.Compression;
 using System.Linq;
+using System.Globalization;
 
 namespace APIs.Controllers
 {
@@ -103,7 +104,7 @@ namespace APIs.Controllers
                                 UnitPrice = product.UnitPrice,
                                 CaratName = carat,
                                 ColorName = metal.Trim(),
-                                IsActivated=true
+                                IsActivated = true
                             });
                         }
                     }
@@ -177,6 +178,82 @@ namespace APIs.Controllers
                         }
 
                         await _productRepository.SaveProductCollectionList(rows);
+
+                    }
+                }
+
+                return Ok("File uploaded and processed successfully.");
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPost("BulkNewProductCollectionUpload")]
+        public async Task<IActionResult> UploadNewProductCollectionExcel(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
+            try
+            {
+                // Ensure the file is an Excel file
+                if (!file.FileName.EndsWith(".xlsx"))
+                {
+                    return BadRequest("Invalid file format. Please upload an Excel (.xlsx) or (.csv) file.");
+                }
+
+                // Read the file using EPPlus
+                using (var stream = new MemoryStream())
+                {
+
+                    await file.CopyToAsync(stream);
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                    using (var package = new ExcelPackage(stream))
+                    {
+                        var workbook = package.Workbook;
+
+                        var worksheet = workbook.Worksheets[0]; // Assuming you want the first sheet
+
+                        var rows = new List<Models.ProductDTO>();
+
+                        // Loop through rows and columns
+                        for (int row = 2; row <= worksheet.Dimension.Rows; row++) // Start at row 2 to skip header
+                        {
+                            var date = worksheet.Cells[row, 2].Value;
+                            var itemDate = ParseDate(date);
+
+                            var data = new ProductDTO
+                            {
+                                DesignNo = worksheet.Cells[row, 1].Text,
+                                ProductDate = itemDate ?? DateTime.MinValue,
+                                ParentDesign = worksheet.Cells[row,3].Text,
+                                CaratName= worksheet.Cells[row, 4].Text,
+                                Gender= worksheet.Cells[row, 5].Text,
+                                CollectionName= worksheet.Cells[row, 6].Text,
+                                CategoryName= worksheet.Cells[row, 7].Text,
+                                SubCategoryName= worksheet.Cells[row, 8].Text,
+                                ProductType= worksheet.Cells[row, 9].Text,
+                                StyleName= worksheet.Cells[row, 10].Text,
+                                Occasion= worksheet.Cells[row, 11].Text,
+                                Remarks= worksheet.Cells[row, 12].Text,
+                                Package= worksheet.Cells[row, 13].Text,
+                                MfgDesign= worksheet.Cells[row, 14].Text,
+                                VenderName= worksheet.Cells[row, 15].Text,
+                                Title= worksheet.Cells[row, 16].Text,
+                                Designer = worksheet.Cells[row, 17].Text,
+                                CadDesigner = worksheet.Cells[row, 18].Text,
+                                Id = Guid.NewGuid()
+                            };
+
+                            rows.Add(data);
+                        }
+
+
+                        await _productRepository.SaveNewProductCollectionList(rows);
 
                     }
                 }
@@ -286,8 +363,37 @@ namespace APIs.Controllers
         public async Task<IActionResult> GetProductDetailsList()
         {
             var result = await _productRepository.GetProductStyleList();
-
             return Ok(result);
+        }
+
+        [HttpGet("GetProductCollectionNewList")]
+        public async Task<IActionResult> GetProductNewCollection()
+        {
+            var result= await _productRepository.GetProductCollectionNewList();
+            return Ok(result);
+        }
+
+
+
+        private DateTime? ParseDate(object cellValue)
+        {
+            if (cellValue is DateTime parsedDate)
+            {
+                return parsedDate;
+            }
+
+            // Fallback for parsing in dd-MM-yyyy format
+            if (cellValue is string dateString)
+            {
+                DateTime result;
+                if (DateTime.TryParseExact(dateString, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
+                {
+                    return result;
+                }
+            }
+
+            // Return null if the value cannot be parsed
+            return null;
         }
     }
 }

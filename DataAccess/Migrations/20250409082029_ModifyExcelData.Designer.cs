@@ -4,14 +4,16 @@ using DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250409082029_ModifyExcelData")]
+    partial class ModifyExcelData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -953,9 +955,6 @@ namespace DataAccess.Migrations
                     b.Property<string>("CadDesigner")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Carat")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("CaratId")
                         .HasColumnType("int");
 
@@ -984,9 +983,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DesignNo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Designer")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("DiaWT")
@@ -1022,7 +1018,7 @@ namespace DataAccess.Migrations
                     b.Property<string>("Package")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ParentDesign")
+                    b.Property<string>("ParentDesignNo")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
@@ -1065,9 +1061,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("VenderId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Vendor")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
