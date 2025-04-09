@@ -48,7 +48,7 @@ namespace Business.Repository
 
                 // Execute the stored procedure with parameters and get the result
                 var diamonds = await _context.DiamondData
-                    .FromSqlRaw("EXEC SP_GetDiamondDataBY_TEST_DiamondFilters @Shapes, @Colors, @FromCarat, @ToCarat, @FromPrice, @ToPrice, @Cuts, @Clarities, @FromRatio, @ToRatio, @FromTable, @ToTable, @FromDepth, @ToDepth, @Polish, @Fluor, @Symmeties", parameters)
+                    .FromSqlRaw("EXEC SP_GetDiamondDataBY_NEW_DiamondFilters @Shapes, @Colors, @FromCarat, @ToCarat, @FromPrice, @ToPrice, @Cuts, @Clarities, @FromRatio, @ToRatio, @FromTable, @ToTable, @FromDepth, @ToDepth, @Polish, @Fluor, @Symmeties", parameters)
                     .ToListAsync();
 
                 // Pagination logic (skip and take)
@@ -63,14 +63,12 @@ namespace Business.Repository
             }
         }
 
-
-
         public async Task<IEnumerable<DiamondData>> GetDiamondList()
         {
             try
             {
                 var diamonds = await _context.DiamondData
-                    .FromSqlRaw("EXEC SP_GetDiamondDataBY_TEST_DiamondFilters")
+                    .FromSqlRaw("EXEC SP_GetDiamondDataBY_NEW_DiamondFilters")
                     .ToListAsync();
 
                 return diamonds;
@@ -80,14 +78,13 @@ namespace Business.Repository
                 throw;
             }
         }
-
 
         public async Task<IEnumerable<DiamondData>> GetDiamondNewList()
         {
             try
             {
                 var diamonds = await _context.DiamondData
-                    .FromSqlRaw("EXEC SP_GetDiamondDataBY_New_DiamondFilters")
+                    .FromSqlRaw("EXEC SP_GetDiamondDataBY_Temp_DiamondFilters")
                     .ToListAsync();
 
                 return diamonds;
@@ -97,9 +94,6 @@ namespace Business.Repository
                 throw;
             }
         }
-
-
-
 
         public async Task<bool> BulkInsertDiamondsAsync(string jsonData)
         {

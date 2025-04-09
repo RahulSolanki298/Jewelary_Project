@@ -144,10 +144,12 @@ namespace Business.Repository
 
         public async Task<IEnumerable<DiamondPropertyDTO>> GetShapeListAsync()
         {
+            // Ensure indexes are applied on ParentId, IsActivated, and DispOrder in the database
             var result = await (from dimPro in _context.DiamondProperties
                                 join parent in _context.DiamondProperties on dimPro.ParentId equals parent.Id into parentGroup
                                 from parentProp in parentGroup.DefaultIfEmpty()
                                 where parentProp.Name == SD.Shape && dimPro.IsActivated
+                                orderby dimPro.DispOrder // Sort in the database directly
                                 select new DiamondPropertyDTO
                                 {
                                     Id = dimPro.Id,
@@ -157,12 +159,14 @@ namespace Business.Repository
                                     IconPath = dimPro.IconPath,
                                     ParentId = dimPro.ParentId,
                                     DispOrder = dimPro.DispOrder,
-                                    ParentProperty = parentProp.Name,  // Avoid null reference
+                                    ParentProperty = parentProp.Name,  // Safely handle potential null reference
                                     IsActivated = dimPro.IsActivated
-                                }).OrderBy(x=>x.DispOrder).ToListAsync();
+                                }).AsNoTracking() // Use AsNoTracking for better performance
+                                .ToListAsync();
 
             return result;
         }
+
 
         public async Task<IEnumerable<DiamondPropertyDTO>> GetCutListAsync()
         {
@@ -241,25 +245,23 @@ namespace Business.Repository
 
         public async Task<IEnumerable<DiamondPropertyDTO>> GetFluorListAsync()
         {
-            var result = await _context.DiamondProperties
-                .GroupJoin(
-                    _context.DiamondProperties,
-                    dimPro => dimPro.ParentId,
-                    propG => propG.Id,
-                    (dimPro, dimGroup) => new { dimPro, dimGroup })
-                .SelectMany(
-                    x => x.dimGroup.DefaultIfEmpty(),
-                    (x, propG) => new DiamondPropertyDTO
-                    {
-                        Id = x.dimPro.Id,
-                        Name = x.dimPro.Name,
-                        Description = x.dimPro.Description,
-                        SymbolName = x.dimPro.SymbolName,
-                        IconPath = x.dimPro.IconPath,
-                        ParentId = x.dimPro.ParentId,
-                        ParentProperty = propG.Name,  // Avoid null reference
-                        IsActivated = x.dimPro.IsActivated
-                    }).OrderBy(x => x.DispOrder).Where(x => x.ParentProperty == $"{SD.Fluor}" && x.IsActivated == true).ToListAsync();
+            var result = await (
+                from child in _context.DiamondProperties
+                join parent in _context.DiamondProperties on child.ParentId equals parent.Id
+                where parent.Name == SD.Fluor && child.IsActivated
+                orderby child.DispOrder
+                select new DiamondPropertyDTO
+                {
+                    Id = child.Id,
+                    Name = child.Name,
+                    Description = child.Description,
+                    SymbolName = child.SymbolName,
+                    IconPath = child.IconPath,
+                    ParentId = child.ParentId,
+                    ParentProperty = parent.Name,
+                    IsActivated = child.IsActivated
+                }
+            ).ToListAsync();
 
             return result;
         }
