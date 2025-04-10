@@ -1,7 +1,8 @@
 ﻿<!-- Product Section - Start -->
 @{
-    <link rel="stylesheet" href="~/assets/css/products.css">
-    }
+    ViewBag.Title="Products";
+	<link rel="stylesheet" href="~/assets/css/products.css">
+}
 
 <!-- breadcrumb area start -->
 <div class="breadcrumb-area">
@@ -12,7 +13,7 @@
                     <nav aria-label="breadcrumb">
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="index.html"><i class="fa fa-home"></i></a></li>
-                            <li class="breadcrumb-item active" aria-current="page">shop 4 column</li>
+                            <li class="breadcrumb-item active" aria-current="page">@ViewBag.Title</li>
                         </ul>
                     </nav>
                 </div>
@@ -23,10 +24,13 @@
  <!-- breadcrumb area end -->
 <!-- page main wrapper start -->
  <div class="shop-main-wrapper section-padding">
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
+            <div class="col-lg-2" id="SideBar">
+
+            </div>
             <!-- shop main wrapper start -->
-            <div class="col-lg-12">
+            <div class="col-lg-10">
                 <div class="shop-product-wrapper">
                     <!-- shop product top wrap start -->
                     <div class="shop-top-bar">
@@ -571,7 +575,7 @@
                                     <a href="product-details.html">
 										<img class="pri-img" src="~/assets/img/collections/images/plde-97/plde-97-y1.png" />
 										<img class="sec-img" src="~/assets/img/collections/images/plde-97/plde-97-y2.png" />
-                                     
+
                                     </a>
                                     <div class="product-badge">
                                         <div class="product-label new">
@@ -1082,7 +1086,7 @@
 										<img class="pri-img" src="~/assets/img/collections/images/plde-75/plde-75-r1.png" />
                                         <img class="sec-img" src="~/assets/img/collections/images/plde-75/plde-75-r2.png" />
 									</a>
-									
+
                                     <div class="product-badge">
                                         <div class="product-label new">
                                             <span>new</span>
@@ -1771,8 +1775,6 @@
         </div>
     </div>
 </div>
-<!-- page main wrapper end -->
-<!-- Product Section - End -->
 
 @* <div class="" id="MyProductsImg">
 
@@ -1781,12 +1783,13 @@
 
 
 
-@* @section Scripts{
+@section Scripts{
 
     <script>
-        $(document).ready(function(){
-			GetProducts();
-        });
+            $(document).ready(function(){
+			    //GetProducts();
+                GetProductFilters()
+            });
             function GetProducts() {
             $.ajax({    
                 url: '@Url.Action("GetProductList", "Products")',
@@ -1802,6 +1805,22 @@
             });
         }
 
+        function GetProductFilters() {
+            $.ajax({
+                url: '/Products/GetProductFilters',
+                type: 'GET',
+                dataType: 'html'
+            })
+            .done(function(response) {
+                $('#SideBar').html(response);
+            })
+            .fail(function(xhr, status, error) {
+                console.error('AJAX error:', status, error);
+            });
+        }
+
+
+
     </script>
 
-} *@
+}

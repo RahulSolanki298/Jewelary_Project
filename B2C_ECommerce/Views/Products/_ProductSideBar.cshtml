@@ -1,0 +1,124 @@
+﻿@model Models.ProductPropertyListDTO
+
+
+<div class="row">
+	<div class="col-lg-12 order-2 order-lg-1">
+		<aside class="sidebar-wrapper">
+			<!-- single sidebar start -->
+			<div class="sidebar-single">
+				<h5 class="sidebar-title">categories</h5>
+				<div class="sidebar-body">
+					<ul class="shop-categories">
+						@if (Model.StylesList != null)
+						{
+							@foreach (var item in Model.StylesList)
+							{
+								<li><a href="#">@item.StyleName</a></li>
+							}
+						}
+					</ul>
+				</div>
+			</div>
+			<!-- single sidebar end -->
+			<!-- single sidebar start -->
+			<div class="sidebar-single">
+				<h5 class="sidebar-title">price</h5>
+				<div class="sidebar-body">
+					@if (Model != null)
+					{
+						<div class="price-range-wrap">
+							<div class="price-range" data-min="1" data-max="1000"></div>
+							<div class="range-slider">
+								<form action="#" class="d-flex align-items-center justify-content-between">
+									<div class="price-input">
+										<label for="amount">Price: </label>
+										<input type="text" id="amount">
+									</div>
+									<button class="filter-btn">filter</button>
+								</form>
+							</div>
+						</div>
+
+					}
+				</div>
+			</div>
+			<!-- single sidebar end -->
+			<!-- single sidebar start -->
+			<div class="sidebar-single">
+				<h5 class="sidebar-title">Brand</h5>
+				<div class="sidebar-body">
+					<ul class="checkbox-container categories-list">
+						@if (Model.CollectionList != null)
+						{
+							@foreach (var item in Model.CollectionList)
+							{
+								<li>
+									<div class="custom-control custom-checkbox">
+										<input type="checkbox" class="custom-control-input" id="customCheck2">
+										<label class="custom-control-label" for="customCheck2">@item.CollectionName</label>
+									</div>
+								</li>
+							}
+
+						}
+					</ul>
+				</div>
+			</div>
+			<!-- single sidebar end -->
+			<!-- single sidebar start -->
+			<div class="sidebar-single">
+				<h5 class="sidebar-title">color</h5>
+				<div class="sidebar-body">
+					<ul class="checkbox-container categories-list">
+						@if (Model.Colors != null)
+						{
+							foreach (var item in Model.Colors)
+							{
+
+								<li>
+									<div class="custom-control custom-checkbox">
+										<input type="checkbox" class="custom-control-input" id="customCheck12">
+										<label class="custom-control-label" for="customCheck12">@item.Name</label>
+									</div>
+								</li>
+							}
+						}
+					</ul>
+				</div>
+			</div>
+			<!-- single sidebar end -->
+			<!-- single sidebar start -->
+			<div class="sidebar-single">
+				<h5 class="sidebar-title">size</h5>
+				<div class="sidebar-body">
+					<ul class="checkbox-container categories-list">
+						@if (Model.CaratSizes != null)
+						{
+							@foreach (var item in Model.CaratSizes)
+							{
+
+								<li>
+									<div class="custom-control custom-checkbox">
+										<input type="checkbox" class="custom-control-input" id="customCheck12">
+										<label class="custom-control-label" for="customCheck12">@item.Name</label>
+									</div>
+								</li>
+							}
+						}
+					</ul>
+				</div>
+			</div>
+			<!-- single sidebar end -->
+			<!-- single sidebar start -->
+			<div class="sidebar-banner">
+				<div class="img-container">
+					<a href="#">
+						<img src="assets/img/banner/sidebar-banner.jpg" alt="">
+					</a>
+				</div>
+			</div>
+			<!-- single sidebar end -->
+		</aside>
+	</div>
+
+</div>

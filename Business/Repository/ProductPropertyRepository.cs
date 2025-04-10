@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Business.Repository.IRepository;
+using Common;
 using DataAccess.Data;
 using DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
+using Models;
 
 namespace Business.Repository
 {
@@ -86,5 +88,105 @@ namespace Business.Repository
                 throw;
             }
         }
+
+        public async Task<IEnumerable<ProductPropertyDTO>> GetProductColorList()
+        {
+            try
+            {
+
+            
+            var colors = await (from prd in _context.ProductProperty
+                                join met in _context.ProductProperty.Where(x => x.Name == SD.Metal && x.IsActive==true) on prd.ParentId equals met.Id
+                                select new ProductPropertyDTO
+                                {
+                                    Id = prd.Id,
+                                    Name = prd.Name,
+                                    Description = prd.Description,
+                                    SymbolName = prd.SymbolName,
+                                    IconPath = prd.IconPath,
+                                    ParentId = met.Id,
+                                    ParentProperty = "-"
+                                }).ToListAsync();
+
+            return colors;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<ProductPropertyDTO>> GetProductCaratSizeList()
+        {
+            var colors = await (from prd in _context.ProductProperty
+                                join met in _context.ProductProperty.Where(x => x.Name == SD.CaratSize && x.IsActive == true) on prd.ParentId equals met.Id
+                                select new ProductPropertyDTO
+                                {
+                                    Id = prd.Id,
+                                    Name = prd.Name,
+                                    Description = prd.Description,
+                                    SymbolName = prd.SymbolName,
+                                    IconPath = prd.IconPath,
+                                    ParentId = met.Id,
+                                    ParentProperty = "-"
+                                }).ToListAsync();
+
+            return colors;
+        }
+
+
+        public async Task<IEnumerable<CategoryDTO>> GetProductCategoryList()
+        {
+            var categories = await (from prd in _context.Category
+                                    select new CategoryDTO
+                                    {
+                                        Id = prd.Id,
+                                        Name = prd.Name,
+                                    }).ToListAsync();
+
+            return categories;
+        }
+
+
+        public async Task<IEnumerable<CategoryDTO>> GetProductSubCategoryList()
+        {
+            var categories = await (from prd in _context.SubCategory
+                                    select new CategoryDTO
+                                    {
+                                        Id = prd.Id,
+                                        Name = prd.Name,
+                                    }).ToListAsync();
+
+            return categories;
+        }
+
+
+        public async Task<IEnumerable<ProductCollectionDTO>> GetCategories()
+        {
+            var collections = await (from prd in _context.ProductCollections
+                                    select new ProductCollectionDTO
+                                    {
+                                        Id = prd.Id,
+                                        CollectionName = prd.CollectionName,
+                                    }).ToListAsync();
+
+            return collections;
+        }
+
+        public async Task<IEnumerable<ProductStyleDTO>> GetSubCategoryList()
+        {
+            var categories = await (from prd in _context.ProductStyles
+                                    select new ProductStyleDTO
+                                    {
+                                        Id = prd.Id,
+                                        StyleName = prd.StyleName,
+                                    }).ToListAsync();
+
+            return categories;
+        }
+
+
     }
 }

@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Business.Repository.IRepository;
+using Common;
 using DataAccess.Data;
 using DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -607,7 +608,7 @@ namespace Business.Repository
 
         public async Task<int> GetColorId()
         {
-            var colorDT = await _context.ProductProperty.Where(static x => x.Name == "Metal").FirstOrDefaultAsync();
+            var colorDT = await _context.ProductProperty.Where(static x => x.Name == SD.Metal).FirstOrDefaultAsync();
             return colorDT.Id;
         }
 
@@ -633,7 +634,7 @@ namespace Business.Repository
 
         public async Task<int> GetShapeId()
         {
-            var shapeDT = await _context.ProductProperty.Where(static x => x.Name == "Shape").FirstOrDefaultAsync();
+            var shapeDT = await _context.ProductProperty.Where(static x => x.Name == SD.Shape).FirstOrDefaultAsync();
             return shapeDT.Id;
         }
 
@@ -688,6 +689,7 @@ namespace Business.Repository
             int underscoreIndex = fileName.IndexOf('_');
             return (underscoreIndex > 0) ? fileName.Substring(0, underscoreIndex) : "Unknown";
         }
+
 
     }
 }

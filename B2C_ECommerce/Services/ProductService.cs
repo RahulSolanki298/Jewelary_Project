@@ -46,5 +46,93 @@ namespace B2C_ECommerce.Services
                 throw new Exception($"Error fetching diamond list: {ex.Message}", ex);
             }
         }
+
+        public async Task<List<ProductPropertyDTO>> GetProductColorList()
+        {
+            try
+            {
+                var requestUrl = $"{SD.BaseApiUrl}/api/productFilters/get-color-list";
+
+                using var response = await _httpClient.GetAsync(requestUrl);
+
+                response.EnsureSuccessStatusCode(); // Throws exception if status code is not successful.
+
+                if (response.Content is null)
+                {
+                    throw new Exception("API response content is null.");
+                }
+
+                var result = await response.Content.ReadFromJsonAsync<List<ProductPropertyDTO>>();
+
+                return result ?? new List<ProductPropertyDTO>();
+            }
+            catch (HttpRequestException httpEx)
+            {
+                throw new Exception($"HTTP request error: {httpEx.Message}", httpEx);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching diamond list: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<List<ProductStyleDTO>> GetCategoriesList()
+        {
+            try
+            {
+                var requestUrl = $"{SD.BaseApiUrl}/api/productFilters/Get-Style-List";
+
+                using var response = await _httpClient.GetAsync(requestUrl);
+
+                response.EnsureSuccessStatusCode(); // Throws exception if status code is not successful.
+
+                if (response.Content is null)
+                {
+                    throw new Exception("API response content is null.");
+                }
+
+                var result = await response.Content.ReadFromJsonAsync<List<ProductStyleDTO>>();
+
+                return result ?? new List<ProductStyleDTO>();
+            }
+            catch (HttpRequestException httpEx)
+            {
+                throw new Exception($"HTTP request error: {httpEx.Message}", httpEx);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching categories: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<List<ProductCollectionDTO>> GetSubcategoryList()
+        {
+            try
+            {
+                var requestUrl = $"{SD.BaseApiUrl}/api/productFilters/Get-Collection-List";
+
+                using var response = await _httpClient.GetAsync(requestUrl);
+
+                response.EnsureSuccessStatusCode(); // Throws exception if status code is not successful.
+
+                if (response.Content is null)
+                {
+                    throw new Exception("API response content is null.");
+                }
+
+                var result = await response.Content.ReadFromJsonAsync<List<ProductCollectionDTO>>();
+
+                return result ?? new List<ProductCollectionDTO>();
+            }
+            catch (HttpRequestException httpEx)
+            {
+                throw new Exception($"HTTP request error: {httpEx.Message}", httpEx);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching sub categories: {ex.Message}", ex);
+            }
+        }
+
     }
 }

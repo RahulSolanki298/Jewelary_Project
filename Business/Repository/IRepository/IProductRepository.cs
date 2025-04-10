@@ -17,7 +17,6 @@ namespace Business.Repository.IRepository
         Task<bool> SaveProductCollectionList(List<ProductDTO> products);
         Task<List<ProductProperty>> GetGoldWeightList();
         Task<List<ProductProperty>> GetGoldPurityList();
-
         Task<IEnumerable<Product>> GetProductCollectionNewList();
         Task<bool> SaveNewProductCollectionList(List<ProductDTO> products);
         string ExtractStyleName(string fileName);
