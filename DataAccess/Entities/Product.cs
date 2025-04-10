@@ -48,6 +48,15 @@ namespace DataAccess.Entities
         public decimal? DiaWT { get; set; }
         public string Grades { get; set; }
         public int NoOfStones { get; set; }
+
+        public string Component { get; set; }
+
+        public string MaterialType { get; set; }
+
+        public string Type { get; set; }
+
+        public string Setting { get; set; }
+
         public bool IsActivated { get; set; } = false;
     }
 }

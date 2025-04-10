@@ -25,6 +25,7 @@ namespace B2C_ECommerce.Controllers
             var result = await _productRepository.GetProductListByFilter();
             //return PartialView("~/Views/Products/_NewImagesAndProducts.cshtml", result);
             return PartialView("~/Views/ProductNew/_NewImagesAndProducts.cshtml", result);
+
         }
 
         [HttpGet]

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Models
 {
@@ -114,5 +115,7 @@ namespace Models
         public string Designer { get; set; }
 
         public string CadDesigner { get; set; }
+
+        public List<ProductImageAndVideoDTO> ProductProperty { get; set; }
     }
 }

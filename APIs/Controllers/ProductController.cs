@@ -151,29 +151,18 @@ namespace APIs.Controllers
                         var rows = new List<Models.ProductDTO>();
 
                         // Loop through rows and columns
-                        for (int row = 5; row <= worksheet.Dimension.Rows; row++) // Start at row 2 to skip header
+                        for (int row = 2; row <= worksheet.Dimension.Rows; row++) // Start at row 2 to skip header
                         {
                             var data = new ProductDTO
                             {
-                                ProductDate = Convert.ToDateTime(worksheet.Cells[row, 1].Text),
-                                VenderName = worksheet.Cells[row, 3].Text,  // Column A
-                                StyleName = worksheet.Cells[row, 4].Text, // Column B
-                                CategoryName = workbook.Worksheets[0].Name,
-                                GoldPurity = worksheet.Cells[row, 5].Text, // Column C
-                                GoldWeight = worksheet.Cells[row, 6].Text, // Column C
-                                CTW = worksheet.Cells[row, 7].Text, // Column C
-                                CenterShapeName = worksheet.Cells[row, 8].Text,
-                                CenterCaratName = worksheet.Cells[row, 9].Text,
-                                ColorName = worksheet.Cells[row, 10].Text,
-                                CaratSizeName = worksheet.Cells[row, 7].Text,
+                                DesignNo= worksheet.Cells[row, 1].Text,
+                                GoldPurity = worksheet.Cells[row, 6].Text, // Column C
+                                ShapeName = worksheet.Cells[row, 5].Text, // Column C
+                                ColorName = worksheet.Cells[row, 7].Text,
+                                CaratSizeName = worksheet.Cells[row, 8].Text,
+                                GoldWeight = worksheet.Cells[row, 11].Text, // Column C
                                 ClarityName = worksheet.Cells[row, 8].Text,
-                                Sku = worksheet.Cells[row, 9].Text,
-                                Price = Convert.ToDecimal(worksheet.Cells[row, 10].Text),
-                                UnitPrice = Convert.ToDecimal(worksheet.Cells[row, 11].Text),
-                                Quantity = Convert.ToInt32(worksheet.Cells[row, 12].Text),
-                                CollectionName = worksheet.Cells[row, 13].Text,
-                                IsActivated = Convert.ToBoolean(worksheet.Cells[row, 14].Text),
-                                Id = Guid.NewGuid()
+                                Quantity = Convert.ToInt32(worksheet.Cells[row, 12].Text)
                             };
                             rows.Add(data);
                         }
@@ -367,8 +356,8 @@ namespace APIs.Controllers
         //    _context = context;
         //}
 
-        //[HttpPost("BulkProductCollectionImagesUpload")]
-        //public async Task<IActionResult> UploadProductCollectionImages(IFormFile zipFile)
+       // [HttpPost("BulkNewCollectionImagesUpload")]
+        //public async Task<IActionResult> UploadNewProductCollectionImages(IFormFile zipFile)
         //{
         //    if (zipFile == null || zipFile.Length == 0)
         //        return BadRequest("No file uploaded.");
@@ -414,6 +403,9 @@ namespace APIs.Controllers
         //                entry.ExtractToFile(destinationPath, overwrite: true);
 
         //                // Save entity
+        //                var imgUpload = new FileManager();
+        //                imgUpload.FileUrl = destinationPath;
+
         //                var productImage = new ProductImages
         //                {
         //                    DesignNo = designNo,
@@ -447,7 +439,7 @@ namespace APIs.Controllers
         [HttpGet("GetProductCollectionNewList")]
         public async Task<IActionResult> GetProductNewCollection()
         {
-            var result= await _productRepository.GetProductCollectionNewList();
+            var result = await _productRepository.GetProductCollectionNewList();
             return Ok(result);
         }
 
