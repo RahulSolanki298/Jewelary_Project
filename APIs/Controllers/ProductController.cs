@@ -10,6 +10,7 @@ using Models;
 using System.IO.Compression;
 using System.Linq;
 using System.Globalization;
+using DataAccess.Entities;
 
 namespace APIs.Controllers
 {
@@ -358,6 +359,83 @@ namespace APIs.Controllers
 
             return Ok("Images uploaded and organized successfully.");
         }
+
+        //private readonly AppDbContext _context;
+
+        //public YourController(AppDbContext context)
+        //{
+        //    _context = context;
+        //}
+
+        //[HttpPost("BulkProductCollectionImagesUpload")]
+        //public async Task<IActionResult> UploadProductCollectionImages(IFormFile zipFile)
+        //{
+        //    if (zipFile == null || zipFile.Length == 0)
+        //        return BadRequest("No file uploaded.");
+
+        //    var extractedFolder = Path.Combine("UploadedFiles", "Collections");
+        //    Directory.CreateDirectory(extractedFolder);
+
+        //    var zipPath = Path.Combine(extractedFolder, zipFile.FileName);
+        //    using (var fileStream = new FileStream(zipPath, FileMode.Create))
+        //    {
+        //        await zipFile.CopyToAsync(fileStream);
+        //    }
+        //    List<ProductImages> imageEntities = new List<ProductImages>();
+
+        //    using (ZipArchive archive = ZipFile.OpenRead(zipPath))
+        //    {
+        //        foreach (ZipArchiveEntry entry in archive.Entries)
+        //        {
+        //            if (string.IsNullOrEmpty(entry.Name))
+        //                continue;
+
+        //            if (!entry.FullName.StartsWith("Images/", StringComparison.OrdinalIgnoreCase))
+        //                continue;
+
+        //            if (entry.Name.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+        //                entry.Name.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
+        //                entry.Name.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
+        //            {
+        //                // Extract DesignNo and ColorCode from filename
+        //                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(entry.Name);
+        //                var parts = fileNameWithoutExt.Split('-');
+        //                if (parts.Length < 2)
+        //                    continue;
+
+        //                string designNo = string.Join("-", parts.Take(parts.Length - 1));
+        //                string colorCode = parts.Last();
+
+        //                // Create folder for DesignNo
+        //                string folderPath = Path.Combine(extractedFolder, designNo);
+        //                Directory.CreateDirectory(folderPath);
+
+        //                string destinationPath = Path.Combine(folderPath, entry.Name);
+        //                entry.ExtractToFile(destinationPath, overwrite: true);
+
+        //                // Save entity
+        //                var productImage = new ProductImages
+        //                {
+        //                    DesignNo = designNo,
+        //                    ColorCode = colorCode,
+        //                    ImagePath = destinationPath
+        //                };
+
+        //                imageEntities.Add(productImage);
+        //            }
+        //        }
+        //    }
+
+        //    if (imageEntities.Count > 0)
+        //    {
+        //        _context.ProductImages.AddRange(imageEntities);
+        //        await _context.SaveChangesAsync();
+        //    }
+
+        //    return Ok("Images uploaded, organized, and saved to DB successfully.");
+        //}
+
+
 
         [HttpPost("GetProductDetailsList")]
         public async Task<IActionResult> GetProductDetailsList()

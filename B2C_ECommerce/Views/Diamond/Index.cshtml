@@ -111,17 +111,17 @@
 
 		$(function () {
 			// Initial Data Fetch
+			GetShapeDesign();
 			loadAllFunctions();
 
-			// GetShapeDesign();
-			// 	GetCarat();
-			// const fixCut =GetCutData();
-			// const fixColors =GetColorData();
-			// const fixClarity =GetClarityData();
-			// const fixPrice =GetPriceData();
-			// const fixPolish =GetPolishData();
-			// const fixFluor =GetFluorData();
-			// const fixSym =GetSymmetryData();
+			GetCarat();
+			const fixCut =GetCutData();
+			const fixColors =GetColorData();
+			const fixClarity =GetClarityData();
+			const fixPrice =GetPriceData();
+			const fixPolish =GetPolishData();
+			const fixFluor =GetFluorData();
+			const fixSym =GetSymmetryData();
 			// GetTableData();
 			// GetDepthData();
 			// GetRatioData();
@@ -192,6 +192,7 @@
 			// 		$("#maxCut").val(ui.values[1]);
 			// 	}
 			// });
+
 			$(" #btnViewAll").on("click",function(){
 				ResetAllData();
 			});
@@ -264,7 +265,7 @@
 		});
 
 
-				async function GetShapeDesign() {
+			async function GetShapeDesign() {
 				  const shapeListContainer = $('#filter-box #shape-list'); // Cache the DOM selector
 					  try {
 						const response = await fetch('@SD.BaseApiUrl/api/diamondproperty/get-shape-list'); // Using native fetch
@@ -292,8 +293,7 @@
 
 				}
 
-
-				async function GetCarat() {
+			async function GetCarat() {
 				try {
 					var response = await $.ajax({
 						url: '@(SD.BaseApiUrl)/api/diamondproperty/get-carat-ranges', // API endpoint
@@ -331,7 +331,7 @@
 			}
 
 
-						async function GetColorData() {
+		async function GetColorData() {
 				try {
 					// Fetching data from API
 					var response = await $.ajax({
@@ -377,7 +377,7 @@
 								.map(item => item.Id);
 
 							// Store in hidden field
-							$("#txtIds").val(selectedColorIds.join(','));
+							$("#txtColorIds").val(selectedColorIds.join(','));
 
 							// Set filter values
 							diamondFilters.Colors = $("#txtColorIds").val();
@@ -401,7 +401,7 @@
 			}
 		}
 
-						async function GetCutData() {
+		async function GetCutData() {
 			try {
 				// Fetch cut list from the API
 				const response = await $.ajax({
@@ -469,7 +469,7 @@
 		}
 
 
-						async function GetClarityData() {
+		async function GetClarityData() {
 			try {
 				// Fetch clarity list from API
 				const response = await $.ajax({
@@ -537,7 +537,7 @@
 		}
 
 
-						async function GetPolishData() {
+		async function GetPolishData() {
 			try {
 				// Fetching data from API
 				const response = await $.ajax({
@@ -599,7 +599,7 @@
 			}
 		}
 
-				async function GetTableData() {
+			async function GetTableData() {
 			  try {
 				// Fetch data from the API endpoint
 				const response = await $.ajax({
@@ -790,7 +790,8 @@
 							$('#filter-box #Polish-slider').html('<p>Failed to load Polish</p>');
 						}
 					}
-					async function GetFluorData() {
+		
+		async function GetFluorData() {
 			try {
 				// Fetching data from API
 				const response = await $.ajax({
@@ -851,7 +852,7 @@
 			}
 		}
 
-					async function GetSymmetryData() {
+		async function GetSymmetryData() {
 			try {
 				// Fetching data from API
 				const response = await $.ajax({
@@ -927,9 +928,6 @@
 						},
 						success: function (data) {
 							$('#diamond-list-container').html(data);
-							// setTimeout(() => {
-							//     hideLoader();
-							// }, 10000);
 							hideLoader();
 						},
 						error: function (error) {
@@ -948,7 +946,7 @@
 					try {
 						await Promise.all([
 
-							GetShapeDesign(),
+							//GetShapeDesign(),
 							GetCarat(),
 							GetCutData(),
 							GetColorData(),
@@ -966,35 +964,6 @@
 						console.error("An error occurred while loading data:", error);
 					}
 					hideLoader();
-				}
-
-				async function getDiamondDataList(diamondFilters, pageNumber = 1, pageSize = 10) {
-					showLoader();
-					return $.ajax({
-						//url: '@Url.Action("GetDiamondList", "Diamond")', // Change this to your actual route
-						url: '/Diamond/GetDiamondList', // Change this to your actual route
-						type: 'POST',
-						data: {
-							diamondFilters: diamondFilters,
-							pageNumber: pageNumber,
-							pageSize: pageSize
-						},
-						success: function (data) {
-							$('#diamond-list-container').html(data);
-							// setTimeout(() => {
-							//     hideLoader();
-							// }, 10000);
-							hideLoader();
-						},
-						error: function (error) {
-							console.error('Error fetching data:', error);
-							//   setTimeout(() => {
-							//     hideLoader();
-							// }, 10000);
-							hideLoader();
-						}
-
-					});
 				}
 
 		function ResetAllData(){

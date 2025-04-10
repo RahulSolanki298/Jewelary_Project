@@ -10,61 +10,61 @@
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
 
-<MudGrid Class="m-0 p-0">
-    <!-- Left Column: Image -->
-	<MudItem xs="12" sm="6" lg="6" Class="m-0 p-0">
-		<img src="/images/_login_process.jpg" alt="Login Image"/>
-    </MudItem>
 
-    <!-- Right Column: Form -->
-    <MudItem xs="12" sm="6" lg="6" Class="m-0 p-0">
-        <EditForm Model="@loginModel" OnValidSubmit="OnValidSubmit">
-            <DataAnnotationsValidator />
-            <MudCard Class="d-flex flex-column justify-content-center align-items-center" Style="width: 100%; min-height: 50vh; object-fit: cover;">
-                <!-- Center the form vertically -->
-                <MudCardContent Class="d-flex p-0">
-                    <div class="d-flex">
-                        <h6 class="mud-typography mud-typography-h6 mb-4">Sign In</h6>
-                    </div>
-                    <div class="d-flex">
-                        <MudIconButton Icon="@Icons.Material.Filled.Facebook" aria-label="facebook" />
-                        <MudIconButton Icon="@Icons.Custom.Brands.Twitter" Color="Color.Primary" aria-label="twitter" />
-                    </div>
-                </MudCardContent>
 
-                <MudCardContent Class="p-0">
-                    @if (!success)
-                    {
-                        <span style="color:red;">@Message</span>
-                    }
-                    @if (isLoading)
-                    {
-                        <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate="true" />
-                    }
+<MudPaper Class="d-inline-flex pa-4">
+    <img src="/images/_login_process.jpg" alt="Login Image" />
+</MudPaper>
 
-                    <label>Username</label>
-                    <MudTextField Label="Email" FullWidth="true" @bind-Value="loginModel.UserName"
-                                  For="@(() => loginModel.UserName)" Variant="Variant.Outlined" />
+<MudPaper Class="d-inline-flex pa-4">
+    <EditForm Model="@loginModel" OnValidSubmit="OnValidSubmit">
+        <DataAnnotationsValidator />
 
-                    <label>Password</label>
-                    <MudTextField Label="Password" FullWidth="true" @bind-Value="loginModel.Password"
-                                  For="@(() => loginModel.Password)" InputType="InputType.Password" Variant="Variant.Outlined" />
+        <MudCard Class="d-flex flex-column justify-content-center align-items-center" Style="width: 100%; min-height: 50vh;">
+            <!-- Sign In Form Header -->
+            <MudCardContent Class="d-flex flex-column align-items-center p-0">
+                <h6 class="mud-typography mud-typography-h6 mb-4">Sign In</h6>
 
-                    <MudCheckBox @bind-Checked="loginModel.RememberMe" Label="Remember Me" Value="Origin.TopLeft" />
-                    
-                </MudCardContent>
+                <!-- Social Login Buttons -->
+                <div class="d-flex mb-3">
+                    <MudIconButton Icon="@Icons.Material.Filled.Facebook" aria-label="facebook" />
+                    <MudIconButton Icon="@Icons.Custom.Brands.Twitter" Color="Color.Primary" aria-label="twitter" />
+                </div>
+            </MudCardContent>
 
-                <MudCardActions Class="d-flex justify-content-center w-100 p-0">
-                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled"
-                               Color="Color.Primary" Size="Size.Large" FullWidth="true">Login</MudButton>
-                </MudCardActions>
-                <MudCardContent Class="d-flex justify-content-center p-0">
-                    <MudLink Href="/pages/authentication/forgot-password" Color="Color.Dark" Style="text-align:center;">Forgot Password?</MudLink>
-                </MudCardContent>
-            </MudCard>
-        </EditForm>
-    </MudItem>
-</MudGrid>
+            <!-- Error Message / Loading Indicator -->
+            <MudCardContent Class="p-0">
+                @if (!success)
+                {
+                    <span class="text-danger">@Message</span>
+                }
+                @if (isLoading)
+                {
+                    <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate="true" />
+                }
+            </MudCardContent>
+
+            <!-- Form Fields -->
+            <MudCardContent Class="p-0">
+                <MudTextField Label="Email" FullWidth="true" @bind-Value="loginModel.UserName" Variant="Variant.Outlined" />
+                <MudTextField Label="Password" FullWidth="true" @bind-Value="loginModel.Password" InputType="InputType.Password" Variant="Variant.Outlined" />
+                <MudCheckBox @bind-Checked="loginModel.RememberMe" Label="Remember Me" />
+            </MudCardContent>
+
+            <!-- Submit Button -->
+            <MudCardActions Class="d-flex justify-content-center w-100 p-0">
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" FullWidth="true">Login</MudButton>
+            </MudCardActions>
+
+            <!-- Forgot Password Link -->
+            <MudCardContent Class="d-flex justify-content-center p-0">
+                <MudLink Href="/pages/authentication/forgot-password" Color="Color.Dark" Style="text-align:center;">Forgot Password?</MudLink>
+            </MudCardContent>
+        </MudCard>
+    </EditForm>
+</MudPaper>
+
+    
 
 @code {
     private AdminLoginModel loginModel = new AdminLoginModel();
