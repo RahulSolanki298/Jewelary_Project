@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Business.Repository.IRepository;
@@ -19,6 +20,12 @@ namespace Business.Repository
         public ProductRepository(ApplicationDBContext context)
         {
             _context = context;
+        }
+
+        public async Task<Product> GetProductByDesignNo(string designNo)
+        {
+            var dtDesign= await _context.Product.Where(x=>x.DesignNo==designNo).FirstOrDefaultAsync();
+            return dtDesign;
         }
 
         public async Task<bool> SaveProductList(List<ProductDTO> products)
@@ -683,10 +690,56 @@ namespace Business.Repository
             return result;
         }
 
-        public string ExtractStyleName(string fileName)
+        public async Task<int> SaveImageVideoPath(string imgVdoPath)
         {
-            int underscoreIndex = fileName.IndexOf('_');
-            return (underscoreIndex > 0) ? fileName.Substring(0, underscoreIndex) : "Unknown";
+            if (imgVdoPath == null) return 0;
+            try
+            {
+                var imgVdo = new FileManager();
+                imgVdo.FileUrl = imgVdoPath;
+                await _context.FileManager.AddAsync(imgVdo);
+                await _context.SaveChangesAsync();
+
+                return imgVdo.Id;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<bool> SaveImageVideoAsync(ProductImages ImgVdoData)
+        {
+            try
+            {
+                var imgDT=new ProductImages();
+                imgDT.ProductId = ImgVdoData.ProductId;
+                imgDT.ImageLgId = ImgVdoData.ImageLgId ?? null;
+                imgDT.VideoId = ImgVdoData.VideoId ?? null;
+                imgDT.IsDefault= true;
+
+                await _context.AddAsync(imgDT);
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public FileSplitDTO ExtractStyleName(string fileName)
+        {
+            string nameOnly = Path.GetFileNameWithoutExtension(fileName); // PLDB-02-R1
+
+            var parts = nameOnly.Split('-');
+            var dtImgVideo = new FileSplitDTO();
+            dtImgVideo.DesignNo = $"{parts[0]}-{parts[1]}";
+            dtImgVideo.ColorName = parts[2].Substring(0, 1);
+            dtImgVideo.Index = Convert.ToInt32(parts[2].Substring(1));
+            return dtImgVideo;
         }
 
     }

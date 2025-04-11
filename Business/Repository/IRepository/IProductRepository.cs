@@ -17,9 +17,12 @@ namespace Business.Repository.IRepository
         Task<bool> SaveProductCollectionList(List<ProductDTO> products);
         Task<List<ProductProperty>> GetGoldWeightList();
         Task<List<ProductProperty>> GetGoldPurityList();
-
+        Task<bool> SaveImageVideoAsync(ProductImages ImgVdoData);
         Task<IEnumerable<Product>> GetProductCollectionNewList();
         Task<bool> SaveNewProductCollectionList(List<ProductDTO> products);
-        string ExtractStyleName(string fileName);
+        Task<int> SaveImageVideoPath(string imgVdoPath);
+        FileSplitDTO ExtractStyleName(string fileName);
+
+        Task<Product> GetProductByDesignNo(string designNo);
     }
 }

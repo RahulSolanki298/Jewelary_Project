@@ -20,6 +20,10 @@ namespace APIs
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.ConfigureKestrel(serverOptions =>
+                    {
+                        serverOptions.Limits.MaxRequestBodySize = 52428800; // 50 MB
+                    });
                     webBuilder.UseStartup<Startup>();
                 });
     }

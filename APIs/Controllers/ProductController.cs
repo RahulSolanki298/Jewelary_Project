@@ -231,20 +231,20 @@ namespace APIs.Controllers
                             {
                                 DesignNo = worksheet.Cells[row, 1].Text,
                                 ProductDate = itemDate ?? DateTime.MinValue,
-                                ParentDesign = worksheet.Cells[row,3].Text,
-                                CaratName= worksheet.Cells[row, 4].Text,
-                                Gender= worksheet.Cells[row, 5].Text,
-                                CollectionName= worksheet.Cells[row, 6].Text,
-                                CategoryName= worksheet.Cells[row, 7].Text,
-                                SubCategoryName= worksheet.Cells[row, 8].Text,
-                                ProductType= worksheet.Cells[row, 9].Text,
-                                StyleName= worksheet.Cells[row, 10].Text,
-                                Occasion= worksheet.Cells[row, 11].Text,
-                                Remarks= worksheet.Cells[row, 12].Text,
-                                Package= worksheet.Cells[row, 13].Text,
-                                MfgDesign= worksheet.Cells[row, 14].Text,
-                                VenderName= worksheet.Cells[row, 15].Text,
-                                Title= worksheet.Cells[row, 16].Text,
+                                ParentDesign = worksheet.Cells[row, 3].Text,
+                                CaratName = worksheet.Cells[row, 4].Text,
+                                Gender = worksheet.Cells[row, 5].Text,
+                                CollectionName = worksheet.Cells[row, 6].Text,
+                                CategoryName = worksheet.Cells[row, 7].Text,
+                                SubCategoryName = worksheet.Cells[row, 8].Text,
+                                ProductType = worksheet.Cells[row, 9].Text,
+                                StyleName = worksheet.Cells[row, 10].Text,
+                                Occasion = worksheet.Cells[row, 11].Text,
+                                Remarks = worksheet.Cells[row, 12].Text,
+                                Package = worksheet.Cells[row, 13].Text,
+                                MfgDesign = worksheet.Cells[row, 14].Text,
+                                VenderName = worksheet.Cells[row, 15].Text,
+                                Title = worksheet.Cells[row, 16].Text,
                                 Designer = worksheet.Cells[row, 17].Text,
                                 CadDesigner = worksheet.Cells[row, 18].Text,
                                 Id = Guid.NewGuid()
@@ -270,6 +270,7 @@ namespace APIs.Controllers
         [HttpPost("BulkProductImagesUpload")]
         public async Task<IActionResult> UploadProductImages(IFormFile zipFile)
         {
+            FileSplitDTO styles = new FileSplitDTO();
             if (zipFile == null || zipFile.Length == 0)
                 return BadRequest("No file uploaded.");
 
@@ -296,10 +297,10 @@ namespace APIs.Controllers
                         entry.Name.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
                     {
                         // Extract StyleName from image name
-                        string styleName = _productRepository.ExtractStyleName(entry.Name);
+                        styles = _productRepository.ExtractStyleName(entry.Name);
 
                         // Create folder for StyleName
-                        string folderPath = Path.Combine(extractedFolder, styleName);
+                        string folderPath = Path.Combine(extractedFolder, styles.DesignNo);
                         if (!Directory.Exists(folderPath))
                             Directory.CreateDirectory(folderPath);
 
@@ -316,8 +317,13 @@ namespace APIs.Controllers
         }
 
         [HttpPost("BulkProductCollectionImagesUpload")]
+        [RequestSizeLimit(1073741824)]
         public async Task<IActionResult> UploadProductCollectionImages(IFormFile zipFile)
         {
+            FileSplitDTO styleName;
+            string destinationPath = string.Empty;
+            string folderPath = string.Empty;
+
             if (zipFile == null || zipFile.Length == 0)
                 return BadRequest("No file uploaded.");
 
@@ -330,7 +336,9 @@ namespace APIs.Controllers
                 await zipFile.CopyToAsync(fileStream);
             }
 
-            List<string> savedImagePaths = new List<string>();
+            var productImgVidos=new List<ProductImages>();
+            var prdDT=new ProductImages();
+            var fileUpload = new FileManager();
 
             using (ZipArchive archive = ZipFile.OpenRead(zipPath))
             {
@@ -338,26 +346,53 @@ namespace APIs.Controllers
                 {
                     if (entry.Name.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
                         entry.Name.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
-                        entry.Name.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
+                        entry.Name.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
+                        entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
                     {
                         // Extract StyleName from image name
-                        string styleName = _productRepository.ExtractStyleName(entry.Name);
+                        styleName = _productRepository.ExtractStyleName(entry.Name);
 
                         // Create folder for StyleName
-                        string folderPath = Path.Combine(extractedFolder, styleName);
+                        folderPath = Path.Combine(extractedFolder, styleName.DesignNo);
                         if (!Directory.Exists(folderPath))
                             Directory.CreateDirectory(folderPath);
 
                         // Save extracted image
-                        string destinationPath = Path.Combine(folderPath, entry.Name);
+                        destinationPath = Path.Combine(folderPath, entry.Name);
                         entry.ExtractToFile(destinationPath, overwrite: true);
-                        savedImagePaths.Add(destinationPath);
+
+                        // Save Products
+                        int pId= await _productRepository.SaveImageVideoPath(destinationPath);
+
+                        prdDT = new ProductImages();
+                        if (entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+                        {
+                            prdDT.VideoId=pId;
+                        }
+                        else if (styleName.Index == 1)
+                        {
+                            prdDT.ImageLgId = pId;
+                            prdDT.IsDefault = true;
+                        }
+                        else
+                        {
+                            prdDT.ImageLgId = pId;
+                        }
+                        prdDT.ImageIndexNumber = styleName.Index;
+
+
+                        var prdDesignDT=await _productRepository.GetProductByDesignNo(styleName.DesignNo);
+                        prdDT.ProductId = prdDesignDT.Id.ToString();
+
+                        await _productRepository.SaveImageVideoAsync(prdDT);
+
+
                     }
                 }
             }
 
 
-            return Ok("Images uploaded and organized successfully.");
+            return Ok("File Uploaded Successfully.");
         }
 
         //private readonly AppDbContext _context;
@@ -447,7 +482,7 @@ namespace APIs.Controllers
         [HttpGet("GetProductCollectionNewList")]
         public async Task<IActionResult> GetProductNewCollection()
         {
-            var result= await _productRepository.GetProductCollectionNewList();
+            var result = await _productRepository.GetProductCollectionNewList();
             return Ok(result);
         }
 
