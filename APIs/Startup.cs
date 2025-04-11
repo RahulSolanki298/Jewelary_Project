@@ -106,8 +106,6 @@ namespace APIs
                     opt.SerializerSettings.ContractResolver = new DefaultContractResolver();
                     opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                     opt.SerializerSettings.MaxDepth = 64; // optional
-                    opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                    //opt.SerializerSettings.Max = int.MaxValue;
                 });
             services.AddSwaggerGen(c =>
             {

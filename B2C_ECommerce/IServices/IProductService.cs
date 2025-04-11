@@ -15,5 +15,6 @@ namespace B2C_ECommerce.IServices
         Task<List<ProductStyleDTO>> GetCategoriesList();
 
         Task<List<ProductCollectionDTO>> GetSubcategoryList();
+
     }
 }

@@ -28,6 +28,14 @@ namespace B2C_ECommerce.Controllers
             return PartialView("~/Views/Diamond/_DiamondDataList.cshtml", response);
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> GetShapeList()
+        {
+            var response = await _diamondService.GetShapeListAsync();
+            return PartialView("~/Views/Diamond/_ShapeList.cshtml", response);
+        }
+
         [HttpGet]
         public IActionResult GetCertificate(string diamondCerti)
         {

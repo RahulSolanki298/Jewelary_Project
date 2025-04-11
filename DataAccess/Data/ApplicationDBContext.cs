@@ -65,10 +65,16 @@ namespace DataAccess.Data
 
         public DbSet<DiamondData> DiamondData { get; set; }
 
+        public DbSet<DiamondShapeData> DiamondShapeData { get; set; }
+
+        public DbSet<DiamondColorData> DiamondColorData { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<DiamondData>().ToTable("Diamond").HasNoKey();
+            modelBuilder.Entity<DiamondShapeData>().ToTable("DiamondShapeData").HasNoKey();
+            modelBuilder.Entity<DiamondColorData>().ToTable("DiamondColorData").HasNoKey();
         }
     }
 }

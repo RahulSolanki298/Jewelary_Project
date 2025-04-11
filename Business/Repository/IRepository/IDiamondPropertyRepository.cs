@@ -9,9 +9,9 @@ namespace Business.Repository.IRepository
     {
         Task<DiamondPropertyDTO> GetByIdAsync(int id);
         Task<IEnumerable<DiamondPropertyDTO>> GetAllAsync();
-        Task<IEnumerable<DiamondPropertyDTO>> GetMetalListAsync();
+        //Task<IEnumerable<DiamondPropertyDTO>> GetMetalListAsync();
         Task<IEnumerable<DiamondPropertyDTO>> GetCaratListAsync();
-        Task<IEnumerable<DiamondPropertyDTO>> GetShapeListAsync();
+        //Task<IEnumerable<DiamondPropertyDTO>> GetShapeListAsync();
         Task<IEnumerable<DiamondPropertyDTO>> GetClarityListAsync();
         Task<IEnumerable<DiamondPropertyDTO>> GetCutListAsync();
         Task<CaratSizeRanges> GetCaratSizeRangeAsync();
@@ -28,7 +28,9 @@ namespace Business.Repository.IRepository
         Task<bool> DeleteAsync(int id);
         Task<int> GetDiamondPropertyId(string diamondPropertyName, string properyName);
         Task<int> GetParentIdByName(string parentName);
+        Task<IEnumerable<DiamondShapeData>> GetShapeListAsync();
 
+        Task<IEnumerable<DiamondPropertyDTO>> GetMetalListAsync();
 
 
 

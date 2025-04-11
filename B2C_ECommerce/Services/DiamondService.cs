@@ -73,6 +73,35 @@ namespace B2C_ECommerce.Services
             }
         }
 
+        public async Task<IEnumerable<DiamondShapeData>> GetShapeListAsync()
+        {
+            try
+            {
+                //Get-Collection-List
+                var requestUrl = $"{SD.BaseApiUrl}/api/diamondproperty/get-shape-list";
+
+                using var response = await _httpClient.GetAsync(requestUrl);
+
+                response.EnsureSuccessStatusCode(); // Throws exception if status code is not successful.
+
+                if (response.Content is null)
+                {
+                    throw new Exception("API response content is null.");
+                }
+
+                var result = await response.Content.ReadFromJsonAsync<List<DiamondShapeData>>();
+
+                return result ?? new List<DiamondShapeData>();
+            }
+            catch (HttpRequestException httpEx)
+            {
+                throw new Exception($"HTTP request error: {httpEx.Message}", httpEx);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching sub categories: {ex.Message}", ex);
+            }
+        }
 
     }
 }

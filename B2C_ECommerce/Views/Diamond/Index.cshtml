@@ -111,11 +111,10 @@
 
 		$(function () {
 			// Initial Data Fetch
-			//GetShapeDesign();
 			loadAllFunctions();
 
 			GetCarat();
-			const fixCut =GetCutData();
+			// const fixCut =GetCutData();
 			const fixColors =GetColorData();
 			const fixClarity =GetClarityData();
 			const fixPrice =GetPriceData();
@@ -265,35 +264,32 @@
 		});
 
 
-			async function GetShapeDesign() {
-				  const shapeListContainer = $('#filter-box #shape-list'); // Cache the DOM selector
-					  try {
-						const response = await fetch('@SD.BaseApiUrl/api/diamondproperty/get-shape-list'); // Using native fetch
-						const data = await response.json();
+		async function GetShapeDesign() {
+				const $shapeListContainer = $('#filter-box #shape-list');
+				try {
+					// Fetch data from the server
+					const response = await fetch('/Diamond/GetShapeList');
 
-						if (Array.isArray(data) && data.length > 0) {
-						  const shapeButtons = data.map(shape => {
-							return `
-								 <div class="shape-btn text-center" shapeId='${shape.Id}'>
-								<input type="hidden" value="${shape.Id}" />
-								<img src="${shape.IconPath}" alt="${shape.Name}" style="height:60px;" />
-								<span>${shape.Name}</span>
-							  </div>
-							`;
-						  }).join(''); // Concatenate all the buttons in a single string
+					// Check if response is successful
+					if (!response.ok) {
+						throw new Error('Failed to fetch shapes');
+					}
 
-						  shapeListContainer.html(shapeButtons); // Append all the shapes at once
-						} else {
-						  shapeListContainer.html('<p>No shapes available</p>');
-						}
-					  } catch (error) {
-						console.error('Error fetching data:', error);
-						shapeListContainer.html('<p>Failed to load shapes</p>');
-					  }
+					// Get the HTML content from the response
+					const htmlContent = await response.text();
 
+					// Inject the HTML content into the child partial view container
+					$shapeListContainer.html(htmlContent);
+
+				} catch (error) {
+					console.error('Error fetching shape data:', error);
+					// Display an error message in case of failure
+					$shapeListContainer.html('<p>Failed to load shapes</p>');
 				}
+		}
 
-			async function GetCarat() {
+
+		async function GetCarat() {
 				try {
 					var response = await $.ajax({
 						url: '@(SD.BaseApiUrl)/api/diamondproperty/get-carat-ranges', // API endpoint
@@ -653,8 +649,7 @@
 			}
 
 
-
-				async function GetDepthData() {
+		async function GetDepthData() {
 							try {
 										// Fetching price data from the API
 										const response = await $.ajax({
@@ -914,6 +909,62 @@
 			}
 		}
 
+		async function GetPriceData() {
+				try {
+							// Fetching price data from the API
+							const response = await $.ajax({
+							  url: '@(SD.BaseApiUrl)/api/diamondproperty/get-price-ranges', // API endpoint
+							  method: 'GET', // GET request
+							  dataType: 'json', // Expecting JSON response
+							});
+
+							// Ensure the response contains MaxPrice
+							if (!response || typeof response.MaxPrice !== 'number') {
+							  throw new Error('Invalid response structure');
+							}
+
+							const maxPrice = response.MaxPrice;
+							const minPrice = response.MinPrice;
+
+							// Initialize the price slider
+							$("#price-slider").slider({
+							  range: true,
+							  min: minPrice, // Minimum price is 0
+							  max: maxPrice, // Set maximum from API response
+							  step: 0.1, // Step size for the slider
+							  values: [minPrice, maxPrice], // Default values
+							  slide: function (event, ui) {
+								  debugger;
+								// Update the min and max price input fields dynamically
+								$("#minPrice").val(ui.values[0]);
+								$("#maxPrice").val(ui.values[1]);
+
+								diamondFilters={
+									FromPrice: $('#minPrice').val() ? $('#minPrice').val() : '',
+									ToPrice: $('#maxPrice').val() ? $('#maxPrice').val() : ''
+								};
+
+								// diamondFilters.FromPrice=ui.values[0];
+								// diamondFilters.ToPrice=ui.values[1];
+
+								getDiamondDataList(diamondFilters,page,rangeVal);
+
+							  }
+							});
+
+							// Set initial values for the price input fields
+							$("#minPrice").val(minPrice);
+							$("#maxPrice").val(maxPrice);
+
+						  } 
+						catch (error) {
+							// Handle any errors during the API request or slider setup
+							console.error('Error fetching data: ', error);
+							$('#filter-box #price-list').html('<p>Failed to load price ranges</p>');
+						  }
+				}
+
+
 
 
 				async function getDiamondDataList(diamondFilters, pageNumber = 1, pageSize = 10) {
@@ -947,8 +998,6 @@
 					showLoader();
 					try {
 						await Promise.all([
-
-							GetShapeDesign(),
 							GetCarat(),
 							GetCutData(),
 							GetColorData(),
@@ -960,8 +1009,9 @@
 							GetTableData(),
 							GetDepthData(),
 							GetRatioData(),
+							GetShapeDesign()
 						]);
-						  await  getDiamondDataList(diamondFilters, page, rangeVal);
+						getDiamondDataList(diamondFilters, page, rangeVal);
 					} catch (error) {
 						console.error("An error occurred while loading data:", error);
 					}

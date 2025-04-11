@@ -7,6 +7,7 @@ using System;
 using DataAccess.Entities;
 using System.Net.Http.Json;
 using B2C_ECommerce.IServices;
+using Microsoft.EntityFrameworkCore;
 
 namespace B2C_ECommerce.Services
 {
@@ -135,6 +136,8 @@ namespace B2C_ECommerce.Services
                 throw new Exception($"Error fetching sub categories: {ex.Message}", ex);
             }
         }
+
+        
 
     }
 }

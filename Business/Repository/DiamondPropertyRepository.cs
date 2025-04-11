@@ -75,54 +75,36 @@ namespace Business.Repository
 
         public async Task<IEnumerable<DiamondPropertyDTO>> GetMetalListAsync()
         {
-            var result = await _context.DiamondProperties
-                .GroupJoin(
-                    _context.DiamondProperties,
-                    dimPro => dimPro.ParentId,
-                    propG => propG.Id,
-                    (dimPro, dimGroup) => new { dimPro, dimGroup })
-                .SelectMany(
-                    x => x.dimGroup.DefaultIfEmpty(),
-                    (x, propG) => new DiamondPropertyDTO
-                    {
-                        Id = x.dimPro.Id,
-                        Name = x.dimPro.Name,
-                        Description = x.dimPro.Description,
-                        SymbolName = x.dimPro.SymbolName,
-                        IconPath = x.dimPro.IconPath,
-                        ParentId = x.dimPro.ParentId,
-                        DispOrder=x.dimPro.DispOrder,
-                        ParentProperty = propG.Name,  // Avoid null reference
-                        IsActivated = x.dimPro.IsActivated
-                    }).OrderBy(x => x.DispOrder).Where(x => x.ParentProperty == $"{SD.Color}" && x.IsActivated == true).ToListAsync();
-
+            var result = await (from par in _context.DiamondProperties
+                                join col in _context.DiamondProperties on par.ParentId equals col.Id
+                                where col.Name == SD.Color && par.IsActivated == true
+                                select new DiamondPropertyDTO
+                                {
+                                    Id = par.Id,
+                                    Name = par.Name,
+                                    ParentId = col.Id,
+                                    DispOrder = par.DispOrder,
+                                    IconPath = par.IconPath,
+                                    SymbolName = par.SymbolName
+                                }).OrderBy(x => x.DispOrder).ToListAsync();
             return result;
         }
 
         public async Task<IEnumerable<DiamondPropertyDTO>> GetCaratListAsync()
         {
-            var result = await _context.DiamondProperties
-                .GroupJoin(
-                    _context.DiamondProperties,
-                    dimPro => dimPro.ParentId,
-                    propG => propG.Id,
-                    (dimPro, dimGroup) => new { dimPro, dimGroup })
-                .SelectMany(
-                    x => x.dimGroup.DefaultIfEmpty(),
-                    (x, propG) => new DiamondPropertyDTO
-                    {
-                        Id = x.dimPro.Id,
-                        Name = x.dimPro.Name,
-                        Description = x.dimPro.Description,
-                        SymbolName = x.dimPro.SymbolName,
-                        IconPath = x.dimPro.IconPath,
-                        ParentId = x.dimPro.ParentId,
-                        ParentProperty = propG.Name,  // Avoid null reference
-                        DispOrder = x.dimPro.DispOrder,
-                        IsActivated = x.dimPro.IsActivated
-                    }).OrderBy(x => x.DispOrder).Where(x => x.ParentProperty == $"{SD.CaratSize}" && x.IsActivated == true).ToListAsync();
-
-            return result;
+            var result = await (from par in _context.DiamondProperties
+                                join col in _context.DiamondProperties on par.ParentId equals col.Id
+                                where col.Name == SD.CaratSize && par.IsActivated == true
+                                select new DiamondPropertyDTO
+                                {
+                                    Id = par.Id,
+                                    Name = par.Name,
+                                    ParentId = col.Id,
+                                    DispOrder = par.DispOrder,
+                                    IconPath = par.IconPath,
+                                    SymbolName = par.SymbolName
+                                }).OrderBy(x => x.DispOrder).ToListAsync();
+             return result;
         }
 
         public async Task<CaratSizeRanges> GetCaratSizeRangeAsync()
@@ -142,31 +124,21 @@ namespace Business.Repository
             };
         }
 
-        public async Task<IEnumerable<DiamondPropertyDTO>> GetShapeListAsync()
+        public async Task<IEnumerable<DiamondShapeData>> GetShapeListAsync()
         {
-            // Ensure indexes are applied on ParentId, IsActivated, and DispOrder in the database
-            var result = await (from dimPro in _context.DiamondProperties
-                                join parent in _context.DiamondProperties on dimPro.ParentId equals parent.Id into parentGroup
-                                from parentProp in parentGroup.DefaultIfEmpty()
-                                where parentProp.Name == SD.Shape && dimPro.IsActivated
-                                orderby dimPro.DispOrder // Sort in the database directly
-                                select new DiamondPropertyDTO
+            var result = await (from par in _context.DiamondProperties
+                                join col in _context.DiamondProperties on par.ParentId equals col.Id
+                                where col.Name == SD.Shape && par.IsActivated == true
+                                select new DiamondShapeData
                                 {
-                                    Id = dimPro.Id,
-                                    Name = dimPro.Name,
-                                    Description = dimPro.Description,
-                                    SymbolName = dimPro.SymbolName,
-                                    IconPath = dimPro.IconPath,
-                                    ParentId = dimPro.ParentId,
-                                    DispOrder = dimPro.DispOrder,
-                                    ParentProperty = parentProp.Name,  // Safely handle potential null reference
-                                    IsActivated = dimPro.IsActivated
-                                }).AsNoTracking() // Use AsNoTracking for better performance
-                                .ToListAsync();
-
+                                    Id = par.Id,
+                                    Name = par.Name,
+                                    ParentId = col.Id,
+                                    DispOrder = par.DispOrder,
+                                    IconPath = par.IconPath
+                                }).OrderBy(x => x.DispOrder).ToListAsync();
             return result;
         }
-
 
         public async Task<IEnumerable<DiamondPropertyDTO>> GetCutListAsync()
         {
@@ -193,54 +165,49 @@ namespace Business.Repository
 
         public async Task<IEnumerable<DiamondPropertyDTO>> GetClarityListAsync()
         {
-            var result = await _context.DiamondProperties
-                .GroupJoin(
-                    _context.DiamondProperties,
-                    dimPro => dimPro.ParentId,
-                    propG => propG.Id,
-                    (dimPro, dimGroup) => new { dimPro, dimGroup })
-                .SelectMany(
-                    x => x.dimGroup.DefaultIfEmpty(),
-                    (x, propG) => new DiamondPropertyDTO
-                    {
-                        Id = x.dimPro.Id,
-                        Name = x.dimPro.Name,
-                        Description = x.dimPro.Description,
-                        SymbolName = x.dimPro.SymbolName,
-                        IconPath = x.dimPro.IconPath,
-                        ParentId = x.dimPro.ParentId,
-                        DispOrder = x.dimPro.DispOrder,
-                        ParentProperty = propG.Name,  // Avoid null reference
-                        IsActivated = x.dimPro.IsActivated
-                    }).OrderBy(x => x.DispOrder).Where(x => x.ParentProperty == $"{SD.Clarity}" && x.IsActivated == true).ToListAsync();
+
+            var result = await (from dimPro in _context.DiamondProperties
+                                join parent in _context.DiamondProperties on dimPro.ParentId equals parent.Id into parentGroup
+                                from parentProp in parentGroup.DefaultIfEmpty()
+                                where parentProp.Name == SD.Clarity && dimPro.IsActivated
+                                select new DiamondPropertyDTO
+                                {
+                                    Id = dimPro.Id,
+                                    Name = dimPro.Name,
+                                    Description = dimPro.Description,
+                                    SymbolName = dimPro.SymbolName,
+                                    IconPath = dimPro.IconPath,
+                                    ParentId = dimPro.ParentId,
+                                    DispOrder = dimPro.DispOrder,
+                                    ParentProperty = parentProp.Name,  // Avoid null reference
+                                    IsActivated = dimPro.IsActivated
+                                }).OrderBy(x => x.DispOrder).ToListAsync();
 
             return result;
+
         }
 
         public async Task<IEnumerable<DiamondPropertyDTO>> GetRatioListAsync()
         {
-            var result = await _context.DiamondProperties
-                .GroupJoin(
-                    _context.DiamondProperties,
-                    dimPro => dimPro.ParentId,
-                    propG => propG.Id,
-                    (dimPro, dimGroup) => new { dimPro, dimGroup })
-                .SelectMany(
-                    x => x.dimGroup.DefaultIfEmpty(),
-                    (x, propG) => new DiamondPropertyDTO
-                    {
-                        Id = x.dimPro.Id,
-                        Name = x.dimPro.Name,
-                        Description = x.dimPro.Description,
-                        SymbolName = x.dimPro.SymbolName,
-                        IconPath = x.dimPro.IconPath,
-                        ParentId = x.dimPro.ParentId,
-                        ParentProperty = propG.Name,  // Avoid null reference
-                        DispOrder=x.dimPro.DispOrder,
-                        IsActivated = x.dimPro.IsActivated
-                    }).OrderBy(x => x.DispOrder).Where(x => x.ParentProperty == $"{SD.Ratio}" && x.IsActivated == true).ToListAsync();
+            var result = await (from dimPro in _context.DiamondProperties
+                                join parent in _context.DiamondProperties on dimPro.ParentId equals parent.Id into parentGroup
+                                from parentProp in parentGroup.DefaultIfEmpty()
+                                where parentProp.Name == SD.Ratio && dimPro.IsActivated
+                                select new DiamondPropertyDTO
+                                {
+                                    Id = dimPro.Id,
+                                    Name = dimPro.Name,
+                                    Description = dimPro.Description,
+                                    SymbolName = dimPro.SymbolName,
+                                    IconPath = dimPro.IconPath,
+                                    ParentId = dimPro.ParentId,
+                                    DispOrder = dimPro.DispOrder,
+                                    ParentProperty = parentProp.Name,  // Avoid null reference
+                                    IsActivated = dimPro.IsActivated
+                                }).OrderBy(x => x.DispOrder).ToListAsync();
 
             return result;
+            
         }
 
         public async Task<IEnumerable<DiamondPropertyDTO>> GetFluorListAsync()
@@ -268,54 +235,48 @@ namespace Business.Repository
 
         public async Task<IEnumerable<DiamondPropertyDTO>> GetPolishListAsync()
         {
-            var result = await _context.DiamondProperties
-                .GroupJoin(
-                    _context.DiamondProperties,
-                    dimPro => dimPro.ParentId,
-                    propG => propG.Id,
-                    (dimPro, dimGroup) => new { dimPro, dimGroup })
-                .SelectMany(
-                    x => x.dimGroup.DefaultIfEmpty(),
-                    (x, propG) => new DiamondPropertyDTO
-                    {
-                        Id = x.dimPro.Id,
-                        Name = x.dimPro.Name,
-                        Description = x.dimPro.Description,
-                        SymbolName = x.dimPro.SymbolName,
-                        IconPath = x.dimPro.IconPath,
-                        ParentId = x.dimPro.ParentId,
-                        DispOrder = x.dimPro.DispOrder,
-                        ParentProperty = propG.Name,  // Avoid null reference
-                        IsActivated = x.dimPro.IsActivated
-                    }).OrderBy(x => x.DispOrder).Where(x => x.ParentProperty == $"{SD.Polish}" && x.IsActivated == true).ToListAsync();
+            var result = await (from dimPro in _context.DiamondProperties
+                                join parent in _context.DiamondProperties on dimPro.ParentId equals parent.Id into parentGroup
+                                from parentProp in parentGroup.DefaultIfEmpty()
+                                where parentProp.Name == SD.Polish && dimPro.IsActivated
+                                select new DiamondPropertyDTO
+                                {
+                                    Id = dimPro.Id,
+                                    Name = dimPro.Name,
+                                    Description = dimPro.Description,
+                                    SymbolName = dimPro.SymbolName,
+                                    IconPath = dimPro.IconPath,
+                                    ParentId = dimPro.ParentId,
+                                    DispOrder = dimPro.DispOrder,
+                                    ParentProperty = parentProp.Name,  // Avoid null reference
+                                    IsActivated = dimPro.IsActivated
+                                }).OrderBy(x => x.DispOrder).ToListAsync();
 
             return result;
+
         }
 
         public async Task<IEnumerable<DiamondPropertyDTO>> GetSymmetryListAsync()
         {
-            var result = await _context.DiamondProperties
-                .GroupJoin(
-                    _context.DiamondProperties,
-                    dimPro => dimPro.ParentId,
-                    propG => propG.Id,
-                    (dimPro, dimGroup) => new { dimPro, dimGroup })
-                .SelectMany(
-                    x => x.dimGroup.DefaultIfEmpty(),
-                    (x, propG) => new DiamondPropertyDTO
-                    {
-                        Id = x.dimPro.Id,
-                        Name = x.dimPro.Name,
-                        Description = x.dimPro.Description,
-                        SymbolName = x.dimPro.SymbolName,
-                        IconPath = x.dimPro.IconPath,
-                        ParentId = x.dimPro.ParentId,
-                        ParentProperty = propG.Name,  // Avoid null reference
-                        DispOrder= x.dimPro.DispOrder,
-                        IsActivated = x.dimPro.IsActivated
-                    }).OrderBy(x => x.DispOrder).Where(x => x.ParentProperty == $"{SD.Symmetry}" && x.IsActivated == true).ToListAsync();
+            var result = await (from dimPro in _context.DiamondProperties
+                                join parent in _context.DiamondProperties on dimPro.ParentId equals parent.Id into parentGroup
+                                from parentProp in parentGroup.DefaultIfEmpty()
+                                where parentProp.Name == SD.Symmetry && dimPro.IsActivated
+                                select new DiamondPropertyDTO
+                                {
+                                    Id = dimPro.Id,
+                                    Name = dimPro.Name,
+                                    Description = dimPro.Description,
+                                    SymbolName = dimPro.SymbolName,
+                                    IconPath = dimPro.IconPath,
+                                    ParentId = dimPro.ParentId,
+                                    DispOrder = dimPro.DispOrder,
+                                    ParentProperty = parentProp.Name,  // Avoid null reference
+                                    IsActivated = dimPro.IsActivated
+                                }).OrderBy(x => x.DispOrder).ToListAsync();
 
             return result;
+
         }
 
         public async Task<DiamondPropertyDTO> GetByIdAsync(int id)
@@ -412,8 +373,8 @@ namespace Business.Repository
         {
             var data = await _context.Diamonds.ToListAsync();
             var priceRange = new PriceRanges();
-            priceRange.MaxPrice = Convert.ToDecimal(data.Max(x => x.Amount));
-            priceRange.MinPrice = Convert.ToDecimal(data.Min(x => x.Amount));
+            priceRange.MaxPrice = data.Max(x => x.Amount).Value;
+            priceRange.MinPrice = data.Min(x => x.Amount).Value;
 
             return priceRange;
         }
@@ -422,8 +383,8 @@ namespace Business.Repository
         {
             var data = await _context.Diamonds.ToListAsync();
             var depthRange = new DepthDTO();
-            depthRange.MaxValue = Convert.ToDecimal(data.Max(x => x.Depth));
-            depthRange.MinValue = Convert.ToDecimal(data.Min(x => x.Amount));
+            depthRange.MaxValue = data.Max(x => x.Depth).Value;
+            depthRange.MinValue = data.Min(x => x.Amount).Value;
             return depthRange;
         }
 
@@ -431,8 +392,8 @@ namespace Business.Repository
         {
             var data = await _context.Diamonds.ToListAsync();
             var tableRange = new TableRangeDTO();
-            tableRange.MaxValue = Convert.ToDecimal(data.Max(x => x.Table));
-            tableRange.MinValue = Convert.ToDecimal(data.Min(x => x.Table));
+            tableRange.MaxValue = data.Max(x => x.Table).Value;
+            tableRange.MinValue = data.Min(x => x.Table).Value;
 
             return tableRange;
         }
