@@ -302,20 +302,21 @@
                         $("#maxCarat").val(response.MaxCaratSize);
 
 
+				} catch (error) {
+					console.error('Error fetching data: ', error);
+					$('#filter-box #shape-list').html('<p>Failed to load shapes</p>');
+				}
+			}
 
-                    } catch (error) {
-                        console.error('Error fetching data: ', error);
-                        $('#filter-box #shape-list').html('<p>Failed to load shapes</p>');
-                    }
-                }
-                async function GetColorData() {
-                    try {
-                        // Fetching data from API
-                        var response = await $.ajax({
-                            url: '@(SD.BaseApiUrl)/api/diamondproperty/diamond-property/get-color-list',
-                            method: 'GET',
-                            dataType: 'json',
-                        });
+
+		async function GetColorData() {
+				try {
+					// Fetching data from API
+					var response = await $.ajax({
+						url: '@(SD.BaseApiUrl)/api/diamondproperty/diamond-property/get-color-list',
+						method: 'GET',
+						dataType: 'json',
+					});
 
                         // Extract color names
                         const colorList = response.map(item => item.Name);
