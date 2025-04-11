@@ -111,7 +111,7 @@
 
 		$(function () {
 			// Initial Data Fetch
-			GetShapeDesign();
+			//GetShapeDesign();
 			loadAllFunctions();
 
 			GetCarat();
@@ -381,7 +381,7 @@
 
 							// Set filter values
 							diamondFilters.Colors = $("#txtColorIds").val();
-							console.log(diamondFilters.Colors );
+							console.log(diamondFilters.Colors);
 
 							// Call filter
 							getDiamondDataList(diamondFilters, page, rangeVal);
@@ -917,6 +917,7 @@
 
 				async function getDiamondDataList(diamondFilters, pageNumber = 1, pageSize = 10) {
 					showLoader();
+					debugger;
 					return $.ajax({
 						//url: '@Url.Action("GetDiamondList", "Diamond")', // Change this to your actual route
 						url: '/Diamond/GetDiamondList', // Change this to your actual route
@@ -946,7 +947,7 @@
 					try {
 						await Promise.all([
 
-							//GetShapeDesign(),
+							GetShapeDesign(),
 							GetCarat(),
 							GetCutData(),
 							GetColorData(),

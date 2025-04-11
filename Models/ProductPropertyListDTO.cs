@@ -12,5 +12,6 @@ namespace Models
 
         public List<ProductStyleDTO> StylesList { get; set; }
 
+
     }
 }

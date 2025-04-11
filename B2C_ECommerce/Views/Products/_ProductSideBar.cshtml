@@ -21,13 +21,12 @@
 			</div>
 			<!-- single sidebar end -->
 			<!-- single sidebar start -->
-			<div class="sidebar-single">
+			@* <div class="sidebar-single">
 				<h5 class="sidebar-title">price</h5>
 				<div class="sidebar-body">
-					@if (Model != null)
-					{
+					
 						<div class="price-range-wrap">
-							<div class="price-range" data-min="1" data-max="1000"></div>
+							<div class="price-range" data-min="1" data-max="1000000"></div>
 							<div class="range-slider">
 								<form action="#" class="d-flex align-items-center justify-content-between">
 									<div class="price-input">
@@ -39,7 +38,24 @@
 							</div>
 						</div>
 
-					}
+				</div>
+			</div> *@
+
+			<div class="sidebar-single">
+				<h5 class="sidebar-title">price</h5>
+				<div class="sidebar-body">
+					<div class="price-range-wrap">
+						<div class="price-range ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content" data-min="1" data-max="1000"><div class="ui-slider-range ui-corner-all ui-widget-header" style="left: 0%; width: 100%;"></div><span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="left: 0%;"></span><span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="left: 100%;"></span></div>
+						<div class="range-slider">
+							<form action="#" class="d-flex align-items-center justify-content-between">
+								<div class="price-input">
+									<label for="amount">Price: </label>
+									<input type="text" id="amount">
+								</div>
+								<button class="filter-btn">filter</button>
+							</form>
+						</div>
+					</div>
 				</div>
 			</div>
 			<!-- single sidebar end -->
@@ -48,14 +64,14 @@
 				<h5 class="sidebar-title">Brand</h5>
 				<div class="sidebar-body">
 					<ul class="checkbox-container categories-list">
-						@if (Model.CollectionList != null)
+						@if (Model.StylesList != null)
 						{
-							@foreach (var item in Model.CollectionList)
+							@foreach (var item in Model.StylesList)
 							{
 								<li>
 									<div class="custom-control custom-checkbox">
 										<input type="checkbox" class="custom-control-input" id="customCheck2">
-										<label class="custom-control-label" for="customCheck2">@item.CollectionName</label>
+										<label class="custom-control-label" for="customCheck2">@item.StyleName</label>
 									</div>
 								</li>
 							}

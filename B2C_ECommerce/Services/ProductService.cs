@@ -82,6 +82,7 @@ namespace B2C_ECommerce.Services
             {
                 var requestUrl = $"{SD.BaseApiUrl}/api/productFilters/Get-Style-List";
 
+
                 using var response = await _httpClient.GetAsync(requestUrl);
 
                 response.EnsureSuccessStatusCode(); // Throws exception if status code is not successful.
@@ -109,6 +110,7 @@ namespace B2C_ECommerce.Services
         {
             try
             {
+                //Get-Collection-List
                 var requestUrl = $"{SD.BaseApiUrl}/api/productFilters/Get-Collection-List";
 
                 using var response = await _httpClient.GetAsync(requestUrl);

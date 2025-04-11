@@ -26,14 +26,14 @@ namespace APIs.Controllers
         [HttpGet("Get-Style-List")]
         public async Task<IActionResult> GetStylesList()
         {
-            var result = await _productPropertyRepository.GetCategories();
+            var result = await _productPropertyRepository.GetSubCategoryList();
             return Ok(result);
         }
 
         [HttpGet("Get-Collection-List")]
         public async Task<IActionResult> GetCollectionList()
         {
-            var result = await _productPropertyRepository.GetSubCategoryList();
+            var result = await _productPropertyRepository.GetCategories();
             return Ok(result);
         }
     }

@@ -38,7 +38,7 @@ namespace B2C_ECommerce.Controllers
             productFilters.CollectionList = (await _productRepository.GetSubcategoryList());
 
             try { 
-            productFilters.StylesList = await _productRepository.GetCategoriesList();
+                productFilters.StylesList = await _productRepository.GetCategoriesList();
             }
             catch(Exception ex)
             {

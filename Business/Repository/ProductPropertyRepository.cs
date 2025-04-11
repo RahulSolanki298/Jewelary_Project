@@ -96,7 +96,8 @@ namespace Business.Repository
 
             
             var colors = await (from prd in _context.ProductProperty
-                                join met in _context.ProductProperty.Where(x => x.Name == SD.Metal && x.IsActive==true) on prd.ParentId equals met.Id
+                                join met in _context.ProductProperty on prd.ParentId equals met.Id
+                                where prd.IsActive==true
                                 select new ProductPropertyDTO
                                 {
                                     Id = prd.Id,
@@ -122,6 +123,7 @@ namespace Business.Repository
         {
             var colors = await (from prd in _context.ProductProperty
                                 join met in _context.ProductProperty.Where(x => x.Name == SD.CaratSize && x.IsActive == true) on prd.ParentId equals met.Id
+                                where prd.IsActive==true
                                 select new ProductPropertyDTO
                                 {
                                     Id = prd.Id,
