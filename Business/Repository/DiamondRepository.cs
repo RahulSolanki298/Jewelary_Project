@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Business.Repository.IRepository;
 using DataAccess.Data;
@@ -63,12 +64,13 @@ namespace Business.Repository
             }
         }
 
+
         public async Task<IEnumerable<DiamondData>> GetDiamondList()
         {
             try
             {
                 var diamonds = await _context.DiamondData
-                    .FromSqlRaw("EXEC SP_GetDiamondDataBY_NEW_DiamondFilters")
+                    .FromSqlRaw("EXEC SP_SelectAllDiamonds")
                     .ToListAsync();
 
                 return diamonds;
@@ -79,15 +81,22 @@ namespace Business.Repository
             }
         }
 
-        public async Task<IEnumerable<DiamondData>> GetDiamondNewList()
+        public async Task<IEnumerable<DiamondData>> GetShapeWiseDiamondList()
         {
             try
             {
-                var diamonds = await _context.DiamondData
-                    .FromSqlRaw("EXEC SP_GetDiamondDataBY_Temp_DiamondFilters")
+                // Step 1: Get all DiamondData from stored procedure
+                var diamondDT = await _context.DiamondData
+                    .FromSqlRaw("EXEC SP_SelectAllDiamonds")
                     .ToListAsync();
 
-                return diamonds;
+                // Step 2: Group by ShapeId and select the first diamond in each group
+                var shapeWiseDiamonds = diamondDT
+                                            .GroupBy(x => x.ShapeId)
+                                            .Select(g => g.First()) // You can change to .OrderBy(...).First() if needed
+                                            .ToList();
+
+                return shapeWiseDiamonds;
             }
             catch (Exception)
             {
