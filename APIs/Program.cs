@@ -24,6 +24,7 @@ namespace APIs
                     {
                         serverOptions.Limits.MaxRequestBodySize = 52428800; // 50 MB
                     });
+
                     webBuilder.UseStartup<Startup>();
                 });
     }

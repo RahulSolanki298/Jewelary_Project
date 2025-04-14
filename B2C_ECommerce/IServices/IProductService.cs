@@ -7,8 +7,7 @@ namespace B2C_ECommerce.IServices
 {
     public interface IProductService
     {
-        Task<List<Product>> GetProductListByFilter();
-
+        Task<List<ProductDTO>> GetProductListByFilter(ProductFilters productFilters);
 
         Task<List<ProductPropertyDTO>> GetProductColorList();
 

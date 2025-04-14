@@ -1,71 +1,59 @@
-﻿.loader-overlay {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
-    background-color: rgba(255, 255, 255, 0.7);
-    padding: 2rem;
-    border-radius: 50%;
-}
-
+﻿/* Background Styles */
 .login-background {
     background-image: url('images/loginbackground.jpg');
     background-size: cover;
     background-position: center;
     height: 100vh;
-    width: 100vw;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 1rem;
 }
 
-.login-container {
-    background-color: rgba(255, 255, 255, 0.85); /* Slight white overlay */
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-}
-
-.login-container {
-    height: 100vh;
+/* Wrapper for login image and form */
+.login-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 900px;
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     overflow: hidden;
 }
 
+.login-container {
+    padding: 2rem;
+    flex: 1;
+}
+
 .login-image-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #f5f5f5;
+    display: none;
+    background-color: #f0f0f0;
+    flex: 1;
 }
 
 .login-image {
     width: 100%;
-    height: 100vh;
+    height: 100%;
     object-fit: cover;
 }
 
+/* Show image on medium+ screens */
+@media (min-width: 768px) {
+    .login-wrapper {
+        flex-direction: row;
+    }
+
+    .login-image-container {
+        display: block;
+    }
+}
+
+/* Card inner padding & layout */
 .login-card {
     width: 100%;
-    max-width: 400px;
-    padding: 2rem;
-    border-radius: 16px;
-    background-color: #ffffff;
-    box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.15);
-}
-
-.animate-fade-in {
-    animation: fadeInUp 0.6s ease-out;
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    border-radius: 12px;
+    box-shadow: none;
+    background-color: transparent;
 }

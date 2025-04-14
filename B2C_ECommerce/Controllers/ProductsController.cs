@@ -21,12 +21,12 @@ namespace B2C_ECommerce.Controllers
         {
             return View();
         }
-
-        [HttpGet]
-        public async Task<IActionResult> GetProductList()
+            
+        [HttpPost]
+        public async Task<IActionResult> GetProductList(ProductFilters filters, int pageNumber = 1, int pageSize = 5000)
         {
-            var result = await _productRepository.GetProductListByFilter();
-            return PartialView("~/Views/ProductNew/_NewImagesAndProducts.cshtml", result);
+            var result = await _productRepository.GetProductListByFilter(filters);
+            return PartialView("~/Views/Products/_NewImagesAndProducts.cshtml", result);
 
         }
 
@@ -45,7 +45,7 @@ namespace B2C_ECommerce.Controllers
 
             }
 
-            return PartialView("~/Views/Products/_ProductSideBar.cshtml", productFilters);
+            return PartialView("~/Views/Products/_ProductFilterBar.cshtml", productFilters);
         }
 
         [HttpGet]

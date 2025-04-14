@@ -123,5 +123,7 @@ namespace Models
         public string Setting { get; set; }
 
         public List<ProductImageAndVideoDTO> ProductImageVideos { get; set; }
+        public List<ProductPropertyDTO> Metals { get; set; }
+        public List<ProductPropertyDTO> CaratSizes { get; set; }
     }
 }

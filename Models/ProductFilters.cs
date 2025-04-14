@@ -10,7 +10,7 @@
 
         public string[] category { get; set; }
 
-        public string[] subCategory { get; set; }
+        //public string[] subCategory { get; set; }
 
         public decimal? FromPrice { get; set; }
 

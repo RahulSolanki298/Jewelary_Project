@@ -56,10 +56,6 @@
             <button id="showMoreBtn" class="btn btn-dark text-capitalize">Show More</button>
         </div>
     </div>
-
-
-
-
     <div class="modal fade" id="dimCertiModal" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static" aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog" style="max-width:100% !important">
             <div class="modal-content">
@@ -67,7 +63,7 @@
                     <h5 class="modal-title fw-bold" id="dimCertiLabel">
                         🧾 Diamond Certificate
                     </h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close" id="btnCertiClose"><span aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body" id="SearchItemArea">
                     <div class="container-fluid">
@@ -239,7 +235,9 @@
 			});
 
 
-
+			$("#btnCertiClose").click(function () {
+                $("#dimCertiModal").modal("hide");
+			});
 
 
 			// Categorical sliders
@@ -1000,7 +998,6 @@
 				}
 
 		async function loadAllFunctions() {
-			debugger;
 					showLoader();
 					try {
 						await Promise.all([

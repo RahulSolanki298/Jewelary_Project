@@ -1,18 +1,18 @@
-﻿@inherits LayoutComponentBase
+﻿	@inherits LayoutComponentBase
 
 
-<MudThemeProvider Theme="_currentTheme" />
-<MudSnackbarProvider />
+	<MudThemeProvider Theme="_currentTheme" />
+	<MudSnackbarProvider />
 
 
-<div class="login-background">
-	<MudContainer MaxWidth="MaxWidth.Medium">
-		@Body
-	</MudContainer>
-</div>
+	<div class="login-background">
+		<MudContainer MaxWidth="MaxWidth.Medium">
+			@Body
+		</MudContainer>
+	</div>
 
 
-@code 
-{
-	private MudTheme _currentTheme = new MudBlazorAdminDashboard();
-}
+	@code 
+	{
+		private MudTheme _currentTheme = new MudBlazorAdminDashboard();
+	}

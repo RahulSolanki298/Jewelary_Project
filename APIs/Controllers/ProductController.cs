@@ -11,6 +11,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Globalization;
 using DataAccess.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace APIs.Controllers
 {
@@ -161,7 +162,7 @@ namespace APIs.Controllers
                         }
 
 
-                        await _productRepository.SaveNewProductCollectionList(rows);
+                        await _productRepository.UpdateProductDetailsByExcel(rows);
 
                     }
                 }
@@ -280,19 +281,19 @@ namespace APIs.Controllers
                 int rowCount = worksheet.Dimension.Rows;
                 List<ProductDTO> products = new();
                 string dateString = string.Empty;
-                var ProductDate = new DateTime();
+                //var ProductDate = new DateTime();
                 for (int row = 5; row <= rowCount; row++)
                 {
-                    dateString = worksheet.Cells[row, 1].Text;
-                    if (!string.IsNullOrEmpty(dateString))
-                    {
-                        ProductDate = DateTime.ParseExact(dateString, "M/d/yy", CultureInfo.InvariantCulture);
-                    }
+                    //dateString = worksheet.Cells[row, 1].Text;
+                    //if (!string.IsNullOrEmpty(dateString))
+                    //{
+                    //    ProductDate = DateTime.ParseExact(dateString, "M/d/yy", CultureInfo.InvariantCulture);
+                    //}
 
                     var product = new ProductDTO
                     {
                         Id = Guid.NewGuid(),
-                        ProductDate = ProductDate,
+                        //ProductDate = ProductDate,
                         // CategoryName = worksheet.Name,
                         CategoryName = "Rings",
                         VenderName = worksheet.Cells[row, 6].Text,
@@ -375,10 +376,46 @@ namespace APIs.Controllers
 
 
         [HttpPost("GetProductsByFilters")]
-        public async Task<IActionResult> GetProductsByFilters(ProductFilters productFilters)
+        public async Task<IActionResult> GetProductsByFilters(ProductFilters filters, int pageNumber = 1, int pageSize = 10)
         {
             var products = await _productRepository.GetProductStyleList();
+
+            //var query = products.AsQueryable();
+
+            // Apply filters
+            //if (!filters.Metals.Any()&& filters.Shapes.Any() ? string.Join(",", filters.Shapes) : (object)DBNull.Value)
+            //{
+            //    query = query.Where(p => filters.Metals.Contains(p.ColorName));
+            //}
+            //if (filters.Carats?.Any() == true)
+            //{
+            //    query = query.Where(p => filters.Carats.Contains(p.Carat));
+            //}
+            //if (filters.Shapes?.Any() == true)
+            //{
+            //    query = query.Where(p => filters.Shapes.Contains(p.ShapeName));
+            //}
+            //if (filters.category.Any() == true)
+            //{
+            //    query = query.Where(p => filters.category.Contains(p.CategoryName));
+            //}
+            ////if (filters.subCategory?.Any() == true)
+            ////{
+            ////    query = query.Where(p => filters.subCategory.Contains(p.SubCategory));
+            ////}
+            //if (filters.FromPrice.HasValue)
+            //{
+            //    query = query.Where(p => p.Price >= filters.FromPrice.Value);
+            //}
+            //if (filters.ToPrice.HasValue)
+            //{
+            //    query = query.Where(p => p.Price <= filters.ToPrice.Value);
+            //}
+
+            //products = await query.ToListAsync();
+
             return Ok(products);
+
         }
 
 

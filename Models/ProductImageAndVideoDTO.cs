@@ -2,7 +2,7 @@
 {
     public class ProductImageAndVideoDTO
     {
-        public int Id { get; set; }
+        public int Id { get; set; } = 0;
 
         public string ProductId { get; set; }
 

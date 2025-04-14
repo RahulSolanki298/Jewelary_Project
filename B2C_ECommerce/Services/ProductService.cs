@@ -19,34 +19,34 @@ namespace B2C_ECommerce.Services
             _httpClient = httpClientFactory.CreateClient("API");
         }
 
-        public async Task<List<Product>> GetProductListByFilter()
+        public async Task<List<ProductDTO>> GetProductListByFilter(ProductFilters productFilters)
         {
             try
             {
-                var requestUrl = $"{SD.BaseApiUrl}/api/product/GetProductCollectionNewList";
+                var requestUrl = $"{SD.BaseApiUrl}/api/product/GetProductsByFilters";
 
-                using var response = await _httpClient.GetAsync(requestUrl);
+                // Use PostAsJsonAsync for serialization and sending the request
+                using var response = await _httpClient.PostAsJsonAsync(requestUrl, productFilters);
 
                 response.EnsureSuccessStatusCode(); // Throws exception if status code is not successful.
 
-                if (response.Content is null)
-                {
-                    throw new Exception("API response content is null.");
-                }
+                // Deserialize the response content directly
+                var result = await response.Content.ReadFromJsonAsync<List<ProductDTO>>();
 
-                var result = await response.Content.ReadFromJsonAsync<List<Product>>();
-
-                return result ?? new List<Product>();
+                return result ?? new List<ProductDTO>();
             }
             catch (HttpRequestException httpEx)
             {
+                // Log or handle HTTP request-specific errors
                 throw new Exception($"HTTP request error: {httpEx.Message}", httpEx);
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error fetching diamond list: {ex.Message}", ex);
+                // Log or handle general errors
+                throw new Exception($"Error fetching product list: {ex.Message}", ex);
             }
         }
+
 
         public async Task<List<ProductPropertyDTO>> GetProductColorList()
         {

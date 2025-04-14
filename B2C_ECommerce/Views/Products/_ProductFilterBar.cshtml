@@ -1,0 +1,77 @@
+﻿@model Models.ProductPropertyListDTO
+
+
+<div class="filter-container">
+    <!-- Shape -->
+    <div class="filter-group shape-group">
+        <h4>Categories</h4>
+        @if (Model.StylesList != null)
+        {
+            <div class="category-grid">
+                @foreach (var item in Model.StylesList)
+                {
+                    <div class="category-item"><input class="checkbox" type="checkbox">@item.StyleName</div>
+                }
+            </div>
+        }
+    </div>
+
+    <!-- Metal -->
+    <div class="filter-group Metel-Group">
+        <h4>Color</h4>
+        @if (Model.Colors != null)
+        {
+            <div class="color-grid">
+                @foreach (var item in Model.Colors)
+                {
+                <input type="hidden" id="txtMetalIds" value="@string.Join(",",item)" />
+                <div class="color-item"><input class="checkbox" type="checkbox">@item.Name</div>
+
+                }
+            </div>
+        }
+    </div>
+
+    <!-- Stone -->
+    <div class="filter-group stone-group">
+        <h4>Brand</h4>
+        
+        @if (Model.StylesList != null)
+        {
+            <div class="brand-grid">
+                @foreach (var item in Model.StylesList)
+                {
+                    <div class="brand-item"><input class="checkbox" type="checkbox">@item.StyleName</div>
+
+                }
+            </div>
+        }
+
+    </div>
+
+    <!-- Sliders -->
+    <div class="slider-section Price-Group">
+        <div class="d-flex mb-2">
+            <div class="filter-label">
+                <label for="minPrice" class="form-label" style="padding-right: 2px;">Price <span>$</span></label>
+            </div>
+            <div class="d-flex">
+                <input type="text" class="form-control txt-bolder me-2 range_slider" placeholder="Min Price" id="minPrice1" />
+                - &nbsp;<input type="text" class="form-control txt-bolder range_slider margin-left-2" placeholder="Max Price" id="maxPrice1" />
+            </div>
+        </div>
+        <div id="price-slider1" class="slider filter-scroll-bg"></div>
+        <div class="d-flex mb-2">
+            <div class="filter-label">
+                <label for="minCarat" class="form-label" style="padding-right:2px;">Carat Size <span><img src="~/assets/img/icon/diamond-icon.png" style="width:25px;" /></span> </label>
+            </div>
+            <div class="d-flex">
+                <input type="text" class="form-control txt-bolder me-2 range_slider" placeholder="Min Carat" id="minCarat" />
+                - <input type="text" class="form-control txt-bolder range_slider margin-left-2" placeholder="Max Carat" id="maxCarat" />
+            </div>
+
+        </div>
+        <div id="carat-size-slider" class="slider filter-scroll-bg"></div>
+
+    </div>
+</div>

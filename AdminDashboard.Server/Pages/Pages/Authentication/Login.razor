@@ -12,59 +12,62 @@
 
 
 
-<MudPaper Class="d-inline-flex pa-4">
-    <img src="/images/_login_process.jpg" alt="Login Image" />
-</MudPaper>
 
-<MudPaper Class="d-inline-flex pa-4">
-    <EditForm Model="@loginModel" OnValidSubmit="OnValidSubmit">
-        <DataAnnotationsValidator />
+<div class="login-background">
+    <div class="login-wrapper">
+        <!-- Image section (only visible on medium+ screens) -->
+        <div class="login-image-container">
+            <img src="images/_login_process.jpg" class="login-image" alt="Login Illustration" />
+        </div>
 
-        <MudCard Class="d-flex flex-column justify-content-center align-items-center" Style="width: 100%; min-height: 50vh;">
-            <!-- Sign In Form Header -->
-            <MudCardContent Class="d-flex flex-column align-items-center p-0">
-                <h6 class="mud-typography mud-typography-h6 mb-4">Sign In</h6>
+        <!-- Login form -->
+        <div class="login-container">
+            <MudCard Class="login-card">
+                <EditForm Model="@loginModel" OnValidSubmit="OnValidSubmit">
+                    <DataAnnotationsValidator />
 
-                <!-- Social Login Buttons -->
-                <div class="d-flex mb-3">
-                    <MudIconButton Icon="@Icons.Material.Filled.Facebook" aria-label="facebook" />
-                    <MudIconButton Icon="@Icons.Custom.Brands.Twitter" Color="Color.Primary" aria-label="twitter" />
-                </div>
-            </MudCardContent>
+                    <MudCardContent>
+                        <h5 class="mud-typography mud-typography-h5 text-center mb-4">Sign In</h5>
 
-            <!-- Error Message / Loading Indicator -->
-            <MudCardContent Class="p-0">
-                @if (!success)
-                {
-                    <span class="text-danger">@Message</span>
-                }
-                @if (isLoading)
-                {
-                    <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate="true" />
-                }
-            </MudCardContent>
+                        <!-- Social Buttons -->
+                        <div class="d-flex justify-content-center gap-2 mb-3">
+                            <MudIconButton Icon="@Icons.Material.Filled.Facebook" aria-label="facebook" />
+                            <MudIconButton Icon="@Icons.Custom.Brands.Twitter" Color="Color.Primary" aria-label="twitter" />
+                        </div>
 
-            <!-- Form Fields -->
-            <MudCardContent Class="p-0">
-                <MudTextField Label="Email" FullWidth="true" @bind-Value="loginModel.UserName" Variant="Variant.Outlined" />
-                <MudTextField Label="Password" FullWidth="true" @bind-Value="loginModel.Password" InputType="InputType.Password" Variant="Variant.Outlined" />
-                <MudCheckBox @bind-Checked="loginModel.RememberMe" Label="Remember Me" />
-            </MudCardContent>
+                        <!-- Error or Loader -->
+                        @if (!success)
+                        {
+                            <div class="text-danger mb-2">@Message</div>
+                        }
+                        @if (isLoading)
+                        {
+                            <div class="d-flex justify-content-center mb-2">
+                                <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Medium" />
+                            </div>
+                        }
 
-            <!-- Submit Button -->
-            <MudCardActions Class="d-flex justify-content-center w-100 p-0">
-                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" FullWidth="true">Login</MudButton>
-            </MudCardActions>
+                        <!-- Inputs -->
+                        <MudTextField Label="Email" Variant="Variant.Outlined" FullWidth="true" @bind-Value="loginModel.UserName" />
+                        <MudTextField Label="Password" Variant="Variant.Outlined" InputType="InputType.Password" FullWidth="true" @bind-Value="loginModel.Password" />
+                        <MudCheckBox @bind-Checked="loginModel.RememberMe" Label="Remember Me" Class="mt-2 mb-2" />
 
-            <!-- Forgot Password Link -->
-            <MudCardContent Class="d-flex justify-content-center p-0">
-                <MudLink Href="/pages/authentication/forgot-password" Color="Color.Dark" Style="text-align:center;">Forgot Password?</MudLink>
-            </MudCardContent>
-        </MudCard>
-    </EditForm>
-</MudPaper>
+                        <!-- Submit -->
+                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Size="Size.Large">
+                            Login
+                        </MudButton>
 
-    
+                        <!-- Forgot Password -->
+                        <div class="text-center mt-3">
+                            <MudLink Href="/pages/authentication/forgot-password" Color="Color.Primary">Forgot Password?</MudLink>
+                        </div>
+                    </MudCardContent>
+                </EditForm>
+            </MudCard>
+        </div>
+    </div>
+</div>
+
 
 @code {
     private AdminLoginModel loginModel = new AdminLoginModel();
