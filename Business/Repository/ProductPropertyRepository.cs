@@ -53,7 +53,6 @@ namespace Business.Repository
                 {
                     var productDT = await _context.ProductProperty.FirstOrDefaultAsync(x => x.Id == producutPropertyId);
                     productDT.Name = productDT.Name;
-                    productDT.CategoryId = productProperty.CategoryId;
                     productDT.Description = productProperty.Description;
                     if (productProperty.ParentId != null)
                     {
@@ -69,7 +68,6 @@ namespace Business.Repository
                 {
                     var productDT = new ProductProperty();
                     productDT.Name = productProperty.Name;
-                    productDT.CategoryId = productProperty.CategoryId;
                     productDT.Description = productProperty.Description;
 
                     if (productProperty.ParentId != null)

@@ -32,4 +32,8 @@
     <ProjectReference Include="..\Models\Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UploadedFiles\Collections\" />
+  </ItemGroup>
+
 </Project>

@@ -36,6 +36,10 @@ namespace Models
 
         public string ProductType { get; set; } // Diamond, Gold
 
+        public string BandWidth { get; set; }
+
+        public string Karat { get; set; }
+        public int? KaratId { get; set; }
         // If Gold
         public string GoldPurity { get; set; } // 18 k
 
@@ -116,6 +120,8 @@ namespace Models
 
         public string CadDesigner { get; set; }
 
-        public List<ProductImageAndVideoDTO> ProductProperty { get; set; }
+        public string Setting { get; set; }
+
+        public List<ProductImageAndVideoDTO> ProductImageVideos { get; set; }
     }
 }

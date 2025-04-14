@@ -17,12 +17,7 @@
         <MudCardContent>
             <MudText @bind-Value="productProperty.Id" InputType="InputType.Hidden" ></MudText>
             <MudTextField @bind-Value="productProperty.Name" Placeholder="Please enter product property type."></MudTextField>
-            <MudSelect @bind-Value="productProperty.CategoryId" Label="CategoryId" Variant="Variant.Outlined">
-                @foreach (var cat in Categories)
-                {
-                    <MudSelectItem Value="@cat.Id">@cat.Name</MudSelectItem>
-                }
-            </MudSelect>
+            
             <MudTextField @bind-Value="productProperty.ParentId" Placeholder="Please enter parent id."></MudTextField>
             <MudTextField @bind-Value="productProperty.Description" Placeholder="Please enter description."></MudTextField>
             <br/>
@@ -40,13 +35,11 @@
     </ToolBarContent>
     <HeaderContent>
         <MudTh><MudTableSortLabel SortBy="new Func<DataAccess.Entities.ProductProperty, object>(x=>x.Name)" InitialDirection="SortDirection.Ascending"></MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<DataAccess.Entities.ProductProperty, object>(x=>x.CategoryId)">Category</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<DataAccess.Entities.ProductProperty, object>(x=>x.ParentId)">Parent Property</MudTableSortLabel></MudTh>
         <MudTh>Actions</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTh DataLabel="Name">@context.Name</MudTh>
-        <MudTh DataLabel="CategoryId">@context.CategoryId</MudTh>
         <MudTh DataLabel="ParentId">@(context.ParentId != null ? context.ParentId : "-")</MudTh>
         <MudTd DataLabel=""> 
             <MudFab @onclick="@(() => Edit(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
@@ -105,8 +98,7 @@
 
     private bool Search(DataAccess.Entities.ProductProperty productProperty)
     {
-        if (productProperty.Name != null && 
-            productProperty.CategoryId != null && 
+        if (productProperty.Name != null &&  
             productProperty.ParentId != null &&
             productProperty.Name.Contains(searchstring, StringComparison.OrdinalIgnoreCase))
         {

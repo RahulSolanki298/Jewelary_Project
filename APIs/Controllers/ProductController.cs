@@ -24,6 +24,369 @@ namespace APIs.Controllers
             _productRepository = productRepository;
         }
 
+        #region Useful APIS
+
+        [HttpPost("BulkNewProductCollectionUpload")]
+        public async Task<IActionResult> UploadNewProductCollectionExcel(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
+            try
+            {
+                // Ensure the file is an Excel file
+                if (!file.FileName.EndsWith(".xlsx"))
+                {
+                    return BadRequest("Invalid file format. Please upload an Excel (.xlsx) or (.csv) file.");
+                }
+
+                // Read the file using EPPlus
+                using (var stream = new MemoryStream())
+                {
+
+                    await file.CopyToAsync(stream);
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                    using (var package = new ExcelPackage(stream))
+                    {
+                        var workbook = package.Workbook;
+
+                        var worksheet = workbook.Worksheets[0]; // Assuming you want the first sheet
+
+                        var rows = new List<Models.ProductDTO>();
+
+                        // Loop through rows and columns
+                        for (int row = 2; row <= worksheet.Dimension.Rows; row++) // Start at row 2 to skip header
+                        {
+                            var date = worksheet.Cells[row, 2].Value;
+                            var itemDate = ParseDate(date);
+
+                            var data = new ProductDTO
+                            {
+                                DesignNo = worksheet.Cells[row, 1].Text,
+                                ProductDate = itemDate ?? DateTime.MinValue,
+                                ParentDesign = worksheet.Cells[row, 3].Text,
+                                CaratName = worksheet.Cells[row, 4].Text,
+                                Gender = worksheet.Cells[row, 5].Text,
+                                CollectionName = worksheet.Cells[row, 6].Text,
+                                CategoryName = worksheet.Cells[row, 7].Text,
+                                SubCategoryName = worksheet.Cells[row, 8].Text,
+                                ProductType = worksheet.Cells[row, 9].Text,
+                                StyleName = worksheet.Cells[row, 10].Text,
+                                Occasion = worksheet.Cells[row, 11].Text,
+                                Remarks = worksheet.Cells[row, 12].Text,
+                                Package = worksheet.Cells[row, 13].Text,
+                                MfgDesign = worksheet.Cells[row, 14].Text,
+                                VenderName = worksheet.Cells[row, 15].Text,
+                                Title = worksheet.Cells[row, 16].Text,
+                                Designer = worksheet.Cells[row, 17].Text,
+                                CadDesigner = worksheet.Cells[row, 18].Text,
+                                Id = Guid.NewGuid()
+                            };
+
+                            rows.Add(data);
+                        }
+
+
+                        await _productRepository.SaveNewProductCollectionList(rows);
+
+                    }
+                }
+
+                return Ok("File uploaded and processed successfully.");
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPost("UpdateProductDataByExcel")]
+        public async Task<IActionResult> UpdateProductDataByExcel(IFormFile file)
+        {
+            var data = new ProductDTO();
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
+            try
+            {
+                // Ensure the file is an Excel file
+                if (!file.FileName.EndsWith(".xlsx"))
+                {
+                    return BadRequest("Invalid file format. Please upload an Excel (.xlsx) or (.csv) file.");
+                }
+
+                // Read the file using EPPlus
+                using (var stream = new MemoryStream())
+                {
+
+                    await file.CopyToAsync(stream);
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                    using (var package = new ExcelPackage(stream))
+                    {
+                        var workbook = package.Workbook;
+
+                        var worksheet = workbook.Worksheets[0]; // Assuming you want the first sheet
+
+                        var rows = new List<Models.ProductDTO>();
+
+                        // Loop through rows and columns
+                        for (int row = 2; row <= worksheet.Dimension.Rows; row++) // Start at row 2 to skip header
+                        {
+                            //var date = worksheet.Cells[row, 2].Value;
+                            //var itemDate = ParseDate(date);
+
+                            data = new ProductDTO();
+
+                            data.DesignNo = worksheet.Cells[row, 1].Text;
+                            data.ShapeName = string.IsNullOrEmpty(worksheet.Cells[row, 5].Text) != true ? worksheet.Cells[row, 5].Text : "";
+                            data.ClarityName = string.IsNullOrEmpty(worksheet.Cells[row, 6].Text) != true && worksheet.Cells[row, 4].Text == "LGD"
+                                            ? worksheet.Cells[row, 6].Text : "-";
+                            data.Karat = string.IsNullOrEmpty(worksheet.Cells[row, 6].Text) != true && worksheet.Cells[row, 4].Text == "GOLD"
+                                            ? worksheet.Cells[row, 6].Text : "-";
+                            data.ColorName = worksheet.Cells[row, 7].Text;
+                            data.Carat = worksheet.Cells[row, 8].Text;
+                            data.Quantity = string.IsNullOrEmpty(worksheet.Cells[row, 10].Text) != true ?
+                                             Convert.ToInt32(worksheet.Cells[row, 10].Text) : 0;
+                            //data.DiaWT = string.IsNullOrEmpty(worksheet.Cells[row, 11].Text) != true ? Convert.ToInt32(worksheet.Cells[row, 11].Text) : 0;
+                            data.ProductType = worksheet.Cells[row, 4].Text;
+                            data.Setting = worksheet.Cells[row, 9].Text;
+                            data.Id = Guid.NewGuid();
+
+
+                            rows.Add(data);
+                        }
+
+
+                        await _productRepository.SaveNewProductCollectionList(rows);
+
+                    }
+                }
+
+                return Ok("File uploaded and processed successfully.");
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+
+        [HttpPost("BulkProductCollectionImagesUpload")]
+        [RequestSizeLimit(1073741824)]
+        public async Task<IActionResult> UploadProductCollectionImages(IFormFile zipFile)
+        {
+            FileSplitDTO styleName;
+            string destinationPath = string.Empty;
+            string folderPath = string.Empty;
+
+            if (zipFile == null || zipFile.Length == 0)
+                return BadRequest("No file uploaded.");
+
+            var extractedFolder = Path.Combine("UploadedFiles", "Collections");
+            Directory.CreateDirectory(extractedFolder);
+
+            var zipPath = Path.Combine(extractedFolder, zipFile.FileName);
+            using (var fileStream = new FileStream(zipPath, FileMode.Create))
+            {
+                await zipFile.CopyToAsync(fileStream);
+            }
+
+            var productImgVidos = new List<ProductImages>();
+            var prdDT = new ProductImages();
+            var fileUpload = new FileManager();
+
+            using (ZipArchive archive = ZipFile.OpenRead(zipPath))
+            {
+                foreach (ZipArchiveEntry entry in archive.Entries)
+                {
+                    if (entry.Name.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                        entry.Name.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
+                        entry.Name.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
+                        entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Extract StyleName from image name
+                        styleName = _productRepository.ExtractStyleName(entry.Name);
+
+                        // Create folder for StyleName
+                        folderPath = Path.Combine(extractedFolder, styleName.DesignNo);
+                        if (!Directory.Exists(folderPath))
+                            Directory.CreateDirectory(folderPath);
+
+                        // Save extracted image
+                        destinationPath = Path.Combine(folderPath, entry.Name);
+                        entry.ExtractToFile(destinationPath, overwrite: true);
+
+                        // Save Products
+                        int pId = await _productRepository.SaveImageVideoPath(destinationPath);
+
+                        prdDT = new ProductImages();
+                        if (entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+                        {
+                            prdDT.VideoId = pId;
+                        }
+                        else if (styleName.Index == 1)
+                        {
+                            prdDT.ImageLgId = pId;
+                            prdDT.IsDefault = true;
+                        }
+                        else
+                        {
+                            prdDT.ImageLgId = pId;
+                        }
+                        prdDT.ImageIndexNumber = styleName.Index;
+
+
+                        var prdDesignDT = await _productRepository.GetProductByDesignNo(styleName.DesignNo);
+                        if (prdDesignDT != null)
+                        {
+                            prdDT.ProductId = prdDesignDT.Id.ToString();
+
+                            await _productRepository.SaveImageVideoAsync(prdDT);
+                        }
+
+                    }
+                }
+            }
+
+
+            return Ok("File Uploaded Successfully.");
+        }
+
+
+        [HttpPost("BulkNewProductUpload")]
+        public async Task<IActionResult> UploadNewExcel(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("No file uploaded.");
+
+            if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
+                return BadRequest("Invalid file format. Please upload an Excel (.xlsx) file.");
+
+            try
+            {
+                using var stream = new MemoryStream();
+                await file.CopyToAsync(stream);
+
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                using var package = new ExcelPackage(stream);
+                var worksheet = package.Workbook.Worksheets.FirstOrDefault();
+                if (worksheet == null)
+                    return BadRequest("The Excel file is empty.");
+
+                int rowCount = worksheet.Dimension.Rows;
+                List<ProductDTO> products = new();
+                string dateString = string.Empty;
+                var ProductDate = new DateTime();
+                for (int row = 5; row <= rowCount; row++)
+                {
+                    dateString = worksheet.Cells[row, 1].Text;
+                    if (!string.IsNullOrEmpty(dateString))
+                    {
+                        ProductDate = DateTime.ParseExact(dateString, "M/d/yy", CultureInfo.InvariantCulture);
+                    }
+
+                    var product = new ProductDTO
+                    {
+                        Id = Guid.NewGuid(),
+                        ProductDate = ProductDate,
+                        // CategoryName = worksheet.Name,
+                        CategoryName = "Rings",
+                        VenderName = worksheet.Cells[row, 6].Text,
+                        StyleName = worksheet.Cells[row, 7].Text,
+                        Sku = worksheet.Cells[row, 7].Text,
+                        Length = worksheet.Cells[row, 9].Text,
+                        BandWidth = worksheet.Cells[row, 10].Text,
+                        GoldWeight = worksheet.Cells[row, 11].Text,
+                        CTW = worksheet.Cells[row, 12].Text,
+                        ShapeName = worksheet.Cells[row, 13].Text,
+                        CenterCaratName = worksheet.Cells[row, 14].Text,
+                        Grades = worksheet.Cells[row, 21].Text,
+                        ColorName = worksheet.Cells[row, 15].Text,
+                    };
+
+                    // Convert numeric values safely
+                    product.DiaWT = decimal.TryParse(worksheet.Cells[row, 19].Text, out var diaWt) ? diaWt : 0;
+                    product.NoOfStones = int.TryParse(worksheet.Cells[row, 20].Text, out var noOfStones) ? noOfStones : 0;
+                    product.Price = decimal.TryParse(worksheet.Cells[row, 25].Text, out var Sprice) ? Sprice : 0;
+                    product.UnitPrice = product.Price;
+
+                    // Handling multiple metal colors
+                    int lastSpaceIndex = product.ColorName.LastIndexOf(' ');
+                    if (lastSpaceIndex == -1)
+                    {
+                        continue;
+                    }
+                    string leftPart = product.ColorName.Substring(0, lastSpaceIndex);     // "14k White,Yellow,Rose"
+                    string productType = product.ColorName.Substring(lastSpaceIndex + 1); // "Gold"
+
+                    // Now get karat and colors
+                    string[] leftParts = leftPart.Split(' ', 2); // Split only once
+                    string karat = leftParts[0];                 // "14k"
+                    var productMetals = leftParts[1].Split(',');   // ["White", "Yellow", "Rose"]
+
+                    if (productMetals.Length > 0)
+                    {
+                        //string carat = productMetals[0]; // Store carat separately
+                        foreach (var metal in productMetals.Skip(1)) // Skip first item (carat)
+                        {
+                            products.Add(new ProductDTO
+                            {
+                                Id = product.Id,
+                                //CategoryName = product.CategoryName,
+                                CategoryName = "Rings",
+                                VenderName = product.VenderName,
+                                StyleName = product.StyleName,
+                                Sku = product.Sku,
+                                Length = product.Length,
+                                BandWidth = product.BandWidth,
+                                GoldWeight = product.GoldWeight,
+                                CTW = product.CTW,
+                                CenterShapeName = product.CenterShapeName,
+                                CenterCaratName = product.CenterCaratName,
+                                CaratSizeName = product.CaratSizeName,
+                                ShapeName = product.ShapeName,
+                                Grades = product.Grades,
+                                DiaWT = product.DiaWT,
+                                NoOfStones = product.NoOfStones,
+                                Price = product.Price,
+                                UnitPrice = product.UnitPrice,
+                                //CaratName = carat,
+                                ColorName = metal.Trim(),
+                                Karat = karat,
+                                ProductType = productType,
+                                IsActivated = true
+                            });
+                        }
+                    }
+                }
+
+                await _productRepository.SaveNewProductList(products);
+                return Ok("File uploaded and processed successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+
+        [HttpPost("GetProductsByFilters")]
+        public async Task<IActionResult> GetProductsByFilters(ProductFilters productFilters)
+        {
+            var products = await _productRepository.GetProductStyleList();
+            return Ok(products);
+        }
+
+
+
+        #endregion
+
+        #region Old APIs
+
         [HttpPost("BulkProductUpload")]
         public async Task<IActionResult> UploadExcel(IFormFile file)
         {
@@ -155,7 +518,7 @@ namespace APIs.Controllers
                         {
                             var data = new ProductDTO
                             {
-                                DesignNo= worksheet.Cells[row, 1].Text,
+                                DesignNo = worksheet.Cells[row, 1].Text,
                                 GoldPurity = worksheet.Cells[row, 6].Text, // Column C
                                 ShapeName = worksheet.Cells[row, 5].Text, // Column C
                                 ColorName = worksheet.Cells[row, 7].Text,
@@ -168,82 +531,6 @@ namespace APIs.Controllers
                         }
 
                         await _productRepository.SaveProductCollectionList(rows);
-
-                    }
-                }
-
-                return Ok("File uploaded and processed successfully.");
-            }
-            catch (System.Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
-
-        [HttpPost("BulkNewProductCollectionUpload")]
-        public async Task<IActionResult> UploadNewProductCollectionExcel(IFormFile file)
-        {
-            if (file == null || file.Length == 0)
-            {
-                return BadRequest("No file uploaded.");
-            }
-
-            try
-            {
-                // Ensure the file is an Excel file
-                if (!file.FileName.EndsWith(".xlsx"))
-                {
-                    return BadRequest("Invalid file format. Please upload an Excel (.xlsx) or (.csv) file.");
-                }
-
-                // Read the file using EPPlus
-                using (var stream = new MemoryStream())
-                {
-
-                    await file.CopyToAsync(stream);
-                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-                    using (var package = new ExcelPackage(stream))
-                    {
-                        var workbook = package.Workbook;
-
-                        var worksheet = workbook.Worksheets[0]; // Assuming you want the first sheet
-
-                        var rows = new List<Models.ProductDTO>();
-
-                        // Loop through rows and columns
-                        for (int row = 2; row <= worksheet.Dimension.Rows; row++) // Start at row 2 to skip header
-                        {
-                            var date = worksheet.Cells[row, 2].Value;
-                            var itemDate = ParseDate(date);
-
-                            var data = new ProductDTO
-                            {
-                                DesignNo = worksheet.Cells[row, 1].Text,
-                                ProductDate = itemDate ?? DateTime.MinValue,
-                                ParentDesign = worksheet.Cells[row, 3].Text,
-                                CaratName = worksheet.Cells[row, 4].Text,
-                                Gender = worksheet.Cells[row, 5].Text,
-                                CollectionName = worksheet.Cells[row, 6].Text,
-                                CategoryName = worksheet.Cells[row, 7].Text,
-                                SubCategoryName = worksheet.Cells[row, 8].Text,
-                                ProductType = worksheet.Cells[row, 9].Text,
-                                StyleName = worksheet.Cells[row, 10].Text,
-                                Occasion = worksheet.Cells[row, 11].Text,
-                                Remarks = worksheet.Cells[row, 12].Text,
-                                Package = worksheet.Cells[row, 13].Text,
-                                MfgDesign = worksheet.Cells[row, 14].Text,
-                                VenderName = worksheet.Cells[row, 15].Text,
-                                Title = worksheet.Cells[row, 16].Text,
-                                Designer = worksheet.Cells[row, 17].Text,
-                                CadDesigner = worksheet.Cells[row, 18].Text,
-                                Id = Guid.NewGuid()
-                            };
-
-                            rows.Add(data);
-                        }
-
-
-                        await _productRepository.SaveNewProductCollectionList(rows);
 
                     }
                 }
@@ -305,84 +592,6 @@ namespace APIs.Controllers
             return Ok("Images uploaded and organized successfully.");
         }
 
-        [HttpPost("BulkProductCollectionImagesUpload")]
-        [RequestSizeLimit(1073741824)]
-        public async Task<IActionResult> UploadProductCollectionImages(IFormFile zipFile)
-        {
-            FileSplitDTO styleName;
-            string destinationPath = string.Empty;
-            string folderPath = string.Empty;
-
-            if (zipFile == null || zipFile.Length == 0)
-                return BadRequest("No file uploaded.");
-
-            var extractedFolder = Path.Combine("UploadedFiles", "Collections");
-            Directory.CreateDirectory(extractedFolder);
-
-            var zipPath = Path.Combine(extractedFolder, zipFile.FileName);
-            using (var fileStream = new FileStream(zipPath, FileMode.Create))
-            {
-                await zipFile.CopyToAsync(fileStream);
-            }
-
-            var productImgVidos=new List<ProductImages>();
-            var prdDT=new ProductImages();
-            var fileUpload = new FileManager();
-
-            using (ZipArchive archive = ZipFile.OpenRead(zipPath))
-            {
-                foreach (ZipArchiveEntry entry in archive.Entries)
-                {
-                    if (entry.Name.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
-                        entry.Name.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
-                        entry.Name.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
-                        entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
-                    {
-                        // Extract StyleName from image name
-                        styleName = _productRepository.ExtractStyleName(entry.Name);
-
-                        // Create folder for StyleName
-                        folderPath = Path.Combine(extractedFolder, styleName.DesignNo);
-                        if (!Directory.Exists(folderPath))
-                            Directory.CreateDirectory(folderPath);
-
-                        // Save extracted image
-                        destinationPath = Path.Combine(folderPath, entry.Name);
-                        entry.ExtractToFile(destinationPath, overwrite: true);
-
-                        // Save Products
-                        int pId= await _productRepository.SaveImageVideoPath(destinationPath);
-
-                        prdDT = new ProductImages();
-                        if (entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
-                        {
-                            prdDT.VideoId=pId;
-                        }
-                        else if (styleName.Index == 1)
-                        {
-                            prdDT.ImageLgId = pId;
-                            prdDT.IsDefault = true;
-                        }
-                        else
-                        {
-                            prdDT.ImageLgId = pId;
-                        }
-                        prdDT.ImageIndexNumber = styleName.Index;
-
-
-                        var prdDesignDT=await _productRepository.GetProductByDesignNo(styleName.DesignNo);
-                        prdDT.ProductId = prdDesignDT.Id.ToString();
-
-                        await _productRepository.SaveImageVideoAsync(prdDT);
-
-
-                    }
-                }
-            }
-
-
-            return Ok("File Uploaded Successfully.");
-        }
 
         //private readonly AppDbContext _context;
 
@@ -391,7 +600,7 @@ namespace APIs.Controllers
         //    _context = context;
         //}
 
-       // [HttpPost("BulkNewCollectionImagesUpload")]
+        // [HttpPost("BulkNewCollectionImagesUpload")]
         //public async Task<IActionResult> UploadNewProductCollectionImages(IFormFile zipFile)
         //{
         //    if (zipFile == null || zipFile.Length == 0)
@@ -462,7 +671,9 @@ namespace APIs.Controllers
         //    return Ok("Images uploaded, organized, and saved to DB successfully.");
         //}
 
+        #endregion
 
+        #region Get APIs
 
         [HttpPost("GetProductDetailsList")]
         public async Task<IActionResult> GetProductDetailsList()
@@ -478,7 +689,7 @@ namespace APIs.Controllers
             return Ok(result);
         }
 
-       
+        #endregion
 
         private DateTime? ParseDate(object cellValue)
         {
@@ -500,5 +711,7 @@ namespace APIs.Controllers
             // Return null if the value cannot be parsed
             return null;
         }
+
+
     }
 }

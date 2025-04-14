@@ -25,7 +25,7 @@ namespace Business.Repository
 
         public async Task<Product> GetProductByDesignNo(string designNo)
         {
-            var dtDesign= await _context.Product.Where(x=>x.DesignNo==designNo).FirstOrDefaultAsync();
+            var dtDesign = await _context.Product.Where(x => x.DesignNo == designNo).FirstOrDefaultAsync();
             return dtDesign;
         }
 
@@ -39,8 +39,6 @@ namespace Business.Repository
                 int styleId = 0;
 
                 var styleDT = new ProductStyles();
-
-                // Step 1: Fetch all related entities in bulk to avoid repeated database calls
                 var colors = await GetColorList();
                 var categories = await _context.Category.ToListAsync();
                 var subCategories = await _context.SubCategory.ToListAsync();
@@ -484,6 +482,117 @@ namespace Business.Repository
             }
         }
 
+        public async Task<bool> UpdateProductDetailsByExcel(List<ProductDTO> products)
+        {
+            try
+            {
+                // Step 0: Initilize veriable
+                var updateList = new List<Product>();
+                var existingProduct = new Product();
+
+                // Step 1: Fetch all related entities in bulk to avoid repeated database calls
+
+                var categories = await _context.Category.ToListAsync();
+                var subCategories = await _context.SubCategory.ToListAsync();
+                var karatList = await GetKaratList();
+
+                // Step 2: Create dictionaries for fast lookup by Name
+                var categoryDict = categories.ToDictionary(x => x.Name, x => x.Id);
+                var subCategoryDict = subCategories.ToDictionary(x => x.Name, x => x.Id);
+                var karatDict= karatList.ToDictionary(x => x.Name, x => x.Id);
+
+                // Lists for insert and update
+                int subCategoryId, categoryId, collectionId, StyleId,karatId;
+
+                // Step 3: Process each product
+                foreach (var product in products)
+                {
+                    if (string.IsNullOrEmpty(product.DesignNo)
+                        || string.IsNullOrEmpty(product.ProductType)
+                        || string.IsNullOrEmpty(product.ColorName))
+                    {
+                        continue;
+                    }
+
+                    categoryId = categoryDict.GetValueOrDefault(product.CategoryName);
+                    subCategoryId = subCategoryDict.GetValueOrDefault(product.SubCategoryName);
+                    karatId = karatDict.GetValueOrDefault(product.Karat);
+                    if (string.IsNullOrEmpty(product.CollectionName) != true)
+                    {
+                        var collDT = _context.ProductCollections.Where(x => x.CollectionName == product.CollectionName).FirstOrDefault();
+                        if (collDT != null)
+                        {
+                            collectionId = collDT.Id;
+                        }
+                        else
+                        {
+                            ProductCollections collection = new ProductCollections();
+                            collection.CollectionName = product.CollectionName;
+                            await _context.ProductCollections.AddAsync(collection);
+                            await _context.SaveChangesAsync();
+                            StyleId = collection.Id;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(product.StyleName) != true)
+                    {
+                        var styleDT = _context.ProductStyles.Where(x => x.StyleName == product.StyleName).FirstOrDefault();
+                        if (styleDT != null)
+                        {
+                            StyleId = styleDT.Id;
+                        }
+                        else
+                        {
+                            ProductStyles style = new ProductStyles();
+                            style.StyleName = product.StyleName;
+                            await _context.ProductStyles.AddAsync(style);
+                            await _context.SaveChangesAsync();
+                            StyleId = style.Id;
+                        }
+                    }
+
+                    // Check if a product already exists based on related field IDs
+                    existingProduct = await _context.Product
+                        .Where(x => x.ProductType == product.ProductType
+                                    && x.DesignNo == product.DesignNo)
+                        .FirstOrDefaultAsync();
+                    if (existingProduct != null)
+                    {
+                        // Update existing product
+                        existingProduct.ProductType = product.ProductType;
+                        existingProduct.ShapeId = product.ShapeId;
+                        existingProduct.Carat = product.Carat;
+                        existingProduct.ColorId = product.ColorId;
+                        existingProduct.ClarityId = product.ClarityId;
+                        existingProduct.Quantity = product.Quantity;
+                        existingProduct.Setting = product.Setting;
+                        existingProduct.KaratId = product.KaratId;
+                        updateList.Add(existingProduct);
+                    }
+                    
+                }
+
+                // Step 4: Bulk insert new products and update existing products
+                if (updateList.Count > 0)
+                {
+                    _context.Product.UpdateRange(updateList);
+                }
+
+                // Step 5: Save changes to the database
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (You can replace this with your actual logging mechanism)
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+
+                // You can add more handling if needed (e.g., rethrow or return false)
+                return false;
+            }
+        }
+
         public async Task<IEnumerable<Product>> GetProductCollectionNewList()
         {
             var products = await _context.Product.ToListAsync();
@@ -546,8 +655,12 @@ namespace Business.Repository
                                       Sku = product.Sku,
                                       ProductType = cat.ProductType,
                                       StyleId = product.StyleId,
-                                      StyleName = sty != null ? sty.Name : null
-                                  }).Where(x => !String.IsNullOrEmpty(x.StyleName) && x.IsActivated == true).ToListAsync();
+                                      StyleName = sty != null ? sty.Name : null,
+                                      ProductImageVideos=new List<ProductImageAndVideoDTO>
+                                      {
+
+                                      }
+                                  }).Where(x => x.IsActivated == true).ToListAsync();
 
             return products;
 
@@ -628,7 +741,7 @@ namespace Business.Repository
 
         public async Task<int> GetCaratId()
         {
-            var caratDT = await _context.ProductProperty.Where(static x => x.Name == "Carat").FirstOrDefaultAsync();
+            var caratDT = await _context.ProductProperty.Where(static x => x.Name == "Center-Carat").FirstOrDefaultAsync();
             return caratDT.Id;
         }
 
@@ -636,6 +749,19 @@ namespace Business.Repository
         {
             int caratId = await GetCaratId();
             var result = await _context.ProductProperty.Where(x => x.ParentId == caratId).ToListAsync();
+            return result;
+        }
+
+        public async Task<int> GetKaratId()
+        {
+            var caratDT = await _context.ProductProperty.Where(static x => x.Name == "Karat").FirstOrDefaultAsync();
+            return caratDT.Id;
+        }
+
+        public async Task<List<ProductProperty>> GetKaratList()
+        {
+            int ktId = await GetKaratId();
+            var result = await _context.ProductProperty.Where(x => x.ParentId == ktId).ToListAsync();
             return result;
         }
 
@@ -648,7 +774,7 @@ namespace Business.Repository
         public async Task<List<ProductProperty>> GetShapeList()
         {
             int shapeId = await GetShapeId();
-            var result = await _context.ProductProperty.Where(x => x.ParentId == shapeId).ToListAsync();
+            var result = await _context.ProductProperty.Where(x => x.ParentId == shapeId && x.IsActive==true).ToListAsync();
             return result;
         }
 
@@ -686,7 +812,7 @@ namespace Business.Repository
 
         public async Task<List<ProductProperty>> GetGoldPurityList()
         {
-            int weightId = await GetGoldWeightById();
+            int weightId = await GetGoldPurityById();
             var result = await _context.ProductProperty.Where(x => x.ParentId == weightId).ToListAsync();
             return result;
         }
@@ -714,11 +840,11 @@ namespace Business.Repository
         {
             try
             {
-                var imgDT=new ProductImages();
+                var imgDT = new ProductImages();
                 imgDT.ProductId = ImgVdoData.ProductId;
                 imgDT.ImageLgId = ImgVdoData.ImageLgId ?? null;
                 imgDT.VideoId = ImgVdoData.VideoId ?? null;
-                imgDT.IsDefault= true;
+                imgDT.IsDefault = true;
 
                 await _context.AddAsync(imgDT);
                 await _context.SaveChangesAsync();
@@ -727,6 +853,168 @@ namespace Business.Repository
             }
             catch (Exception ex)
             {
+                return false;
+            }
+        }
+
+        public async Task<bool> SaveNewProductList(List<ProductDTO> products)
+        {
+            try
+            {
+                // Step 0: Initilize veriable
+                var newProduct = new Product();
+                var existingProduct = new Product();
+                int styleId = 0;
+
+                var styleDT = new ProductStyles();
+                var colors = await GetColorList();
+                var categories = await _context.Category.ToListAsync();
+                var subCategories = await _context.SubCategory.ToListAsync();
+
+                var clarities = await GetClarityList();
+                var carats = await GetCaratList(); // caratsize list
+                var karats = await GetKaratList();
+                var shapes = await GetShapeList();
+                var goldWeight = await GetGoldWeightList();
+                //var goldPurity = await GetGoldPurityList();
+
+                // Step 2: Create dictionaries for fast lookup by Name
+                var colorDict = colors.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
+                var categoryDict = categories.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
+                //var subCategoryDict = subCategories.ToDictionary(x => x.Name, x => x.Id);
+                var clarityDict = clarities.ToDictionary(x => x.Name, x => x.Id);
+                var caratDict = carats.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
+                var KaratDict = karats.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
+                var shapeDict = shapes.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
+                var weightDict = goldWeight.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
+                //var purityDict = .ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
+
+                // Lists for insert and update
+                var productList = new List<Product>();
+                var updateList = new List<Product>();
+
+                int colorId, subCategoryId, categoryId, clarityId, caratId, karatId, caratSizeId, shapeId, goldWeightId = 0;
+                // Step 3: Process each product
+                foreach (var product in products)
+                {
+                    if (string.IsNullOrEmpty(product.ColorName)
+                        || string.IsNullOrEmpty(product.CategoryName)
+                        //|| string.IsNullOrEmpty(product.ClarityName)
+                        || string.IsNullOrEmpty(product.CenterCaratName)
+                        || string.IsNullOrEmpty(product.ShapeName)
+                        || string.IsNullOrEmpty(product.Karat))
+                    {
+                        continue;
+                    }
+
+                    colorId = colorDict.GetValueOrDefault(product.ColorName);
+                    categoryId = categoryDict.GetValueOrDefault(product.CategoryName);
+                    //subCategoryId = subCategoryDict.GetValueOrDefault(product.SubCategoryName);
+                    //clarityId = clarityDict.GetValueOrDefault(product.ClarityName);
+                    caratId = caratDict.GetValueOrDefault(product.CenterCaratName);
+                    shapeId = shapeDict.GetValueOrDefault(product.ShapeName);
+                    karatId = KaratDict.GetValueOrDefault(product.Karat);
+                    goldWeightId = weightDict.GetValueOrDefault(product.GoldWeight);
+
+                    #region Create style
+
+                    if (string.IsNullOrEmpty(product.StyleName) != true)
+                    {
+                        styleDT = _context.ProductStyles.Where(x => x.StyleName == product.StyleName).FirstOrDefault();
+
+                        if (styleDT == null)
+                        {
+                            styleDT = new ProductStyles()
+                            {
+                                StyleName = product.StyleName,
+                                CreatedDate = DateTime.Now,
+                                IsActivated = true
+                            };
+
+                            await _context.ProductStyles.AddAsync(styleDT);
+                            await _context.SaveChangesAsync();
+                        }
+                        styleId = styleDT.Id;
+                    }
+                    #endregion
+
+                    existingProduct = await _context.Product
+                        .Where(x => x.CategoryId == categoryId
+                                    && x.ColorId == product.ColorId
+                                    && x.KaratId==karatId
+                                    && x.ProductType==product.ProductType)
+                                    
+                        .FirstOrDefaultAsync();
+
+                    if (existingProduct != null)
+                    {
+                        // Update existing product
+                        existingProduct.Title = $"{product.CTW} {product.ShapeName} {product.CaratName} {product.ProductType}";
+                        existingProduct.Sku = product.Sku;
+                        existingProduct.Price = product.Price;
+                        existingProduct.UnitPrice = product.UnitPrice;
+                        existingProduct.Quantity = product.Quantity;
+                        existingProduct.StyleId = styleId;
+                        existingProduct.IsActivated = product.IsActivated;
+                        existingProduct.KaratId = karatId;
+                        existingProduct.CenterCaratId = caratId;
+                        existingProduct.ShapeId = shapeId;
+                        updateList.Add(existingProduct);
+                    }
+                    else
+                    {
+                        // Insert new product
+                        newProduct = new Product
+                        {
+                            //Title = $"{product.ShapeName} {product.CenterCaratName} {product.ProductType}",
+                            Sku = product.Sku,
+                            CategoryId = categoryId,
+                            //SubCategoryId = subCategoryId,
+                            KaratId = karatId,
+                            CenterCaratId = caratId,
+                            //ClarityId = clarityId,
+                            Length = product.Length,
+                            ColorId = colorId,
+                            Description = product.Description,
+                            IsActivated = product.IsActivated,
+                            StyleId = styleId,
+                            GoldWeightId = goldWeightId,
+                            BandWidth = decimal.TryParse(product.BandWidth,out var result) ? result: (decimal?)null,
+                            Price = product.Price,
+                            UnitPrice = product.UnitPrice,
+                            Quantity = product.Quantity,
+                            ProductType = product.ProductType,
+                            ShapeId = shapeId,
+                            Id = Guid.NewGuid()
+                        };
+
+                        productList.Add(newProduct);
+                    }
+
+                }
+
+                // Step 4: Bulk insert new products and update existing products
+                if (productList.Count > 0)
+                {
+                    await _context.Product.AddRangeAsync(productList);
+                }
+
+                if (updateList.Count > 0)
+                {
+                    _context.Product.UpdateRange(updateList);
+                }
+
+                // Step 5: Save changes to the database
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (You can replace this with your actual logging mechanism)
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+
+                // You can add more handling if needed (e.g., rethrow or return false)
                 return false;
             }
         }

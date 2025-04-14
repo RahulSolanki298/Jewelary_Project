@@ -32,8 +32,6 @@ namespace APIs.Controllers
         [HttpPost("GetDiamondList")]
         public async Task<ActionResult> GetDiamondByFilterData(DiamondFilters diamondFilters, int pageNumber = 1, int pageSize = 10)
         {
-            var json = JsonConvert.SerializeObject(diamondFilters);
-
             var response = await _diamondRepository.GetDiamondsAsync(diamondFilters, pageNumber, pageSize);
 
             if (response.Count() == 0)

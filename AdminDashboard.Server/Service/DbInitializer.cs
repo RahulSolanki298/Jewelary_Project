@@ -165,10 +165,10 @@ namespace AdminDashboard.Service
                     {
                         var productProperties = new List<ProductProperty>
                     {
-                        new ProductProperty { Name = "Metal", CategoryId = ringCategory.Id,Description="-" },
-                        new ProductProperty { Name = "Clarity", CategoryId = ringCategory.Id },
-                        new ProductProperty { Name = "Shape", CategoryId = ringCategory.Id },
-                        new ProductProperty { Name = "Carat", CategoryId = ringCategory.Id },
+                        new ProductProperty { Name = "Metal", Description="-" },
+                        new ProductProperty { Name = "Clarity" },
+                        new ProductProperty { Name = "Shape" },
+                        new ProductProperty { Name = "Carat"},
                     };
                         await _db.ProductProperty.AddRangeAsync(productProperties);
                         await _db.SaveChangesAsync();

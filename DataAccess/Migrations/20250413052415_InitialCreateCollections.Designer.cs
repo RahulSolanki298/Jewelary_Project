@@ -4,14 +4,16 @@ using DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250413052415_InitialCreateCollections")]
+    partial class InitialCreateCollections
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -947,9 +949,6 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal?>("BandWidth")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int?>("CTW")
                         .HasColumnType("int");
 
@@ -1012,9 +1011,6 @@ namespace DataAccess.Migrations
 
                     b.Property<bool>("IsActivated")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("KaratId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Length")
                         .HasColumnType("nvarchar(max)");

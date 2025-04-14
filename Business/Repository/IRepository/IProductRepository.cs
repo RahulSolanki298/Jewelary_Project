@@ -24,5 +24,13 @@ namespace Business.Repository.IRepository
         FileSplitDTO ExtractStyleName(string fileName);
 
         Task<Product> GetProductByDesignNo(string designNo);
+
+        Task<int> GetKaratId();
+
+        Task<List<ProductProperty>> GetKaratList();
+
+        Task<bool> SaveNewProductList(List<ProductDTO> products);
+
+        Task<bool> UpdateProductDetailsByExcel(List<ProductDTO> products);
     }
 }
