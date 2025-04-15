@@ -3,143 +3,146 @@
 @{
     var secImg = string.Empty;
 }
-@foreach (var item in Model)
+@if (Model != null)
 {
-    secImg = item.ProductImageVideos.Last()?.ImageUrl;
-    if (secImg != null && secImg == "-")
+    @foreach (var item in Model)
     {
-        secImg = item.ProductImageVideos.FirstOrDefault()?.ImageUrl;
+        secImg = item.ProductImageVideos.Last()?.ImageUrl;
+        if (secImg != null && secImg == "-")
+        {
+            secImg = item.ProductImageVideos.FirstOrDefault()?.ImageUrl;
+        }
+
+        <div class="col-lg-3 col-md-4 col-sm-6">
+            <div class="product-item">
+                <figure class="product-thumb product-box-with-border">
+                    <a href="@Url.Action("ProductDetails", "Products", new { id = item.Id })">
+                        <img class="pri-img" src="@($"{SD.BaseApiUrl}/{item.ProductImageVideos.FirstOrDefault()?.ImageUrl}")" />
+                        <img class="sec-img" src="@($"{SD.BaseApiUrl}/{secImg}")" />
+
+                    </a>
+                    <div class="product-badge">
+                        <div class="product-label new">
+                            <span>new</span>
+                        </div>
+                        <div class="product-label discount">
+                            <span>10%</span>
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to wishlist"><i class="pe-7s-like"></i></a>
+                        <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to Compare"><i class="pe-7s-refresh-2"></i></a>
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#quick_view"><span data-bs-toggle="tooltip" data-bs-placement="left" title="Quick View"><i class="pe-7s-search"></i></span></a>
+                    </div>
+                    <div class="cart-hover">
+                        @*<button class="btn btn-cart">add to cart</button>*@
+                        <a href="@Url.Action("ProductDetails", "Products", new { id = item.Id })" class="btn btn-cart"> Add to Card</a>
+                    </div>
+                </figure>
+                <div class="product-caption text-left product-box-desc">
+                    <div class="product-identity">
+                        <p class="manufacturer-name"><a href="#">@item.ShapeName @item.BandWidth @item.Length @item.Sku</a></p>
+                    </div>
+                    <div class="price-box">
+                        <span class="price-regular">@item.Price</span>
+                        <span class="price-old"><del>@item.UnitPrice</del></span>
+                    </div>
+
+                    <div class="d-flex">
+                        <span>Metal</span>
+                        <ul class="color-categories" style="padding-left:10px;">
+                            @foreach (var color in item.Metals)
+                            {
+                                <li>
+                                    <a class="@color.SymbolName" href="#" title="@color.Name"></a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+
+                    <div class="d-flex">
+                        <span>Carat</span>
+                        <ul class="size-categories" style="padding-left:10px;">
+                            @foreach (var carat in item.CaratSizes)
+                            {
+                                <li>
+                                    <a href="#" title="@carat.Name">@carat.Name</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+
+
+                </div>
+            </div>
+            <!--<div class="product-list-item">
+                <figure class="product-thumb product-box-with-border">
+                    <a href="@Url.Action("ProductDetails", "Products", new { id = item.Id })">-->
+            @*<img class="pri-img" src="@($"{string.Concat(@SD.BaseApiUrl,'/',item.ProductImageVideos.FirstOrDefault()?.ImageUrl)}  /")" />*@
+            <!--<img class="pri-img" src="@($"{SD.BaseApiUrl}/{item.ProductImageVideos.FirstOrDefault()?.ImageUrl}")" />
+                        <img class="sec-img" src="@($"{SD.BaseApiUrl}/{secImg}")" />
+
+                    </a>
+                    <div class="product-badge">
+                        <div class="product-label new">
+                            <span>new</span>
+                        </div>
+                        <div class="product-label discount">
+                            <span>10%</span>
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to wishlist"><i class="pe-7s-like"></i></a>
+                        <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to Compare"><i class="pe-7s-refresh-2"></i></a>
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#quick_view"><span data-bs-toggle="tooltip" data-bs-placement="left" title="Quick View"><i class="pe-7s-search"></i></span></a>
+                    </div>
+                    <div class="cart-hover">
+                        <button class="btn btn-cart">add to cart</button>
+                    </div>
+                </figure>
+                <div class="product-content-list">
+                    <div class="manufacturer-name">
+                        <a href="#">@item.CaratName @item.ColorName @item.BandWidth @item.Sku</a>
+                    </div>
+                    <div class="price-box">
+                        <span class="price-regular">@item.Price</span>
+                        <span class="price-old"><del>@item.UnitPrice</del></span>
+                    </div>
+
+                    <div class="d-flex">
+                        <span>Metal</span>
+                        <ul class="color-categories" style="padding-left:10px;">
+                            @foreach (var color in item.Metals)
+                            {
+                                <li>
+                                    <a class="@color.SymbolName" href="#" title="@color.Name"></a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+
+                    <div class="d-flex">
+                        <span>Carat</span>
+                        <ul class="size-categories" style="padding-left:10px;">
+                            <li>
+                                <a class="" href="#" title="1">1</a>
+                            </li>
+                            <li>
+                                <a class="" href="#" title="2">2</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <p>
+                        @item.Description
+                    </p>
+                </div>
+            </div>-->
+        </div>
+
     }
 
-    <div class="col-lg-3 col-md-4 col-sm-6">
-        <!-- product grid start -->
-        <div class="product-item">
-            <figure class="product-thumb product-box-with-border">
-                <a href="@Url.Action("ProductDetails", "Products", new { id = item.Id })">
-                    <img class="pri-img" src="@($"{SD.BaseApiUrl}/{item.ProductImageVideos.FirstOrDefault()?.ImageUrl}")" />
-                    <img class="sec-img" src="@($"{SD.BaseApiUrl}/{secImg}")" />
-
-                </a>
-                <div class="product-badge">
-                    <div class="product-label new">
-                        <span>new</span>
-                    </div>
-                    <div class="product-label discount">
-                        <span>10%</span>
-                    </div>
-                </div>
-                <div class="button-group">
-                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to wishlist"><i class="pe-7s-like"></i></a>
-                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to Compare"><i class="pe-7s-refresh-2"></i></a>
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#quick_view"><span data-bs-toggle="tooltip" data-bs-placement="left" title="Quick View"><i class="pe-7s-search"></i></span></a>
-                </div>
-                <div class="cart-hover">
-                    @*<button class="btn btn-cart">add to cart</button>*@
-                    <a href="@Url.Action("ProductDetails", "Products", new { id = item.Id })" class="btn btn-cart"> Add to Card</a>
-                </div>
-            </figure>
-            <div class="product-caption text-left product-box-desc">
-                <div class="product-identity">
-                    <p class="manufacturer-name"><a href="#">@item.CaratName @item.ColorName @item.BandWidth @item.Sku</a></p>
-                </div>
-                <div class="price-box">
-                    <span class="price-regular">@item.Price</span>
-                    <span class="price-old"><del>@item.UnitPrice</del></span>
-                </div>
-
-                <div class="d-flex">
-                    <span>Metal</span>
-                    <ul class="color-categories" style="padding-left:10px;">
-                        @foreach (var color in item.Metals)
-                        {
-                            <li>
-                                <a class="@color.SymbolName" href="#" title="@color.Name"></a>
-                            </li>
-                        }
-                    </ul>
-                </div>
-
-                <div class="d-flex">
-                    <span>Carat</span>
-                    <ul class="size-categories" style="padding-left:10px;">
-                        <li>
-                            <a class="" href="#" title="1">1</a>
-                        </li>
-                        <li>
-                            <a class="" href="#" title="2">2</a>
-                        </li>
-                    </ul>
-                </div>
-
-
-            </div>
-        </div>
-        <!-- product grid end -->
-        <!-- product list item end -->
-        <div class="product-list-item">
-            <figure class="product-thumb product-box-with-border">
-                <a href="@Url.Action("ProductDetails", "Products", new { id = item.Id })">
-                    @*<img class="pri-img" src="@($"{string.Concat(@SD.BaseApiUrl,'/',item.ProductImageVideos.FirstOrDefault()?.ImageUrl)}  /")" />*@
-                    <img class="pri-img" src="@($"{SD.BaseApiUrl}/{item.ProductImageVideos.FirstOrDefault()?.ImageUrl}")" />
-                    <img class="sec-img" src="@($"{SD.BaseApiUrl}/{secImg}")" />
-
-                </a>
-                <div class="product-badge">
-                    <div class="product-label new">
-                        <span>new</span>
-                    </div>
-                    <div class="product-label discount">
-                        <span>10%</span>
-                    </div>
-                </div>
-                <div class="button-group">
-                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to wishlist"><i class="pe-7s-like"></i></a>
-                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to Compare"><i class="pe-7s-refresh-2"></i></a>
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#quick_view"><span data-bs-toggle="tooltip" data-bs-placement="left" title="Quick View"><i class="pe-7s-search"></i></span></a>
-                </div>
-                <div class="cart-hover">
-                    <button class="btn btn-cart">add to cart</button>
-                </div>
-            </figure>
-            <div class="product-content-list">
-                <div class="manufacturer-name">
-                    <a href="#">@item.CaratName @item.ColorName @item.BandWidth @item.Sku</a>
-                </div>
-                <div class="price-box">
-                    <span class="price-regular">@item.Price</span>
-                    <span class="price-old"><del>@item.UnitPrice</del></span>
-                </div>
-
-                <div class="d-flex">
-                    <span>Metal</span>
-                    <ul class="color-categories" style="padding-left:10px;">
-                        @foreach (var color in item.Metals)
-                        {
-                            <li>
-                                <a class="@color.SymbolName" href="#" title="@color.Name"></a>
-                            </li>
-                        }
-                    </ul>
-                </div>
-
-                <div class="d-flex">
-                    <span>Carat</span>
-                    <ul class="size-categories" style="padding-left:10px;">
-                        <li>
-                            <a class="" href="#" title="1">1</a>
-                        </li>
-                        <li>
-                            <a class="" href="#" title="2">2</a>
-                        </li>
-                    </ul>
-                </div>
-                <p>
-                    @item.Description
-                </p>
-            </div>
-        </div>
-        <!-- product list item end -->
-    </div>
-
 }
-
+else
+{
+    <div></div>
+}

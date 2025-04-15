@@ -40,10 +40,10 @@
         public static string Polish = "Polish";
         public static string Symmetry = "Symmetry";
         public static string Table = "Table";
-        public static string CaratSize = "CaratSize";
-        public static string Depth="Depth";
-        public static string Lab  ="Lab";
-        public static string Cut = "Cut";   
+        public static string CaratSize = "Center-Carat";//"CaratSize";
+        public static string Depth = "Depth";
+        public static string Lab = "Lab";
+        public static string Cut = "Cut";
         public static string _TYPE = "TYPE";
 
         // Supplier Activation Status
@@ -66,7 +66,7 @@
         public static string Returned = "Returned";
         public static string Refunded = "Refunded";
 
-        //public static string BaseApiUrl = "https://localhost:44302"; // https://jswebapi.com
+        // public static string BaseApiUrl = "https://localhost:44302"; // https://jswebapi.com
         public static string BaseApiUrl = "https://localhost:4050"; // https://jswebapi.com
 
 

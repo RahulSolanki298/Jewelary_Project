@@ -54,7 +54,7 @@ namespace B2C_ECommerce.Services
                 if (string.IsNullOrWhiteSpace(productId))
                     throw new ArgumentException("Product ID cannot be null or empty.", nameof(productId));
 
-                var requestUrl = $"{SD.BaseApiUrl}/api/product/{productId}";
+                var requestUrl = $"{SD.BaseApiUrl}/api/product/GetProductDetails/{productId}";
 
                 using var response = await _httpClient.GetAsync(requestUrl);
                 response.EnsureSuccessStatusCode();
@@ -163,7 +163,35 @@ namespace B2C_ECommerce.Services
             }
         }
 
-        
+        public async Task<List<ProductPropertyDTO>> GetShapeList()
+        {
+            try
+            {
+                //Get-Collection-List
+                var requestUrl = $"{SD.BaseApiUrl}/api/productFilters/get-shape-list";
+
+                using var response = await _httpClient.GetAsync(requestUrl);
+
+                response.EnsureSuccessStatusCode(); // Throws exception if status code is not successful.
+
+                if (response.Content is null)
+                {
+                    throw new Exception("API response content is null.");
+                }
+
+                var result = await response.Content.ReadFromJsonAsync<List<ProductPropertyDTO>>();
+
+                return result ?? new List<ProductPropertyDTO>();
+            }
+            catch (HttpRequestException httpEx)
+            {
+                throw new Exception($"HTTP request error: {httpEx.Message}", httpEx);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching sub categories: {ex.Message}", ex);
+            }
+        }
 
     }
 }

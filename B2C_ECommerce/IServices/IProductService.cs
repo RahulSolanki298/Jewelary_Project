@@ -17,5 +17,7 @@ namespace B2C_ECommerce.IServices
 
         Task<ProductDTO> GetProductByProductId(string productId);
 
+        Task<List<ProductPropertyDTO>> GetShapeList();
+
     }
 }

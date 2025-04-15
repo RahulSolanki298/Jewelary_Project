@@ -120,7 +120,7 @@ namespace Business.Repository
         public async Task<IEnumerable<ProductPropertyDTO>> GetProductCaratSizeList()
         {
             var colors = await (from prd in _context.ProductProperty
-                                join met in _context.ProductProperty.Where(x => x.Name == SD.CaratSize && x.IsActive == true) on prd.ParentId equals met.Id
+                                join met in _context.ProductProperty on prd.ParentId equals met.Id
                                 where prd.IsActive==true && prd.Name==SD.CaratSize
                                 select new ProductPropertyDTO
                                 {
@@ -185,6 +185,46 @@ namespace Business.Repository
                                     }).ToListAsync();
 
             return categories;
+        }
+
+        public async Task<IEnumerable<ProductPropertyDTO>> GetProductShapeList()
+        {
+
+            try
+            {
+                var colors = await (from prd in _context.ProductProperty
+                                    join shape in _context.ProductProperty on prd.ParentId equals shape.Id
+                                    where prd.IsActive == true && shape.Name == SD.Shape
+                                    select new ProductPropertyDTO
+                                    {
+                                        Id = prd.Id,
+                                        Name = prd.Name,
+                                        Description = prd.Description,
+                                        SymbolName = prd.SymbolName,
+                                        IconPath = prd.IconPath,
+                                        ParentId = shape.Id,
+                                        ParentProperty = "-"
+                                    }).ToListAsync();
+
+                return colors;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+
+        public async Task<PriceRanges> GetPriceRangeAsync()
+        {
+            var data = await _context.Product.ToListAsync();
+            var priceRange = new PriceRanges();
+            priceRange.MaxPrice = data.Max(x => x.Price);
+            priceRange.MinPrice = data.Min(x => x.Price);
+
+            return priceRange;
         }
 
 

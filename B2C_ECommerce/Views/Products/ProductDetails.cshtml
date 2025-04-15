@@ -1,5 +1,5 @@
-﻿@model Model.ProductDTO
-
+﻿@model Models.ProductDTO
+@using Common
 @{
     ViewData["Title"] = "ProductDetails";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -18,30 +18,31 @@
                             <div class="product-large-slider">
                                 @if (Model != null && Model.ProductImageVideos.Count > 0)
                                 {
+
                                     foreach (var item in Model.ProductImageVideos)
                                     {
                                         <div class="pro-large-img img-zoom">
-                                            <img src="@($"{SD.BaseApiUrl}/{item.ProductImageVideos.FirstOrDefault()?.ImageUrl}")" />
+                                            <img src="@($"{SD.BaseApiUrl}/{item?.ImageUrl}")" />
                                         </div>
                                     }
                                 }
 
 
                                 @* <div class="pro-large-img img-zoom">
-                                    <img src="~/assets/img/product/product-details-img1.jpg" alt="product-details">
-                                </div>
-                                <div class="pro-large-img img-zoom">
-                                    <img src="~/assets/img/product/product-details-img2.jpg" alt="product-details">
-                                </div>
-                                <div class="pro-large-img img-zoom">
-                                    <img src="~/assets/img/product/product-details-img3.jpg" alt="product-details">
-                                </div>
-                                <div class="pro-large-img img-zoom">
-                                    <img src="~/assets/img/product/product-details-img4.jpg" alt="product-details">
-                                </div>
-                                <div class="pro-large-img img-zoom">
-                                    <img src="~/assets/img/product/product-details-img5.jpg" alt="product-details">
-                                </div> *@
+                                        <img src="~/assets/img/product/product-details-img1.jpg" alt="product-details">
+                                    </div>
+                                    <div class="pro-large-img img-zoom">
+                                        <img src="~/assets/img/product/product-details-img2.jpg" alt="product-details">
+                                    </div>
+                                    <div class="pro-large-img img-zoom">
+                                        <img src="~/assets/img/product/product-details-img3.jpg" alt="product-details">
+                                    </div>
+                                    <div class="pro-large-img img-zoom">
+                                        <img src="~/assets/img/product/product-details-img4.jpg" alt="product-details">
+                                    </div>
+                                    <div class="pro-large-img img-zoom">
+                                        <img src="~/assets/img/product/product-details-img5.jpg" alt="product-details">
+                                    </div> *@
                             </div>
                             <div class="pro-nav slick-row-10 slick-arrow-style">
                                 @if (Model != null && Model.ProductImageVideos.Count > 0)
@@ -49,34 +50,35 @@
                                     foreach (var item in Model.ProductImageVideos)
                                     {
                                         <div class="pro-nav-thumb product-details-img-border">
-                                            <img src="@($"{SD.BaseApiUrl}/{item.ProductImageVideos.FirstOrDefault()?.ImageUrl}")" />
+
+                                            <img src="@($"{SD.BaseApiUrl}/{item?.ImageUrl}")" />
                                         </div>
                                     }
                                 }
 
-                               @*  <div class="pro-nav-thumb product-details-img-border">
-                                    <img src="~/assets/img/product/product-details-img1.jpg" alt="product-details">
-                                </div>
-                                <div class="pro-nav-thumb product-details-img-border">
-                                    <img src="~/assets/img/product/product-details-img2.jpg" alt="product-details">
-                                </div>
-                                <div class="pro-nav-thumb product-details-img-border">
-                                    <img src="~/assets/img/product/product-details-img3.jpg" alt="product-details">
-                                </div>
-                                <div class="pro-nav-thumb product-details-img-border">
-                                    <img src="~/assets/img/product/product-details-img4.jpg" alt="product-details">
-                                </div>
-                                <div class="pro-nav-thumb product-details-img-border">
-                                    <img src="~/assets/img/product/product-details-img5.jpg" alt="product-details">
-                                </div> *@
+                                @*  <div class="pro-nav-thumb product-details-img-border">
+                                        <img src="~/assets/img/product/product-details-img1.jpg" alt="product-details">
+                                    </div>
+                                    <div class="pro-nav-thumb product-details-img-border">
+                                        <img src="~/assets/img/product/product-details-img2.jpg" alt="product-details">
+                                    </div>
+                                    <div class="pro-nav-thumb product-details-img-border">
+                                        <img src="~/assets/img/product/product-details-img3.jpg" alt="product-details">
+                                    </div>
+                                    <div class="pro-nav-thumb product-details-img-border">
+                                        <img src="~/assets/img/product/product-details-img4.jpg" alt="product-details">
+                                    </div>
+                                    <div class="pro-nav-thumb product-details-img-border">
+                                        <img src="~/assets/img/product/product-details-img5.jpg" alt="product-details">
+                                    </div> *@
                             </div>
                         </div>
                         <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6">
                             <div class="product-details-des">
-                                <div class="manufacturer-name">
+                                @*<div class="manufacturer-name">
                                     <a href="product-details.html">HasTech</a>
-                                </div>
-                                <h3 class="product-name">@Model.Title</h3>
+                                </div>*@
+                                <h3 class="product-name">@Model.ShapeName @Model.BandWidth @Model.Length @Model.Sku</h3>
                                 <div class="ratings d-flex">
                                     <span><i class="fa fa-star-o"></i></span>
                                     <span><i class="fa fa-star-o"></i></span>
@@ -98,47 +100,39 @@
                                     <span>In stock</span>
                                 </div>
                                 <p class="pro-desc">
-                                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
-                                    eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
-                                    voluptua. Phasellus id nisi quis justo tempus mollis sed et dui. In hac
-                                    habitasse platea dictumst.
+                                    @Model.Description
                                 </p>
                                 <div class="quantity-cart-box d-flex align-items-center">
-                                    <h6 class="option-title">qty:</h6>
-                                    <div class="quantity">
-                                        <div class="pro-qty"><input type="text" value="1"></div>
-                                    </div>
+                                    @*<h6 class="option-title">qty:</h6>
+            <div class="quantity">
+                <div class="pro-qty"><input type="text" value="1"></div>
+            </div>*@
                                     <div class="action_link">
                                         <a class="btn btn-cart2" href="#">Add to cart</a>
                                     </div>
                                 </div>
-                                @* <div class="pro-size">
-                                    <h6 class="option-title">size :</h6>
-                                    <select class="nice-select">
-                                        <option>S</option>
-                                        <option>M</option>
-                                        <option>L</option>
-                                        <option>XL</option>
-                                    </select>
-                                </div> *@
                                 <div class="color-option">
-                                    <h6 class="option-title">color :</h6>
+                                    <h6 class="option-title">Metals :</h6>
                                     <ul class="color-categories">
-                                        <li>
-                                            <a class="c-lightblue" href="#" title="LightSteelblue"></a>
-                                        </li>
-                                        <li>
-                                            <a class="c-darktan" href="#" title="Darktan"></a>
-                                        </li>
-                                        <li>
-                                            <a class="c-grey" href="#" title="Grey"></a>
-                                        </li>
-                                        <li>
-                                            <a class="c-brown" href="#" title="Brown"></a>
-                                        </li>
+                                        @foreach (var item in Model.Metals)
+                                        {
+                                            <li>
+                                                <a class="@item.SymbolName" href="#" title="@item.Name"></a>
+                                            </li>
+                                        }
                                     </ul>
                                 </div>
-                                
+                                <div class="color-option">
+                                    <h6 class="option-title">Carat Sizes :</h6>
+                                    <ul class="size-categories" style="padding-left:20px;">
+                                        @foreach (var item in Model.CaratSizes)
+                                        {
+                                            <li>
+                                                <a class="text-black-50" href="#" title="@item.Name">@item.Name</a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
 
                                 <div class="useful-links">
                                     <a href="#" data-bs-toggle="tooltip" title="Compare"><i class="pe-7s-refresh-2"></i>compare</a>
@@ -195,16 +189,7 @@
                                     <div class="tab-pane fade show active" id="tab_one">
                                         <div class="tab-one">
                                             <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam
-                                                fringilla augue nec est tristique auctor. Ipsum metus feugiat
-                                                sem, quis fermentum turpis eros eget velit. Donec ac tempus
-                                                ante. Fusce ultricies massa massa. Fusce aliquam, purus eget
-                                                sagittis vulputate, sapien libero hendrerit est, sed commodo
-                                                augue nisi non neque.Cras neque metus, consequat et blandit et,
-                                                luctus a nunc. Etiam gravida vehicula tellus, in imperdiet
-                                                ligula euismod eget. Pellentesque habitant morbi tristique
-                                                senectus et netus et malesuada fames ac turpis egestas. Nam
-                                                erat mi, rutrum at sollicitudin rhoncus
+                                                @Model.Description
                                             </p>
                                         </div>
                                     </div>
@@ -212,12 +197,23 @@
                                         <table class="table table-bordered">
                                             <tbody>
                                                 <tr>
-                                                    <td>color</td>
-                                                    <td>black, blue, red</td>
+                                                    <td>metals :</td>
+                                                    <td>
+                                                        @foreach (var item in Model.Metals)
+                                                        {
+                                                            @item.Name
+                                                        }
+                                                    </td>
                                                 </tr>
                                                 <tr>
-                                                    <td>size</td>
-                                                    <td>L, M, S</td>
+                                                    <td>size :</td>
+                                                    <td>
+                                                        @foreach (var item in Model.CaratSizes)
+                                                        {
+                                                            @item.Name
+                                                        }
+
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>

@@ -403,17 +403,21 @@ namespace APIs.Controllers
         {
             var products = await _productRepository.GetProductStyleList();
 
-            //var query = products.AsQueryable();
+            var query = products.AsQueryable();
 
             ////Apply filters
             //if (filters.Carats?.Any() == true)
             //{
             //    query = query.Where(p => filters.Carats.Contains(p.Carat));
             //}
-            //if (filters.Shapes?.Any() == true)
-            //{
-            //    query = query.Where(p => filters.Shapes.Contains(p.ShapeName));
-            //}
+            if (filters.Shapes?.Any() == true)
+            {
+                query = query.Where(p => p.Shapes.Any(shape => filters.Shapes.Contains(shape.Id.ToString())));
+            }
+            if (filters.Metals?.Any() == true)
+            {
+                query = query.Where(p => p.Metals.Any(metal => filters.Metals.Contains(metal.Id.ToString())));
+            }
             //if (filters.category.Any() == true)
             //{
             //    query = query.Where(p => filters.category.Contains(p.CategoryName));
@@ -431,9 +435,9 @@ namespace APIs.Controllers
             //    query = query.Where(p => p.Price <= filters.ToPrice.Value);
             //}
 
-            //products = await query.ToListAsync();
+           // products = await query.ToListAsync();
 
-            return Ok(products);
+            return Ok(query);
 
         }
 
@@ -741,7 +745,7 @@ namespace APIs.Controllers
         #region Get APIs
 
         [HttpPost("GetProductDetailsList")]
-        public async Task<IActionResult> GetProductDetailsList()
+        public async Task<IActionResult> GetProductDetailsList(ProductFilters filters, int pageNumber = 1, int pageSize = 5000)
         {
             var result = await _productRepository.GetProductStyleList();
             return Ok(result);

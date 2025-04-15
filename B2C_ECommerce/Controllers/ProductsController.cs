@@ -36,6 +36,7 @@ namespace B2C_ECommerce.Controllers
             var productFilters = new ProductPropertyListDTO();
             productFilters.Colors = (await _productRepository.GetProductColorList());
             productFilters.CollectionList = (await _productRepository.GetSubcategoryList());
+            productFilters.Shapes = (await _productRepository.GetShapeList());
 
             try { 
                 productFilters.StylesList = await _productRepository.GetCategoriesList();
@@ -52,7 +53,7 @@ namespace B2C_ECommerce.Controllers
         public async Task<IActionResult> ProductDetails(string id)
         {
             var result = await _productRepository.GetProductByProductId(id);
-            return View();
+            return View(result);
         }
     }
 }

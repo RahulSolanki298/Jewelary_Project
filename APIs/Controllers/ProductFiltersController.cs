@@ -50,5 +50,27 @@ namespace APIs.Controllers
             var result = await _productPropertyRepository.GetProductSubCategoryList();
             return Ok(result);
         }
+
+        [HttpGet("get-shape-list")]
+        public async Task<ActionResult> GetShapeList()
+        {
+            var result = await _productPropertyRepository.GetProductShapeList();
+            return Ok(result);
+        }
+
+        [HttpGet("get-price-ranges")]
+        public async Task<ActionResult> GetPriceRangesAsync()
+        {
+            var result = await _productPropertyRepository.GetPriceRangeAsync();
+            return Ok(result);
+        }
+
+
+        [HttpGet("get-carat-ranges")]
+        public async Task<ActionResult> GetCaratRangesAsync()
+        {
+            var result = await _productPropertyRepository.GetProductCaratSizeList();
+            return Ok(result);
+        }
     }
 }

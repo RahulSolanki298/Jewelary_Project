@@ -14,7 +14,7 @@
                     <nav aria-label="breadcrumb">
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="index.html"><i class="fa fa-home"></i></a></li>
-                            <li class="breadcrumb-item active" aria-current="page">@ViewBag.Title</li>
+                            <li class="breadcrumb-item active" aria-current="page">Fine Jewelry</li>
                         </ul>
                     </nav>
                 </div>
@@ -25,6 +25,13 @@
  <!-- breadcrumb area end -->
 <!-- page main wrapper start -->
  <div class="shop-main-wrapper filter-padding">
+     <div class="container-fluid">
+         <div class="row">
+             <div class="col-lg-12 col-md-12 col-sm-12 text-center">
+                 <h2>Fine Jewelry</h2>
+             </div>
+         </div>
+     </div>
 
     <div class="container-fluid">
         <div class="row">
@@ -35,8 +42,8 @@
 
         <div id="FilterSection" style="display:none;">
             <div class="top-bar">
-                <div class="reset">RESET</div>
-                <div class="filterclose" id="filterclose">✕</div>
+                <div class="reset btn btn-dark text-capitalize" id="btnRestFilter" title="RESET">RESET</div>
+                <div class="filterclose btn btn-danger text-capitalize" id="filterclose" title="CLOSE">✕</div>
             </div>
             <div class="Main-Header" id="ProductFilters">
                 
@@ -53,7 +60,7 @@
                                 <div class="top-bar-left">
                                     <div class="product-view-mode">
                                         <a class="active" href="#" data-target="grid-view" data-bs-toggle="tooltip" title="Grid View"><i class="fa fa-th"></i></a>
-                                        <a href="#" data-target="list-view" data-bs-toggle="tooltip" title="List View"><i class="fa fa-list"></i></a>
+                                        @*<a href="#" data-target="list-view" data-bs-toggle="tooltip" title="List View"><i class="fa fa-list"></i></a>*@
                                     </div>
                                     <div class="product-amount">
                                         <p>Showing 1–16 of 21 results</p>
@@ -114,12 +121,12 @@
         const getArrayValue = id => $(id).val() || [];
 
         var filters = {
-            Metals: getValue('#txtMetalIds'),
-            Carats: getValue('#caratSizeIds'),
-            Shapes: getArrayValue('#shapes'),
-            category: getValue('#txtClarityIds'),
-            FromPrice: getValue('#minPrice'),
-            ToPrice: getValue('#maxPrice'),
+            Metals: getArrayValue('.metal-grp'),
+            Shapes: getArrayValue('.shape-item'),
+            FromPrice: getValue('#minPrice1'),
+            ToPrice: getValue('#maxPrice1'),
+            FromCarat: getValue('#minCarat'),
+            ToCarat: getValue('#maxCarat'),
         };
 
         function showLoader() {
@@ -128,13 +135,21 @@
 
         function hideLoader() {
             $('#txtLoader').hide(); // This hides the loader
-        }
+    }
+
+    // Generic slider initializer
+    function initSlider(selector, options) {
+        $(selector).slider({
+            range: true,
+            ...options
+        });
+    }
 
         $(document).ready(function(){
             loadAllFunctions();
 
-            $("#minPrice").val("$" + $("#price-slider").slider("values", 0));
-            $("#maxPrice").val("$" + $("#price-slider").slider("values", 1));
+            //$("#minPrice").val("$" + $("#price-slider").slider("values", 0));
+            //$("#maxPrice").val("$" + $("#price-slider").slider("values", 1));
 
 
             $("#filterclose").click(function () {
@@ -144,20 +159,78 @@
             $("#filterOpen").click(function () {
                 $("#FilterSection").show();
             });
+            
+            $("#btnViewDesign").click(function () {
+                $("#FilterSection").hide();
+            });
 
+            // Shape button click
+            $("#ProductFilters").on("click", ".shape-item", function () {
+                debugger;
+                const shapeId = $(this).attr('shapeId');
+                $(this).toggleClass('shapeselected');
 
-            // Generic slider initializer
-            function initSlider(selector, options) {
-                $(selector).slider({
-                    range: true,
-                    ...options
-                });
-            }
+                if ($(this).hasClass('shapeselected')) {
+                    if (!filters.Shapes.includes(shapeId)) {
+                        filters.Shapes.push(shapeId);
+                    }
+                } else {
+                    const index = filters.Shapes.indexOf(shapeId);
+                    if (index !== -1) filters.Shapes.splice(index, 1);
+                }
+                console.log(filters);
+                GetProducts(filters, page, rangeVal);
+            });
+
+            //$("#ProductFilters").on("change", ".metal-grp", function () {
+            //    debugger;
+            //    const metalId = $(this).attr('metalId');
+
+            //    if ($(this).is(":checked")) {
+            //        // Add the metalId if it's not already in the array (to avoid duplicates)
+            //        if (!filters.Metals.includes(metalId)) {
+            //            filters.Metals.push(metalId);
+            //        }
+            //    } else {
+            //        // If the checkbox is unchecked, remove the metalId from the array
+            //        const index = filters.Metals.indexOf(metalId);
+            //        if (index !== -1) {
+            //            filters.Metals.splice(index, 1);
+            //        }
+            //    }
+            //    console.log(filters);
+            //    GetProducts(filters, page, rangeVal);
+            //});
+
+            $("#ProductFilters").on("change", ".metal-grp", function () {
+                debugger;
+                const metalId = $(this).attr('metalId'); // Get the value of the checkbox (e.g., Diamond, Gemstone, etc.)
+
+                if ($(".metalcheckbox").is(":checked")) {
+                    // Add the stone type to the filters if it's not already in the array (to avoid duplicates)
+                    if (!filters.Metals.includes(metalId)) {
+                        filters.Metals.push(metalId);
+                    }
+                } else {
+                    // If the checkbox is unchecked, remove the stone type from the array
+                    const index = filters.Metals.indexOf(metalId);
+                    if (index !== -1) {
+                        filters.Metals.splice(index, 1);
+                    }
+                }
+
+                console.log(filters); // Log the current state of filters to the console
+
+                // Call the GetProducts function to fetch the filtered products
+                GetProducts(filters, page, rangeVal);
+            });
+
 
             // Price Slider
             initSlider("#price-slider1", {
                 min: 500, max: 50000, step: 0.01, values: [5000, 30000],
                 slide: (e, ui) => {
+                    debugger;
                     $("#minPrice1").val("$" + ui.values[0]);
                     $("#maxPrice1").val("$" + ui.values[1]);
                 }

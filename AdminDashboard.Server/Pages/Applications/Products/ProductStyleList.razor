@@ -64,96 +64,96 @@
 
 @code {
 
-	private IBrowserFile selectedFile;
+    private IBrowserFile selectedFile;
 
-	private readonly DialogOptions _maxWidth = new() { MaxWidth = MaxWidth.Medium, FullWidth = true };
-	private bool hower = true;
-	private bool dense = true;
-	private string searchstring = "";
-	private ProductDTO product = new ProductDTO();
-	private IEnumerable<ProductDTO> productList { get; set; } = new List<ProductDTO>();
-	private bool IsLoading { get; set; } = false;
-	private int currentPage = 0;
-	private int pageSize = 5;
-	private MudMessageBox _mudMessageBox;
-	private MudDialog BulkAddDialog;
-	private string uploadedFilePath = "";
+    private readonly DialogOptions _maxWidth = new() { MaxWidth = MaxWidth.Medium, FullWidth = true };
+    private bool hower = true;
+    private bool dense = true;
+    private string searchstring = "";
+    private ProductDTO product = new ProductDTO();
+    private IEnumerable<ProductDTO> productList { get; set; } = new List<ProductDTO>();
+    private bool IsLoading { get; set; } = false;
+    private int currentPage = 0;
+    private int pageSize = 5;
+    private MudMessageBox _mudMessageBox;
+    private MudDialog BulkAddDialog;
+    private string uploadedFilePath = "";
 
-	protected override async Task OnInitializedAsync()
-	{
-		IsLoading = true;
-		await GetProductPropertyList();
-		IsLoading = false;
-	}
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoading = true;
+        //await GetProductPropertyList();
+        IsLoading = false;
+    }
 
-	private async Task HandleFileSelected(InputFileChangeEventArgs e)
-	{
-		if (e.File == null)
-		{
-			Snackbar.Add("No file selected.", Severity.Warning);
-			return;
-		}
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        if (e.File == null)
+        {
+            Snackbar.Add("No file selected.", Severity.Warning);
+            return;
+        }
 
-		selectedFile = e.File;
+        selectedFile = e.File;
 
-		try
-		{
-			var fileContent = new MultipartFormDataContent();
-			var stream = selectedFile.OpenReadStream(maxAllowedSize: 10_000_000); // Set max size limit (10MB in this case)
-			var fileStreamContent = new StreamContent(stream);
-			fileStreamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+        try
+        {
+            var fileContent = new MultipartFormDataContent();
+            var stream = selectedFile.OpenReadStream(maxAllowedSize: 10_000_000); // Set max size limit (10MB in this case)
+            var fileStreamContent = new StreamContent(stream);
+            fileStreamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
 
-			fileContent.Add(fileStreamContent, "file", selectedFile.Name);
+            fileContent.Add(fileStreamContent, "file", selectedFile.Name);
 
-			var httpClient = new HttpClient();
-			var response = await httpClient.PostAsync($"{SD.BaseApiUrl}/api/product/BulkProductUpload", fileContent);
+            var httpClient = new HttpClient();
+            var response = await httpClient.PostAsync($"{SD.BaseApiUrl}/api/product/BulkProductUpload", fileContent);
 
-			if (response.IsSuccessStatusCode)
-			{
-				Snackbar.Add("Products uploaded successfully!", Severity.Success);
-				await GetProductPropertyList(); // Refresh the product list after successful upload
-			}
-			else
-			{
-				Snackbar.Add("Failed to upload products. Please try again.", Severity.Error);
-			}
-		}
-		catch (Exception ex)
-		{
-			Snackbar.Add($"Error: {ex.Message}", Severity.Error);
-		}
-	}
+            if (response.IsSuccessStatusCode)
+            {
+                Snackbar.Add("Products uploaded successfully!", Severity.Success);
+                //await GetProductPropertyList(); // Refresh the product list after successful upload
+            }
+            else
+            {
+                Snackbar.Add("Failed to upload products. Please try again.", Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error: {ex.Message}", Severity.Error);
+        }
+    }
 
-	private async Task GetProductPropertyList()
-	{
-		productList = await productRepository.GetProductStyleList();
-	}
+    //private async Task GetProductPropertyList()
+    //{
+    //	productList = await productRepository.GetProductStyleList();
+    //}
 
-	private bool Search(ProductDTO product)
-	{
-		return product.Title?.Contains(searchstring, StringComparison.OrdinalIgnoreCase) == true;
-	}
+    private bool Search(ProductDTO product)
+    {
+        return product.Title?.Contains(searchstring, StringComparison.OrdinalIgnoreCase) == true;
+    }
 
-	private void OpenDialog()
-	{
-		var options = new DialogOptions { CloseButton = true };
+    private void OpenDialog()
+    {
+        var options = new DialogOptions { CloseButton = true };
 
-		Dialog.Show<UploadStyleFile>("Show Upload Collection", options);
-	}
+        Dialog.Show<UploadStyleFile>("Show Upload Collection", options);
+    }
 
-	private void Edit(Guid productId)
-	{
-		// Implement edit logic here
-	}
+    private void Edit(Guid productId)
+    {
+        // Implement edit logic here
+    }
 
-	private void Delete(Guid productId)
-	{
-		// Implement delete logic here
-	}
+    private void Delete(Guid productId)
+    {
+        // Implement delete logic here
+    }
 
-	private void OnBulkAddProductClick()
-	{
-		BulkAddDialog.Show();
-	}
+    private void OnBulkAddProductClick()
+    {
+        BulkAddDialog.Show();
+    }
 
 }

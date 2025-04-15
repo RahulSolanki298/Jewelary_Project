@@ -6216,6 +6216,7 @@ a {
     align-items: center;
     justify-content: flex-start;
     gap: 10px;
+    padding: 5px 5px;
 }
 
     .shape-item img {
@@ -6223,6 +6224,11 @@ a {
         height: 35px;
         margin-bottom: 5px;
     }
+
+    .shapeselected {
+        border: 1px solid black;
+    }
+
 
 .category-grid {
     display: grid;

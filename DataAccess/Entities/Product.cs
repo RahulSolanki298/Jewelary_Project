@@ -32,7 +32,7 @@ namespace DataAccess.Entities
         // If Gold
         public string Length { get; set; }
         public int? KaratId { get; set; }
-        public decimal? BandWidth { get; set; }
+        public string BandWidth { get; set; }
         public int? GoldPurityId { get; set; } // 18 k
         public int? GoldWeightId { get; set; } // 3.00 GMS
         public int? CTW { get; set; }

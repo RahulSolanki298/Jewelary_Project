@@ -24,5 +24,12 @@ namespace Business.Repository.IRepository
         Task<IEnumerable<CategoryDTO>> GetProductCategoryList();
 
         Task<IEnumerable<SubCategoryDTO>> GetProductSubCategoryList();
+
+        Task<IEnumerable<ProductPropertyDTO>> GetProductShapeList();
+
+
+        Task<PriceRanges> GetPriceRangeAsync();
+
+
     }
 }

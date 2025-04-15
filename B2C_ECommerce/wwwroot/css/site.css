@@ -635,6 +635,18 @@ body {
         background-color: #151542 !important
     }
 
+.btn-danger {
+    color: white !important;
+    padding: .375rem .75rem !important;
+    border: 1px solid #E83F25 !important;
+    background-color: #E83F25 !important
+}
+
+    .btn-danger:hover {
+        color: white !important;
+        background-color: #E83F25 !important
+    }
+
 .text-upper {
     text-transform:uppercase;
 }
@@ -1028,3 +1040,64 @@ body {
     -webkit-animation: 1s loader-01 linear infinite;
     animation: 1s loader-01 linear infinite
 }
+
+
+/* Product Filters */
+
+/*.product-shape-btn span.shape-name {
+    
+}*/
+
+/*.product-shape-btn {
+    width: 15%;
+    height: auto;
+    padding: 0px 2px 10px;*/
+    /*margin:10px;*/
+    /*margin: 5px 0px;
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: border-color 0.3s;
+    border: solid dashed 1px;
+}
+
+    .product-shape-btn img {*/
+        /* 
+        height: auto;
+        object-fit: cover;
+        border-radius: 5px;
+        padding: 7px;*/
+        /*width: 43px;
+        vertical-align: middle;
+        border-style: none;
+        max-width: 100%;
+        height: auto;
+        text-align: center;
+        position: relative;
+        overflow-clip-margin: content-box;
+        overflow: clip;
+    }
+
+    .product-shape-btn span.shape-name {
+        display: none;
+        padding: 1px 1px;
+        width: 100%;*/
+        /*display: block;*/
+        /*display: none;
+    }
+
+    .product-shape-btn .selected {
+        border: 2px solid #151542;*/ /* Outline when selected */
+    /*}
+
+    .product-shape-btn:hover {
+        border: 1px solid gray;
+        display: block;
+    }
+
+        .product-shape-btn:hover span.shape-name {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: bolder;
+            display: block;
+        }*/
+
