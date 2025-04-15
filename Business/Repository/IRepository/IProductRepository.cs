@@ -32,5 +32,7 @@ namespace Business.Repository.IRepository
         Task<bool> SaveNewProductList(List<ProductDTO> products);
 
         Task<bool> UpdateProductDetailsByExcel(List<ProductDTO> products);
+
+        Task<ProductDTO> GetProductWithDetails(string productId);
     }
 }

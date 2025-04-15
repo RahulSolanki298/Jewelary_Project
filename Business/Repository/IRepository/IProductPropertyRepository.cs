@@ -23,6 +23,6 @@ namespace Business.Repository.IRepository
 
         Task<IEnumerable<CategoryDTO>> GetProductCategoryList();
 
-        Task<IEnumerable<CategoryDTO>> GetProductSubCategoryList();
+        Task<IEnumerable<SubCategoryDTO>> GetProductSubCategoryList();
     }
 }

@@ -11,9 +11,11 @@ namespace B2C_ECommerce.IServices
 
         Task<List<ProductPropertyDTO>> GetProductColorList();
 
-        Task<List<ProductStyleDTO>> GetCategoriesList();
+        Task<List<SubCategoryDTO>> GetSubcategoryList();
 
-        Task<List<ProductCollectionDTO>> GetSubcategoryList();
+        Task<List<CategoryDTO>> GetCategoriesList();
+
+        Task<ProductDTO> GetProductByProductId(string productId);
 
     }
 }

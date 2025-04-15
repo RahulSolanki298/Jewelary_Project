@@ -95,7 +95,7 @@ namespace Business.Repository
             
             var colors = await (from prd in _context.ProductProperty
                                 join met in _context.ProductProperty on prd.ParentId equals met.Id
-                                where prd.IsActive==true
+                                where prd.IsActive==true && met.Name==SD.Metal
                                 select new ProductPropertyDTO
                                 {
                                     Id = prd.Id,
@@ -121,7 +121,7 @@ namespace Business.Repository
         {
             var colors = await (from prd in _context.ProductProperty
                                 join met in _context.ProductProperty.Where(x => x.Name == SD.CaratSize && x.IsActive == true) on prd.ParentId equals met.Id
-                                where prd.IsActive==true
+                                where prd.IsActive==true && prd.Name==SD.CaratSize
                                 select new ProductPropertyDTO
                                 {
                                     Id = prd.Id,
@@ -150,10 +150,10 @@ namespace Business.Repository
         }
 
 
-        public async Task<IEnumerable<CategoryDTO>> GetProductSubCategoryList()
+        public async Task<IEnumerable<SubCategoryDTO>> GetProductSubCategoryList()
         {
             var categories = await (from prd in _context.SubCategory
-                                    select new CategoryDTO
+                                    select new SubCategoryDTO
                                     {
                                         Id = prd.Id,
                                         Name = prd.Name,

@@ -49,8 +49,9 @@ namespace B2C_ECommerce.Controllers
         }
 
         [HttpGet]
-        public IActionResult ProductDetails(string id)
+        public async Task<IActionResult> ProductDetails(string id)
         {
+            var result = await _productRepository.GetProductByProductId(id);
             return View();
         }
     }

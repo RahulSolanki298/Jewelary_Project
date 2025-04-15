@@ -36,5 +36,19 @@ namespace APIs.Controllers
             var result = await _productPropertyRepository.GetCategories();
             return Ok(result);
         }
+
+        [HttpGet("Get-Category-List")]
+        public async Task<IActionResult> GetCategoryList()
+        {
+            var result = await _productPropertyRepository.GetProductCategoryList();
+            return Ok(result);
+        }
+
+        [HttpGet("Get-SubCat-List")]
+        public async Task<IActionResult> GetSubCategoryList()
+        {
+            var result = await _productPropertyRepository.GetProductSubCategoryList();
+            return Ok(result);
+        }
     }
 }

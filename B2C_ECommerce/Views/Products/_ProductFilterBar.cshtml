@@ -10,7 +10,7 @@
             <div class="category-grid">
                 @foreach (var item in Model.StylesList)
                 {
-                    <div class="category-item"><input class="checkbox" type="checkbox">@item.StyleName</div>
+                    <div class="category-item"><input class="checkbox" type="checkbox">@item.Name</div>
                 }
             </div>
         }
@@ -41,7 +41,7 @@
             <div class="brand-grid">
                 @foreach (var item in Model.StylesList)
                 {
-                    <div class="brand-item"><input class="checkbox" type="checkbox">@item.StyleName</div>
+                    <div class="brand-item"><input class="checkbox" type="checkbox">@item.Name</div>
 
                 }
             </div>

@@ -261,6 +261,7 @@ namespace APIs.Controllers
         [HttpPost("BulkNewProductUpload")]
         public async Task<IActionResult> UploadNewExcel(IFormFile file)
         {
+            var product = new ProductDTO();
             if (file == null || file.Length == 0)
                 return BadRequest("No file uploaded.");
 
@@ -282,6 +283,7 @@ namespace APIs.Controllers
                 List<ProductDTO> products = new();
                 string dateString = string.Empty;
                 //var ProductDate = new DateTime();
+                int index = 0;
                 for (int row = 5; row <= rowCount; row++)
                 {
                     //dateString = worksheet.Cells[row, 1].Text;
@@ -289,31 +291,53 @@ namespace APIs.Controllers
                     //{
                     //    ProductDate = DateTime.ParseExact(dateString, "M/d/yy", CultureInfo.InvariantCulture);
                     //}
-
-                    var product = new ProductDTO
+                    if (index==0)
                     {
-                        Id = Guid.NewGuid(),
-                        //ProductDate = ProductDate,
-                        // CategoryName = worksheet.Name,
-                        CategoryName = "Rings",
-                        VenderName = worksheet.Cells[row, 6].Text,
-                        StyleName = worksheet.Cells[row, 7].Text,
-                        Sku = worksheet.Cells[row, 7].Text,
-                        Length = worksheet.Cells[row, 9].Text,
-                        BandWidth = worksheet.Cells[row, 10].Text,
-                        GoldWeight = worksheet.Cells[row, 11].Text,
-                        CTW = worksheet.Cells[row, 12].Text,
-                        ShapeName = worksheet.Cells[row, 13].Text,
-                        CenterCaratName = worksheet.Cells[row, 14].Text,
-                        Grades = worksheet.Cells[row, 21].Text,
-                        ColorName = worksheet.Cells[row, 15].Text,
-                    };
+                        index += 1;
 
-                    // Convert numeric values safely
-                    product.DiaWT = decimal.TryParse(worksheet.Cells[row, 19].Text, out var diaWt) ? diaWt : 0;
-                    product.NoOfStones = int.TryParse(worksheet.Cells[row, 20].Text, out var noOfStones) ? noOfStones : 0;
-                    product.Price = decimal.TryParse(worksheet.Cells[row, 25].Text, out var Sprice) ? Sprice : 0;
-                    product.UnitPrice = product.Price;
+                    }
+
+                    if (index==1)
+                    {
+                        index += 1;
+                        product = new ProductDTO
+                        {
+                            Id = Guid.NewGuid(),
+                            //ProductDate = ProductDate,
+                            // CategoryName = worksheet.Name,
+                            CategoryName = "Rings",
+                            VenderName = worksheet.Cells[row, 6].Text,
+                            StyleName = worksheet.Cells[row, 7].Text,
+                            Sku = worksheet.Cells[row, 7].Text,
+                            Length = worksheet.Cells[row, 9].Text,
+                            BandWidth = worksheet.Cells[row, 10].Text,
+                            CTW = worksheet.Cells[row, 12].Text,
+                            ShapeName = worksheet.Cells[row, 13].Text,
+                            CenterCaratName = worksheet.Cells[row, 14].Text,
+                            Grades = worksheet.Cells[row, 21].Text,
+                            ColorName = worksheet.Cells[row, 15].Text,
+                        };
+
+                        // Convert numeric values safely
+                        product.DiaWT = decimal.TryParse(worksheet.Cells[row, 19].Text, out var diaWt) ? diaWt : 0;
+                        product.NoOfStones = int.TryParse(worksheet.Cells[row, 20].Text, out var noOfStones) ? noOfStones : 0;
+                        product.Price = decimal.TryParse(worksheet.Cells[row, 25].Text, out var Sprice) ? Sprice : 0;
+                        product.UnitPrice = product.Price;
+                    }
+                    else
+                    {
+                        if (index > 3)
+                        {
+                            index = 0;
+                        }
+                        index += 1;
+                        product.BandWidth = worksheet.Cells[row, 10].Text;
+                        product.CenterCaratName = worksheet.Cells[row, 14].Text;
+
+                        
+
+                    }
+
 
                     // Handling multiple metal colors
                     int lastSpaceIndex = product.ColorName.LastIndexOf(' ');
@@ -332,7 +356,7 @@ namespace APIs.Controllers
                     if (productMetals.Length > 0)
                     {
                         //string carat = productMetals[0]; // Store carat separately
-                        foreach (var metal in productMetals.Skip(1)) // Skip first item (carat)
+                        foreach (var metal in productMetals) // Skip first item (carat)
                         {
                             products.Add(new ProductDTO
                             {
@@ -374,7 +398,6 @@ namespace APIs.Controllers
             }
         }
 
-
         [HttpPost("GetProductsByFilters")]
         public async Task<IActionResult> GetProductsByFilters(ProductFilters filters, int pageNumber = 1, int pageSize = 10)
         {
@@ -382,11 +405,7 @@ namespace APIs.Controllers
 
             //var query = products.AsQueryable();
 
-            // Apply filters
-            //if (!filters.Metals.Any()&& filters.Shapes.Any() ? string.Join(",", filters.Shapes) : (object)DBNull.Value)
-            //{
-            //    query = query.Where(p => filters.Metals.Contains(p.ColorName));
-            //}
+            ////Apply filters
             //if (filters.Carats?.Any() == true)
             //{
             //    query = query.Where(p => filters.Carats.Contains(p.Carat));
@@ -417,6 +436,15 @@ namespace APIs.Controllers
             return Ok(products);
 
         }
+
+        [HttpGet("GetProductDetails/{productId}")]
+        public async Task<IActionResult> GetProductsByFilters(string productId)
+        {
+            var products = await _productRepository.GetProductWithDetails(productId);
+            return Ok(products);
+
+        }
+
 
 
 

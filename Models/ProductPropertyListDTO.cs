@@ -8,9 +8,9 @@ namespace Models
 
         public List<ProductPropertyDTO> CaratSizes { get; set; }
 
-        public List<ProductCollectionDTO> CollectionList { get; set; }
+        public List<SubCategoryDTO> CollectionList { get; set; }
 
-        public List<ProductStyleDTO> StylesList { get; set; }
+        public List<CategoryDTO> StylesList { get; set; }
 
 
     }

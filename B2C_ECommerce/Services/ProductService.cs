@@ -47,6 +47,32 @@ namespace B2C_ECommerce.Services
             }
         }
 
+        public async Task<ProductDTO> GetProductByProductId(string productId)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(productId))
+                    throw new ArgumentException("Product ID cannot be null or empty.", nameof(productId));
+
+                var requestUrl = $"{SD.BaseApiUrl}/api/product/{productId}";
+
+                using var response = await _httpClient.GetAsync(requestUrl);
+                response.EnsureSuccessStatusCode();
+
+                var product = await response.Content.ReadFromJsonAsync<ProductDTO>();
+                return product ?? new ProductDTO();
+            }
+            catch (HttpRequestException httpEx)
+            {
+                throw new Exception($"HTTP request error while fetching product {productId}: {httpEx.Message}", httpEx);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching product with ID {productId}: {ex.Message}", ex);
+            }
+        }
+
+
 
         public async Task<List<ProductPropertyDTO>> GetProductColorList()
         {
@@ -77,11 +103,11 @@ namespace B2C_ECommerce.Services
             }
         }
 
-        public async Task<List<ProductStyleDTO>> GetCategoriesList()
+        public async Task<List<CategoryDTO>> GetCategoriesList()
         {
             try
             {
-                var requestUrl = $"{SD.BaseApiUrl}/api/productFilters/Get-Style-List";
+                var requestUrl = $"{SD.BaseApiUrl}/api/productFilters/Get-Category-List";
 
 
                 using var response = await _httpClient.GetAsync(requestUrl);
@@ -93,9 +119,9 @@ namespace B2C_ECommerce.Services
                     throw new Exception("API response content is null.");
                 }
 
-                var result = await response.Content.ReadFromJsonAsync<List<ProductStyleDTO>>();
+                var result = await response.Content.ReadFromJsonAsync<List<CategoryDTO>>();
 
-                return result ?? new List<ProductStyleDTO>();
+                return result ?? new List<CategoryDTO>();
             }
             catch (HttpRequestException httpEx)
             {
@@ -107,12 +133,12 @@ namespace B2C_ECommerce.Services
             }
         }
 
-        public async Task<List<ProductCollectionDTO>> GetSubcategoryList()
+        public async Task<List<SubCategoryDTO>> GetSubcategoryList()
         {
             try
             {
                 //Get-Collection-List
-                var requestUrl = $"{SD.BaseApiUrl}/api/productFilters/Get-Collection-List";
+                var requestUrl = $"{SD.BaseApiUrl}/api/productFilters/Get-SubCat-List";
 
                 using var response = await _httpClient.GetAsync(requestUrl);
 
@@ -123,9 +149,9 @@ namespace B2C_ECommerce.Services
                     throw new Exception("API response content is null.");
                 }
 
-                var result = await response.Content.ReadFromJsonAsync<List<ProductCollectionDTO>>();
+                var result = await response.Content.ReadFromJsonAsync<List<SubCategoryDTO>>();
 
-                return result ?? new List<ProductCollectionDTO>();
+                return result ?? new List<SubCategoryDTO>();
             }
             catch (HttpRequestException httpEx)
             {
