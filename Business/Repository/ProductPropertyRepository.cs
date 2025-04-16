@@ -23,7 +23,7 @@ namespace Business.Repository
         public async Task<IEnumerable<ProductProperty>> GetProductPropertyList() => await _context.ProductProperty.ToListAsync();
 
         public async Task<ProductProperty> GetProductPropertyById(int Id) => await _context.ProductProperty.FirstOrDefaultAsync(x=>x.Id==Id);
-        
+
         public async Task<bool> DeleteProductProperty(int Id)
         {
             try

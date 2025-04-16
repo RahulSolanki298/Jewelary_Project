@@ -129,6 +129,7 @@
             ToCarat: getValue('#maxCarat'),
         };
 
+        
         function showLoader() {
             $('#txtLoader').show(); // This shows the loader
         }
@@ -151,7 +152,6 @@
             //$("#minPrice").val("$" + $("#price-slider").slider("values", 0));
             //$("#maxPrice").val("$" + $("#price-slider").slider("values", 1));
 
-
             $("#filterclose").click(function () {
                 $("#FilterSection").hide();
             });
@@ -166,7 +166,6 @@
 
             // Shape button click
             $("#ProductFilters").on("click", ".shape-item", function () {
-                debugger;
                 const shapeId = $(this).attr('shapeId');
                 $(this).toggleClass('shapeselected');
 
@@ -181,26 +180,6 @@
                 console.log(filters);
                 GetProducts(filters, page, rangeVal);
             });
-
-            //$("#ProductFilters").on("change", ".metal-grp", function () {
-            //    debugger;
-            //    const metalId = $(this).attr('metalId');
-
-            //    if ($(this).is(":checked")) {
-            //        // Add the metalId if it's not already in the array (to avoid duplicates)
-            //        if (!filters.Metals.includes(metalId)) {
-            //            filters.Metals.push(metalId);
-            //        }
-            //    } else {
-            //        // If the checkbox is unchecked, remove the metalId from the array
-            //        const index = filters.Metals.indexOf(metalId);
-            //        if (index !== -1) {
-            //            filters.Metals.splice(index, 1);
-            //        }
-            //    }
-            //    console.log(filters);
-            //    GetProducts(filters, page, rangeVal);
-            //});
 
             $("#ProductFilters").on("change", ".metal-grp", function () {
                 debugger;
@@ -225,12 +204,10 @@
                 GetProducts(filters, page, rangeVal);
             });
 
-
             // Price Slider
-            initSlider("#price-slider1", {
+            initSlider("#ProductFilters #price-slider1", {
                 min: 500, max: 50000, step: 0.01, values: [5000, 30000],
                 slide: (e, ui) => {
-                    debugger;
                     $("#minPrice1").val("$" + ui.values[0]);
                     $("#maxPrice1").val("$" + ui.values[1]);
                 }
@@ -250,14 +227,25 @@
             });
 
             // Set initial values
+            $("#MyProductsImg").on("click", ".metalColor", function (event) {
+                //var t=$(this).val();
+
+                event.preventDefault();
+
+                debugger;
+                var productId = $(this).attr('productId');
+                var metalId = $(this).attr('metalid');
+               
+                GetProductByColorId(productId, metalId);
+            });
             
 
             //Rajs
-            $("#minPrice1").val("$" + $("#price-slider1").slider("values", 0));
-            $("#maxPrice1").val("$" + $("#price-slider1").slider("values", 1));
+            //$("#minPrice1").val("$" + $("#price-slider1").slider("values", 0));
+            //$("#maxPrice1").val("$" + $("#price-slider1").slider("values", 1));
 
-            $("#minCaratSize").val($("#carat-size-slider").slider("values", 0));
-            $("#maxCaratSize").val($("#carat-size-slider").slider("values", 1));
+            //$("#minCaratSize").val($("#carat-size-slider").slider("values", 0));
+            //$("#maxCaratSize").val($("#carat-size-slider").slider("values", 1));
 
         });
 
@@ -274,7 +262,59 @@
             .fail(function(xhr, status, error) {
                 console.error('AJAX error:', status, error);
             });
-        }
+    }
+
+        function ActivePriceSlider() {
+        debugger;
+        var minPrice = parseFloat($("#minPrice1").val()) || 0;
+        var maxPrice = parseFloat($("#maxPrice1").val()) || 10000; // Set max as a reasonable default
+
+        // Initialize Price Slider
+        $("#price-slider").slider({
+            range: true,
+            min: minPrice, // Minimum price from model or default to 0
+            max: maxPrice, // Maximum price from model or default to 10000
+            step: 0.1, // Step size for price slider
+            values: [minPrice, maxPrice], // Default values
+            slide: function (event, ui) {
+                // Update the min and max price input fields dynamically as the slider is moved
+                $("#minPrice1").val(ui.values[0]);
+                $("#maxPrice1").val(ui.values[1]);
+
+                var diamondFilters = {
+                    FromPrice: ui.values[0],
+                    ToPrice: ui.values[1]
+                };
+
+                getDiamondDataList(diamondFilters);  // Call your API or function to fetch data
+            }
+        });
+
+        // Initialize Carat Size Slider
+        var minCarat = parseFloat($("#minCarat").val()) || 0;
+        var maxCarat = parseFloat($("#maxCarat").val()) || 5; // Example default max carat value
+
+        $("#carat-size-slider").slider({
+            range: true,
+            min: minCarat,
+            max: maxCarat,
+            step: 0.1, // Step size for carat size
+            values: [minCarat, maxCarat],
+            slide: function (event, ui) {
+                // Update carat size fields dynamically as the slider is moved
+                $("#minCarat").val(ui.values[0]);
+                $("#maxCarat").val(ui.values[1]);
+
+                var caratFilters = {
+                    MinCarat: ui.values[0],
+                    MaxCarat: ui.values[1]
+                };
+
+                getDiamondDataList(caratFilters);  // Call your function to fetch carat-specific data
+            }
+        });
+    }
+
 
         async function GetProducts(filters, pageNumber = 1, pageSize = 10) {
             showLoader();
@@ -299,22 +339,51 @@
             });
         }
 
-
-
         async function loadAllFunctions() {
-            showLoader();
-            try {
-                await Promise.all([
-                    GetProductFilters()
-                ]);
-                GetProducts(filters, page, rangeVal);
-            } catch (error) {
-                console.error("An error occurred while loading data:", error);
+                showLoader();
+                try {
+                    await Promise.all([
+                        GetProductFilters(),
+                        ActivePriceSlider()
+                    ]);
+                    GetProducts(filters, page, rangeVal);
+                } catch (error) {
+                    console.error("An error occurred while loading data:", error);
+                }
+                hideLoader();
             }
-            hideLoader();
-        }
 
-        
+    function GetProductByColorId(productId, colorId) {
+        debugger;
+        $.ajax({
+            url: '/Products/ProductDetailsByColorId',
+            data: {
+                sku: productId,
+                colorId:parseInt(colorId)
+            },
+            type: 'GET',
+            dataType: 'json'
+        })
+            .done(function (response) {
+                debugger;
+                console.log($(".activemetalname[data-sku='" + productId + "']"));
+                console.log($(".price-regular[data-sku='" + productId + "']"));
+                console.log($(".price-old[data-sku='" + productId + "']"));
+
+                $(".activemetalname[data-sku='" + productId + "']").text(response.colorName); 
+               
+                $(".price-regular[data-sku='" + productId + "']").text(response.Price);  
+                $(".price-old[data-sku='" + productId + "']").html('<del>' + response.unitPrice + '</del>');
+
+                $(".pro-title[data-title='" + response.title + "']").text(response.title);
+
+
+
+            })
+            .fail(function (xhr, status, error) {
+                console.error('AJAX error:', status, error);
+            });
+    }
 
 </script>
 

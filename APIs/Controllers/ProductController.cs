@@ -20,9 +20,11 @@ namespace APIs.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductRepository _productRepository;
-        public ProductController(IProductRepository productRepository)
+        private readonly IProductPropertyRepository _productPropertyRepository;
+        public ProductController(IProductRepository productRepository, IProductPropertyRepository productPropertyRepository)
         {
             _productRepository = productRepository;
+            _productPropertyRepository = productPropertyRepository;
         }
 
         #region Useful APIS
@@ -177,85 +179,111 @@ namespace APIs.Controllers
 
 
         [HttpPost("BulkProductCollectionImagesUpload")]
-        [RequestSizeLimit(1073741824)]
+        [RequestSizeLimit(1073741824)]  // Limit the upload size to 1GB
         public async Task<IActionResult> UploadProductCollectionImages(IFormFile zipFile)
         {
-            FileSplitDTO styleName;
-            string destinationPath = string.Empty;
-            string folderPath = string.Empty;
-
-            if (zipFile == null || zipFile.Length == 0)
-                return BadRequest("No file uploaded.");
-
-            var extractedFolder = Path.Combine("UploadedFiles", "Collections");
-            Directory.CreateDirectory(extractedFolder);
-
-            var zipPath = Path.Combine(extractedFolder, zipFile.FileName);
-            using (var fileStream = new FileStream(zipPath, FileMode.Create))
+            try
             {
-                await zipFile.CopyToAsync(fileStream);
-            }
-
-            var productImgVidos = new List<ProductImages>();
-            var prdDT = new ProductImages();
-            var fileUpload = new FileManager();
-
-            using (ZipArchive archive = ZipFile.OpenRead(zipPath))
-            {
-                foreach (ZipArchiveEntry entry in archive.Entries)
+                List<Product> prdDesignDT = new List<Product>();
+                var prdDT = new ProductImages();
+                if (zipFile == null || zipFile.Length == 0)
                 {
-                    if (entry.Name.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
-                        entry.Name.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
-                        entry.Name.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
-                        entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+                    return BadRequest("No file uploaded.");
+                }
+
+                string extractedFolder = Path.Combine("UploadedFiles", "Collections");
+                Directory.CreateDirectory(extractedFolder);
+
+                string zipPath = Path.Combine(extractedFolder, zipFile.FileName);
+
+                // Save the uploaded ZIP file
+                using (var fileStream = new FileStream(zipPath, FileMode.Create))
+                {
+                    await zipFile.CopyToAsync(fileStream);
+                }
+
+                var productImages = new List<ProductImages>();
+
+                using (ZipArchive archive = ZipFile.OpenRead(zipPath))
+                {
+                    foreach (ZipArchiveEntry entry in archive.Entries)
                     {
-                        // Extract StyleName from image name
-                        styleName = _productRepository.ExtractStyleName(entry.Name);
-
-                        // Create folder for StyleName
-                        folderPath = Path.Combine(extractedFolder, styleName.DesignNo);
-                        if (!Directory.Exists(folderPath))
-                            Directory.CreateDirectory(folderPath);
-
-                        // Save extracted image
-                        destinationPath = Path.Combine(folderPath, entry.Name);
-                        entry.ExtractToFile(destinationPath, overwrite: true);
-
-                        // Save Products
-                        int pId = await _productRepository.SaveImageVideoPath(destinationPath);
-
-                        prdDT = new ProductImages();
-                        if (entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+                        // Only process image or video files
+                        if (entry.Name.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                            entry.Name.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
+                            entry.Name.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
+                            entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
                         {
-                            prdDT.VideoId = pId;
-                        }
-                        else if (styleName.Index == 1)
-                        {
-                            prdDT.ImageLgId = pId;
-                            prdDT.IsDefault = true;
-                        }
-                        else
-                        {
-                            prdDT.ImageLgId = pId;
-                        }
-                        prdDT.ImageIndexNumber = styleName.Index;
+                            // Extract style name from the entry (assuming method works correctly)
+                            var styleName = _productRepository.ExtractStyleName(entry.Name);
+                            if (styleName == null) continue;  // Skip if style name extraction fails
 
+                            // Get MetalId from ColorName
+                            var metalId = await _productRepository.GetMetalId(styleName.ColorName);
+                            if (metalId == 0) continue;  // Skip if no metal ID found
 
-                        var prdDesignDT = await _productRepository.GetProductByDesignNo(styleName.DesignNo);
-                        if (prdDesignDT != null)
-                        {
-                            prdDT.ProductId = prdDesignDT.Id.ToString();
+                            // Get product by design number
+                            prdDesignDT = await _productRepository.GetProductDataByDesignNo(styleName.DesignNo, metalId);
+                            if (prdDesignDT == null) continue;  // Skip if no product found for design number
 
-                            await _productRepository.SaveImageVideoAsync(prdDT);
+                            foreach (var pro in prdDesignDT)
+                            {
+                                prdDT = new ProductImages
+                                {
+                                    ProductId = pro.Id.ToString(),
+                                    MetalId = metalId,
+                                    Sku = styleName.DesignNo
+                                };
+
+                                // Create folder for StyleName
+                                string folderPath = Path.Combine(extractedFolder, styleName.DesignNo);
+                                if (!Directory.Exists(folderPath))
+                                {
+                                    Directory.CreateDirectory(folderPath);
+                                }
+
+                                // Save extracted file
+                                string destinationPath = Path.Combine(folderPath, entry.Name);
+                                entry.ExtractToFile(destinationPath, overwrite: true);
+
+                                // Save image/video path in the database
+                                int pId = await _productRepository.SaveImageVideoPath(destinationPath);
+
+                                // Assign product image details based on file type
+                                if (entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    prdDT.VideoId = pId;
+                                }
+                                else
+                                {
+                                    if (styleName.Index == 1)
+                                    {
+                                        prdDT.ImageLgId = pId;
+                                        prdDT.IsDefault = true;
+                                    }
+                                    else
+                                    {
+                                        prdDT.ImageLgId = pId;
+                                    }
+                                    prdDT.ImageIndexNumber = styleName.Index;
+                                }
+
+                                // Save the product image/video details asynchronously
+                                await _productRepository.SaveImageVideoAsync(prdDT);
+                            }
                         }
-
                     }
                 }
+
+                return Ok("File Uploaded Successfully.");
             }
+            catch (Exception)
+            {
 
-
-            return Ok("File Uploaded Successfully.");
+                throw;
+            }
         }
+
 
 
         [HttpPost("BulkNewProductUpload")]
@@ -291,13 +319,13 @@ namespace APIs.Controllers
                     //{
                     //    ProductDate = DateTime.ParseExact(dateString, "M/d/yy", CultureInfo.InvariantCulture);
                     //}
-                    if (index==0)
+                    if (index == 0)
                     {
                         index += 1;
 
                     }
 
-                    if (index==1)
+                    if (index == 1)
                     {
                         index += 1;
                         product = new ProductDTO
@@ -332,10 +360,10 @@ namespace APIs.Controllers
                             index = 0;
                         }
                         index += 1;
-                        product.GoldWeight= worksheet.Cells[row, 11].Text;
+                        product.GoldWeight = worksheet.Cells[row, 11].Text;
                         product.CenterCaratName = worksheet.Cells[row, 14].Text;
 
-                        
+
 
                     }
 
@@ -436,7 +464,7 @@ namespace APIs.Controllers
             //    query = query.Where(p => p.Price <= filters.ToPrice.Value);
             //}
 
-           // products = await query.ToListAsync();
+            // products = await query.ToListAsync();
 
             return Ok(query);
 
@@ -451,7 +479,13 @@ namespace APIs.Controllers
         }
 
 
+        [HttpGet("GetProductByColor/Sku/{sku}/colorId/{colorId}")]
+        public async Task<IActionResult> GetProductsByColorId(string sku, int colorId)
+        {
+            var products = await _productRepository.GetProductByColorId(sku, colorId);
+            return Ok(products);
 
+        }
 
         #endregion
 

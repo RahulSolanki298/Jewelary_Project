@@ -4,14 +4,16 @@ using DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250416080922_Add-Synonyms-Data")]
+    partial class AddSynonymsData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1176,9 +1178,6 @@ namespace DataAccess.Migrations
 
                     b.Property<int?>("ShapeId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Sku")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("VideoId")
                         .HasColumnType("int");

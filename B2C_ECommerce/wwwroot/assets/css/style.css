@@ -3251,25 +3251,31 @@ textarea:focus {
 .color-categories {
   line-height: 1;
 }
-.color-categories li {
-  display: inline-block;
-  padding: 1px;
-  border-radius: 50%;
-  border: 1px solid #efefef;
-  -webkit-transition: 0.4s;
-  -o-transition: 0.4s;
-  transition: 0.4s;
-}
+    .color-categories li {
+        display: inline-block;
+        /*padding: 1px;*/
+        padding: 1px 5px;
+        /*border-radius: 50%;*/
+       /* border: 1px solid #efefef;*/
+        -webkit-transition: 0.4s;
+        -o-transition: 0.4s;
+        transition: 0.4s;
+    }
 /*.color-categories li:hover {
   border-color: #151542;
 }*/
+
+.title-bold {
+    padding: 5px 0 6px;
+    font-weight:700;
+}
+
+.title-regular {
+    padding: 5px 0 6px;
+}
     .color-categories li a {
-        /*height: 12px;
-  width: 12px;
-  display: block;
-  border-radius: 50%;*/
-        height: 25px;
-        width: 40px;
+        height: 30px;
+        width: 55px;
         display: block;
     }
 

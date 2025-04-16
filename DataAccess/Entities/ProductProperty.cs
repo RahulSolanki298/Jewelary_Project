@@ -10,6 +10,8 @@
 
         public string SymbolName { get; set; }
 
+        public string Synonyms { get; set; }
+
         public string IconPath { get; set; }
 
         public int? ParentId { get; set; }

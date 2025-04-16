@@ -23,7 +23,7 @@ namespace Business.Repository.IRepository
         Task<int> SaveImageVideoPath(string imgVdoPath);
         FileSplitDTO ExtractStyleName(string fileName);
 
-        Task<Product> GetProductByDesignNo(string designNo);
+        Task<Product> GetProductByDesignNo(string designNo,int metalId);
 
         Task<int> GetKaratId();
 
@@ -34,6 +34,13 @@ namespace Business.Repository.IRepository
         Task<bool> UpdateProductDetailsByExcel(List<ProductDTO> products);
 
         Task<ProductDTO> GetProductWithDetails(string productId);
+
+        Task<ProductDTO> GetProductByColorId(string sku, int colorId);
+
+
+        Task<int> GetMetalId(string name);
+
+        Task<List<Product>> GetProductDataByDesignNo(string designNo, int metalId);
 
     }
 }

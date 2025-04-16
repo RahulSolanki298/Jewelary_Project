@@ -5,6 +5,7 @@ using B2C_ECommerce.IServices;
 using Business.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using Newtonsoft.Json;
 
 namespace B2C_ECommerce.Controllers
 {
@@ -23,9 +24,9 @@ namespace B2C_ECommerce.Controllers
         }
             
         [HttpPost]
-        public async Task<IActionResult> GetProductList(ProductFilters filters, int pageNumber = 1, int pageSize = 5000)
+        public async Task<IActionResult> GetProductList(ProductFilters filters, int pageNumber = 1, int pageSize = 10)
         {
-            var result = await _productRepository.GetProductListByFilter(filters);
+            var result = await _productRepository.GetProductListByFilter(filters,pageNumber,pageSize);
             return PartialView("~/Views/Products/_NewImagesAndProducts.cshtml", result);
 
         }
@@ -35,17 +36,13 @@ namespace B2C_ECommerce.Controllers
         {
             var productFilters = new ProductPropertyListDTO();
             productFilters.Colors = (await _productRepository.GetProductColorList());
-            productFilters.CollectionList = (await _productRepository.GetSubcategoryList());
+            //productFilters.CollectionList = (await _productRepository.GetSubcategoryList());
             productFilters.Shapes = (await _productRepository.GetShapeList());
-
-            try { 
-                productFilters.StylesList = await _productRepository.GetCategoriesList();
-            }
-            catch(Exception ex)
-            {
-
-            }
-
+            //productFilters.StylesList = await _productRepository.GetCategoriesList();
+            var priceDT = await _productRepository.GetProductPriceRangeData();
+            productFilters.FromPrice = priceDT.MinPrice;
+            productFilters.ToPrice = priceDT.MaxPrice;
+            
             return PartialView("~/Views/Products/_ProductFilterBar.cshtml", productFilters);
         }
 
@@ -54,6 +51,16 @@ namespace B2C_ECommerce.Controllers
         {
             var result = await _productRepository.GetProductByProductId(id);
             return View(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ProductDetailsByColorId(string sku, int colorId)
+        {
+            var jsonResult = await _productRepository.GetProductsByColorId(sku, colorId);
+
+            //var products = JsonConvert.DeserializeObject<ProductDTO>(jsonResult);
+
+            return Json(jsonResult);
         }
     }
 }

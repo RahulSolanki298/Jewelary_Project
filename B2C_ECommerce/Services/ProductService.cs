@@ -19,11 +19,11 @@ namespace B2C_ECommerce.Services
             _httpClient = httpClientFactory.CreateClient("API");
         }
 
-        public async Task<List<ProductDTO>> GetProductListByFilter(ProductFilters productFilters)
+        public async Task<List<ProductDTO>> GetProductListByFilter(ProductFilters productFilters, int pageNumber = 1, int pageSize = 10)
         {
             try
             {
-                var requestUrl = $"{SD.BaseApiUrl}/api/product/GetProductsByFilters";
+                var requestUrl = $"{SD.BaseApiUrl}/api/product/GetProductsByFilters?pageNumber={pageNumber}&pageSize={pageSize}";
 
                 // Use PostAsJsonAsync for serialization and sending the request
                 using var response = await _httpClient.PostAsJsonAsync(requestUrl, productFilters);
@@ -193,5 +193,62 @@ namespace B2C_ECommerce.Services
             }
         }
 
+        public async Task<PriceRanges> GetProductPriceRangeData()
+        {
+            try
+            {
+                var requestUrl = $"{SD.BaseApiUrl}/api/productFilters/get-price-ranges";
+
+                using var response = await _httpClient.GetAsync(requestUrl);
+
+                response.EnsureSuccessStatusCode(); // Throws exception if status code is not successful.
+
+                if (response.Content is null)
+                {
+                    throw new Exception("API response content is null.");
+                }
+
+                var result = await response.Content.ReadFromJsonAsync<PriceRanges>();
+
+                return result ?? new PriceRanges();
+            }
+            catch (HttpRequestException httpEx)
+            {
+                throw new Exception($"HTTP request error: {httpEx.Message}", httpEx);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching diamond list: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<ProductDTO> GetProductsByColorId(string sku, int colorId)
+        {
+            try
+            {
+                var requestUrl = $"{SD.BaseApiUrl}/api/Product/GetProductByColor/Sku/{sku}/colorId/{colorId}";
+
+                using var response = await _httpClient.GetAsync(requestUrl);
+
+                response.EnsureSuccessStatusCode(); // Throws exception if status code is not successful.
+
+                if (response.Content is null)
+                {
+                    throw new Exception("API response content is null.");
+                }
+
+                var result = await response.Content.ReadFromJsonAsync<ProductDTO>();
+
+                return result ?? new ProductDTO();
+            }
+            catch (HttpRequestException httpEx)
+            {
+                throw new Exception($"HTTP request error: {httpEx.Message}", httpEx);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching diamond list: {ex.Message}", ex);
+            }
+        }
     }
 }

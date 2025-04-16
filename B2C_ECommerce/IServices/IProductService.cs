@@ -7,7 +7,7 @@ namespace B2C_ECommerce.IServices
 {
     public interface IProductService
     {
-        Task<List<ProductDTO>> GetProductListByFilter(ProductFilters productFilters);
+        Task<List<ProductDTO>> GetProductListByFilter(ProductFilters productFilters, int pageNumber = 1, int pageSize = 10);
 
         Task<List<ProductPropertyDTO>> GetProductColorList();
 
@@ -18,6 +18,10 @@ namespace B2C_ECommerce.IServices
         Task<ProductDTO> GetProductByProductId(string productId);
 
         Task<List<ProductPropertyDTO>> GetShapeList();
+
+        Task<PriceRanges> GetProductPriceRangeData();
+
+        Task<ProductDTO> GetProductsByColorId(string sku, int colorId);
 
     }
 }

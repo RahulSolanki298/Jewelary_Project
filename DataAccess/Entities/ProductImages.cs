@@ -20,6 +20,7 @@
 
         public int? ShapeId { get; set; }
 
+        public string Sku { get; set; }
 
         public bool IsDefault { get; set; }
 

@@ -23,9 +23,15 @@ namespace Business.Repository
             _context = context;
         }
 
-        public async Task<Product> GetProductByDesignNo(string designNo)
+        public async Task<Product> GetProductByDesignNo(string designNo, int metalId)
         {
-            var dtDesign = await _context.Product.Where(x => x.Sku == designNo).FirstOrDefaultAsync();
+            var dtDesign = await _context.Product.Where(x => x.Sku == designNo && x.ColorId == metalId).FirstOrDefaultAsync();
+            return dtDesign;
+        }
+
+        public async Task<List<Product>> GetProductDataByDesignNo(string designNo, int metalId)
+        {
+            var dtDesign = await _context.Product.Where(x => x.Sku == designNo && x.ColorId == metalId).ToListAsync();
             return dtDesign;
         }
 
@@ -878,6 +884,7 @@ namespace Business.Repository
                 imgDT.ProductId = ImgVdoData.ProductId;
                 imgDT.ImageLgId = ImgVdoData.ImageLgId ?? null;
                 imgDT.VideoId = ImgVdoData.VideoId ?? null;
+                imgDT.MetalId = ImgVdoData.MetalId;
                 imgDT.IsDefault = true;
 
                 await _context.AddAsync(imgDT);
@@ -927,7 +934,7 @@ namespace Business.Repository
                 var productList = new List<Product>();
                 var updateList = new List<Product>();
 
-                int colorId, categoryId, caratId, karatId, shapeId= 0;
+                int colorId, categoryId, caratId, karatId, shapeId = 0;
                 // Step 3: Process each product
                 foreach (var product in products)
                 {
@@ -1016,7 +1023,7 @@ namespace Business.Repository
                             UnitPrice = product.UnitPrice,
                             Quantity = product.Quantity,
                             ProductType = product.ProductType,
-                            GoldWeight=product.GoldWeight,
+                            GoldWeight = product.GoldWeight,
                             Grades = product.Grades,
                             ShapeId = shapeId,
                             Id = Guid.NewGuid()
@@ -1200,6 +1207,156 @@ namespace Business.Repository
 
             // Return products where there are product images/videos
             return productDTO;
+        }
+
+
+        public async Task<ProductDTO> GetProductByColorId(string sku, int colorId)
+        {
+            var products = await (from product in _context.Product
+                                  join cat in _context.Category on product.CategoryId equals cat.Id
+                                  join color in _context.ProductProperty on product.ColorId equals color.Id into colorGroup
+                                  from color in colorGroup.DefaultIfEmpty()
+                                  join shape in _context.ProductProperty on product.ShapeId equals shape.Id into shapeGroup
+                                  from shape in shapeGroup.DefaultIfEmpty()
+                                  join clarity in _context.ProductProperty on product.ClarityId equals clarity.Id into clarityGroup
+                                  from clarity in clarityGroup.DefaultIfEmpty()
+                                  join size in _context.ProductProperty on product.CenterCaratId equals size.Id into sizeGroup
+                                  from size in sizeGroup.DefaultIfEmpty()
+                                  join sty in _context.ProductProperty on product.StyleId equals sty.Id into styleGroup
+                                  from sty in styleGroup.DefaultIfEmpty()
+                                  select new ProductDTO
+                                  {
+                                      Id = product.Id,
+                                      Title = product.Title,
+                                      BandWidth = product.BandWidth.ToString(),
+                                      Length = product.Length,
+                                      CaratName = product.Carat,
+                                      CategoryId = cat.Id,
+                                      CategoryName = cat.Name,
+                                      ColorId = color.Id,
+                                      ColorName = color.Name,
+                                      ClarityId = clarity.Id,
+                                      ClarityName = clarity.Name,
+                                      ShapeName = shape.Name,
+                                      ShapeId = shape.Id,
+                                      UnitPrice = product.UnitPrice,
+                                      Price = product.Price,
+                                      IsActivated = product.IsActivated,
+                                      CaratSizeId = product.CaratSizeId,
+                                      Description = product.Description,
+                                      Sku = product.Sku,
+                                      ProductType = cat.ProductType,
+                                      StyleId = product.StyleId
+                                  }).Where(x => x.IsActivated != false && x.Sku == sku && x.ColorId == colorId).FirstOrDefaultAsync();
+
+            // Step 1: Group products by SKU
+            //var groupedProducts = products.GroupBy(p => p.Sku);
+
+
+
+            var firstProduct = products; // Get the first product from the group
+
+            // Step 2: Get all related properties for each group
+            var metals = await (from col in _context.ProductProperty
+                                join prod in _context.Product on col.Id equals prod.ColorId
+                                join colN in _context.ProductProperty on col.ParentId equals colN.Id
+                                where colN.Name == SD.Metal && prod.Sku == firstProduct.Sku
+                                select new ProductPropertyDTO
+                                {
+                                    Id = col.Id,
+                                    Name = col.Name,
+                                    SymbolName = col.SymbolName,
+                                    IsActivated = col.IsActive.HasValue ? col.IsActive.Value : false
+                                }).Distinct().ToListAsync();
+
+            var caratSizes = await (from col in _context.ProductProperty
+                                    join prod in _context.Product on col.Id equals prod.CenterCaratId
+                                    join colN in _context.ProductProperty on col.ParentId equals colN.Id
+                                    where colN.Name == SD.CaratSize && prod.Sku == firstProduct.Sku
+                                    select new ProductPropertyDTO
+                                    {
+                                        Id = col.Id,
+                                        Name = col.Name,
+                                        IsActivated = col.IsActive.HasValue ? col.IsActive.Value : false
+                                    }).Distinct().ToListAsync();
+
+            var shapes = await (from col in _context.ProductProperty
+                                join prod in _context.Product on col.Id equals prod.ShapeId
+                                join colN in _context.ProductProperty on col.ParentId equals colN.Id
+                                where colN.Name == SD.Shape && prod.Sku == firstProduct.Sku
+                                select new ProductPropertyDTO
+                                {
+                                    Id = col.Id,
+                                    Name = col.Name,
+                                    IconPath = col.IconPath,
+                                    IsActivated = col.IsActive.HasValue ? col.IsActive.Value : false
+                                }).Distinct().ToListAsync();
+
+
+            // Step 3: Create a ProductDTO for the group and add related properties
+            var productDTO = new ProductDTO
+            {
+                Id = firstProduct.Id,
+                Title = firstProduct.Title,
+                CaratName = firstProduct.CaratName,
+                CategoryId = firstProduct.CategoryId,
+                CategoryName = firstProduct.CategoryName,
+                ColorId = firstProduct.ColorId,
+                ColorName = firstProduct.ColorName,
+                ClarityId = firstProduct.ClarityId,
+                ClarityName = firstProduct.ClarityName,
+                ShapeName = firstProduct.ShapeName,
+                ShapeId = firstProduct.ShapeId,
+                UnitPrice = firstProduct.UnitPrice,
+                Price = firstProduct.Price,
+                IsActivated = firstProduct.IsActivated,
+                CaratSizeId = firstProduct.CaratSizeId,
+                Description = firstProduct.Description,
+                Sku = firstProduct.Sku,
+                ProductType = firstProduct.ProductType,
+                StyleId = firstProduct.StyleId,
+                Metals = metals,
+                CaratSizes = caratSizes,
+                Shapes = shapes,
+                BandWidth = firstProduct.BandWidth,
+                Length = firstProduct.Length,
+                ProductImageVideos = new List<ProductImageAndVideoDTO>() // Initialize to avoid null reference
+            };
+
+            // Step 4: Get the product images for the first product
+            var productImages = await _context.ProductImages.Where(x => x.ProductId == firstProduct.Id.ToString() && x.MetalId == colorId).ToListAsync();
+
+            foreach (var image in productImages)
+            {
+                var imageUrl = _context.FileManager.FirstOrDefault(x => x.Id == image.ImageLgId)?.FileUrl ?? "-";
+                var videoUrl = _context.FileManager.FirstOrDefault(x => x.Id == image.VideoId)?.FileUrl ?? "-";
+
+                var imageVideo = new ProductImageAndVideoDTO
+                {
+                    ImageUrl = imageUrl,
+                    VideoUrl = videoUrl
+                };
+
+                productDTO.ProductImageVideos.Add(imageVideo);
+            }
+
+
+
+            // Return products where there are product images/videos
+            return productDTO;
+        }
+
+
+        public async Task<int> GetMetalId(string name)
+        {
+            var colorId = await GetColorId();
+
+            // Use EF.Functions.Like for partial matching (fuzzy search)
+            var color = await _context.ProductProperty
+                .Where(x => x.ParentId == colorId && EF.Functions.Like(x.Synonyms, "%" + name + "%"))
+                .FirstOrDefaultAsync();
+
+            return color?.Id ?? 0; // If no match found, return 0
         }
 
 
