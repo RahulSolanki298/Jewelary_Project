@@ -16,6 +16,11 @@
 
         public int? VideoId { get; set; }
 
+        public int? MetalId { get; set; }
+
+        public int? ShapeId { get; set; }
+
+
         public bool IsDefault { get; set; }
 
     }

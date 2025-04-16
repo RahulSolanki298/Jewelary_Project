@@ -2,22 +2,29 @@
 @using Common;
 @{
     var secImg = string.Empty;
+    var priImg = string.Empty;
 }
 @if (Model != null)
 {
     @foreach (var item in Model)
     {
-        secImg = item.ProductImageVideos.Last()?.ImageUrl;
+        secImg = item.ProductImageVideos.LastOrDefault()?.ImageUrl;
         if (secImg != null && secImg == "-")
         {
             secImg = item.ProductImageVideos.FirstOrDefault()?.ImageUrl;
+        }
+
+        priImg=item.ProductImageVideos.FirstOrDefault()?.ImageUrl;
+        if (priImg != null && priImg == "-")
+        {
+            priImg = item.ProductImageVideos.FirstOrDefault()?.ImageUrl;
         }
 
         <div class="col-lg-3 col-md-4 col-sm-6">
             <div class="product-item">
                 <figure class="product-thumb product-box-with-border">
                     <a href="@Url.Action("ProductDetails", "Products", new { id = item.Id })">
-                        <img class="pri-img" src="@($"{SD.BaseApiUrl}/{item.ProductImageVideos.FirstOrDefault()?.ImageUrl}")" />
+                        <img class="pri-img" src="@($"{SD.BaseApiUrl}/{priImg}")" />
                         <img class="sec-img" src="@($"{SD.BaseApiUrl}/{secImg}")" />
 
                     </a>

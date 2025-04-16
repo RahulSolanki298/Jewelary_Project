@@ -11,9 +11,7 @@ namespace DataAccess.Entities
         public string Gender { get; set; }
         public DateTime ProductDate { get; set; }
         public string VenderId { get; set; }
-
         public string Vendor { get; set; }
-
         public string Sku { get; set; }  // OTN23U01-D300R0B 
         public string Title { get; set; }
         public string Description { get; set; }
@@ -27,14 +25,14 @@ namespace DataAccess.Entities
         public string MfgDesign { get; set; }
         public string Designer { get; set; }
         public string CadDesigner { get; set; }
-
         public string Carat { get; set; }
         // If Gold
         public string Length { get; set; }
         public int? KaratId { get; set; }
         public string BandWidth { get; set; }
         public int? GoldPurityId { get; set; } // 18 k
-        public int? GoldWeightId { get; set; } // 3.00 GMS
+        //public int? GoldWeightId { get; set; } // 3.00 GMS
+        public string GoldWeight { get; set; }
         public int? CTW { get; set; }
         public int? CenterShapeId { get; set; }
         public int? CenterCaratId { get; set; }
@@ -50,15 +48,10 @@ namespace DataAccess.Entities
         public decimal? DiaWT { get; set; }
         public string Grades { get; set; }
         public int NoOfStones { get; set; }
-
         public string Component { get; set; }
-
         public string MaterialType { get; set; }
-
         public string Type { get; set; }
-
         public string Setting { get; set; }
-
         public bool IsActivated { get; set; } = false;
     }
 }

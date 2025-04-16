@@ -1,17 +1,17 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using System;
-using Business.Repository.IRepository;
+﻿using Business.Repository.IRepository;
+using DataAccess.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using OfficeOpenXml;
+using Microsoft.EntityFrameworkCore;
 using Models;
+using OfficeOpenXml;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Globalization;
-using DataAccess.Entities;
-using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace APIs.Controllers
 {
@@ -314,8 +314,9 @@ namespace APIs.Controllers
                             CTW = worksheet.Cells[row, 12].Text,
                             ShapeName = worksheet.Cells[row, 13].Text,
                             CenterCaratName = worksheet.Cells[row, 14].Text,
-                            Grades = worksheet.Cells[row, 21].Text,
                             ColorName = worksheet.Cells[row, 15].Text,
+                            Grades = worksheet.Cells[row, 21].Text,
+                            GoldWeight = worksheet.Cells[row, 11].Text
                         };
 
                         // Convert numeric values safely
@@ -326,12 +327,12 @@ namespace APIs.Controllers
                     }
                     else
                     {
-                        if (index > 3)
+                        if (index >= 3)
                         {
                             index = 0;
                         }
                         index += 1;
-                        product.BandWidth = worksheet.Cells[row, 10].Text;
+                        product.GoldWeight= worksheet.Cells[row, 11].Text;
                         product.CenterCaratName = worksheet.Cells[row, 14].Text;
 
                         

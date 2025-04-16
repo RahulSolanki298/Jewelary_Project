@@ -46,8 +46,8 @@ namespace Business.Repository
                 var carats = await GetCaratList();
                 var caratSizes = await _context.ProductCaratSize.ToListAsync();
                 var shapes = await GetShapeList();
-                var goldWeight = await GetGoldPurityList();
-                var goldPurity = await GetGoldPurityList();
+                //var goldWeight = await GetGoldPurityList();
+                //var goldPurity = await GetGoldPurityList();
 
                 // Step 2: Create dictionaries for fast lookup by Name
                 var colorDict = colors.ToDictionary(x => x.Name, x => x.Id);
@@ -57,8 +57,8 @@ namespace Business.Repository
                 var caratDict = carats.ToDictionary(x => x.Name, x => x.Id);
                 var caratSizeDict = caratSizes.ToDictionary(x => x.Name, x => x.Id);
                 var shapeDict = shapes.ToDictionary(x => x.Name, x => x.Id);
-                var weightDict = shapes.ToDictionary(x => x.Name, x => x.Id);
-                var purityDict = shapes.ToDictionary(x => x.Name, x => x.Id);
+                //var weightDict = shapes.ToDictionary(x => x.Name, x => x.Id);
+                //var purityDict = shapes.ToDictionary(x => x.Name, x => x.Id);
 
                 // Lists for insert and update
                 var productList = new List<Product>();
@@ -86,8 +86,7 @@ namespace Business.Repository
                     caratId = caratDict.GetValueOrDefault(product.CaratName);
                     shapeId = shapeDict.GetValueOrDefault(product.ShapeName);
                     caratSizeId = caratSizeDict.GetValueOrDefault(product.CaratSizeName);
-                    goldWeightId = weightDict.GetValueOrDefault(product.GoldWeight);
-                    goldPurityId = purityDict.GetValueOrDefault(product.GoldPurity);
+                    //goldPurityId = purityDict.GetValueOrDefault(product.GoldPurity);
 
                     #region Create style
 
@@ -145,7 +144,7 @@ namespace Business.Repository
                             Description = product.Description,
                             IsActivated = product.IsActivated,
                             StyleId = styleId,
-                            GoldWeightId = goldWeightId,
+                            GoldWeight = product.GoldWeight,
                             GoldPurityId = goldPurityId,
                             Price = product.Price,
                             UnitPrice = product.UnitPrice,
@@ -577,7 +576,7 @@ namespace Business.Repository
                                   {
                                       Id = product.Id,
                                       Title = product.Title,
-                                      BandWidth = product.BandWidth,
+                                      BandWidth = product.BandWidth.ToString(),
                                       Length = product.Length,
                                       CaratName = product.Carat,
                                       CategoryId = cat.Id,
@@ -696,7 +695,7 @@ namespace Business.Repository
             }
 
             // Return products where there are product images/videos
-            return productDTOList.Where(x => x.ProductImageVideos.Any()).ToList();
+            return productDTOList;
         }
 
 
@@ -910,7 +909,7 @@ namespace Business.Repository
                 var carats = await GetCaratList(); // caratsize list
                 var karats = await GetKaratList();
                 var shapes = await GetShapeList();
-                var goldWeight = await GetGoldWeightList();
+                //var goldWeight = await GetGoldWeightList();
                 //var goldPurity = await GetGoldPurityList();
 
                 // Step 2: Create dictionaries for fast lookup by Name
@@ -928,7 +927,7 @@ namespace Business.Repository
                 var productList = new List<Product>();
                 var updateList = new List<Product>();
 
-                int colorId, subCategoryId, categoryId, clarityId, caratId, karatId, caratSizeId, shapeId, goldWeightId = 0;
+                int colorId, categoryId, caratId, karatId, shapeId= 0;
                 // Step 3: Process each product
                 foreach (var product in products)
                 {
@@ -949,7 +948,6 @@ namespace Business.Repository
                     caratId = caratDict.GetValueOrDefault(product.CenterCaratName);
                     shapeId = shapeDict.GetValueOrDefault(product.ShapeName);
                     karatId = KaratDict.GetValueOrDefault(product.Karat);
-                    //goldWeightId = weightDict.GetValueOrDefault(product.GoldWeight);
 
                     #region Create style
 
@@ -975,7 +973,7 @@ namespace Business.Repository
 
                     existingProduct = await _context.Product
                         .Where(x => x.CategoryId == categoryId
-                                    && x.ColorId == product.ColorId
+                                    && x.ColorId == colorId
                                     && x.KaratId == karatId
                                     && x.ProductType == product.ProductType)
 
@@ -995,6 +993,8 @@ namespace Business.Repository
                         existingProduct.CenterCaratId = caratId;
                         existingProduct.ShapeId = shapeId;
                         existingProduct.BandWidth = product.BandWidth;
+                        existingProduct.GoldWeight = product.GoldWeight;
+                        existingProduct.Grades = product.Grades;
                         updateList.Add(existingProduct);
                     }
                     else
@@ -1016,6 +1016,8 @@ namespace Business.Repository
                             UnitPrice = product.UnitPrice,
                             Quantity = product.Quantity,
                             ProductType = product.ProductType,
+                            GoldWeight=product.GoldWeight,
+                            Grades = product.Grades,
                             ShapeId = shapeId,
                             Id = Guid.NewGuid()
                         };
@@ -1082,7 +1084,7 @@ namespace Business.Repository
                                   {
                                       Id = product.Id,
                                       Title = product.Title,
-                                      BandWidth = product.BandWidth,
+                                      BandWidth = product.BandWidth.ToString(),
                                       Length = product.Length,
                                       CaratName = product.Carat,
                                       CategoryId = cat.Id,
