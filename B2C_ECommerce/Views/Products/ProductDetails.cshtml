@@ -7,7 +7,7 @@
 
 <!-- page main wrapper start -->
 <div class="shop-main-wrapper section-padding pb-0">
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <!-- product details wrapper start -->
             <div class="col-lg-12 order-1 order-lg-2">
@@ -26,23 +26,6 @@
                                         </div>
                                     }
                                 }
-
-
-                                @* <div class="pro-large-img img-zoom">
-                                        <img src="~/assets/img/product/product-details-img1.jpg" alt="product-details">
-                                    </div>
-                                    <div class="pro-large-img img-zoom">
-                                        <img src="~/assets/img/product/product-details-img2.jpg" alt="product-details">
-                                    </div>
-                                    <div class="pro-large-img img-zoom">
-                                        <img src="~/assets/img/product/product-details-img3.jpg" alt="product-details">
-                                    </div>
-                                    <div class="pro-large-img img-zoom">
-                                        <img src="~/assets/img/product/product-details-img4.jpg" alt="product-details">
-                                    </div>
-                                    <div class="pro-large-img img-zoom">
-                                        <img src="~/assets/img/product/product-details-img5.jpg" alt="product-details">
-                                    </div> *@
                             </div>
                             <div class="pro-nav slick-row-10 slick-arrow-style">
                                 @if (Model != null && Model.ProductImageVideos.Count > 0)
@@ -55,46 +38,73 @@
                                         </div>
                                     }
                                 }
-
-                                @*  <div class="pro-nav-thumb product-details-img-border">
-                                        <img src="~/assets/img/product/product-details-img1.jpg" alt="product-details">
-                                    </div>
-                                    <div class="pro-nav-thumb product-details-img-border">
-                                        <img src="~/assets/img/product/product-details-img2.jpg" alt="product-details">
-                                    </div>
-                                    <div class="pro-nav-thumb product-details-img-border">
-                                        <img src="~/assets/img/product/product-details-img3.jpg" alt="product-details">
-                                    </div>
-                                    <div class="pro-nav-thumb product-details-img-border">
-                                        <img src="~/assets/img/product/product-details-img4.jpg" alt="product-details">
-                                    </div>
-                                    <div class="pro-nav-thumb product-details-img-border">
-                                        <img src="~/assets/img/product/product-details-img5.jpg" alt="product-details">
-                                    </div> *@
                             </div>
                         </div>
                         <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6">
                             <div class="product-details-des">
-                                @*<div class="manufacturer-name">
-                                    <a href="product-details.html">HasTech</a>
-                                </div>*@
                                 <h3 class="product-name">@Model.ShapeName @Model.BandWidth @Model.Length @Model.Sku</h3>
-                                <div class="ratings d-flex">
-                                    <span><i class="fa fa-star-o"></i></span>
-                                    <span><i class="fa fa-star-o"></i></span>
-                                    <span><i class="fa fa-star-o"></i></span>
-                                    <span><i class="fa fa-star-o"></i></span>
-                                    <span><i class="fa fa-star-o"></i></span>
-                                    <div class="pro-review">
+                                <span class="text-black-50">@Model.Karat @Model.ColorName @Model.ProductType @Model.CenterCaratName</span>
+
+                                <div class="price-box  d-flex">
+                                    <span class="price-regular" style="font-size: x-large; font-family: Castoro serif; ">$70.00</span>
+                                    <span class="price-old"><del>$90.00</del></span>
+
+                                    <div class="ratings" style="padding-left:15px;">
+                                        <span><i class="fa fa-star-o"></i></span>
+                                        <span><i class="fa fa-star-o"></i></span>
+                                        <span><i class="fa fa-star-o"></i></span>
+                                        <span><i class="fa fa-star-o"></i></span>
+                                        <span><i class="fa fa-star-o"></i></span>
                                         <span>1 Reviews</span>
                                     </div>
                                 </div>
-                                <div class="price-box">
-                                    <span class="price-regular">$70.00</span>
-                                    <span class="price-old"><del>$90.00</del></span>
+                                <hr />
+
+                                <div class="pt-3">
+                                    <h6 class="option-title"> <span style="font-weight:bold;">Metal :</span>  @Model.ColorName </h6>
+                                    <ul class="color-categories-details">
+                                        @foreach (var color in Model.Metals)
+                                        {
+                                            <li>
+                                                <a class="@color.SymbolName metalColor" metalId="@color.Id" href="javascript:void(0)" title="@color.Name" productId="@Model.Sku" data-colorName="@color.Name"></a>
+                                            </li>
+                                        }
+                                    </ul>
                                 </div>
-                                <h5 class="offer-text"><strong>Hurry up</strong>! offer ends in:</h5>
-                                <div class="product-countdown" data-countdown="2022/12/30"></div>
+
+                                <div class="pt-3">
+                                    <h6 class="option-title"> <span style="font-weight:bold;">Diamond Shape</span> : @Model.ShapeName </h6>
+                                    <ul class="shape-categories-details">
+                                        @foreach (var shape in Model.Shapes)
+                                        {
+                                            <li>
+                                                <a href="#" title="@shape.Name">
+                                                    <img class="shape-img" src="@shape.IconPath" title="@shape.Name" />
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+
+                                <div class="pt-4">
+                                    <h5 class="offer-text"><strong>Carat Weight :</strong> @Model.CaratName</h5>
+                                    @*<ul class="size-categories-details">
+                                            @foreach (var item in Model.CaratSizes)
+                                            {
+                                                <li>
+                                                    <a class="text-black-50" href="#" >@item.Name</a>
+                                                </li>
+                                            }
+                                        </ul>*@
+                                    <div class="product-countdown">
+
+                                        @foreach (var item in Model.CaratSizes)
+                                        {
+                                            <div class="single-countdown selectedCaratClick"><span class="single-countdown__time" title="@item.Name">@item.Name</span></div>
+                                        }
+                                    </div>
+                                </div>
+
                                 <div class="availability">
                                     <i class="fa fa-check-circle"></i>
                                     <span>In stock</span>
@@ -103,36 +113,12 @@
                                     @Model.Description
                                 </p>
                                 <div class="quantity-cart-box d-flex align-items-center">
-                                    @*<h6 class="option-title">qty:</h6>
-            <div class="quantity">
-                <div class="pro-qty"><input type="text" value="1"></div>
-            </div>*@
                                     <div class="action_link">
                                         <a class="btn btn-cart2" href="#">Add to cart</a>
                                     </div>
                                 </div>
-                                <div class="color-option">
-                                    <h6 class="option-title">Metals :</h6>
-                                    <ul class="color-categories">
-                                        @foreach (var item in Model.Metals)
-                                        {
-                                            <li>
-                                                <a class="@item.SymbolName" href="#" title="@item.Name"></a>
-                                            </li>
-                                        }
-                                    </ul>
-                                </div>
-                                <div class="color-option">
-                                    <h6 class="option-title">Carat Sizes :</h6>
-                                    <ul class="size-categories" style="padding-left:20px;">
-                                        @foreach (var item in Model.CaratSizes)
-                                        {
-                                            <li>
-                                                <a class="text-black-50" href="#" title="@item.Name">@item.Name</a>
-                                            </li>
-                                        }
-                                    </ul>
-                                </div>
+
+
 
                                 <div class="useful-links">
                                     <a href="#" data-bs-toggle="tooltip" title="Compare"><i class="pe-7s-refresh-2"></i>compare</a>
@@ -201,7 +187,7 @@
                                                     <td>
                                                         @foreach (var item in Model.Metals)
                                                         {
-                                                            @item.Name
+                                                            <span> @item.Name</span> 
                                                         }
                                                     </td>
                                                 </tr>
@@ -210,7 +196,7 @@
                                                     <td>
                                                         @foreach (var item in Model.CaratSizes)
                                                         {
-                                                            @item.Name
+                                                            <span>@item.Name</span>
                                                         }
 
                                                     </td>
@@ -591,3 +577,59 @@
     </div>
 </section>
 
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+    // Handle color change click
+    $(document).on("click", ".metalColor", function () {
+        const colorId = $(this).attr("metalId");
+        const productId = $(this).attr("productId");
+
+        GetProductByColorId(productId, colorId);
+    });
+});
+
+function GetProductByColorId(productId, colorId) {
+    $.ajax({
+        url: '/Products/ProductDetailsByColorId',
+        data: {
+            sku: productId,
+            colorId: parseInt(colorId)
+        },
+        type: 'GET',
+        dataType: 'json'
+    })
+        .done(function (response) {
+            debugger;
+        const baseUrl = '@SD.BaseApiUrl'.replace(/\\/g, '/');
+
+        // Update color name
+            // @Model.ShapeName @Model.BandWidth @Model.Length @Model.Sku
+            $(".product-name").text(response.shapeName + ' ' + response.bandWidth + ' '+ response.length + ' '+response.sku);
+
+        // Update prices
+        $(".price-regular[data-sku='" + productId + "']").text('{response.Price}');
+        $(".price-old[data-sku='" + productId + "']").html('<del>' + response.unitPrice + '</del>');
+
+        // Update images
+        const images = (response.productImageVideos || []).filter(x => x.imageUrl && x.imageUrl !== "-");
+        if (images.length > 0) {
+            const priImg = baseUrl + '/' + images[0].imageUrl.replace(/\\/g, '/');
+            $(".product-large-slider .pro-large-img img").first().attr("src", priImg).attr("alt", response.colorName + " - Primary Image");
+            $(".pro-nav .pro-nav-thumb img").first().attr("src", priImg);
+        }
+
+        if (images.length > 1) {
+            const secImg = baseUrl + '/' + images[1].imageUrl.replace(/\\/g, '/');
+            $(".product-large-slider .pro-large-img img").eq(1).attr("src", secImg).attr("alt", response.colorName + " - Secondary Image");
+            $(".pro-nav .pro-nav-thumb img").eq(1).attr("src", secImg);
+        }
+    })
+    .fail(function (xhr, status, error) {
+        console.error('AJAX error:', status, error);
+    });
+}
+
+
+    </script>
+}

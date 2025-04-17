@@ -28,7 +28,6 @@
                     <a href="@Url.Action("ProductDetails", "Products", new { id = item.Id })">
                         <img class="pri-img" src="@($"{SD.BaseApiUrl}/{priImg}")" />
                         <img class="sec-img" src="@($"{SD.BaseApiUrl}/{secImg}")" />
-
                     </a>
                     <div class="product-badge">
                         <div class="product-label new">
@@ -50,7 +49,6 @@
                 </figure>
                 <div class="product-caption text-left product-box-desc">
                     <div class="product-identity">
-                        @*<p class="manufacturer-name"><a href="#" data-title="@item.Title">@item.ShapeName @item.BandWidth @item.Length @item.Sku</a></p>*@
                         <p class="manufacturer-name"><a href="#" class="pro-title" data-title="@item.Title">@item.ShapeName @item.BandWidth @item.Length @item.Sku</a></p>
                     </div>
                     <div class="price-box">

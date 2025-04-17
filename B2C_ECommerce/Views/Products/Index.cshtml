@@ -5,6 +5,18 @@
 }
 @using Common
 
+<section>
+    <div class="listingpage">
+        <div class="home-giftbanner-main position-relative left-text-banner">
+            <a href="#" aria-label="" class="d-block">
+                <div class="ole-image-banner thumb text-center ">
+                    <img src="~/assets/img/banner/filter-cover-image.jpg" class="filter-top-image" alt="" title="" />
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
 <!-- breadcrumb area start -->
 <div class="breadcrumb-area">
     <div class="container">
@@ -40,7 +52,7 @@
             </div>
         </div>
 
-        <div id="FilterSection" style="display:none;">
+        <div id="FilterSection" style="display:none;" class="product-shadow">
             <div class="top-bar">
                 <div class="reset btn btn-dark text-capitalize" id="btnRestFilter" title="RESET">RESET</div>
                 <div class="filterclose btn btn-danger text-capitalize" id="filterclose" title="CLOSE">✕</div>
@@ -239,11 +251,11 @@
                 ActivePriceSlider();
 
                 //Rajs
-                //$("#minPrice1").val("$" + $("#price-slider1").slider("values", 0));
-                //$("#maxPrice1").val("$" + $("#price-slider1").slider("values", 1));
+                $("#minPrice1").val("$" + $("#price-slider1").slider("values", 0));
+                $("#maxPrice1").val("$" + $("#price-slider1").slider("values", 1));
 
-                //$("#minCaratSize").val($("#carat-size-slider").slider("values", 0));
-                //$("#maxCaratSize").val($("#carat-size-slider").slider("values", 1));
+                $("#minCaratSize").val($("#carat-size-slider").slider("values", 0));
+                $("#maxCaratSize").val($("#carat-size-slider").slider("values", 1));
 
             });
 

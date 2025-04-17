@@ -420,8 +420,11 @@ namespace Business.Repository
         {
             var data = await _context.Diamonds.ToListAsync();
             var priceRange = new PriceRanges();
-            priceRange.MaxPrice = data.Max(x => x.Amount).Value;
-            priceRange.MinPrice = data.Min(x => x.Amount).Value;
+            //priceRange.MaxPrice = data.Max(x => x.Amount).Value;
+            //priceRange.MinPrice = data.Min(x => x.Amount).Value;
+
+            priceRange.MaxPrice = data.Max(x => x.Price).Value;
+            priceRange.MinPrice = data.Min(x => x.Price).Value;
 
             return priceRange;
         }

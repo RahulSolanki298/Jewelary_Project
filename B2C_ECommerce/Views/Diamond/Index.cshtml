@@ -5,7 +5,7 @@
         <div class="home-giftbanner-main position-relative left-text-banner">
             <a href="#" aria-label="" class="d-block">
                 <div class="ole-image-banner thumb text-center ">
-                    <img src="~/assets/img/banner/filter-cover-image.jpg" class="filter-top-image" width="3840" height="300" alt="" title="" />
+                    <img src="~/assets/img/banner/filter-cover-image.jpg" class="filter-top-image"  alt="" title="" />
                 </div>
             </a>
         </div>
@@ -156,8 +156,8 @@
 			const fixClarity =GetClarityData();
 			//const fixPrice =GetPriceData();
 			const fixPolish =GetPolishData();
-			//const fixFluor =GetFluorData();
-			//const fixSym =GetSymmetryData();
+			const fixFluor =GetFluorData();
+			const fixSym =GetSymmetryData();
 			// GetTableData();
 			// GetDepthData();
 			// GetRatioData();
@@ -642,106 +642,106 @@
                                   }
                                 }
 
-        async function GetTableData() {
-          try {
-            // Fetch data from the API endpoint
-            const response = await $.ajax({
-              url: '@(SD.BaseApiUrl)/api/diamondproperty/get-table-ranges', // API endpoint
-              method: 'GET', // GET request
-              dataType: 'json', // Expecting JSON response
-            });
-
-				// Validate the response structure
-				if (!response || typeof response.MaxValue !== 'number') {
-				  throw new Error('Invalid response structure');
-				}
-
-				const maxValue = response.MaxValue;
-
-				// Initialize the slider only if it hasn't been initialized already
-				const $slider = $("#TablePer-slider");
-				if ($slider.data('initialized')) return; // Prevent re-initialization
-				$slider.data('initialized', true); // Mark slider as initialized
-
-				// Setup the slider with the max value
-				$slider.slider({
-				  range: true,
-				  min: 0,
-				  max: maxValue,
-				  step: 0.1,
-				  values: [0, maxValue],
-				  slide: function (event, ui) {
-					// Update the min and max values on slide
-					$("#minTablePer").val(ui.values[0]);
-					$("#maxTablePer").val(ui.values[1]);
-
-					// Update filters and fetch the data list
-					diamondFilters.FromTable = ui.values[0];
-					diamondFilters.ToTable = ui.values[1];
-
-					getDiamondDataList(diamondFilters, page, rangeVal);
-				  }
-				});
-
-				// Set initial values for the input fields
-				$("#minTablePer").val(0);
-				$("#maxTablePer").val(maxValue);
-				diamondFilters.FromTable = $("#minTablePer").val();
-				diamondFilters.ToTable = $("#maxTablePer").val();
-
-			  } catch (error) {
-				// Handle any errors during the API request or slider setup
-				console.error('Error fetching data:', error);
-				$('#filter-box #table-list').html('<p>Failed to load table ranges</p>');
-			  }
-			}
-
-
-		async function GetDepthData() {
+			async function GetTableData() {
 				try {
-					// Fetching price data from the API
+				// Fetch data from the API endpoint
 					const response = await $.ajax({
-						  url: '@(SD.BaseApiUrl)/api/diamondproperty/get-depth-ranges', // API endpoint
+					  url: '@(SD.BaseApiUrl)/api/diamondproperty/get-table-ranges', // API endpoint
 					  method: 'GET', // GET request
 					  dataType: 'json', // Expecting JSON response
 					});
 
-					// Ensure the response contains MaxPrice
+					// Validate the response structure
 					if (!response || typeof response.MaxValue !== 'number') {
 					  throw new Error('Invalid response structure');
 					}
 
-						const maxValue = response.MaxValue;
+					const maxValue = response.MaxValue;
 
-					// Initialize the price slider
-						$("#DepthPer-slider").slider({
+					// Initialize the slider only if it hasn't been initialized already
+					const $slider = $("#TablePer-slider");
+					if ($slider.data('initialized')) return; // Prevent re-initialization
+					$slider.data('initialized', true); // Mark slider as initialized
+
+					// Setup the slider with the max value
+					$slider.slider({
 					  range: true,
-					  min: 0, // Minimum price is 0
-						  max: maxValue, // Set maximum from API response
-					  step: 0.1, // Step size for the slider
-						  values: [0, maxValue], // Default values
+					  min: 0,
+					  max: maxValue,
+					  step: 0.1,
+					  values: [0, maxValue],
 					  slide: function (event, ui) {
-						// Update the min and max price input fields dynamically
-							$("#minDepthPer").val(ui.values[0]);
-							$("#maxDepthPer").val(ui.values[1]);
+						// Update the min and max values on slide
+						$("#minTablePer").val(ui.values[0]);
+						$("#maxTablePer").val(ui.values[1]);
+
+						// Update filters and fetch the data list
+						diamondFilters.FromTable = ui.values[0];
+						diamondFilters.ToTable = ui.values[1];
+
+						getDiamondDataList(diamondFilters, page, rangeVal);
 					  }
 					});
 
-					// Set initial values for the price input fields
-						$("#minDepthPer").val(0);
-					$("#maxDepthPer").val(maxValue);
-                    diamondFilters.FromDepth = $("#minDepthPer").val();
-					diamondFilters.ToDepth = $("#maxDepthPer").val();
-                    getDiamondDataList(diamondFilters, page, rangeVal);
+					// Set initial values for the input fields
+					$("#minTablePer").val(0);
+					$("#maxTablePer").val(maxValue);
+					diamondFilters.FromTable = $("#minTablePer").val();
+					diamondFilters.ToTable = $("#maxTablePer").val();
 
-				} catch (error) {
+				  } catch (error) {
 					// Handle any errors during the API request or slider setup
-					console.error('Error fetching data: ', error);
-						$('#filter-box #DepthPer-list').html('<p>Failed to load depth ranges</p>');
-				}
-		}
+					console.error('Error fetching data:', error);
+					$('#filter-box #table-list').html('<p>Failed to load table ranges</p>');
+				  }
+			}
 
-		async function GetRatioData() {
+
+			async function GetDepthData() {
+					try {
+						// Fetching price data from the API
+						const response = await $.ajax({
+							  url: '@(SD.BaseApiUrl)/api/diamondproperty/get-depth-ranges', // API endpoint
+						  method: 'GET', // GET request
+						  dataType: 'json', // Expecting JSON response
+						});
+
+						// Ensure the response contains MaxPrice
+						if (!response || typeof response.MaxValue !== 'number') {
+						  throw new Error('Invalid response structure');
+						}
+
+							const maxValue = response.MaxValue;
+
+						// Initialize the price slider
+							$("#DepthPer-slider").slider({
+						  range: true,
+						  min: 0, // Minimum price is 0
+							  max: maxValue, // Set maximum from API response
+						  step: 0.1, // Step size for the slider
+							  values: [0, maxValue], // Default values
+						  slide: function (event, ui) {
+							// Update the min and max price input fields dynamically
+								$("#minDepthPer").val(ui.values[0]);
+								$("#maxDepthPer").val(ui.values[1]);
+						  }
+						});
+
+						// Set initial values for the price input fields
+							$("#minDepthPer").val(0);
+						$("#maxDepthPer").val(maxValue);
+						diamondFilters.FromDepth = $("#minDepthPer").val();
+						diamondFilters.ToDepth = $("#maxDepthPer").val();
+						getDiamondDataList(diamondFilters, page, rangeVal);
+
+					} catch (error) {
+						// Handle any errors during the API request or slider setup
+						console.error('Error fetching data: ', error);
+							$('#filter-box #DepthPer-list').html('<p>Failed to load depth ranges</p>');
+					}
+			}
+
+			async function GetRatioData() {
 					try {
 						// Fetching data from API
 						var response = await $.ajax({
@@ -790,132 +790,133 @@
 						console.error('Error fetching data: ', error);
 								$('#filter-box #LWRatio-slider').html('<p>Failed to load Ratio</p>');
 					}
-				}
-
-		async function GetFluorData() {
-			try {
-				// Fetching data from API
-				const response = await $.ajax({
-					url: '@(SD.BaseApiUrl)/api/diamondproperty/get-fluor-list',
-					method: 'GET',
-					dataType: 'json'
-				});
-
-				// Validate response
-				if (!Array.isArray(response) || response.length === 0) {
-					console.warn('No fluor data found.');
-					$('#filter-box #Fluor-slider').html('<p>No fluor available</p>');
-					return;
-				}
-
-				const fluorList = response;
-
-				$("#Fluor-slider").slider({
-					range: true,
-					min: 0,
-					max: fluorList.length - 1,
-					step: 1,
-					values: [0, fluorList.length - 1],
-					slide: function (event, ui) {
-						const fromIndex = ui.values[0];
-						const toIndex = ui.values[1];
-
-						const fromFluor = fluorList[fromIndex];
-						const toFluor = fluorList[toIndex];
-
-						$("#minFluor").val(fromFluor.Name);
-						$("#maxFluor").val(toFluor.Name);
-
-						const selectedFluorIds = fluorList
-							.slice(fromIndex, toIndex + 1)
-							.map(item => item.Id);
-
-						$("#txtFluorIds").val(selectedFluorIds.join(','));
-						diamondFilters.Fluor= $("#txtFluorIds").val();
-
-						getDiamondDataList(diamondFilters, page, rangeVal);
-					}
-				});
-
-				// Set initial values
-				$("#minFluor").val(fluorList[0].Name);
-				$("#maxFluor").val(fluorList[fluorList.length - 1].Name);
-
-				const initialFluorIds = fluorList.map(item => item.Id);
-				$("#txtFluorIds").val(initialFluorIds.join(','));
-                diamondFilters.Fluor = $("#txtFluorIds").val();
-
-				//getDiamondDataList(diamondFilters, page, rangeVal);
-
-			} catch (error) {
-				console.error('Error fetching fluor data: ', error);
-				$('#filter-box #Fluor-slider').html('<p>Failed to load fluor</p>');
 			}
-		}
 
-		async function GetSymmetryData() {
-			try {
-				// Fetching data from API
-				const response = await $.ajax({
-					url: '@(SD.BaseApiUrl)/api/diamondproperty/get-symmetry-list',
-					method: 'GET',
-					dataType: 'json',
-				});
-
-				// Validate response
-				if (!Array.isArray(response) || response.length === 0) {
-					console.warn('No symmetry data found.');
-					$('#filter-box #Symmetry-slider').html('<p>No symmetry available</p>');
-					return;
-				}
-
-				const symmetryList = response;
-
-				$("#Symmetry-slider").slider({
-					range: true,
-					min: 0,
-					max: symmetryList.length - 1,
-					step: 1,
-					values: [0, symmetryList.length - 1],
-					slide: function (event, ui) {
-						const fromIndex = ui.values[0];
-						const toIndex = ui.values[1];
-
-						const fromSym = symmetryList[fromIndex];
-						const toSym = symmetryList[toIndex];
-
-						$("#minSymmetry").val(fromSym.Name);
-						$("#maxSymmetry").val(toSym.Name);
-
-						const selectedSymmetryIds = symmetryList
-							.slice(fromIndex, toIndex + 1)
-							.map(item => item.Id);
-
-						$("#txtSymmetryIds").val(selectedSymmetryIds.join(','));
-                        diamondFilters.Symmeties = selectedSymmetryIds.join(',');
-
-						getDiamondDataList(diamondFilters, page, rangeVal);
-					}
-				});
-
-				// Set initial values for the min and max symmetry fields
-				$("#minSymmetry").val(symmetryList[0].Name);
-				$("#maxSymmetry").val(symmetryList[symmetryList.length - 1].Name);
-
-				const initialSymmetryIds = symmetryList.map(item => item.Id);
-				$("#txtSymmetryIds").val(initialSymmetryIds.join(','));
-                diamondFilters.Symmeties = initialSymmetryIds.join(',');
-
-				//getDiamondDataList(diamondFilters, page, rangeVal);
-
-			} catch (error) {
-				console.error('Error fetching symmetry data: ', error);
-				$('#filter-box #Symmetry-slider').html('<p>Failed to load symmetry</p>');
-			}
-		}
-
-		async function GetPriceData() {
+			async function GetFluorData() {
 				try {
+					// Fetching data from API
+					const response = await $.ajax({
+						url: '@(SD.BaseApiUrl)/api/diamondproperty/get-fluor-list',
+						method: 'GET',
+						dataType: 'json'
+					});
+
+					// Validate response
+					if (!Array.isArray(response) || response.length === 0) {
+						console.warn('No fluor data found.');
+						$('#filter-box #Fluor-slider').html('<p>No fluor available</p>');
+						return;
+					}
+
+					const fluorList = response;
+
+					$("#Fluor-slider").slider({
+						range: true,
+						min: 0,
+						max: fluorList.length - 1,
+						step: 1,
+						values: [0, fluorList.length - 1],
+						slide: function (event, ui) {
+							const fromIndex = ui.values[0];
+							const toIndex = ui.values[1];
+
+							const fromFluor = fluorList[fromIndex];
+							const toFluor = fluorList[toIndex];
+
+							$("#minFluor").val(fromFluor.Name);
+							$("#maxFluor").val(toFluor.Name);
+
+							const selectedFluorIds = fluorList
+								.slice(fromIndex, toIndex + 1)
+								.map(item => item.Id);
+
+							$("#txtFluorIds").val(selectedFluorIds.join(','));
+							diamondFilters.Fluor= $("#txtFluorIds").val();
+
+							getDiamondDataList(diamondFilters, page, rangeVal);
+						}
+					});
+
+					// Set initial values
+					$("#minFluor").val(fluorList[0].Name);
+					$("#maxFluor").val(fluorList[fluorList.length - 1].Name);
+
+					const initialFluorIds = fluorList.map(item => item.Id);
+					$("#txtFluorIds").val(initialFluorIds.join(','));
+					diamondFilters.Fluor = $("#txtFluorIds").val();
+
+					//getDiamondDataList(diamondFilters, page, rangeVal);
+
+				} catch (error) {
+					console.error('Error fetching fluor data: ', error);
+					$('#filter-box #Fluor-slider').html('<p>Failed to load fluor</p>');
+				}
+			}
+
+			async function GetSymmetryData() {
+				try {
+					// Fetching data from API
+					const response = await $.ajax({
+						url: '@(SD.BaseApiUrl)/api/diamondproperty/get-symmetry-list',
+						method: 'GET',
+						dataType: 'json',
+					});
+
+					// Validate response
+					if (!Array.isArray(response) || response.length === 0) {
+						console.warn('No symmetry data found.');
+						$('#filter-box #Symmetry-slider').html('<p>No symmetry available</p>');
+						return;
+					}
+
+					const symmetryList = response;
+
+					$("#Symmetry-slider").slider({
+						range: true,
+						min: 0,
+						max: symmetryList.length - 1,
+						step: 1,
+						values: [0, symmetryList.length - 1],
+						slide: function (event, ui) {
+							const fromIndex = ui.values[0];
+							const toIndex = ui.values[1];
+
+							const fromSym = symmetryList[fromIndex];
+							const toSym = symmetryList[toIndex];
+
+							$("#minSymmetry").val(fromSym.Name);
+							$("#maxSymmetry").val(toSym.Name);
+
+							const selectedSymmetryIds = symmetryList
+								.slice(fromIndex, toIndex + 1)
+								.map(item => item.Id);
+
+							$("#txtSymmetryIds").val(selectedSymmetryIds.join(','));
+							diamondFilters.Symmeties = selectedSymmetryIds.join(',');
+
+							getDiamondDataList(diamondFilters, page, rangeVal);
+						}
+					});
+
+					// Set initial values for the min and max symmetry fields
+					$("#minSymmetry").val(symmetryList[0].Name);
+					$("#maxSymmetry").val(symmetryList[symmetryList.length - 1].Name);
+
+					const initialSymmetryIds = symmetryList.map(item => item.Id);
+					$("#txtSymmetryIds").val(initialSymmetryIds.join(','));
+					diamondFilters.Symmeties = initialSymmetryIds.join(',');
+
+					//getDiamondDataList(diamondFilters, page, rangeVal);
+
+				} catch (error) {
+					console.error('Error fetching symmetry data: ', error);
+					$('#filter-box #Symmetry-slider').html('<p>Failed to load symmetry</p>');
+				}
+			}
+
+			async function GetPriceData()
+			{
+					try {
 							// Fetching price data from the API
 							const response = await $.ajax({
 							  url: '@(SD.BaseApiUrl)/api/diamondproperty/get-price-ranges', // API endpoint
@@ -963,14 +964,14 @@
 							diamondFilters.FromPrice = $("#minPrice").val();
 							diamondFilters.ToPrice = $("#maxPrice").val();
 						  }
-						catch (error) {
+						  catch (error) {
 							// Handle any errors during the API request or slider setup
 							console.error('Error fetching data: ', error);
 							$('#filter-box #price-list').html('<p>Failed to load price ranges</p>');
 						  }
 				}
 
-		async function getDiamondDataList(diamondFilters, pageNumber = 1, pageSize = 10) {
+				async function getDiamondDataList(diamondFilters, pageNumber = 1, pageSize = 10) {
 					showLoader();
 					return $.ajax({
 						//url: '@Url.Action("GetDiamondList", "Diamond")', // Change this to your actual route
@@ -997,7 +998,7 @@
 					});
 				}
 
-		async function loadAllFunctions() {
+				async function loadAllFunctions() {
 					showLoader();
 					try {
 						await Promise.all([
@@ -1022,23 +1023,23 @@
 					hideLoader();
 				}
 
-		function ResetAllData()
-		{
-				GetShapeDesign();
-				GetCarat();
-				GetCutData();
-				GetColorData();
-				GetClarityData();
-				GetPriceData();
-				GetPolishData();
-				GetFluorData();
-				GetSymmetryData();
-				GetTableData();
-				GetDepthData();
-				GetRatioData();
-				diamondFilters = [];
-				getDiamondDataList(diamondFilters, page, rangeVal);
-		}
+				function ResetAllData()
+				{
+						GetShapeDesign();
+						GetCarat();
+						GetCutData();
+						GetColorData();
+						GetClarityData();
+						GetPriceData();
+						GetPolishData();
+						GetFluorData();
+						GetSymmetryData();
+						GetTableData();
+						GetDepthData();
+						GetRatioData();
+						diamondFilters = [];
+						getDiamondDataList(diamondFilters, page, rangeVal);
+				}
 
 
     </script>

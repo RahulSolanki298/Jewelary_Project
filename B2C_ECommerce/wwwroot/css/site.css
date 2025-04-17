@@ -150,11 +150,11 @@ body {
         display: block;
     }
 
-.shape-btn:hover span {
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-weight:bolder;
-    display: block;
-}
+        .shape-btn:hover span {
+            font-family: PlayfairDisplay-Regular, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: bolder;
+            display: block;
+        }
 
 
 
@@ -738,6 +738,7 @@ body {
 .font-arial {
     font-family: Arial !important;
 }
+
 
 .jewelry-mega-menu-display {
     display: grid !important;
