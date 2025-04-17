@@ -224,7 +224,7 @@ namespace APIs.Controllers
 
                             // Get product by design number
                             prdDesignDT = await _productRepository.GetProductDataByDesignNo(styleName.DesignNo, metalId);
-                            if (prdDesignDT == null) continue;  // Skip if no product found for design number
+                            if (prdDesignDT.Count == 0) continue;  // Skip if no product found for design number
 
                             foreach (var pro in prdDesignDT)
                             {
@@ -232,7 +232,8 @@ namespace APIs.Controllers
                                 {
                                     ProductId = pro.Id.ToString(),
                                     MetalId = metalId,
-                                    Sku = styleName.DesignNo
+                                    Sku = styleName.DesignNo,
+                                    ShapeId=pro.ShapeId
                                 };
 
                                 // Create folder for StyleName

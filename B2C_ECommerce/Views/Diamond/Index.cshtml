@@ -452,14 +452,14 @@
 				// Validate response
 				if (!Array.isArray(response) || response.length === 0) {
 					console.warn('No cuts available');
-					$('#filter-box #cut-slider').html('<p>No cuts available</p>');
+					$('#filter-box #Cut-slider').html('<p>No cuts available</p>');
 					return;
 				}
 
 				const cutList = response;
 
 				// Initialize the slider
-				$("#cut-slider").slider({
+				$("#Cut-slider").slider({
 					range: true,
 					min: 0,
 					max: cutList.length - 1,

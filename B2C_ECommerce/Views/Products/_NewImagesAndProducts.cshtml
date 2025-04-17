@@ -73,12 +73,31 @@
                     </div>
 
                     <div class="d-flex">
-                        <p class="title-bold mb-0">Carat</p>
+                        <p class="title-bold mb-0">Carat : </p>&nbsp;&nbsp;<span class="activemetalname title-regular mb-0" data-sku="@item.Sku">@item.CenterCaratName</span>
+                    </div>
+                    <div class="d-flex">
                         <ul class="size-categories" style="padding-left:10px;">
                             @foreach (var carat in item.CaratSizes)
                             {
                                 <li>
                                     <a href="#" title="@carat.Name">@carat.Name</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+
+                    <div class="d-flex">
+                        <p class="title-bold mb-0">Shape : </p>
+                    </div>
+                    <div class="d-flex">
+                        <ul class="size-categories" style="padding-left:10px;">
+                            @foreach (var shape in item.Shapes)
+                            {
+                                <li>
+                                    <a href="#" title="@shape.Name">
+                                        @* @shape.Name *@
+                                        <img src="@shape.IconPath" />
+                                    </a>
                                 </li>
                             }
                         </ul>

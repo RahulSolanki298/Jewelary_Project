@@ -860,7 +860,9 @@ namespace Business.Repository
         public async Task<int> SaveImageVideoPath(string imgVdoPath)
         {
             if (imgVdoPath == null) return 0;
-            try
+            var existImg = await _context.FileManager.Where(x => x.FileUrl == imgVdoPath).FirstOrDefaultAsync();
+
+            if(existImg == null)
             {
                 var imgVdo = new FileManager();
                 imgVdo.FileUrl = imgVdoPath;
@@ -869,11 +871,8 @@ namespace Business.Repository
 
                 return imgVdo.Id;
             }
-            catch (Exception)
-            {
 
-                throw;
-            }
+            return existImg.Id;
         }
 
         public async Task<bool> SaveImageVideoAsync(ProductImages ImgVdoData)
@@ -885,6 +884,8 @@ namespace Business.Repository
                 imgDT.ImageLgId = ImgVdoData.ImageLgId ?? null;
                 imgDT.VideoId = ImgVdoData.VideoId ?? null;
                 imgDT.MetalId = ImgVdoData.MetalId;
+                imgDT.Sku=ImgVdoData.Sku;
+                imgDT.ShapeId = ImgVdoData.ShapeId;
                 imgDT.IsDefault = true;
 
                 await _context.AddAsync(imgDT);
@@ -1062,15 +1063,38 @@ namespace Business.Repository
 
         public FileSplitDTO ExtractStyleName(string fileName)
         {
-            string nameOnly = Path.GetFileNameWithoutExtension(fileName); // PLDB-02-R1
+            string nameOnly = Path.GetFileNameWithoutExtension(fileName); // e.g., "PLDB-02-R1" or "PLDB-02-RG"
 
             var parts = nameOnly.Split('-');
-            var dtImgVideo = new FileSplitDTO();
-            dtImgVideo.DesignNo = $"{parts[0]}-{parts[1]}";
-            dtImgVideo.ColorName = parts[2].Substring(0, 1);
-            dtImgVideo.Index = Convert.ToInt32(parts[2].Substring(1));
+            var dtImgVideo = new FileSplitDTO
+            {
+                DesignNo = $"{parts[0]}-{parts[1]}"
+            };
+
+            string colorPart = parts[2];
+
+            // If last part ends in a digit, split into letters + number
+            if (char.IsDigit(colorPart.Last()))
+            {
+                // Separate letters and digits
+                string letters = new string(colorPart.TakeWhile(c => !char.IsDigit(c)).ToArray());
+                string digits = new string(colorPart.SkipWhile(c => !char.IsDigit(c)).ToArray());
+
+                dtImgVideo.ColorName = letters;
+                dtImgVideo.Index = int.TryParse(digits, out int indexVal) ? indexVal : 0;
+            }
+            else
+            {
+                // Entire part is the color code (e.g., "RG", "WG")
+                dtImgVideo.ColorName = colorPart;
+                dtImgVideo.Index = 0; // Or null if you change Index to nullable (int?)
+            }
+
+
+
             return dtImgVideo;
         }
+
 
 
         public async Task<ProductDTO> GetProductWithDetails(string productId)
