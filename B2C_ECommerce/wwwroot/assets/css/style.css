@@ -2976,7 +2976,8 @@ textarea {
 .banner-content_style2 {
     left: 40px;
     top: auto;
-    bottom: 40px;
+    /*bottom: 40px;*/
+    bottom: 12px;
     -webkit-transform: translateY(0);
     -ms-transform: translateY(0);
     transform: translateY(0);
@@ -3091,8 +3092,8 @@ textarea {
         background: linear-gradient(90deg, #151542, #000, #151542);
         background-repeat: no-repeat;
         background-size: 90%;
-        -webkit-animation: shine 3s linear infinite;
-        animation: shine 3s linear infinite;
+        /*-webkit-animation: shine 3s linear infinite;
+        animation: shine 3s linear infinite;*/
         -webkit-background-clip: text;
         -webkit-text-fill-color: rgba(255, 255, 255, 0);
     }
@@ -7465,7 +7466,7 @@ a {
     align-items: center;
     justify-content: center;
 }
-}
+
 
 /*.metalColor 
 {
@@ -7487,4 +7488,15 @@ a {
     font-size:16px;
     font-weight:bold;
     border:1px solid black;
+}
+
+
+.wobble-horizontal-on-hover {
+    -webkit-transform: perspective(1px) translateZ(0);
+    transform: perspective(1px) translateZ(0);
+    cursor: pointer;
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+    text-decoration: none !important;
+    -webkit-transition: all 0.5s ease-out 0s;
+    background-color: transparent;
 }

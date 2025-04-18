@@ -681,7 +681,8 @@ body {
 
 .filter-page-section-padding {
     padding-top: 24px;
-    padding-bottom: 50px;
+    /*padding-bottom: 50px;*/
+    padding-bottom: 10px;
 }
 
 .padding-top-10 {
@@ -785,7 +786,21 @@ body {
     }
 
 .product-type-box {
-    width: 300px;
+    /*width: 300px;*/
+    width: 150px;
+    padding:10px 0px;
+}
+
+
+.shopby-category-card {
+    background: #fff !important;
+    color: #151542 !important;
+    border-radius: 50%;
+}
+
+.shopby-section {
+    display: flex;
+    gap: 0px 150px;
 }
 
 .product-type-padding-section{
@@ -796,6 +811,10 @@ body {
     margin:20px 20px;
 }
 
+
+.shopby-category-img-shadow {
+    box-shadow: -16px 6px 20px 2px #ffffff8a;
+}
 .border-radius-15 {
    /* border-radius: 15px;
     border-style: ridge;
@@ -916,7 +935,12 @@ body {
     }
 
     .product-type-box {
-        width: 300px;
+        /*width: 300px;*/
+        width: 150px;
+    }
+
+    .shopby-section {
+        gap: 0px 150px;
     }
 }
 
@@ -946,7 +970,12 @@ body {
     }
 
     .product-type-box {
-        width: 200px;
+        /*width: 200px;*/
+        width: 120px;
+    }
+
+    .shopby-section {
+        gap: 0px 90px;
     }
 }
 
@@ -968,7 +997,12 @@ body {
     }
 
     .product-type-box {
-        width: 135px;
+        /*width: 135px;*/
+        width: 120px;
+    }
+
+    .shopby-section {
+        gap: 0px 25px;
     }
 }
 
@@ -998,6 +1032,38 @@ body {
         left: 65%;
     }
 
+}
+
+
+@media only screen and (max-width: 700px) {
+    .gap-icon-filter {
+        gap: 0.1rem !important;
+    }
+
+    .shape-btn {
+        width: 15%;
+    }
+
+    .range_slider {
+        width: 110px !important;
+    }
+
+    .product-type-padding-section {
+        padding: 0px 50px;
+    }
+
+    .product-type-box {
+        /*width: 135px;*/
+        width: 120px;
+    }
+
+    .shopby-section {
+        display:block;
+    }
+
+    .product-type-box {
+        margin-bottom:10px;
+    }
 }
 
 #loader {
@@ -1102,3 +1168,27 @@ body {
             display: block;
         }*/
 
+.text-theme-color-font {
+    color: #151542 !important;
+}
+
+.promise-box {
+    text-align: center;
+    font-size: 14px;
+    color: #060606;    
+    text-transform: capitalize;
+    font-weight: 400;
+    padding: 15px 10px;
+    border: 1px solid dimgray;
+    border-radius: 10px;
+    height: 100%;
+}
+
+
+    .promise-box img {
+        display: block;
+        margin: 20px auto;
+        height: auto;
+        width: 100%;
+        max-width: 50px;
+    }
