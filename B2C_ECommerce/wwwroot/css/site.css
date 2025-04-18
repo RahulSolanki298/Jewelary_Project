@@ -600,7 +600,7 @@ body {
 }
 
 .filter-scroll-bg {
-    background: #151542 !important;
+    /*background: #151542 !important;*/
     height:8px;
     margin:15px 0px;
 }

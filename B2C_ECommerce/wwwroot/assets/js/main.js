@@ -371,6 +371,7 @@
 
 	// brand logo carousel active js
 	$('.brand-logo-carousel').slick({
+		autoplay: true,
 		speed: 1000,
 		slidesToShow: 5,
 		adaptiveHeight: true,

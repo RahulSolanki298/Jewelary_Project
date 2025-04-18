@@ -430,6 +430,22 @@
 
         function ResetAllData()
         {
+            var page = 1;
+            var rangeVal = 10;
+
+            const getValue = id => $(id).val() || '';
+            const getArrayValue = id => $(id).val() || [];
+
+            var filters = {
+                Metals: getArrayValue('.metal-grp'),
+                Shapes: getArrayValue('.shape-item'),
+                FromPrice: getValue('#minPrice1'),
+                ToPrice: getValue('#maxPrice1'),
+                FromCarat: getValue('#minCarat'),
+                ToCarat: getValue('#maxCarat'),
+            };
+
+
            GetProductFilters();
            GetProducts(filters, page, rangeVal);
         }

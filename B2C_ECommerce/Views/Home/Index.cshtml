@@ -26,7 +26,7 @@
     </div>
 </section>
 
-<section class="section-padding padding-top-40 padding-bottom-40" id="section2">
+<section class="section-padding padding-top-40 padding-bottom-40 bg-light-pink" id="section2">
     <div class="container">
         <div class="row text-center">
             <!-- section title -->
@@ -131,6 +131,20 @@
     </div>
 </section>
 
+<section class="padding-top-40 padding-bottom-40 creative-studio-section-bg">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-12">
+                <div class="creative-studio-section-details">
+                    <h6 class="pb-2 text-white">INTRODUCING CREATIVE STUDIO</h6>
+                    <h3 class="pb-2 text-white">Tailor-Made by You</h3>
+                    <p>Our Creative Studio allows you to design your engagement ring exactly the way you want it—with control over every detail. Use our unique tools to create something exceptional, online or in showrooms.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <section class="useful-info-area section-padding bg-light">
     <div class="container">
         <div class="row">
@@ -188,7 +202,7 @@
             <div class="col-12">
                 <!-- section title start -->
                 <div class="section-title text-center">
-                    <h2 class="text-uppercase text-white">Shop by Product Type</h2>
+                    <h2 class="text-uppercase text-white">Shop by Category</h2>
                 </div>
                 <!-- section title end -->
             </div>
@@ -732,53 +746,80 @@
     </div>
 </section>
 
-<div class="brand-logo padding-top-10 padding-bottom-10">
+<div class="brand-logo padding-top-20 padding-bottom-10">
     <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <!-- section title start -->
+                <div class="section-title text-center">
+                    <h2 class="title text-uppercase">Our certificates</h2>
+                </div>
+                <!-- section title start -->
+            </div>
+        </div>
         <div class="row">
             <div class="col-12">
                 <div class="brand-logo-carousel slick-row-10 slick-arrow-style">
                     <!-- single brand start -->
                     <div class="brand-item">
-                        <a href="#">
-                            <img src="assets/img/brand/1.png" alt="">
+                        <a href="javascript:void(0)">
+                            <img src="~/assets/img/certificate/GIA.png" alt="">
                         </a>
                     </div>
                     <!-- single brand end -->
                     <!-- single brand start -->
                     <div class="brand-item">
-                        <a href="#">
-                            <img src="assets/img/brand/2.png" alt="">
+                        <a href="javascript:void(0)">
+                            <img src="~/assets/img/certificate/IGI.png" alt="">
                         </a>
                     </div>
                     <!-- single brand end -->
                     <!-- single brand start -->
                     <div class="brand-item">
-                        <a href="#">
-                            <img src="assets/img/brand/3.png" alt="">
+                        <a href="javascript:void(0)">
+                            <img src="~/assets/img/certificate/GJEPC.png" alt="">
                         </a>
                     </div>
                     <!-- single brand end -->
                     <!-- single brand start -->
                     <div class="brand-item">
-                        <a href="#">
-                            <img src="assets/img/brand/4.png" alt="">
+                        <a href="javascript:void(0)">
+                            <img src="~/assets/img/certificate/green-build.png" alt="">
                         </a>
                     </div>
                     <!-- single brand end -->
                     <!-- single brand start -->
                     <div class="brand-item">
-                        <a href="#">
-                            <img src="assets/img/brand/5.png" alt="">
+                        <a href="javascript:void(0)">
+                            <img src="~/assets/img/certificate/rjc.png" alt="">
                         </a>
                     </div>
                     <!-- single brand end -->
                     <!-- single brand start -->
                     <div class="brand-item">
-                        <a href="#">
-                            <img src="assets/img/brand/6.png" alt="">
+                        <a href="javascript:void(0)">
+                            <img src="~/assets/img/certificate/SCS-007.png" alt="">
                         </a>
                     </div>
                     <!-- single brand end -->
+                    <div class="brand-item">
+                        <a href="javascript:void(0)">
+                            <img src="~/assets/img/certificate/SCS-AH.png" alt="">
+                        </a>
+                    </div>
+
+                    <div class="brand-item">
+                        <a href="javascript:void(0)">
+                            <img src="~/assets/img/certificate/sedex.png" alt="">
+                        </a>
+                    </div>
+
+                    <div class="brand-item">
+                        <a href="javascript:void(0)">
+                            <img src="~/assets/img/certificate/Certification_Badge_cre_FEB-2024_2025.png" alt="">
+                        </a>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -786,37 +827,37 @@
 </div>
 
 
-@section Scripts {  
-<script>
-    $(function () {
-        $("#btnRingsTab").click(function () {
-            $("#divEarrings").hide();
-            $("#divBracelets").hide();
-            $("#divNecklaces").hide();
-            $("#divRings").show();
-        });
+@section Scripts {
+    <script>
+        $(function () {
+            $("#btnRingsTab").click(function () {
+                $("#divEarrings").hide();
+                $("#divBracelets").hide();
+                $("#divNecklaces").hide();
+                $("#divRings").show();
+            });
 
-        $("#btnEarringsTab").click(function () {
-            $("#divRings").hide();
-            $("#divBracelets").hide();
-            $("#divNecklaces").hide();
-            $("#divEarrings").show();
-        });
+            $("#btnEarringsTab").click(function () {
+                $("#divRings").hide();
+                $("#divBracelets").hide();
+                $("#divNecklaces").hide();
+                $("#divEarrings").show();
+            });
 
-        $("#btnBraceletsTab").click(function () {
-            $("#divRings").hide();
-            $("#divNecklaces").hide();
-            $("#divEarrings").hide();
-            $("#divBracelets").show();
-        });
+            $("#btnBraceletsTab").click(function () {
+                $("#divRings").hide();
+                $("#divNecklaces").hide();
+                $("#divEarrings").hide();
+                $("#divBracelets").show();
+            });
 
-        $("#btnNecklacesTab").click(function () {
-            $("#divRings").hide();
-            $("#divEarrings").hide();
-            $("#divBracelets").hide();
-            $("#divNecklaces").show();
+            $("#btnNecklacesTab").click(function () {
+                $("#divRings").hide();
+                $("#divEarrings").hide();
+                $("#divBracelets").hide();
+                $("#divNecklaces").show();
 
+            });
         });
-    });
-</script>
+    </script>
 }
