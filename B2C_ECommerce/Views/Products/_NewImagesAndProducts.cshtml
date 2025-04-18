@@ -33,18 +33,15 @@
                 <figure class="product-thumb product-box-with-border">
                     <a href="@Url.Action("ProductDetails", "Products", new { id = item.Id })">
                         <img class="pri-img media-item" src="@($"{SD.BaseApiUrl}/{priImg}")" />
-                        <img class="sec-img" src="@($"{SD.BaseApiUrl}/{secImg}")" />
-
-                        @* @if (!string.IsNullOrEmpty(vdoUrl) && vdoUrl != "-")
+                        @if (!string.IsNullOrEmpty(vdoUrl) && vdoUrl != "-")
                         {
                             <video class="sec-img media-item" muted loop preload="none">
                                 <source src="@($"{SD.BaseApiUrl}/{vdoUrl}")" type="video/mp4" />
-                                Your browser does not support the video tag.
                             </video>
                         }
-                        else *@
-                       
-                        
+                        else{
+                            <img class="sec-img" src="@($"{SD.BaseApiUrl}/{secImg}")" />
+                        }
                     </a>
                 </figure>
 
@@ -63,7 +60,7 @@
                             @foreach (var color in item.Metals)
                             {
                                 <li>
-                                    <a class="@color.SymbolName metalColor" @(color.Name == item.ColorName ? "selected" : null) metalId="@color.Id" href="javascript:void(0)" title="@color.Name" productId="@item.Sku" data-colorName="@color.Name">@item.Karat</a>
+                                    <a class="@color.SymbolName metalColor" @(color.Name == item.ColorName ? "selected" : null) metalId="@color.Id" href="javascript:void(0)" title="@color.Name" productId="@item.Sku" data-colorName="@color.Name"><span class="cls-krt">@item.Karat</span></a>
                                 </li>
                             }
                         </ul>

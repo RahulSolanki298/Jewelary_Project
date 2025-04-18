@@ -82,14 +82,12 @@
                                 <div class="top-bar-right">
                                     <div class="product-short">
                                         <p>Sort By : </p>
-                                        <select class="nice-select" name="sortby">
-                                            <option value="trending">Relevance</option>
+                                        <select class="nice-select" name="sortby" id="selectSort">
+                                            @* <option value="trending">Relevance</option> *@
                                             <option value="sales">Name (A - Z)</option>
                                             <option value="sales">Name (Z - A)</option>
                                             <option value="rating">Price (Low &gt; High)</option>
-                                            <option value="date">Rating (Lowest)</option>
-                                            <option value="price-asc">Model (A - Z)</option>
-                                            <option value="price-asc">Model (Z - A)</option>
+                                            @* <option value="date">Rating (Lowest)</option> *@
                                         </select>
                                     </div>
                                 </div>
@@ -211,28 +209,28 @@
                     GetProducts(filters, page, rangeVal);
                 });
 
-         $("#ProductFilters").on("mouseenter mouseleave", ".metal-grp", function () {
-            const metalId = $(this).attr('metalId');
+        //  $("#ProductFilters").on("mouseenter mouseleave", ".metal-grp", function () {
+        //     const metalId = $(this).attr('metalId');
 
-            if ($(".metalcheckbox").is(":checked")) {
-                if (!filters.Metals.includes(metalId)) {
-                    filters.Metals.push(metalId);
-                }
-            } else {
-                const index = filters.Metals.indexOf(metalId);
-                if (index !== -1) {
-                    filters.Metals.splice(index, 1);
-                }
-            }
+        //     if ($(".metalcheckbox").is(":checked")) {
+        //         if (!filters.Metals.includes(metalId)) {
+        //             filters.Metals.push(metalId);
+        //         }
+        //     } else {
+        //         const index = filters.Metals.indexOf(metalId);
+        //         if (index !== -1) {
+        //             filters.Metals.splice(index, 1);
+        //         }
+        //     }
 
-            console.log(filters);
+        //     console.log(filters);
 
-            GetProducts(filters, page, rangeVal);
-        });
+        //     GetProducts(filters, page, rangeVal);
+        // });
 
 
                 $('#ProductFilters .hover-media-wrapper').mouseenter(function () {
-                    const video = $(this).find('video');
+                    const video = $(this).find('video.sec-img');
                     const image = $(this).find('.pri-img');
 
                     if (video.length > 0) {
@@ -259,13 +257,30 @@
                 });
                 
                 // Set initial values
-                $("#MyProductsImg").on("click", ".metalColor", function (event) {
-                    event.preventDefault();
-                    var productId = $(this).attr('productId');
-                    var metalId = $(this).attr('metalid');
+        $("#MyProductsImg").on("click", ".metalColor", function (event) {
+            event.preventDefault();
 
-                    GetProductByColorId(productId, metalId);
+            // Get the product and metal ids from the clicked element
+            var productId = $(this).attr('productId');
+            var metalId = $(this).attr('metalid');
+
+            // Deselect all other items: reset the text and border color
+            $(".metalColor").each(function() {
+                $(this).text("").css({
+                    'color': 'black',
+                    'font-size': '16px',
+                    'font-weight': 'normal',
+                    'border': 'none'
                 });
+            });
+
+            // Now, apply the selected styles to the clicked element
+            $(this).addClass("metalHide");
+
+            // Call your function to get the product by color ID
+            GetProductByColorId(productId, metalId);
+        });
+
                 ActivePriceSlider();
 
                 $("#minPrice1").val("$" + $("#price-slider1").slider("values", 0));
