@@ -578,6 +578,8 @@ namespace Business.Repository
                                   from size in sizeGroup.DefaultIfEmpty()
                                   join sty in _context.ProductProperty on product.StyleId equals sty.Id into styleGroup
                                   from sty in styleGroup.DefaultIfEmpty()
+                                  join krt in _context.ProductProperty on product.KaratId equals krt.Id into karatGroup
+                                  from krt in karatGroup.DefaultIfEmpty()
                                   select new ProductDTO
                                   {
                                       Id = product.Id,
@@ -600,7 +602,10 @@ namespace Business.Repository
                                       Description = product.Description,
                                       Sku = product.Sku,
                                       ProductType = cat.ProductType,
-                                      StyleId = product.StyleId
+                                      StyleId = product.StyleId,
+                                      CenterCaratName= size.Name,
+                                      KaratId = krt.Id,
+                                      Karat=krt.Name
                                   }).Where(x => x.IsActivated).ToListAsync();
 
             // Step 1: Group products by SKU

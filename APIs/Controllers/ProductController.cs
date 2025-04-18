@@ -432,44 +432,51 @@ namespace APIs.Controllers
         public async Task<IActionResult> GetProductsByFilters(ProductFilters filters, int pageNumber = 1, int pageSize = 10)
         {
             var products = await _productRepository.GetProductStyleList();
-
             var query = products.AsQueryable();
 
-            ////Apply filters
-            //if (filters.Carats?.Any() == true)
-            //{
-            //    query = query.Where(p => filters.Carats.Contains(p.Carat));
-            //}
-            if (filters.Shapes?.Any() == true)
+            // Convert string filter IDs to appropriate types (e.g., int or Guid)
+            var shapeIds = filters.Shapes?.Select(Int32.Parse).ToList();
+            var metalIds = filters.Metals?.Select(Int32.Parse).ToList();
+
+            if (shapeIds?.Any() == true)
             {
-                query = query.Where(p => p.Shapes.Any(shape => filters.Shapes.Contains(shape.Id.ToString())));
+                query = query.Where(p => p.Shapes.Any(shape => shapeIds.Contains(p.ShapeId.Value)));
             }
-            if (filters.Metals?.Any() == true)
+
+            if (metalIds?.Any() == true)
             {
-                query = query.Where(p => p.Metals.Any(metal => filters.Metals.Contains(metal.Id.ToString())));
+                query = query.Where(p => p.Metals.Any(metal => metalIds.Contains(p.ColorId.Value)));
             }
-            //if (filters.category.Any() == true)
-            //{
-            //    query = query.Where(p => filters.category.Contains(p.CategoryName));
-            //}
-            ////if (filters.subCategory?.Any() == true)
-            ////{
-            ////    query = query.Where(p => filters.subCategory.Contains(p.SubCategory));
-            ////}
-            //if (filters.FromPrice.HasValue)
-            //{
-            //    query = query.Where(p => p.Price >= filters.FromPrice.Value);
-            //}
-            //if (filters.ToPrice.HasValue)
-            //{
-            //    query = query.Where(p => p.Price <= filters.ToPrice.Value);
-            //}
 
-            // products = await query.ToListAsync();
+            if (filters.FromPrice.HasValue)
+            {
+                query = query.Where(p => p.Price >= filters.FromPrice.Value);
+            }
 
-            return Ok(query);
+            if (filters.ToPrice.HasValue)
+            {
+                query = query.Where(p => p.Price <= filters.ToPrice.Value);
+            }
 
+            if (filters.FromCarat.HasValue)
+            {
+                query = query.Where(p => Convert.ToDecimal(p.CenterCaratName) >= filters.FromCarat.Value);
+            }
+
+            if (filters.ToCarat.HasValue)
+            {
+                query = query.Where(p => Convert.ToDecimal(p.CenterCaratName) <= filters.ToCarat.Value);
+            }
+
+            // Pagination
+            var pagedResult = query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            return Ok(pagedResult);
         }
+
 
         [HttpGet("GetProductDetails/{productId}")]
         public async Task<IActionResult> GetProductsByFilters(string productId)
