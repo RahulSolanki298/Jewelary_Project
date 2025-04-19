@@ -45,14 +45,13 @@ namespace Business.Repository
                     new SqlParameter("@Polish", SqlDbType.NVarChar) { Value = filters.Polish != null && filters.Polish.Any() ? string.Join(",", filters.Polish) : (object)DBNull.Value },
                     new SqlParameter("@Fluor", SqlDbType.NVarChar) { Value = filters.Fluor != null && filters.Fluor.Any() ? string.Join(",", filters.Fluor) : (object)DBNull.Value },
                     new SqlParameter("@Symmeties", SqlDbType.NVarChar) { Value = filters.Symmeties != null && filters.Symmeties.Any() ? string.Join(",", filters.Symmeties) : (object)DBNull.Value },
+                    new SqlParameter("@LabNames", SqlDbType.NVarChar) { Value = filters.LabNames != null && filters.LabNames.Any() ? string.Join(",", filters.LabNames) : (object)DBNull.Value },
                 };
 
-                // Execute the stored procedure with parameters and get the result
                 var diamonds = await _context.DiamondData
-                    .FromSqlRaw("EXEC SP_GetDiamondDataBY_NEW_DiamondFilters @Shapes, @Colors, @FromCarat, @ToCarat, @FromPrice, @ToPrice, @Cuts, @Clarities, @FromRatio, @ToRatio, @FromTable, @ToTable, @FromDepth, @ToDepth, @Polish, @Fluor, @Symmeties", parameters)
+                    .FromSqlRaw("EXEC SP_GetDiamondDataBY_NEW_DiamondFilters @Shapes, @Colors, @FromCarat, @ToCarat, @FromPrice, @ToPrice, @Cuts, @Clarities, @FromRatio, @ToRatio, @FromTable, @ToTable, @FromDepth, @ToDepth, @Polish, @Fluor, @Symmeties,@LabNames", parameters)
                     .ToListAsync();
 
-                // Pagination logic (skip and take)
                 var query = diamonds.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
                 return query;

@@ -31,7 +31,7 @@
 
         public string[] Symmeties { get; set; }
 
-        public string[] LabName { get; set; }
+        public string[] LabNames { get; set; }
 
     }
 }
