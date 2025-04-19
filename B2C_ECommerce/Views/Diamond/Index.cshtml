@@ -5,7 +5,7 @@
         <div class="home-giftbanner-main position-relative left-text-banner">
             <a href="#" aria-label="" class="d-block">
                 <div class="ole-image-banner thumb text-center ">
-                    <img src="~/assets/img/banner/filter-cover-image.jpg" class="filter-top-image" alt="" title="" />
+                    <img src="~/assets/img/banner/Diamond-Banner.jpg" class="filter-top-image" alt="" title="" />
                 </div>
             </a>
         </div>
@@ -153,23 +153,8 @@
             // Initial Data Fetch
             loadAllFunctions();
 
-            //GetCarat();
-            // const fixCut =GetCutData();
-            // const fixColors =GetColorData();
-            // const fixClarity =GetClarityData();
-            // const fixPrice =GetPriceData();
-            // const fixPolish =GetPolishData();
-            // const fixFluor =GetFluorData();
-            // const fixSym =GetSymmetryData();
-            // GetTableData();
-            // GetDepthData();
-            // GetRatioData();
-            // getDiamondDataList(diamondFilters, page, rangeVal);
-
-
             // Shape button click
             $("#shape-list").on("click", ".shape-btn", function () {
-                debugger;
                 const shapeId = $(this).attr('shapeId');
                 $(this).toggleClass('selected');
 
@@ -234,7 +219,7 @@
                  getDiamondDataList(diamondFilters, page, rangeVal);
             });
 
-            // Generic slider initializer
+            //// Generic slider initializer
             function initSlider(selector, options) {
                 $(selector).slider({
                     range: true,
@@ -242,7 +227,7 @@
                 });
             }
 
-            // Price Slider
+            //// Price Slider
             initSlider("#price-slider", {
                 min: 500, max: 50000, step: 0.01, values: [5000, 30000],
                 slide: (e, ui) => {
@@ -259,11 +244,6 @@
             $("#btnCertiClose").click(function () {
                 $("#dimCertiModal").modal("hide");
             });
-
-            
-
-
-            
         });
 
 
@@ -276,7 +256,6 @@
                 $("#dimCertiModal").modal("show");
             }
         });
-
 
         async function GetShapeDesign() {
             const $shapeListContainer = $('#filter-box #shape-list');
@@ -304,8 +283,6 @@
             }
         }
 
-
-
         async function GetCarat() {
                 try {
                     var response = await $.ajax({
@@ -319,7 +296,7 @@
                         min: response.MinCaratSize,  
                         max: response.MaxCaratSize,  
                         step: 0.1, 
-                        values: [response.MinCaratSize, response.MaxCaratSize / 2], 
+                        values: [response.MinCaratSize, response.MaxCaratSize], 
                         slide: function (event, ui) {
                             debugger;
                             $("#minCarat").val(ui.values[0]);
@@ -894,15 +871,8 @@
                               step: 0.1, // Step size for the slider
                               values: [minPrice, maxPrice], // Default values
                                 slide: function (event, ui) {
-                                    debugger;
-                                // Update the min and max price input fields dynamically
                                 $("#minPrice").val(ui.values[0]);
                                 $("#maxPrice").val(ui.values[1]);
-
-                                diamondFilters={
-                                    FromPrice: $('#minPrice').val() ? $('#minPrice').val() : '',
-                                    ToPrice: $('#maxPrice').val() ? $('#maxPrice').val() : ''
-                                };
 
                                 diamondFilters.FromPrice=ui.values[0];
                                 diamondFilters.ToPrice=ui.values[1];
@@ -979,23 +949,43 @@
                 }
 
         function ResetAllData()
-                {
-                        GetShapeDesign();
-                        GetCarat();
-                        GetCutData();
-                        GetColorData();
-                        GetClarityData();
-                        GetPriceData();
-                        GetPolishData();
-                        GetFluorData();
-                        GetSymmetryData();
-                        GetTableData();
-                        GetDepthData();
-                        GetRatioData();
-                        diamondFilters = [];
-                        getDiamondDataList(diamondFilters, page, rangeVal);
-                }
-
-
+        {
+            $("#txtLabNames").val("IGI,GIA");
+            var FilterPara = {
+                Colors: getValue('#txtColorIds'),
+                FromCarat: getValue('#minCarat'),
+                ToCarat: getValue('#maxCarat'),
+                Shapes: getArrayValue('#shapes'),
+                Clarities: getValue('#txtClarityIds'),
+                FromPrice: getValue('#minPrice'),
+                ToPrice: getValue('#maxPrice'),
+                Cuts: getValue('#txtCutIds'),
+                FromRatio: getValue('#minLWRatio'),
+                ToRatio: getValue('#maxLWRatio'),
+                FromTable: getValue('#minTablePer'),
+                ToTable: getValue('#maxTablePer'),
+                FromDepth: getValue('#minDepthPer'),
+                ToDepth: getValue('#maxDepthPer'),
+                Polish: getValue('#txtPolishIds'),
+                Fluor: getValue('#txtFluorIds'),
+                Symmeties: getValue('#txtSymmetyIds'),
+                LabNames: getValue('#txtLabNames'),
+            };
+                
+            GetShapeDesign();
+            GetCarat();
+            GetCutData();
+            GetColorData();
+            GetClarityData();
+            GetPriceData();
+            GetPolishData();
+            GetFluorData();
+            GetSymmetryData();
+            GetTableData();
+            GetDepthData();
+            GetRatioData();
+            diamondFilters = [];
+            getDiamondDataList(FilterPara, page, rangeVal);
+    }
     </script>
 }

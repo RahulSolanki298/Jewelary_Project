@@ -7456,11 +7456,13 @@ a {
 }
 
 .creative-studio-section-bg {
-    background: url(../img/banner/HomeBanner.webp);
-    background-size: contain;
+    background: url(../img/banner/Iconic-Collection-Banner.jpg);
+    background-size: cover;
+    /*background-repeat:no-repeat;*/
 }
 
 .creative-studio-section-details {
+    /*padding: 230px 30px;*/
     padding: 230px 30px;
     color: white;
     align-items: center;
