@@ -35,12 +35,11 @@ namespace Business.Repository.IRepository
 
         Task<ProductDTO> GetProductWithDetails(string productId);
 
-        Task<ProductDTO> GetProductByColorId(string sku, int colorId);
-
-
         Task<int> GetMetalId(string name);
 
         Task<List<Product>> GetProductDataByDesignNo(string designNo, int metalId);
+
+        Task<ProductDTO> GetProductByColorId(string sku, int? colorId = 0, int? caratId = 0);
 
     }
 }

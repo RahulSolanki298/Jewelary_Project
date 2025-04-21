@@ -4,14 +4,16 @@ using DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250421051953_MMSizeAddInProduct")]
+    partial class MMSizeAddInProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -950,8 +952,8 @@ namespace DataAccess.Migrations
                     b.Property<string>("BandWidth")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CTW")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("CTW")
+                        .HasColumnType("int");
 
                     b.Property<string>("CadDesigner")
                         .HasColumnType("nvarchar(max)");

@@ -147,11 +147,11 @@
 
             // Generic slider initializer
             function initSlider(selector, options) {
-            $(selector).slider({
-                range: true,
-                ...options
-            });
-        }
+                $(selector).slider({
+                    range: true,
+                    ...options
+                });
+            }
 
             $(document).ready(function(){
                 loadAllFunctions();
@@ -255,12 +255,12 @@
                     var metalId = $(this).attr('metalid');
 
                     // Deselect all other items: reset the text and border color
-                    $(".metalColor").each(function() {
-                        $(this).text("24K").css({
-                            'font-size': '16px',
-                            'font-weight': 'normal',
-                            // 'border': '1px solid black'
-                        });
+                    $(".metalColor").each(function () {
+
+                        //$(this).text("24K").css({
+                        //    'font-size': '16px',
+                        //    'font-weight': 'normal',
+                        //});
                     });
 
                     // Now, apply the selected styles to the clicked element
@@ -269,7 +269,6 @@
                     // Call your function to get the product by color ID
                     GetProductByColorId(productId, metalId);
                 });
-                
 
                 ActivePriceSlider();
 
@@ -356,7 +355,6 @@
             $("#minCarat").val(minCarat);
             $("#maxCarat").val(maxCarat);
         }
-
 
         async function GetProducts(filters, pageNumber = 1, pageSize = 10) {
                 showLoader();

@@ -233,7 +233,7 @@ namespace APIs.Controllers
                                     ProductId = pro.Id.ToString(),
                                     MetalId = metalId,
                                     Sku = styleName.DesignNo,
-                                    ShapeId=pro.ShapeId
+                                    ShapeId = pro.ShapeId
                                 };
 
                                 // Create folder for StyleName
@@ -288,7 +288,6 @@ namespace APIs.Controllers
         [HttpPost("BulkNewProductUpload")]
         public async Task<IActionResult> UploadNewExcel(IFormFile file)
         {
-            var product = new ProductDTO();
             if (file == null || file.Length == 0)
                 return BadRequest("No file uploaded.");
 
@@ -307,131 +306,139 @@ namespace APIs.Controllers
                     return BadRequest("The Excel file is empty.");
 
                 int rowCount = worksheet.Dimension.Rows;
-                List<ProductDTO> products = new();
-                ProductDTO tempProducts = new();
-                string dateString = string.Empty;
-                //var ProductDate = new DateTime();
+                var products = new List<ProductDTO>();
+                var tmpProduct = new ProductDTO();
+                var product = new ProductDTO();
+                // Temp value holders
+                string tmpLength = "", tmpWidth = "", tmpWeight = "",
+                       tmpCenterCarat = "", tmpMMsize = "", tmpColors = "", tmpVender = "", tmpStyle = "", tmpSku = "", tmpShape = "", tmpGrades = "", tmpCTW = "";
+                int tmpNoOfStones = 0;
+                decimal tmpDiaWt = 0, tmpPrice = 0;
                 int index = 0;
                 for (int row = 5; row <= rowCount; row++)
                 {
-                    //dateString = worksheet.Cells[row, 1].Text;
-                    //if (!string.IsNullOrEmpty(dateString))
-                    //{
-                    //    ProductDate = DateTime.ParseExact(dateString, "M/d/yy", CultureInfo.InvariantCulture);
-                    //}
                     if (index == 0)
                     {
-                        index += 1;
-
-                        tempProducts=new ProductDTO();
-                        tempProducts.Id = Guid.NewGuid();
-                        //tempProducts.ProductDate = ProductDate;
-                        //tempProducts.CategoryName = worksheet.Name
-                        tempProducts.CategoryName = "Rings";
-                        tempProducts.VenderName = worksheet.Cells[row, 6].Text;
-                        tempProducts.StyleName = worksheet.Cells[row, 7].Text;
-                        tempProducts.Sku = worksheet.Cells[row, 7].Text;
-                        tempProducts.Length = worksheet.Cells[row, 9].Text;
-                        tempProducts.BandWidth = worksheet.Cells[row, 10].Text;
-                        tempProducts.CTW = worksheet.Cells[row, 12].Text;
-                        tempProducts.ShapeName = worksheet.Cells[row, 13].Text;
-                        tempProducts.CenterCaratName = worksheet.Cells[row, 14].Text;
-                        tempProducts.ColorName = worksheet.Cells[row, 15].Text;
-                        tempProducts.Grades = worksheet.Cells[row, 21].Text;
-                        tempProducts.GoldWeight = worksheet.Cells[row, 11].Text;
-                        tempProducts.DiaWT = decimal.TryParse(worksheet.Cells[row, 19].Text, out var diaWt) ? diaWt : 0;
-                        tempProducts.NoOfStones = int.TryParse(worksheet.Cells[row, 20].Text, out var noOfStones) ? noOfStones : 0;
-                        tempProducts.Price = decimal.TryParse(worksheet.Cells[row, 25].Text, out var Sprice) ? Sprice : 0;
-                        tempProducts.UnitPrice = product.Price;
-                    }
-
-                    if (index >= 1)
-                    {
-                        index += 1;
                         product = new ProductDTO
                         {
                             Id = Guid.NewGuid(),
-                            //ProductDate = ProductDate,
-                            // CategoryName = worksheet.Name,
                             CategoryName = "Rings",
-                            VenderName = string.IsNullOrEmpty(worksheet.Cells[row, 6].Text) != true ? worksheet.Cells[row, 6].Text : tempProducts.VenderName,
-                            StyleName = string.IsNullOrEmpty(worksheet.Cells[row, 7].Text) != true ? worksheet.Cells[row, 7].Text : tempProducts.StyleName,
-                            Sku = string.IsNullOrEmpty(worksheet.Cells[row, 7].Text) != true ? worksheet.Cells[row, 7].Text : tempProducts.StyleName,
-                            Length = string.IsNullOrEmpty(worksheet.Cells[row, 9].Text) != true ? worksheet.Cells[row, 9].Text : tempProducts.Length,
-                            BandWidth = string.IsNullOrEmpty(worksheet.Cells[row, 10].Text) != true ? worksheet.Cells[row, 10].Text : tempProducts.BandWidth,
-                            CTW = string.IsNullOrEmpty(worksheet.Cells[row, 12].Text) != true ? worksheet.Cells[row, 12].Text : tempProducts.CTW,
-                            ShapeName = string.IsNullOrEmpty(worksheet.Cells[row, 13].Text) != true ? worksheet.Cells[row, 13].Text : tempProducts.ShapeName,
-                            CenterCaratName = string.IsNullOrEmpty(worksheet.Cells[row, 14].Text) != true ? worksheet.Cells[row, 14].Text : tempProducts.CenterCaratName,
-                            ColorName = string.IsNullOrEmpty(worksheet.Cells[row, 15].Text) != true ? worksheet.Cells[row, 15].Text : tempProducts.ColorName,
-                            Grades = string.IsNullOrEmpty(worksheet.Cells[row, 21].Text) != true ? worksheet.Cells[row, 21].Text : tempProducts.Grades,
-                            GoldWeight = string.IsNullOrEmpty(worksheet.Cells[row, 11].Text) != true ? worksheet.Cells[row, 11].Text : tempProducts.GoldWeight,
+                            VenderName = worksheet.Cells[row, 6].Text,
+                            StyleName = worksheet.Cells[row, 7].Text,
+                            Sku = worksheet.Cells[row, 7].Text,
+                            Length = worksheet.Cells[row, 9].Text,
+                            BandWidth = worksheet.Cells[row, 10].Text,
+                            GoldWeight = worksheet.Cells[row, 11].Text,
+                            CTW = worksheet.Cells[row, 12].Text,
+                            ShapeName = worksheet.Cells[row, 13].Text,
+                            CenterCaratName = worksheet.Cells[row, 14].Text,
+                            ColorName = worksheet.Cells[row, 15].Text,
+                            Grades = worksheet.Cells[row, 21].Text,
+                            MMSize = worksheet.Cells[row, 18].Text,
+                            DiaWT = decimal.TryParse(worksheet.Cells[row, 19].Text, out var diaWt) ? diaWt : 0,
+                            NoOfStones = int.TryParse(worksheet.Cells[row, 20].Text, out var noOfStones) ? noOfStones : 0,
+                            Price = decimal.TryParse(worksheet.Cells[row, 25].Text, out var price) ? price : 0,
                         };
-
-                        // Convert numeric values safely
-                        product.DiaWT = decimal.TryParse(worksheet.Cells[row, 19].Text, out var diaWt) ? diaWt : tempProducts.DiaWT;
-                        product.NoOfStones = int.TryParse(worksheet.Cells[row, 20].Text, out var noOfStones) ? noOfStones : tempProducts.NoOfStones;
-                        product.Price = decimal.TryParse(worksheet.Cells[row, 25].Text, out var Sprice) ? Sprice : tempProducts.Price;
-                        product.UnitPrice = product.Price > 0 ? product.Price : tempProducts.Price;
+                        product.UnitPrice = product.Price;
+                        index++;
                     }
-                    else
+
+                    // Update tmp values if new data is present
+                    if (!string.IsNullOrWhiteSpace(product.Sku)) tmpSku = product.Sku;
+                    if (!string.IsNullOrWhiteSpace(product.Grades)) tmpGrades = product.Grades;
+                    if (!string.IsNullOrWhiteSpace(product.StyleName)) tmpStyle = product.StyleName;
+                    if (!string.IsNullOrWhiteSpace(product.ShapeName)) tmpShape = product.ShapeName;
+                    if (!string.IsNullOrWhiteSpace(product.VenderName)) tmpVender = product.VenderName;
+                    if (!string.IsNullOrWhiteSpace(product.ColorName)) tmpColors = product.ColorName;
+                    if (!string.IsNullOrWhiteSpace(product.Length)) tmpLength = product.Length;
+                    if (!string.IsNullOrWhiteSpace(product.BandWidth)) tmpWidth = product.BandWidth;
+                    if (!string.IsNullOrWhiteSpace(product.GoldWeight)) tmpWeight = product.GoldWeight;
+                    if (!string.IsNullOrWhiteSpace(product.CTW)) tmpCTW = product.CTW;
+                    if (!string.IsNullOrWhiteSpace(product.CenterCaratName)) tmpCenterCarat = product.CenterCaratName;
+                    if (!string.IsNullOrWhiteSpace(product.MMSize)) tmpMMsize = product.MMSize;
+                    if (product.DiaWT.HasValue && product.DiaWT.Value > 0) tmpDiaWt = product.DiaWT.Value;
+                    if (product.NoOfStones > 0) tmpNoOfStones = product.NoOfStones;
+                    if (product.Price > 0) tmpPrice = product.Price;
+
+                    //
+
+                    if (index > 0)
                     {
-                        if (index >= 3)
+                        if (index == 3)
                         {
                             index = 0;
                         }
-                        index += 1;
-                        product.GoldWeight = worksheet.Cells[row, 11].Text;
-                        product.CenterCaratName = worksheet.Cells[row, 14].Text;
+                        product = new ProductDTO
+                        {
+                            Id = Guid.NewGuid(),
+                            CategoryName = "Rings",
+                            VenderName = string.IsNullOrWhiteSpace(worksheet.Cells[row, 6].Text) ? tmpVender : worksheet.Cells[row, 6].Text,
+                            StyleName = string.IsNullOrWhiteSpace(worksheet.Cells[row, 7].Text) ? tmpStyle : worksheet.Cells[row, 7].Text,
+                            Sku = string.IsNullOrWhiteSpace(worksheet.Cells[row, 7].Text) ? tmpSku : worksheet.Cells[row, 7].Text,
+                            Length = string.IsNullOrWhiteSpace(worksheet.Cells[row, 9].Text) ? tmpLength : worksheet.Cells[row, 9].Text,
+                            BandWidth = string.IsNullOrWhiteSpace(worksheet.Cells[row, 10].Text) ? tmpWidth : worksheet.Cells[row, 10].Text,
+                            GoldWeight = string.IsNullOrWhiteSpace(worksheet.Cells[row, 11].Text) ? tmpWeight : worksheet.Cells[row, 11].Text,
+                            ShapeName = string.IsNullOrWhiteSpace(worksheet.Cells[row, 13].Text) ? tmpShape : worksheet.Cells[row, 13].Text,
+                            CenterCaratName = string.IsNullOrWhiteSpace(worksheet.Cells[row, 14].Text) ? tmpCenterCarat : worksheet.Cells[row, 14].Text,
+                            ColorName = string.IsNullOrWhiteSpace(worksheet.Cells[row, 15].Text) ? tmpColors : worksheet.Cells[row, 15].Text,
+                            MMSize = string.IsNullOrWhiteSpace(worksheet.Cells[row, 18].Text) ? tmpMMsize : worksheet.Cells[row, 18].Text,
+                            DiaWT = decimal.TryParse(worksheet.Cells[row, 19].Text, out var diaWt) ? diaWt : tmpDiaWt,
+                            NoOfStones = int.TryParse(worksheet.Cells[row, 20].Text, out var noOfStones) ? noOfStones : tmpNoOfStones,
+                            Price = decimal.TryParse(worksheet.Cells[row, 25].Text, out var price) ? price : tmpPrice,
+                            CTW = string.IsNullOrWhiteSpace(worksheet.Cells[row, 12].Text) ? tmpCTW : worksheet.Cells[row, 12].Text,
+                            Grades = string.IsNullOrWhiteSpace(worksheet.Cells[row, 21].Text) ? tmpGrades : worksheet.Cells[row, 21].Text,
+                        };
+                        product.UnitPrice = product.Price;
+                        index++;
+
                     }
 
 
-                    // Handling multiple metal colors
+                    // ColorName parsing
                     int lastSpaceIndex = product.ColorName.LastIndexOf(' ');
                     if (lastSpaceIndex == -1)
                     {
-                        continue;
+                        product.ColorName = tmpColors;
+                        lastSpaceIndex = product.ColorName.LastIndexOf(' ');
                     }
-                    string leftPart = product.ColorName.Substring(0, lastSpaceIndex);     // "14k White,Yellow,Rose"
-                    string productType = product.ColorName.Substring(lastSpaceIndex + 1); // "Gold"
 
-                    // Now get karat and colors
-                    string[] leftParts = leftPart.Split(' ', 2); // Split only once
-                    string karat = leftParts[0];                 // "14k"
-                    var productMetals = leftParts[1].Split(',');   // ["White", "Yellow", "Rose"]
+                    string leftPart = product.ColorName[..lastSpaceIndex];       // e.g. "14k White,Yellow,Rose"
+                    string productType = product.ColorName[(lastSpaceIndex + 1)..]; // e.g. "Gold"
 
-                    if (productMetals.Length > 0)
+                    string[] leftParts = leftPart.Split(' ', 2);
+                    if (leftParts.Length < 2)
+                        continue;
+
+                    string karat = leftParts[0];                             // "14k"
+                    var metals = leftParts[1].Split(',', StringSplitOptions.RemoveEmptyEntries);
+
+                    foreach (var metal in metals)
                     {
-                        //string carat = productMetals[0]; // Store carat separately
-                        foreach (var metal in productMetals) // Skip first item (carat)
+                        products.Add(new ProductDTO
                         {
-                            products.Add(new ProductDTO
-                            {
-                                Id = product.Id,
-                                //CategoryName = product.CategoryName,
-                                CategoryName = "Rings",
-                                VenderName = product.VenderName,
-                                StyleName = product.StyleName,
-                                Sku = product.Sku,
-                                Length = product.Length,
-                                BandWidth = product.BandWidth,
-                                GoldWeight = product.GoldWeight,
-                                CTW = product.CTW,
-                                CenterShapeName = product.CenterShapeName,
-                                CenterCaratName = product.CenterCaratName,
-                                CaratSizeName = product.CaratSizeName,
-                                ShapeName = product.ShapeName,
-                                Grades = product.Grades,
-                                DiaWT = product.DiaWT,
-                                NoOfStones = product.NoOfStones,
-                                Price = product.Price,
-                                UnitPrice = product.UnitPrice,
-                                //CaratName = carat,
-                                ColorName = metal.Trim(),
-                                Karat = karat,
-                                ProductType = productType,
-                                IsActivated = true
-                            });
-                        }
+                            Id = product.Id,
+                            CategoryName = "Rings",
+                            VenderName = string.IsNullOrWhiteSpace(product.VenderName) ? tmpVender : product.VenderName,
+                            StyleName = string.IsNullOrWhiteSpace(product.StyleName) ? tmpStyle : product.StyleName,
+                            Sku = string.IsNullOrWhiteSpace(product.Sku) ? tmpSku : product.Sku,
+                            Length = string.IsNullOrWhiteSpace(product.Length) ? tmpLength : product.Length,
+                            BandWidth = string.IsNullOrWhiteSpace(product.BandWidth) ? tmpWidth : product.BandWidth,
+                            GoldWeight = string.IsNullOrWhiteSpace(product.GoldWeight) ? tmpWeight : product.GoldWeight,
+                            CTW = string.IsNullOrWhiteSpace(product.CTW) ? tmpCTW : product.CTW,
+                            CenterCaratName = string.IsNullOrWhiteSpace(product.CenterCaratName) ? tmpCenterCarat : product.CenterCaratName,
+                            ShapeName = string.IsNullOrWhiteSpace(product.ShapeName) ? tmpShape : product.ShapeName,
+                            Grades = string.IsNullOrWhiteSpace(product.Grades) ? tmpGrades : product.Grades,
+                            DiaWT = product.DiaWT.HasValue && product.DiaWT.Value > 0 ? product.DiaWT.Value : tmpDiaWt,
+                            NoOfStones = int.TryParse(worksheet.Cells[row, 20].Text, out var noOfNewStones) ? noOfNewStones : tmpNoOfStones,
+                            Quantity = int.TryParse(worksheet.Cells[row, 20].Text, out var noOfNewStones2) ? noOfNewStones2 : tmpNoOfStones,
+                            Price = product.Price > 0 ? product.Price : tmpPrice,
+                            UnitPrice = product.UnitPrice,
+                            ColorName = metal.Trim(),
+                            Karat = karat,
+                            ProductType = productType,
+                            MMSize = string.IsNullOrWhiteSpace(product.MMSize) ? tmpMMsize : product.MMSize,
+                            IsActivated = true
+                        });
                     }
                 }
 
@@ -443,6 +450,7 @@ namespace APIs.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
 
         [HttpPost("GetProductsByFilters")]
         public async Task<IActionResult> GetProductsByFilters(ProductFilters filters, int pageNumber = 1, int pageSize = 10)
@@ -484,10 +492,15 @@ namespace APIs.Controllers
             }
 
             // Pagination
-            var pagedResult = query
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
+            //var pagedResult = query
+            //    .Skip((pageNumber - 1) * pageSize)
+            //    .Take(pageSize)
+            //    .ToList();
+
+            var pagedResult = query.Where(x => x.ProductImageVideos.Count > 0)
+               .Skip((pageNumber - 1) * 20)
+               .Take(pageSize)
+               .ToList();
 
             return Ok(pagedResult);
         }
@@ -505,7 +518,16 @@ namespace APIs.Controllers
         [HttpGet("GetProductByColor/Sku/{sku}/colorId/{colorId}")]
         public async Task<IActionResult> GetProductsByColorId(string sku, int colorId)
         {
-            var products = await _productRepository.GetProductByColorId(sku, colorId);
+            var products = await _productRepository.GetProductByColorId(sku, colorId,0);
+            return Ok(products);
+
+        }
+
+
+        [HttpGet("GetProductByColor/Sku/{sku}/caratId/{caratId}")]
+        public async Task<IActionResult> GetProductsByCaratId(string sku, int caratId)
+        {
+            var products = await _productRepository.GetProductByColorId(sku, 0, caratId);
             return Ok(products);
 
         }
@@ -524,7 +546,7 @@ namespace APIs.Controllers
                 return BadRequest("Invalid file format. Please upload an Excel (.xlsx) file.");
 
             try
-            {   
+            {
                 using var stream = new MemoryStream();
                 await file.CopyToAsync(stream);
 
@@ -549,14 +571,14 @@ namespace APIs.Controllers
                         Length = worksheet.Cells[row, 5].Text,
                         GoldPurity = worksheet.Cells[row, 6].Text,
                         GoldWeight = worksheet.Cells[row, 7].Text,
-                        CTW = worksheet.Cells[row, 8].Text,
                         CenterShapeName = worksheet.Cells[row, 9].Text,
                         CenterCaratName = worksheet.Cells[row, 10].Text,
                         ColorName = worksheet.Cells[row, 11].Text,
                         ShapeName = worksheet.Cells[row, 12].Text,
                         CaratSizeName = worksheet.Cells[row, 13].Text,
                         Grades = worksheet.Cells[row, 16].Text,
-                        WebsiteImagesLink = worksheet.Cells[row, 18].Text
+                        WebsiteImagesLink = worksheet.Cells[row, 18].Text,
+                        CTW = worksheet.Cells[row, 8].Text
                     };
 
                     // Convert numeric values safely

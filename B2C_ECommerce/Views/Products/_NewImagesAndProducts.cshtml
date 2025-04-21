@@ -35,11 +35,12 @@
                         <img class="pri-img media-item" src="@($"{SD.BaseApiUrl}/{priImg}")" />
                         @if (!string.IsNullOrEmpty(vdoUrl) && vdoUrl != "-")
                         {
-                            <video class="sec-img media-item" muted loop preload="none">
+                            <video class="sec-img media-item" muted loop preload="none" playsinline>
                                 <source src="@($"{SD.BaseApiUrl}/{vdoUrl}")" type="video/mp4" />
                             </video>
                         }
-                        else{
+                        else
+                        {
                             <img class="sec-img" src="@($"{SD.BaseApiUrl}/{secImg}")" />
                         }
                     </a>
@@ -67,14 +68,14 @@
                     </div>
 
                     <div class="d-flex">
-                        <p class="title-bold mb-0">Carat : </p>&nbsp;&nbsp;@* <span class="activemetalname title-regular mb-0" data-sku="@item.Sku">@item.CenterCaratName</span> *@
+                        <p class="title-bold mb-0">Carat : </p>&nbsp;&nbsp; @* <span class="activemetalname title-regular mb-0" data-sku="@item.Sku">@item.CenterCaratName</span> *@
                         @* </div>
                     <div class="d-flex"> *@
                         <ul class="size-categories" style="padding-left:10px;">
                             @foreach (var carat in item.CaratSizes)
                             {
                                 <li>
-                                    <a class="@carat.Name caratName" caratId="@carat.Id" title="@carat.Name">@carat.Name</a>
+                                    <a class="@carat.Name caratName" @(carat.Name == item.CaratName ? "selected" : null) caratId="@carat.Id" title="@carat.Name" href="javascript:void(0)" productId="@item.Sku">@carat.Name</a>
                                 </li>
                             }
                         </ul>

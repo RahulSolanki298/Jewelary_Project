@@ -33,7 +33,7 @@ namespace DataAccess.Entities
         public int? GoldPurityId { get; set; } // 18 k
         //public int? GoldWeightId { get; set; } // 3.00 GMS
         public string GoldWeight { get; set; }
-        public int? CTW { get; set; }
+        public string CTW { get; set; }
         public int? CenterShapeId { get; set; }
         public int? CenterCaratId { get; set; }
         public int? CategoryId { get; set; }
@@ -46,6 +46,7 @@ namespace DataAccess.Entities
         public int? StyleId { get; set; }       // Style is brands
         public int? CollectionsId { get; set; } // Group of products
         public decimal? DiaWT { get; set; }
+        public string MMSize { get; set; }
         public string Grades { get; set; }
         public int NoOfStones { get; set; }
         public string Component { get; set; }

@@ -70,7 +70,7 @@
         public static string GIA = "GIA";
 
 
-        // public static string BaseApiUrl = "https://localhost:44302"; // https://jswebapi.com
+        //public static string BaseApiUrl = "https://localhost:44302"; // https://jswebapi.com
         public static string BaseApiUrl = "https://localhost:4050"; // https://jswebapi.com
 
 

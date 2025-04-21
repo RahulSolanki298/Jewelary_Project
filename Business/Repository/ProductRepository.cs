@@ -126,6 +126,7 @@ namespace Business.Repository
                         // Update existing product
                         existingProduct.Title = $"{product.CategoryName} {product.ColorName} {product.CaratName} {product.ProductType} {product.Sku}";
                         existingProduct.Sku = product.Sku;
+                        existingProduct.CTW = product.CTW;
                         existingProduct.Price = product.Price;
                         existingProduct.UnitPrice = product.UnitPrice;
                         existingProduct.Quantity = product.Quantity;
@@ -140,6 +141,7 @@ namespace Business.Repository
                         {
                             Title = $"{product.CategoryName} {product.ColorName} {product.CaratName} {product.ProductType} {product.Sku}",
                             Sku = product.Sku,
+                            CTW = product.CTW,
                             CategoryId = categoryId,
                             SubCategoryId = subCategoryId,
                             CaratSizeId = caratSizeId,
@@ -603,9 +605,9 @@ namespace Business.Repository
                                       Sku = product.Sku,
                                       ProductType = cat.ProductType,
                                       StyleId = product.StyleId,
-                                      CenterCaratName= size.Name,
+                                      CenterCaratName = size.Name,
                                       KaratId = krt.Id,
-                                      Karat=krt.Name
+                                      Karat = krt.Name
                                   }).Where(x => x.IsActivated).ToListAsync();
 
             // Step 1: Group products by SKU
@@ -867,7 +869,7 @@ namespace Business.Repository
             if (imgVdoPath == null) return 0;
             var existImg = await _context.FileManager.Where(x => x.FileUrl == imgVdoPath).FirstOrDefaultAsync();
 
-            if(existImg == null)
+            if (existImg == null)
             {
                 var imgVdo = new FileManager();
                 imgVdo.FileUrl = imgVdoPath;
@@ -889,7 +891,7 @@ namespace Business.Repository
                 imgDT.ImageLgId = ImgVdoData.ImageLgId ?? null;
                 imgDT.VideoId = ImgVdoData.VideoId ?? null;
                 imgDT.MetalId = ImgVdoData.MetalId;
-                imgDT.Sku=ImgVdoData.Sku;
+                imgDT.Sku = ImgVdoData.Sku;
                 imgDT.ShapeId = ImgVdoData.ShapeId;
                 imgDT.IsDefault = true;
 
@@ -1008,6 +1010,8 @@ namespace Business.Repository
                         existingProduct.BandWidth = product.BandWidth;
                         existingProduct.GoldWeight = product.GoldWeight;
                         existingProduct.Grades = product.Grades;
+                        existingProduct.MMSize = product.MMSize;
+                        existingProduct.CTW = product.CTW;
                         updateList.Add(existingProduct);
                     }
                     else
@@ -1032,6 +1036,11 @@ namespace Business.Repository
                             GoldWeight = product.GoldWeight,
                             Grades = product.Grades,
                             ShapeId = shapeId,
+                            MMSize = product.MMSize,
+                            NoOfStones = product.NoOfStones,
+                            DiaWT = product.DiaWT,
+                            CenterShapeId = product.CenterShapeId,
+                            CTW = product.CTW,
                             Id = Guid.NewGuid()
                         };
 
@@ -1068,9 +1077,14 @@ namespace Business.Repository
 
         public FileSplitDTO ExtractStyleName(string fileName)
         {
-            string nameOnly = Path.GetFileNameWithoutExtension(fileName); // e.g., "PLDB-02-R1" or "PLDB-02-RG"
-
+            string nameOnly = Path.GetFileNameWithoutExtension(fileName);
             var parts = nameOnly.Split('-');
+
+            if (parts.Length < 3)
+            {
+                throw new ArgumentException("Filename format is invalid. Expected format: DESIGNNO-COLORCODE");
+            }
+
             var dtImgVideo = new FileSplitDTO
             {
                 DesignNo = $"{parts[0]}-{parts[1]}"
@@ -1078,10 +1092,8 @@ namespace Business.Repository
 
             string colorPart = parts[2];
 
-            // If last part ends in a digit, split into letters + number
             if (char.IsDigit(colorPart.Last()))
             {
-                // Separate letters and digits
                 string letters = new string(colorPart.TakeWhile(c => !char.IsDigit(c)).ToArray());
                 string digits = new string(colorPart.SkipWhile(c => !char.IsDigit(c)).ToArray());
 
@@ -1090,15 +1102,13 @@ namespace Business.Repository
             }
             else
             {
-                // Entire part is the color code (e.g., "RG", "WG")
                 dtImgVideo.ColorName = colorPart;
-                dtImgVideo.Index = 0; // Or null if you change Index to nullable (int?)
+                dtImgVideo.Index = 0; // or null if changed to int?
             }
-
-
 
             return dtImgVideo;
         }
+
 
 
 
@@ -1239,7 +1249,7 @@ namespace Business.Repository
         }
 
 
-        public async Task<ProductDTO> GetProductByColorId(string sku, int colorId)
+        public async Task<ProductDTO> GetProductByColorId(string sku, int? colorId = 0, int? caratId = 0)
         {
             var products = await (from product in _context.Product
                                   join cat in _context.Category on product.CategoryId equals cat.Id
@@ -1253,6 +1263,8 @@ namespace Business.Repository
                                   from size in sizeGroup.DefaultIfEmpty()
                                   join sty in _context.ProductProperty on product.StyleId equals sty.Id into styleGroup
                                   from sty in styleGroup.DefaultIfEmpty()
+                                  join kt in _context.ProductProperty on product.KaratId equals kt.Id into ktGroup
+                                  from kt in ktGroup.DefaultIfEmpty()
                                   select new ProductDTO
                                   {
                                       Id = product.Id,
@@ -1275,15 +1287,25 @@ namespace Business.Repository
                                       Description = product.Description,
                                       Sku = product.Sku,
                                       ProductType = cat.ProductType,
-                                      StyleId = product.StyleId
-                                  }).Where(x => x.IsActivated != false && x.Sku == sku && x.ColorId == colorId).FirstOrDefaultAsync();
+                                      StyleId = product.StyleId,
+                                      KaratId=product.KaratId,
+                                      Karat=kt.Name
+                                  }).Where(x => x.IsActivated != false && x.Sku == sku).ToListAsync();
 
-            // Step 1: Group products by SKU
-            //var groupedProducts = products.GroupBy(p => p.Sku);
+            var query = products.AsQueryable();
 
+            if (caratId.HasValue && caratId > 0)
+            {
+                query = query.Where(p => p.CenterCaratId == caratId);
+            }
 
+            if (colorId.HasValue && colorId > 0)
+            {
+                query = query.Where(p => p.ColorId == colorId);
+            }
 
-            var firstProduct = products; // Get the first product from the group
+            var firstProduct = query.First();
+
 
             // Step 2: Get all related properties for each group
             var metals = await (from col in _context.ProductProperty
