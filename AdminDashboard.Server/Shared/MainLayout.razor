@@ -1,4 +1,6 @@
 ﻿@inherits LayoutComponentBase
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
 
 <MudThemeProvider Theme="_themeManager.Theme" />
 <MudDialogProvider />
@@ -10,13 +12,12 @@
     <MudAppBar Elevation="4">
         <MudHidden Breakpoint="Breakpoint.SmAndDown">
             @* <MudIcon Icon="@Icons.Custom.Brands.MudBlazor" Size="Size.Large" /> *@
-            Home Page
         </MudHidden>
         <MudHidden Breakpoint="Breakpoint.MdAndUp">
             <MudIconButton Icon="@Icons.Material.Outlined.Menu"
-                           Color="Color.Inherit"
-                           Edge="Edge.Start"
-                           OnClick="@DrawerToggle" />
+            Color="Color.Inherit"
+            Edge="Edge.Start"
+            OnClick="@DrawerToggle" />
         </MudHidden>
 
         <MudHidden Breakpoint="Breakpoint.Xs">
@@ -30,10 +31,10 @@
 
         <!-- Language Selector -->
         <MudMenu Icon="@Icons.Material.Outlined.Translate"
-                 Color="Color.Inherit"
-                 Direction="Direction.Bottom"
-                 OffsetY="true"
-                 Dense="true">
+        Color="Color.Inherit"
+        Direction="Direction.Bottom"
+        OffsetY="true"
+        Dense="true">
             <MudMenuItem>English</MudMenuItem>
             <MudMenuItem>Swedish</MudMenuItem>
             <MudMenuItem>Old Norse</MudMenuItem>
@@ -41,11 +42,11 @@
 
         <!-- Links -->
         <MudMenu Icon="@Icons.Material.Outlined.Widgets"
-                 Color="Color.Inherit"
-                 Direction="Direction.Bottom"
-                 OffsetY="true"
-                 Dense="true">
-           @*  <MudMenuItem Href="https://mudblazor.com/">MudBlazor</MudMenuItem>
+        Color="Color.Inherit"
+        Direction="Direction.Bottom"
+        OffsetY="true"
+        Dense="true">
+            @*  <MudMenuItem Href="https://mudblazor.com/">MudBlazor</MudMenuItem>
             <MudMenuItem Href="https://github.com/Garderoben/MudBlazor.Templates">Source Code</MudMenuItem> *@
         </MudMenu>
 
@@ -58,15 +59,15 @@
                 <PersonCard Class="mt-n2" />
                 <MudDivider Class="mb-2" />
                 <MudListItem Text="Account" Icon="@Icons.Material.Outlined.Person" Href="/personal/account" />
-                <MudListItem Text="Logout" Icon="@Icons.Material.Outlined.Login" Href="/identity/account/login" />
+                <MudListItem Text="Logout" Icon="@Icons.Material.Outlined.Login" @onclick="LogoutAsync" />
             </ChildContent>
         </MudMenu>
     </MudAppBar>
 
     <!-- Drawer -->
     <MudDrawer @bind-Open="_drawerOpen"
-               Elevation="25"
-               ClipMode="_themeManager.DrawerClipMode">
+    Elevation="25"
+    ClipMode="_themeManager.DrawerClipMode">
         <NavMenu />
     </MudDrawer>
 
@@ -75,22 +76,12 @@
         <MudHidden Breakpoint="Breakpoint.SmAndDown">
             <MudToolBar DisableGutters="true">
                 <MudIconButton Icon="@Icons.Material.Outlined.Menu"
-                               Color="Color.Inherit"
-                               OnClick="@DrawerToggle"
-                               Class="ml-3" />
-
+                Color="Color.Inherit"
+                OnClick="@DrawerToggle"
+                Class="ml-3" />
                 <MudBreadcrumbs Items="_items" />
 
                 <MudToolBarSpacer />
-
-                <MudButton Variant="Variant.Text"
-                           Href="https://mudblazor.com/"
-                           Style="color:#594AE2;">MudBlazor</MudButton>
-
-                <MudButton Variant="Variant.Text"
-                           Href="https://github.com/Garderoben/MudBlazor.Templates"
-                           Style="color:#424242;"
-                           Class="mr-3">Source Code</MudButton>
             </MudToolBar>
         </MudHidden>
 
@@ -106,11 +97,11 @@
 </MudLayout>
 
 <!-- Theme Manager Controls -->
-<MudThemeManagerButton OnClick="@(() => OpenThemeManager(true))" />
+@* <MudThemeManagerButton OnClick="@(() => OpenThemeManager(true))" />
 <MudThemeManager Open="_themeManagerOpen"
                  OpenChanged="OpenThemeManager"
                  Theme="_themeManager"
-                 ThemeChanged="UpdateTheme" />
+                 ThemeChanged="UpdateTheme" /> *@
 
 @code {
     #region Fields
@@ -118,7 +109,7 @@
     private bool _drawerOpen = true;
     private bool _themeManagerOpen = false;
     private bool _isLoading = false;
-
+    private bool success = false;
     #endregion
 
     #region Lifecycle
@@ -152,5 +143,26 @@
         new BreadcrumbItem("Personal", href: "#"),
         new BreadcrumbItem("Dashboard", href: "#"),
     };
+
+    private async Task LogoutAsync()
+    {
+        try
+        {
+            // Remove token from localStorage
+            await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "token");
+
+            // Optional: clear any in-memory authentication flags if needed
+            success = false;
+
+            // Navigate to login or home page
+            NavigationManager.NavigateTo("/", forceLoad: true);
+        }
+        catch (Exception ex)
+        {
+            // Handle potential logout issues (e.g., JS interop errors)
+            Console.WriteLine($"Logout failed: {ex.Message}");
+        }
+
+    }
     #endregion
 }

@@ -3,6 +3,13 @@
 @{
     ViewData["Title"] = "ProductDetails";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    <style>
+        .imageblock {
+            margin-left: 15px;
+        }
+
+
+    </style>
 }
 
 <!-- page main wrapper start -->
@@ -18,11 +25,10 @@
                             <div class="product-large-slider">
                                 @if (Model != null && Model.ProductImageVideos.Count > 0)
                                 {
-
                                     foreach (var item in Model.ProductImageVideos)
                                     {
-                                        <div class="pro-large-img img-zoom">
-                                            <img src="@($"{SD.BaseApiUrl}/{item?.ImageUrl}")" />
+                                        <div class="pro-large-img">
+                                            <img src="@($"{SD.BaseApiUrl}/{item?.ImageUrl}")" class="currImg" />
                                         </div>
                                     }
                                 }
@@ -32,10 +38,12 @@
                                 {
                                     foreach (var item in Model.ProductImageVideos)
                                     {
-                                        <div class="pro-nav-thumb product-details-img-border">
-
-                                            <img src="@($"{SD.BaseApiUrl}/{item?.ImageUrl}")" />
-                                        </div>
+                                        @if (item?.ImageUrl != null && item?.ImageUrl != "-")
+                                        {
+                                            <div class="pro-nav-thumb product-details-img-border">
+                                                <img src="@($"{SD.BaseApiUrl}/{item?.ImageUrl}")" class="figure-img" />
+                                            </div>
+                                        }
                                     }
                                 }
                             </div>

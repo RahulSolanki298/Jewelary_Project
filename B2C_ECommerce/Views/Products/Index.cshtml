@@ -1,9 +1,8 @@
-﻿<!-- Product Section - Start -->
+﻿@using Common
 @{
     ViewBag.Title = "Products";
     @*<link rel="stylesheet" href="~/assets/css/products.css">*@
 }
-@using Common
 
 <section>
     <div class="listingpage">
@@ -144,10 +143,10 @@
 
             function hideLoader() {
                 $('#txtLoader').hide(); // This hides the loader
-        }
+            }
 
-        // Generic slider initializer
-        function initSlider(selector, options) {
+            // Generic slider initializer
+            function initSlider(selector, options) {
             $(selector).slider({
                 range: true,
                 ...options
@@ -209,26 +208,6 @@
                     GetProducts(filters, page, rangeVal);
                 });
 
-        //  $("#ProductFilters").on("mouseenter mouseleave", ".metal-grp", function () {
-        //     const metalId = $(this).attr('metalId');
-
-        //     if ($(".metalcheckbox").is(":checked")) {
-        //         if (!filters.Metals.includes(metalId)) {
-        //             filters.Metals.push(metalId);
-        //         }
-        //     } else {
-        //         const index = filters.Metals.indexOf(metalId);
-        //         if (index !== -1) {
-        //             filters.Metals.splice(index, 1);
-        //         }
-        //     }
-
-        //     console.log(filters);
-
-        //     GetProducts(filters, page, rangeVal);
-        // });
-
-
                 $('#ProductFilters .hover-media-wrapper').mouseenter(function () {
                     const video = $(this).find('video.sec-img');
                     const image = $(this).find('.pri-img');
@@ -257,29 +236,40 @@
                 });
                 
                 // Set initial values
-        $("#MyProductsImg").on("click", ".metalColor", function (event) {
-            event.preventDefault();
+                $("#MyProductsImg").on("click", ".metalColor", function (event) {
+                    debugger;
+                    event.preventDefault();
 
-            // Get the product and metal ids from the clicked element
-            var productId = $(this).attr('productId');
-            var metalId = $(this).attr('metalid');
+                    var productId = $(this).attr('productId');
+                    var metalId = $(this).attr('metalid');
 
-            // Deselect all other items: reset the text and border color
-            $(".metalColor").each(function() {
-                $(this).text("").css({
-                    'color': 'black',
-                    'font-size': '16px',
-                    'font-weight': 'normal',
-                    'border': 'none'
+                    $(this).addClass("metalHide");
+                    GetProductByColorId(productId, metalId);
                 });
-            });
 
-            // Now, apply the selected styles to the clicked element
-            $(this).addClass("metalHide");
+                $("#MyProductsImg").on("mouseenter", ".metalColor", function (event) {
+                    event.preventDefault();
 
-            // Call your function to get the product by color ID
-            GetProductByColorId(productId, metalId);
-        });
+                    // Get the product and metal ids from the clicked element
+                    var productId = $(this).attr('productId');
+                    var metalId = $(this).attr('metalid');
+
+                    // Deselect all other items: reset the text and border color
+                    $(".metalColor").each(function() {
+                        $(this).text("24K").css({
+                            'font-size': '16px',
+                            'font-weight': 'normal',
+                            // 'border': '1px solid black'
+                        });
+                    });
+
+                    // Now, apply the selected styles to the clicked element
+                    $(this).addClass("metalHide");
+
+                    // Call your function to get the product by color ID
+                    GetProductByColorId(productId, metalId);
+                });
+                
 
                 ActivePriceSlider();
 
@@ -291,23 +281,23 @@
 
             });
 
-            function GetProductFilters()
-            {
-                    $.ajax({
-                        url: '/Products/GetProductFilters',
-                        type: 'GET',
-                        dataType: 'html'
-                    })
-                    .done(function(response) {
-                        $("#ProductFilters").html('');
-                        $('#ProductFilters').html(response);
-                        ActivePriceSlider();
+        function GetProductFilters()
+        {
+           $.ajax({
+               url: '/Products/GetProductFilters',
+               type: 'GET',
+               dataType: 'html'
+           })
+           .done(function(response) {
+               $("#ProductFilters").html('');
+               $('#ProductFilters').html(response);
+               ActivePriceSlider();
 
-                    })
-                    .fail(function(xhr, status, error) {
-                        console.error('AJAX error:', status, error);
-                    });
-            }
+           })
+           .fail(function(xhr, status, error) {
+               console.error('AJAX error:', status, error);
+           });
+        }
 
         function ActivePriceSlider()
         {
@@ -465,6 +455,6 @@
            GetProducts(filters, page, rangeVal);
         }
 
-    </script>
+            </script>
 
 }

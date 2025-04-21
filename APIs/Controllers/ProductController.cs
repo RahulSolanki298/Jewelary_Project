@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using OfficeOpenXml;
+using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -183,7 +184,7 @@ namespace APIs.Controllers
         {
             try
             {
-                List<Product> prdDesignDT = new List<Product>();
+                List<DataAccess.Entities.Product> prdDesignDT = new List<DataAccess.Entities.Product>();
                 var prdDT = new ProductImages();
                 if (zipFile == null || zipFile.Length == 0)
                 {
@@ -284,8 +285,6 @@ namespace APIs.Controllers
             }
         }
 
-
-
         [HttpPost("BulkNewProductUpload")]
         public async Task<IActionResult> UploadNewExcel(IFormFile file)
         {
@@ -309,6 +308,7 @@ namespace APIs.Controllers
 
                 int rowCount = worksheet.Dimension.Rows;
                 List<ProductDTO> products = new();
+                ProductDTO tempProducts = new();
                 string dateString = string.Empty;
                 //var ProductDate = new DateTime();
                 int index = 0;
@@ -323,9 +323,29 @@ namespace APIs.Controllers
                     {
                         index += 1;
 
+                        tempProducts=new ProductDTO();
+                        tempProducts.Id = Guid.NewGuid();
+                        //tempProducts.ProductDate = ProductDate;
+                        //tempProducts.CategoryName = worksheet.Name
+                        tempProducts.CategoryName = "Rings";
+                        tempProducts.VenderName = worksheet.Cells[row, 6].Text;
+                        tempProducts.StyleName = worksheet.Cells[row, 7].Text;
+                        tempProducts.Sku = worksheet.Cells[row, 7].Text;
+                        tempProducts.Length = worksheet.Cells[row, 9].Text;
+                        tempProducts.BandWidth = worksheet.Cells[row, 10].Text;
+                        tempProducts.CTW = worksheet.Cells[row, 12].Text;
+                        tempProducts.ShapeName = worksheet.Cells[row, 13].Text;
+                        tempProducts.CenterCaratName = worksheet.Cells[row, 14].Text;
+                        tempProducts.ColorName = worksheet.Cells[row, 15].Text;
+                        tempProducts.Grades = worksheet.Cells[row, 21].Text;
+                        tempProducts.GoldWeight = worksheet.Cells[row, 11].Text;
+                        tempProducts.DiaWT = decimal.TryParse(worksheet.Cells[row, 19].Text, out var diaWt) ? diaWt : 0;
+                        tempProducts.NoOfStones = int.TryParse(worksheet.Cells[row, 20].Text, out var noOfStones) ? noOfStones : 0;
+                        tempProducts.Price = decimal.TryParse(worksheet.Cells[row, 25].Text, out var Sprice) ? Sprice : 0;
+                        tempProducts.UnitPrice = product.Price;
                     }
 
-                    if (index == 1)
+                    if (index >= 1)
                     {
                         index += 1;
                         product = new ProductDTO
@@ -334,24 +354,24 @@ namespace APIs.Controllers
                             //ProductDate = ProductDate,
                             // CategoryName = worksheet.Name,
                             CategoryName = "Rings",
-                            VenderName = worksheet.Cells[row, 6].Text,
-                            StyleName = worksheet.Cells[row, 7].Text,
-                            Sku = worksheet.Cells[row, 7].Text,
-                            Length = worksheet.Cells[row, 9].Text,
-                            BandWidth = worksheet.Cells[row, 10].Text,
-                            CTW = worksheet.Cells[row, 12].Text,
-                            ShapeName = worksheet.Cells[row, 13].Text,
-                            CenterCaratName = worksheet.Cells[row, 14].Text,
-                            ColorName = worksheet.Cells[row, 15].Text,
-                            Grades = worksheet.Cells[row, 21].Text,
-                            GoldWeight = worksheet.Cells[row, 11].Text
+                            VenderName = string.IsNullOrEmpty(worksheet.Cells[row, 6].Text) != true ? worksheet.Cells[row, 6].Text : tempProducts.VenderName,
+                            StyleName = string.IsNullOrEmpty(worksheet.Cells[row, 7].Text) != true ? worksheet.Cells[row, 7].Text : tempProducts.StyleName,
+                            Sku = string.IsNullOrEmpty(worksheet.Cells[row, 7].Text) != true ? worksheet.Cells[row, 7].Text : tempProducts.StyleName,
+                            Length = string.IsNullOrEmpty(worksheet.Cells[row, 9].Text) != true ? worksheet.Cells[row, 9].Text : tempProducts.Length,
+                            BandWidth = string.IsNullOrEmpty(worksheet.Cells[row, 10].Text) != true ? worksheet.Cells[row, 10].Text : tempProducts.BandWidth,
+                            CTW = string.IsNullOrEmpty(worksheet.Cells[row, 12].Text) != true ? worksheet.Cells[row, 12].Text : tempProducts.CTW,
+                            ShapeName = string.IsNullOrEmpty(worksheet.Cells[row, 13].Text) != true ? worksheet.Cells[row, 13].Text : tempProducts.ShapeName,
+                            CenterCaratName = string.IsNullOrEmpty(worksheet.Cells[row, 14].Text) != true ? worksheet.Cells[row, 14].Text : tempProducts.CenterCaratName,
+                            ColorName = string.IsNullOrEmpty(worksheet.Cells[row, 15].Text) != true ? worksheet.Cells[row, 15].Text : tempProducts.ColorName,
+                            Grades = string.IsNullOrEmpty(worksheet.Cells[row, 21].Text) != true ? worksheet.Cells[row, 21].Text : tempProducts.Grades,
+                            GoldWeight = string.IsNullOrEmpty(worksheet.Cells[row, 11].Text) != true ? worksheet.Cells[row, 11].Text : tempProducts.GoldWeight,
                         };
 
                         // Convert numeric values safely
-                        product.DiaWT = decimal.TryParse(worksheet.Cells[row, 19].Text, out var diaWt) ? diaWt : 0;
-                        product.NoOfStones = int.TryParse(worksheet.Cells[row, 20].Text, out var noOfStones) ? noOfStones : 0;
-                        product.Price = decimal.TryParse(worksheet.Cells[row, 25].Text, out var Sprice) ? Sprice : 0;
-                        product.UnitPrice = product.Price;
+                        product.DiaWT = decimal.TryParse(worksheet.Cells[row, 19].Text, out var diaWt) ? diaWt : tempProducts.DiaWT;
+                        product.NoOfStones = int.TryParse(worksheet.Cells[row, 20].Text, out var noOfStones) ? noOfStones : tempProducts.NoOfStones;
+                        product.Price = decimal.TryParse(worksheet.Cells[row, 25].Text, out var Sprice) ? Sprice : tempProducts.Price;
+                        product.UnitPrice = product.Price > 0 ? product.Price : tempProducts.Price;
                     }
                     else
                     {
@@ -362,9 +382,6 @@ namespace APIs.Controllers
                         index += 1;
                         product.GoldWeight = worksheet.Cells[row, 11].Text;
                         product.CenterCaratName = worksheet.Cells[row, 14].Text;
-
-
-
                     }
 
 
@@ -433,7 +450,6 @@ namespace APIs.Controllers
             var products = await _productRepository.GetProductStyleList();
             var query = products.AsQueryable();
 
-            // Convert string filter IDs to appropriate types (e.g., int or Guid)
             var shapeIds = filters.Shapes?.Select(Int32.Parse).ToList();
             var metalIds = filters.Metals?.Select(Int32.Parse).ToList();
 
@@ -508,7 +524,7 @@ namespace APIs.Controllers
                 return BadRequest("Invalid file format. Please upload an Excel (.xlsx) file.");
 
             try
-            {
+            {   
                 using var stream = new MemoryStream();
                 await file.CopyToAsync(stream);
 
@@ -822,7 +838,6 @@ namespace APIs.Controllers
             // Return null if the value cannot be parsed
             return null;
         }
-
 
     }
 }

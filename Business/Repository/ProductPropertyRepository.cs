@@ -19,7 +19,23 @@ namespace Business.Repository
             _context = context;
         }
 
-        public async Task<IEnumerable<ProductProperty>> GetMainPropertyList() => await _context.ProductProperty.Where(x=>x.ParentId == null).ToListAsync();
+        public async Task<IEnumerable<ProductPropertyDTO>> GetMainPropertyList() 
+        {
+            var result = await (from pp in _context.ProductProperty
+                          select new ProductPropertyDTO
+                          {
+                              Id=pp.Id,
+                              Name=pp.Name,
+                              SymbolName=pp.SymbolName,
+                              Description=pp.Description,
+                              IconPath = pp.IconPath,
+                              DispOrder = pp.DisplayOrder,
+                              ParentId=pp.ParentId,
+                              IsActivated=pp.IsActive.Value
+                          }).Where(x=>x.IsActivated == true && x.ParentId == null).ToListAsync();
+            return result; 
+        }
+
         public async Task<IEnumerable<ProductProperty>> GetProductPropertyList() => await _context.ProductProperty.ToListAsync();
 
         public async Task<ProductProperty> GetProductPropertyById(int Id) => await _context.ProductProperty.FirstOrDefaultAsync(x=>x.Id==Id);

@@ -2,6 +2,7 @@
 
 @using Business.Repository
 @using Business.Repository.IRepository
+@using global::Models
 
 @inject IProductPropertyRepository _productPropertyRepo
 @inject ICategoryRepositry _categoryRepository
@@ -11,13 +12,19 @@
     <MudItem>
         <MudCardHeader>
             <CardHeaderContent>
-                <MudText Typo="Typo.h6">Add / Edit Product Property</MudText>
+                <MudText Typo="Typo.h6">Product Property</MudText>
             </CardHeaderContent>
         </MudCardHeader>
         <MudCardContent>
             <MudText @bind-Value="productProperty.Id" InputType="InputType.Hidden" ></MudText>
             <MudTextField @bind-Value="productProperty.Name" Placeholder="Please enter product property type."></MudTextField>
             
+            <MudSelect @bind-Value="productProperty.ParentId" Label="Margin">
+                @foreach (var margin in productPropertyList)
+                {
+                    <MudSelectItem Value="margin.Id">@margin.Name</MudSelectItem>
+                }
+            </MudSelect>
             <MudTextField @bind-Value="productProperty.ParentId" Placeholder="Please enter parent id."></MudTextField>
             <MudTextField @bind-Value="productProperty.Description" Placeholder="Please enter description."></MudTextField>
             <br/>
@@ -72,7 +79,7 @@
     private IEnumerable<DataAccess.Entities.Category> Categories { get; set; } = new List<DataAccess.Entities.Category>();
     private DataAccess.Entities.ProductProperty productProperty = new DataAccess.Entities.ProductProperty();
     private IEnumerable<DataAccess.Entities.ProductProperty> productPropertyList { get; set; } = new List<DataAccess.Entities.ProductProperty>();
-    private IEnumerable<DataAccess.Entities.ProductProperty> parentPropertyList { get; set; } = new List<DataAccess.Entities.ProductProperty>();
+    private IEnumerable<ProductPropertyDTO> parentPropertyList { get; set; } = new List<ProductPropertyDTO>();
     private bool IsLoading { get; set; } = false;
     private int currentPage = 0;
     private int pageSize = 5;
@@ -140,7 +147,7 @@
     private async Task GetParentDropDownList()
     {
         parentPropertyList = await _productPropertyRepo.GetMainPropertyList();
-        StateHasChanged(); // Ensure UI updates after data is fetched
+        StateHasChanged(); 
     }
 
 

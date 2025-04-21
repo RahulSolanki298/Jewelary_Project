@@ -7,7 +7,7 @@ namespace Business.Repository.IRepository
 {
     public interface IProductPropertyRepository
     {
-        Task<IEnumerable<ProductProperty>> GetMainPropertyList();
+        Task<IEnumerable<ProductPropertyDTO>> GetMainPropertyList();
         Task<IEnumerable<ProductProperty>> GetProductPropertyList();
         Task<ProductProperty> GetProductPropertyById(int Id);
         Task<bool> DeleteProductProperty(int Id);
