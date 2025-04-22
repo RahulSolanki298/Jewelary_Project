@@ -243,6 +243,8 @@ namespace Business.Repository
             
         }
 
+
+
         public async Task<IEnumerable<DiamondPropertyDTO>> GetFluorListAsync()
         {
             var diamondFluor = await _context.Diamonds
@@ -446,6 +448,19 @@ namespace Business.Repository
             tableRange.MinValue = data.Min(x => x.Table).Value;
 
             return tableRange;
+        }
+
+        public async Task<RatioDto> GetRatioRangeAsync()
+        {
+            var data = await _context.Diamonds.ToListAsync();
+            var priceRange = new RatioDto();
+            //priceRange.MaxPrice = data.Max(x => x.Amount).Value;
+            //priceRange.MinPrice = data.Min(x => x.Amount).Value;
+
+            priceRange.MinValue = data.Max(x => x.Ratio).Value;
+            priceRange.MaxValue = data.Min(x => x.Ratio).Value;
+
+            return priceRange;
         }
     }
 }

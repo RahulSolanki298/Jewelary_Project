@@ -54,9 +54,9 @@ namespace B2C_ECommerce.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ProductDetailsByColorId(string sku, int colorId)
+        public async Task<IActionResult> ProductDetailsByColorId(string sku, int? colorId=0,int? caratId=0)
         {
-            var jsonResult = await _productRepository.GetProductsByColorId(sku, colorId);
+            var jsonResult = await _productRepository.GetProductsByColorId(sku, colorId,caratId);
 
             //var products = JsonConvert.DeserializeObject<ProductDTO>(jsonResult);
 

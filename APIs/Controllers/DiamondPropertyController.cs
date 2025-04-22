@@ -107,6 +107,13 @@ namespace APIs.Controllers
             return Ok(result);
         }
 
+        [HttpGet("get-ratio-ranges")]
+        public async Task<ActionResult> GetRatioRangeAsync()
+        {
+            var result = await _diamondProperty.GetRatioRangeAsync();
+            return Ok(result);
+        }
+
         [HttpGet("get-fluor-list")]
         public async Task<ActionResult> GetFluorListAsync()
         {

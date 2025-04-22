@@ -222,11 +222,11 @@ namespace B2C_ECommerce.Services
             }
         }
 
-        public async Task<ProductDTO> GetProductsByColorId(string sku, int colorId)
+        public async Task<ProductDTO> GetProductsByColorId(string sku, int? colorId=0,int? caratId=0)
         {
             try
             {
-                var requestUrl = $"{SD.BaseApiUrl}/api/Product/GetProductByColor/Sku/{sku}/colorId/{colorId}";
+                var requestUrl = $"{SD.BaseApiUrl}/api/Product/GetProductByColor/Sku/{sku}/colorId/{colorId}/caratId/{caratId}";
 
                 using var response = await _httpClient.GetAsync(requestUrl);
 

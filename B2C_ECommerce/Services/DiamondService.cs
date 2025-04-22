@@ -18,7 +18,7 @@ namespace B2C_ECommerce.Services
             _httpClient = httpClientFactory.CreateClient("API");
         }
 
-        public async Task<List<DiamondData>> GetDiamondListByFilter(DiamondFilters diamondFilters, int pageNumber = 1, int pageSize = 10)
+        public async Task<DiamondAllDataDto> GetDiamondListByFilter(DiamondFilters diamondFilters, int pageNumber = 1, int pageSize = 10)
         {
             try
             {
@@ -33,9 +33,9 @@ namespace B2C_ECommerce.Services
                     throw new Exception("API response content is null.");
                 }
 
-                var result = await response.Content.ReadFromJsonAsync<List<DiamondData>>();
+                var result = await response.Content.ReadFromJsonAsync<DiamondAllDataDto>();
 
-                return result ?? new List<DiamondData>();
+                return result ?? new DiamondAllDataDto();
             }
             catch (HttpRequestException httpEx)
             {

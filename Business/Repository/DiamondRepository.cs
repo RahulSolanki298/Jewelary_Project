@@ -21,10 +21,11 @@ namespace Business.Repository
             _context = context;
         }
 
-        public async Task<IEnumerable<DiamondData>> GetDiamondsAsync(DiamondFilters filters, int pageNumber, int pageSize)
+        public async Task<DiamondAllDataDto> GetDiamondsAsync(DiamondFilters filters, int pageNumber, int pageSize)
         {
             try
             {
+                DiamondAllDataDto diamonData = new DiamondAllDataDto();
                 // Construct the SQL parameters
                 var parameters = new[]
                 {
@@ -48,13 +49,15 @@ namespace Business.Repository
                     new SqlParameter("@LabNames", SqlDbType.NVarChar) { Value = filters.LabNames != null && filters.LabNames.Any() ? string.Join(",", filters.LabNames) : (object)DBNull.Value },
                 };
 
-                var diamonds = await _context.DiamondData
+                diamonData.DiamondData = await _context.DiamondData
                     .FromSqlRaw("EXEC SP_GetDiamondDataBY_NEW_DiamondFilters @Shapes, @Colors, @FromCarat, @ToCarat, @FromPrice, @ToPrice, @Cuts, @Clarities, @FromRatio, @ToRatio, @FromTable, @ToTable, @FromDepth, @ToDepth, @Polish, @Fluor, @Symmeties,@LabNames", parameters)
                     .ToListAsync();
 
-                var query = diamonds.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+                diamonData.DiamondCounter = diamonData.DiamondData.Count();
 
-                return query;
+                diamonData.DiamondData = diamonData.DiamondData.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
+                return diamonData;
             }
             catch (Exception ex)
             {

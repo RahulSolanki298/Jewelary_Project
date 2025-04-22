@@ -498,7 +498,7 @@ namespace APIs.Controllers
             //    .ToList();
 
             var pagedResult = query.Where(x => x.ProductImageVideos.Count > 0)
-               .Skip((pageNumber - 1) * 20)
+               .Skip((pageNumber - 1) * pageSize)
                .Take(pageSize)
                .ToList();
 

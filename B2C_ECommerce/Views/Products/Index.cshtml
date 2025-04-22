@@ -120,7 +120,7 @@
 @section Scripts {
     @*<script src="assets/js/plugins/slick.min.js"></script>*@
 
-    <script>
+<script>
             var page = 1;
             var rangeVal = 10;
 
@@ -156,6 +156,8 @@
             $(document).ready(function(){
                 loadAllFunctions();
 
+                 //GetAmount$("DiamondCount").val();
+
                 //$("#minPrice").val("$" + $("#price-slider").slider("values", 0));
                 //$("#maxPrice").val("$" + $("#price-slider").slider("values", 1));
 
@@ -190,7 +192,7 @@
                 });
 
                 $("#ProductFilters").on("change", ".metal-grp", function () {
-                    const metalId = $(this).attr('metalId'); 
+                    const metalId = $(this).attr('metalId');
 
                     if ($(".metalcheckbox").is(":checked")) {
                         if (!filters.Metals.includes(metalId)) {
@@ -203,7 +205,7 @@
                         }
                     }
 
-                    console.log(filters); 
+                    console.log(filters);
 
                     GetProducts(filters, page, rangeVal);
                 });
@@ -213,9 +215,9 @@
                     const image = $(this).find('.pri-img');
 
                     if (video.length > 0) {
-                        image.hide(); 
-                        video.show(); 
-                        video[0].play(); 
+                        image.hide();
+                        video.show();
+                        video[0].play();
                     }
                 });
 
@@ -234,7 +236,7 @@
                         image.show(); // Show the image again
                     }
                 });
-                
+
                 // Set initial values
                 $("#MyProductsImg").on("click", ".metalColor", function (event) {
                     debugger;
@@ -247,7 +249,7 @@
                     GetProductByColorId(productId, metalId);
                 });
 
-                $("#MyProductsImg").on("mouseenter", ".metalColor", function (event) {
+                $("#MyProductsImg").on("mouseenter", ".caratName", function (event) {
                     event.preventDefault();
 
                     // Get the product and metal ids from the clicked element
@@ -268,6 +270,27 @@
 
                     // Call your function to get the product by color ID
                     GetProductByColorId(productId, metalId);
+                });
+
+
+                $("#MyProductsImg").on("click", ".caratName", function (event) {
+                    event.preventDefault();
+
+                    var productId = $(this).attr('productId');
+                    var caratId = $(this).attr('caratId');
+
+                    $(this).addClass("metalHide");
+                    GetProductByCaratId(productId, caratId);
+                });
+
+                $("#MyProductsImg").on("mouseenter", ".caratName", function (event) {
+                    event.preventDefault();
+
+                    var productId = $(this).attr('productId');
+                    var caratId = $(this).attr('caratId');
+
+                    $(this).addClass("metalHide");
+                    GetProductByCaratId(productId, caratId);
                 });
 
                 ActivePriceSlider();
@@ -330,7 +353,7 @@
             var minCarat = parseFloat($("#minCarat").val()) || 0;
             var maxCarat = parseFloat($("#maxCarat").val()) || 5;
 
-            if (minCarat > maxCarat) 
+            if (minCarat > maxCarat)
             {
                 [minCarat, maxCarat] = [minCarat, maxCarat];
             }
@@ -341,7 +364,7 @@
                 max: maxCarat,
                 step: 0.1,
                 values: [minCarat, maxCarat],
-                slide: function (event, ui) {                    
+                slide: function (event, ui) {
                     $("#minCarat").val(ui.values[0]);
                     $("#maxCarat").val(ui.values[1]);
 
@@ -380,7 +403,7 @@
 
         async function loadAllFunctions() {
             showLoader();
-            try 
+            try
             {
                 await Promise.all([
                    GetProductFilters()
@@ -431,6 +454,45 @@
                 });
         }
 
+        function GetProductByCaratId(productId, caratId) {
+            $.ajax({
+                url: '/Products/ProductDetailsByColorId',
+                data: {
+                    sku: productId,
+                    caratId: parseInt(caratId)
+                },
+                type: 'GET',
+                dataType: 'json'
+            })
+                .done(function (response) {
+                    const $productContainer = $(".product-item").has("[data-sku='" + productId + "']");
+                    const baseUrl = '@SD.BaseApiUrl'.replace(/\\/g, '/');
+
+                    console.log($(".activemetalname[data-sku='" + productId + "']"));
+                    console.log($(".price-regular[data-sku='" + productId + "']"));
+                    console.log($(".price-old[data-sku='" + productId + "']"));
+
+                    $(".activemetalname[data-sku='" + productId + "']").text(response.colorName);
+
+                    $(".price-regular[data-sku='" + productId + "']").text(response.Price);
+                    $(".price-old[data-sku='" + productId + "']").html('<del>' + response.unitPrice + '</del>');
+
+                    const images = (response.productImageVideos || []).filter(x => x.imageUrl && x.imageUrl !== "-");
+                    if (images.length > 0) {
+                        const priImg = baseUrl + '/' + images[0].imageUrl.replace(/\\/g, '/');
+                        $productContainer.find('.pri-img').attr('src', priImg).attr('alt', response.colorName + ' - Primary Image');
+                    }
+
+                    if (images.length > 1) {
+                        const secImg = baseUrl + '/' + images[1].imageUrl.replace(/\\/g, '/');
+                        $productContainer.find('.sec-img').attr('src', secImg).attr('alt', response.colorName + ' - Secondary Image');
+                    }
+                })
+                .fail(function (xhr, status, error) {
+                    console.error('AJAX error:', status, error);
+                });
+        }
+
         function ResetAllData()
         {
             var page = 1;
@@ -453,6 +515,16 @@
            GetProducts(filters, page, rangeVal);
         }
 
-            </script>
+
+    //function GetAmount(amount) {
+    //    const formatted = amount.toLocaleString('en-US', {
+    //        style: 'currency',
+    //        currency: 'USD',
+    //        minimumFractionDigits: 2
+    //    });
+
+    //    return formatted;
+    //}
+</script>
 
 }

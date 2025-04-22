@@ -1,29 +1,29 @@
-﻿@model IEnumerable<Models.DiamondData>
+﻿@model Models.DiamondAllDataDto
 
 
-<div class="row mb-3">
-    <div class="col-md-4 ml-auto">
-        <h5>Diamonds Available: @Model.Count()</h5>
+<div class="row mb-12">
+    <div class="col-md-12 ml-auto text-center">
+        <h5>Diamonds Available: @Model.DiamondCounter.ToString("N0")</h5>
     </div>
 
-    <div class="col-md-4 ">
+    @*<div class="col-md-4 ">
         <input type="text" id="diamondFilter" class="form-control shadow-sm" placeholder="Search Diamonds..." />
-    </div>
+    </div>*@
 
 </div>
 
 
-<div class="table-responsive">
+<div class="table-responsive p-4">
     <table id="diamondTable" class="table table-bordered border-dark table-hover align-middle shadow-sm">
         <thead class="table-light border-dark text-center" style="background-color:#d2d2d2;">
             <tr>
                 <th>Actions</th>
+                <th>CERT.</th>
                 <th>Shape</th>
                 <th>Carat</th>
                 <th>Color</th>
                 <th>Clarity</th>
                 <th>Cut</th>
-                <th>CERT.</th>
                 <th>Polish</th>
                 <th>Symmetry</th>
                 <th>Depth</th>
@@ -34,7 +34,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.DiamondData)
             {
                 <tr class="text-center">
                     <td>
@@ -44,8 +44,17 @@
                         <a href="@item.DiamondVideoPath" target="_blank">
                             <img src="~/assets/img/360-degrees.png" class="rounded" style="height:35px;width:35px;" />
                         </a>
+                    </td>
+                    <td>
                         <a href="#" data-certi="@item.Certificate" class="text-decoration-none text-dark clsCertificate">
-                            <i class="fa fa-lg fa-certificate" aria-hidden="true"></i>
+                            @if (item.LabName == "IGI")
+                            {
+                                <img src="~/assets/img/logo/Igi-Reports.png" style="width:200px;" />
+                            }
+                            else if (item.LabName == "GIA")
+                            {
+                                <img src="~/assets/img/logo/Gia-Reports.png"   style="width:200px;" />
+                            }
                         </a>
                     </td>
                     <td>@item.ShapeName</td>
@@ -53,11 +62,7 @@
                     <td>@item.ColorName</td>
                     <td>@item.ClarityName</td>
                     <td>@item.CutName</td>
-                    <td>
-                        <a href="#" data-certi="@item.Certificate" class="text-decoration-none text-dark clsCertificate">
-                            @item.LabName
-                        </a>
-                    </td>
+
                     <td>@item.PolishName</td>
                     <td>@item.SymmetyName</td>
                     <td>@item.Depth</td>

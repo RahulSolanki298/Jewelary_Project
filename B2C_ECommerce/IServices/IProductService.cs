@@ -21,7 +21,7 @@ namespace B2C_ECommerce.IServices
 
         Task<PriceRanges> GetProductPriceRangeData();
 
-        Task<ProductDTO> GetProductsByColorId(string sku, int colorId);
+        Task<ProductDTO> GetProductsByColorId(string sku, int? colorId = 0, int? caratId = 0);
 
     }
 }

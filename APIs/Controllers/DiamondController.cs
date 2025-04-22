@@ -34,9 +34,9 @@ namespace APIs.Controllers
         {
             var response = await _diamondRepository.GetDiamondsAsync(diamondFilters, pageNumber, pageSize);
 
-            if (response.Count() == 0)
+            if (response.DiamondData.Count() == 0)
             {
-                response = await _diamondRepository.GetShapeWiseDiamondList();
+                response.DiamondData = (List<DiamondData>)await _diamondRepository.GetShapeWiseDiamondList();
             }
 
             return Ok(response);

@@ -38,9 +38,30 @@
                         <div class="col-lg-7">
                             <div class="product-details-des">
                                 <div class="manufacturer-name">
-                                    <a href="product-details.html">HasTech</a>
+                                    <a href="#">@Model.LabShape</a>                                    
                                 </div>
                                 <h3 class="product-name"> @Model.Carat @Model.ColorName @Model.ShapeName @Model.ClarityName @Model.LabName</h3>
+                                <p style="font-size:medium;"> @Model.CutName Cut | @Model.ColorName Color | @Model.ClarityName Clarity</p>
+
+                                <a href="@Model.Certificate" data-certi="@Model.Certificate" class="text-decoration-none text-dark clsCertificate" target="_blank">
+                                    @if (Model.LabName == "IGI")
+                                    {
+                                        <img src="~/assets/img/logo/Igi-Reports.png" style="width:200px;" />
+                                    }
+                                    else if (Model.LabName == "GIA")
+                                    {
+                                        <img src="~/assets/img/logo/Gia-Reports.png" style="width:200px;" />
+                                    }
+                                </a>
+
+                                <div class="price-box">
+                                    <p style="font-size:x-large;">
+                                        $ @Model.Price
+                                    </p>
+                                    @*<span class="price-old"><del>@Model.Amount</del></span>*@
+                                </div>
+                                <hr />
+
                                 <div class="ratings d-flex">
                                     <span><i class="fa fa-star-o"></i></span>
                                     <span><i class="fa fa-star-o"></i></span>
@@ -51,41 +72,39 @@
                                         <span>1 Reviews</span>
                                     </div>
                                 </div>
-                                <div class="price-box">
-                                    <span class="price-regular">@Model.Price</span>
-                                    <span class="price-old"><del>@Model.Amount</del></span>
+
+                                <h5>Short Description</h5>
+
+                                <div class="pro-desc">
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
+                                        eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
+                                        voluptua. Phasellus id nisi quis justo tempus mollis sed et dui. In hac
+                                        habitasse platea dictumst.
+                                    </p>
                                 </div>
-                                @*<h5 class="offer-text"><strong>Hurry up</strong>! offer ends in:</h5>
-                                <div class="product-countdown" data-countdown="2022/12/30"></div>
-                                <div class="availability">
-                                    <i class="fa fa-check-circle"></i>
-                                    <span>200 in stock</span>
-                                </div>*@
-                                <p class="pro-desc">
-                                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
-                                    eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
-                                    voluptua. Phasellus id nisi quis justo tempus mollis sed et dui. In hac
-                                    habitasse platea dictumst.
-                                </p>
-                                <div class="quantity-cart-box d-flex align-items-center">
-                                    <h6 class="option-title">qty:</h6>
-                                    <div class="quantity">
-                                        <div class="pro-qty"><input type="text" value="1"></div>
-                                    </div>
-                                    <div class="action_link">
-                                        <a class="btn btn-cart2" href="#">Add to cart</a>
-                                    </div>
+                                <div class="action_link">
+                                    <a class="btn btn-cart2" href="#">Add to cart</a>
                                 </div>
-                                <div class="pro-size">
-                                    <h6 class="option-title">size :</h6>
-                                    <select class="nice-select">
-                                        <option>S</option>
-                                        <option>M</option>
-                                        <option>L</option>
-                                        <option>XL</option>
-                                    </select>
-                                </div>
-                                <div class="color-option">
+                                @*<div class="quantity-cart-box d-flex align-items-center">
+            <h6 class="option-title">qty:</h6>
+            <div class="quantity">
+                <div class="pro-qty"><input type="text" value="1"></div>
+            </div>
+            <div class="action_link">
+                <a class="btn btn-cart2" href="#">Add to cart</a>
+            </div>
+        </div>*@
+                                @*<div class="pro-size">
+            <h6 class="option-title">size :</h6>
+            <select class="nice-select">
+                <option>S</option>
+                <option>M</option>
+                <option>L</option>
+                <option>XL</option>
+            </select>
+        </div>*@
+                                @*<div class="color-option">
                                     <h6 class="option-title">color :</h6>
                                     <ul class="color-categories">
                                         <li>
@@ -101,7 +120,7 @@
                                             <a class="c-brown" href="#" title="Brown"></a>
                                         </li>
                                     </ul>
-                                </div>
+                                </div>*@
                                 <div class="useful-links">
                                     <a href="#" data-bs-toggle="tooltip" title="Compare"><i class="pe-7s-refresh-2"></i>compare</a>
                                     <a href="#" data-bs-toggle="tooltip" title="Wishlist"><i class="pe-7s-like"></i>wishlist</a>
@@ -155,11 +174,11 @@
                                             <tbody>
                                                 <tr>
                                                     <td>color</td>
-                                                    <td>black, blue, red</td>
+                                                    <td>@Model.ColorName</td>
                                                 </tr>
                                                 <tr>
                                                     <td>size</td>
-                                                    <td>L, M, S</td>
+                                                    <td>@Model.Carat</td>
                                                 </tr>
                                             </tbody>
                                         </table>

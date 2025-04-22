@@ -32,6 +32,8 @@ namespace Business.Repository.IRepository
 
         Task<IEnumerable<DiamondPropertyDTO>> GetMetalListAsync();
 
+        Task<RatioDto> GetRatioRangeAsync();
+
 
 
     }

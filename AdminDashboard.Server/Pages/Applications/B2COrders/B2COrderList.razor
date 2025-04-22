@@ -1,18 +1,15 @@
 ﻿@page "/applications/b2corders/customer-orders"
 
-@using Business.Repository
 @using Business.Repository.IRepository
-@using System.IO
 @using Common
 @using DataAccess.Entities
-@using OfficeOpenXml
 @using global::Models
 
 @inject IDialogService Dialog
 @inject IB2COrdersRepository _OrderRepo
 @inject ISnackbar Snackbar
 
-<MudTable Elevation="10" Items="RequestOrders" Filter="new Func<CustomerOrders,bool>(Search)" @bind-category="CustomerOrders" Hover="@hower" Dense="@dense">
+<MudTable Elevation="10" Items="RequestOrders">
 	<ToolBarContent>
 		<MudText Typo="Typo.h6">B2C Order Request List</MudText>
 		<MudToolBarSpacer />
