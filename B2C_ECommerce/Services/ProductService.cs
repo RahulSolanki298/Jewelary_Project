@@ -222,15 +222,14 @@ namespace B2C_ECommerce.Services
             }
         }
 
-        public async Task<ProductDTO> GetProductsByColorId(string sku, int? colorId=0,int? caratId=0)
+        public async Task<ProductDTO> GetProductsByColorId(string sku, int? colorId = 0)
         {
             try
             {
-                var requestUrl = $"{SD.BaseApiUrl}/api/Product/GetProductByColor/Sku/{sku}/colorId/{colorId}/caratId/{caratId}";
+                var requestUrl = $"{SD.BaseApiUrl}/api/Product/GetProductByColor/Sku/{sku}/colorId/{colorId}";
 
                 using var response = await _httpClient.GetAsync(requestUrl);
-
-                response.EnsureSuccessStatusCode(); // Throws exception if status code is not successful.
+                response.EnsureSuccessStatusCode();
 
                 if (response.Content is null)
                 {
@@ -238,7 +237,6 @@ namespace B2C_ECommerce.Services
                 }
 
                 var result = await response.Content.ReadFromJsonAsync<ProductDTO>();
-
                 return result ?? new ProductDTO();
             }
             catch (HttpRequestException httpEx)
@@ -250,5 +248,33 @@ namespace B2C_ECommerce.Services
                 throw new Exception($"Error fetching diamond list: {ex.Message}", ex);
             }
         }
+
+        public async Task<ProductDTO> GetProductsByCaratId(string sku, int? caratId = 0)
+        {
+            try
+            {
+                var requestUrl = $"{SD.BaseApiUrl}/api/Product/GetProductByCarat/Sku/{sku}/caratId/{caratId}";
+
+                using var response = await _httpClient.GetAsync(requestUrl);
+                response.EnsureSuccessStatusCode();
+
+                if (response.Content is null)
+                {
+                    throw new Exception("API response content is null.");
+                }
+
+                var result = await response.Content.ReadFromJsonAsync<ProductDTO>();
+                return result ?? new ProductDTO();
+            }
+            catch (HttpRequestException httpEx)
+            {
+                throw new Exception($"HTTP request error: {httpEx.Message}", httpEx);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching diamond list: {ex.Message}", ex);
+            }
+        }
+
     }
 }

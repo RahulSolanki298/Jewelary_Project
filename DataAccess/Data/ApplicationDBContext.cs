@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using DataAccess.Entities;
+﻿using DataAccess.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Models;
 
 namespace DataAccess.Data
 {
-    public class ApplicationDBContext :IdentityDbContext<ApplicationUser>
+    public class ApplicationDBContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
         {
@@ -68,6 +66,12 @@ namespace DataAccess.Data
         public DbSet<DiamondShapeData> DiamondShapeData { get; set; }
 
         public DbSet<DiamondColorData> DiamondColorData { get; set; }
+
+        public DbSet<ProductPrices> ProductPrices { get; set; }
+
+        public DbSet<ProductWeight> ProductWeights { get; set; }
+
+        public DbSet<EventSites> EventSites { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

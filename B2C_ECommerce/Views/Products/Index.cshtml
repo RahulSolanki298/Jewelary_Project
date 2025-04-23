@@ -2,6 +2,38 @@
 @{
     ViewBag.Title = "Products";
     @*<link rel="stylesheet" href="~/assets/css/products.css">*@
+    <style>
+        .media-container {
+            position: relative;
+        }
+
+        .product-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+            z-index: 2;
+        }
+
+        .metalHide {
+            color: black;
+            font-size: 16px;
+            font-weight: normal;
+            border: none;
+        }
+
+        .metalShow {
+            color: black;
+            font-size: 16px;
+            font-weight: bold;
+            border: 1px solid black;
+            display:block;
+        }
+
+    </style>
 }
 
 <section>
@@ -120,7 +152,7 @@
 @section Scripts {
     @*<script src="assets/js/plugins/slick.min.js"></script>*@
 
-<script>
+    <script>
             var page = 1;
             var rangeVal = 10;
 
@@ -244,28 +276,24 @@
 
                     var productId = $(this).attr('productId');
                     var metalId = $(this).attr('metalid');
+                    $(".metalColor").removeClass("metalShow");
+                    $(".metalColor").addClass("metalHide");
 
-                    $(this).addClass("metalHide");
+                    $(this).addClass("metalShow");
                     GetProductByColorId(productId, metalId);
                 });
 
-                $("#MyProductsImg").on("mouseenter", ".caratName", function (event) {
+                $("#MyProductsImg").on("mouseenter", ".metalColor", function (event) {
                     event.preventDefault();
 
                     // Get the product and metal ids from the clicked element
                     var productId = $(this).attr('productId');
                     var metalId = $(this).attr('metalid');
 
-                    // Deselect all other items: reset the text and border color
-                    $(".metalColor").each(function () {
+                    // Find all metalColor elements and remove the 'metalHide' class from all except the clicked one
+                    $(this).closest('.productCard').find('.metalColor').removeClass("metalHide");
 
-                        //$(this).text("24K").css({
-                        //    'font-size': '16px',
-                        //    'font-weight': 'normal',
-                        //});
-                    });
-
-                    // Now, apply the selected styles to the clicked element
+                    // Now apply the 'metalHide' class only to the clicked element
                     $(this).addClass("metalHide");
 
                     // Call your function to get the product by color ID
@@ -294,6 +322,24 @@
                 });
 
                 ActivePriceSlider();
+
+                $('#MyProductsImg').on('mouseenter', '.media-container', function () {
+                    const $video = $(this).find('.product-video');
+                    if ($video.length) {
+                        $video.show();
+                        $video[0].currentTime = 0;
+                        $video[0].play();
+                    }
+                });
+
+                $('#MyProductsImg').on('mouseleave', '.media-container', function () {
+                    const $video = $(this).find('.product-video');
+                    if ($video.length) {
+                        $video[0].pause();
+                        $video.hide();
+                    }
+                });
+
 
                 $("#minPrice1").val("$" + $("#price-slider1").slider("values", 0));
                 $("#maxPrice1").val("$" + $("#price-slider1").slider("values", 1));
@@ -420,7 +466,8 @@
                 url: '/Products/ProductDetailsByColorId',
                 data: {
                     sku: productId,
-                    colorId:parseInt(colorId)
+                    colorId: parseInt(colorId),
+                    caratId:0
                 },
                 type: 'GET',
                 dataType: 'json'
@@ -448,6 +495,30 @@
                         $productContainer.find('.sec-img').attr('src', secImg).attr('alt', response.colorName + ' - Secondary Image');
                     }
 
+                    const videos = (response.productImageVideos || []).filter(x => x.videoUrl && x.videoUrl !== "-");
+                    if (videos.length > 0) {
+                        const videoPT = baseUrl + '/' + videos[0].videoUrl.replace(/\\/g, '/');
+
+                        const $videoContainer = $productContainer.find('.product-video');
+
+                        // Ensure <source> exists or create one
+                        let $videoSource = $videoContainer.find('source');
+                        if ($videoSource.length === 0) {
+                            $videoSource = $('<source>', { type: 'video/mp4' });
+                            $videoContainer.append($videoSource);
+                        }
+
+                        // Update the source and reload
+                        $videoSource.attr('src', videoPT);
+                        $videoContainer.attr('poster', ''); // Optional: clear old poster
+
+                        const videoElement = $videoContainer[0];
+                        if (videoElement) {
+                            videoElement.load(); // Reload video
+                        }
+                    }
+
+
                 })
                 .fail(function (xhr, status, error) {
                     console.error('AJAX error:', status, error);
@@ -456,7 +527,7 @@
 
         function GetProductByCaratId(productId, caratId) {
             $.ajax({
-                url: '/Products/ProductDetailsByColorId',
+                url: '/Products/ProductDetailsByCaratId',
                 data: {
                     sku: productId,
                     caratId: parseInt(caratId)
@@ -525,6 +596,6 @@
 
     //    return formatted;
     //}
-</script>
+    </script>
 
 }

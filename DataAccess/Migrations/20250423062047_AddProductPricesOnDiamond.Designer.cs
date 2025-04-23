@@ -4,14 +4,16 @@ using DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250423062047_AddProductPricesOnDiamond")]
+    partial class AddProductPricesOnDiamond
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -799,21 +801,6 @@ namespace DataAccess.Migrations
                     b.ToTable("DiamondProperties");
                 });
 
-            modelBuilder.Entity("DataAccess.Entities.EventSites", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("EventName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EventSites");
-                });
-
             modelBuilder.Entity("DataAccess.Entities.FileManager", b =>
                 {
                     b.Property<int>("Id")
@@ -962,9 +949,6 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("AccentStoneShapeId")
-                        .HasColumnType("int");
-
                     b.Property<string>("BandWidth")
                         .HasColumnType("nvarchar(max)");
 
@@ -992,9 +976,6 @@ namespace DataAccess.Migrations
                     b.Property<int?>("CenterShapeId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Certificate")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("ClarityId")
                         .HasColumnType("int");
 
@@ -1019,7 +1000,7 @@ namespace DataAccess.Migrations
                     b.Property<decimal?>("DiaWT")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("EventId")
+                    b.Property<int>("EventId")
                         .HasColumnType("int");
 
                     b.Property<string>("Gender")
@@ -1035,9 +1016,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActivated")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("IsReadyforShip")
                         .HasColumnType("bit");
 
                     b.Property<int?>("KaratId")
@@ -1300,27 +1278,6 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ProductStyles");
-                });
-
-            modelBuilder.Entity("DataAccess.Entities.ProductWeight", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("KaratId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ProductId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("Weight")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ProductWeights");
                 });
 
             modelBuilder.Entity("DataAccess.Entities.SubCategory", b =>

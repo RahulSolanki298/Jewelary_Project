@@ -15,15 +15,22 @@
 
 
         public static string Requested = "Requested";
+        
         public static string StartActivationProcess = "Start Activation Process"; // Pending Process
+
+        public static string ReadyToPdp = "READY TO PDP";
 
         // Product Types
         public static string GoldProducts = "Gold";
+
         public static string DiamondProducts = "Diamond";
+
         public static string GDProducts = "GoldAndDiamond";
 
         public static string Activated = "Activated";
+
         public static string DeActived = "DeActived";
+
         public static string InProcess = "InProcess";
 
         // Jewelary Property

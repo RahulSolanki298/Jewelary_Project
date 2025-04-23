@@ -1,6 +1,6 @@
 ﻿namespace DataAccess.Entities
 {
-    public class ProductKaratSize
+    public class ProductPrices
     {
         public int Id { get; set; }
 
@@ -8,8 +8,7 @@
 
         public int? KaratId { get; set; }
 
-        public int? ShapeId { get; set; }
+        public decimal? ProductPrice { get; set; } = 0;
 
-        public decimal? Value { get; set; }
     }
 }

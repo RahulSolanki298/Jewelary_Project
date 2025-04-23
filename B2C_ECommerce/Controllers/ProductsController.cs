@@ -28,7 +28,6 @@ namespace B2C_ECommerce.Controllers
         {
             var result = await _productRepository.GetProductListByFilter(filters,pageNumber,pageSize);
             return PartialView("~/Views/Products/_NewImagesAndProducts.cshtml", result);
-
         }
 
         [HttpGet]
@@ -54,11 +53,20 @@ namespace B2C_ECommerce.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ProductDetailsByColorId(string sku, int? colorId=0,int? caratId=0)
+        public async Task<IActionResult> ProductDetailsByColorId(string sku, int? colorId=0)
         {
-            var jsonResult = await _productRepository.GetProductsByColorId(sku, colorId,caratId);
+            var jsonResult = await _productRepository.GetProductsByColorId(sku, colorId);
 
             //var products = JsonConvert.DeserializeObject<ProductDTO>(jsonResult);
+
+            return Json(jsonResult);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ProductDetailsByCaratId(string sku, int? caratId = 0)
+        {
+            var jsonResult = await _productRepository.GetProductsByCaratId(sku, caratId);
+
 
             return Json(jsonResult);
         }

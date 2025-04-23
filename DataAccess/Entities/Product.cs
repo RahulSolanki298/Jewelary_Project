@@ -19,9 +19,9 @@ namespace DataAccess.Entities
         public decimal Price { get; set; }
         public int Quantity { get; set; } = 0;
         public string ProductType { get; set; } // Diamond, Gold
-        public string Occasion  { get; set; }
-        public string Remarks  { get; set; }
-        public string Package  { get; set; }
+        public string Occasion { get; set; }
+        public string Remarks { get; set; }
+        public string Package { get; set; }
         public string MfgDesign { get; set; }
         public string Designer { get; set; }
         public string CadDesigner { get; set; }
@@ -30,7 +30,9 @@ namespace DataAccess.Entities
         public string Length { get; set; }
         public int? KaratId { get; set; }
         public string BandWidth { get; set; }
+
         public int? GoldPurityId { get; set; } // 18 k
+
         //public int? GoldWeightId { get; set; } // 3.00 GMS
         public string GoldWeight { get; set; }
         public string CTW { get; set; }
@@ -53,6 +55,10 @@ namespace DataAccess.Entities
         public string MaterialType { get; set; }
         public string Type { get; set; }
         public string Setting { get; set; }
+        public string Certificate { get; set; }
+        public int? EventId { get; set; }
+        public bool? IsReadyforShip { get; set; }
+        public int? AccentStoneShapeId { get; set; }
         public bool IsActivated { get; set; } = false;
     }
 }

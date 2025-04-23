@@ -1,5 +1,22 @@
 ﻿@using Common
 
+<style>
+    .media-container {
+        position: relative;
+    }
+
+    .product-video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: none;
+        z-index: 2;
+    }
+</style>
+
 <section>
     <div class="listingpage">
         <div class="home-giftbanner-main position-relative left-text-banner">
@@ -81,6 +98,10 @@
 </div>
 
 
+<!-- Model Add -->
+
+
+
 @section Scripts
 {
 
@@ -159,47 +180,46 @@
                 $("#btnMoreFilter").show();
             });
 
-             $('#showMoreBtn').click(()=> {
+            $('#showMoreBtn').click(() => {
                 rangeVal += 10;
                 getDiamondDataList(diamondFilters, page, rangeVal); // Reload the table with new page size
             });
 
-            $("#btnReset").on("click",function(){
+            $("#btnReset").on("click", function () {
                 ResetAllData();
             });
 
-            $("#chkIGI").on("click",function()
-            {
-                 if ($('#chkIGI').is(':checked')) {
-                      selectedLabs.push('IGI');
-                 }else{
-                     selectedLabs = selectedLabs.filter(function (lab) {
-                       return lab !== 'IGI';
-                     });
-                 }
+            $("#chkIGI").on("click", function () {
+                if ($('#chkIGI').is(':checked')) {
+                    selectedLabs.push('IGI');
+                } else {
+                    selectedLabs = selectedLabs.filter(function (lab) {
+                        return lab !== 'IGI';
+                    });
+                }
 
-                 if (selectedLabs.length === 0) {
-                        selectedLabs.push('GIA', 'IGI');
-                    }
+                if (selectedLabs.length === 0) {
+                    selectedLabs.push('GIA', 'IGI');
+                }
 
-                 diamondFilters.LabNames=selectedLabs;
-                 getDiamondDataList(diamondFilters, page, rangeVal);
+                diamondFilters.LabNames = selectedLabs;
+                getDiamondDataList(diamondFilters, page, rangeVal);
             });
 
-            $("#chkGIA").on("click",function(){
+            $("#chkGIA").on("click", function () {
                 debugger;
                 if ($('#chkGIA').is(':checked')) {
-                      selectedLabs.push('GIA');
-                 }else{
-                     selectedLabs = selectedLabs.filter(function (lab) {
-                       return lab !== 'GIA';
-                     });
-                 }
-                 if (selectedLabs.length === 0) {
-                            selectedLabs.push('GIA', 'IGI');
-                 }
-                 diamondFilters.LabNames=selectedLabs;
-                 getDiamondDataList(diamondFilters, page, rangeVal);
+                    selectedLabs.push('GIA');
+                } else {
+                    selectedLabs = selectedLabs.filter(function (lab) {
+                        return lab !== 'GIA';
+                    });
+                }
+                if (selectedLabs.length === 0) {
+                    selectedLabs.push('GIA', 'IGI');
+                }
+                diamondFilters.LabNames = selectedLabs;
+                getDiamondDataList(diamondFilters, page, rangeVal);
             });
 
             //// Generic slider initializer
@@ -219,7 +239,7 @@
                 }
             });
 
-            $(" #btnViewAll").on("click",function(){
+            $(" #btnViewAll").on("click", function () {
                 ResetAllData();
             });
 
@@ -229,43 +249,31 @@
             });
 
             let selectedCheckboxes = [];
+            let selectedDiamondIds = [];
 
-            $('#diamond-list-container').on('change',"#diamondTable tbody input[type='checkbox']" ,function () 
+            $('#diamond-list-container').on('change',"#diamondTable tbody input[type='checkbox']" ,function ()
             {
-                                let checkbox = $(this);
+                let checkbox = $(this);
+                let diamondId = $(this).attr('diamondId');
 
-                        if (checkbox.is(':checked')) {
-                            selectedCheckboxes.push(checkbox);
+                if (checkbox.is(':checked')) {
+                    selectedCheckboxes.push(checkbox);
+                    selectedDiamondIds.push(diamondId);
+                    if (selectedCheckboxes.length > 3) {
+                        // Uncheck the first checkbox
+                        selectedDiamondIds.shift();
+                        let first = selectedCheckboxes.shift();
+                        first.prop('checked', false);
+                    }
+                } else {
+                    // If unchecked manually, remove from the tracking list
+                    selectedCheckboxes = selectedCheckboxes.filter(cb => cb[0] !== checkbox[0]);
+                    selectedDiamondIds = selectedDiamondIds.filter(cb => cb[0] != checkbox[0]);
+                }
 
-                            if (selectedCheckboxes.length > 3) {
-                                // Uncheck the first checkbox
-                                let first = selectedCheckboxes.shift();
-                                first.prop('checked', false);
-                            }
-                        } else {
-                            // If unchecked manually, remove from the tracking list
-                            selectedCheckboxes = selectedCheckboxes.filter(cb => cb[0] !== checkbox[0]);
-                        }
 
-                    // debugger;
-                    // let checkbox = $(this);
-                    // let diamondId=$(this).attr('diamondId');
-
-                    //     if (checkbox.is(':checked')) {
-                    //         selectedCheckboxes.push(diamondId);
-
-                    //         if (selectedCheckboxes.length > 3) {
-                    //             // Uncheck the first checkbox
-                    //             let first = selectedCheckboxes.shift();
-                    //             first.prop('checked', false);
-                    //         }
-                    //     } else {
-                    //         // If unchecked manually, remove from the tracking list
-                    //         selectedCheckboxes = selectedCheckboxes.filter(cb => cb[0] !== checkbox[0]);
-                    //     }
-                    // });
             });
-
+        });
 
         $(document).on("click", ".clsCertificate", function (e) {
             e.preventDefault();
@@ -604,7 +612,6 @@
                                 }
 
         async function GetTableData() {
-            debugger;
             try {
                 const response = await $.ajax({
                   url: '@(SD.BaseApiUrl)/api/diamondproperty/get-table-ranges', // API endpoint
@@ -947,6 +954,7 @@
                     showLoader();
                     try {
                         await Promise.all([
+                            GetShapeDesign(),
                             GetCarat(),
                             GetCutData(),
                             GetColorData(),
@@ -957,10 +965,10 @@
                             GetSymmetryData(),
                             GetTableData(),
                             GetDepthData(),
-                            GetRatioData(),
-                            GetShapeDesign()
+                            GetRatioData()
 
                         ]);
+                        debugger;
                         getDiamondDataList(diamondFilters, page, rangeVal);
                     } catch (error) {
                         console.error("An error occurred while loading data:", error);
