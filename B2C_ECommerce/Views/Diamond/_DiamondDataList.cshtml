@@ -49,11 +49,11 @@
                         <a href="#" data-certi="@item.Certificate" class="text-decoration-none text-dark clsCertificate">
                             @if (item.LabName == "IGI")
                             {
-                                <img src="~/assets/img/logo/Igi-Reports.png" style="width:200px;" />
+                                <img src="~/assets/img/logo/IGI_LOGO.png" style="width:200px;" />
                             }
                             else if (item.LabName == "GIA")
                             {
-                                <img src="~/assets/img/logo/Gia-Reports.png"   style="width:200px;" />
+                                <img src="~/assets/img/logo/Gia-Reports.png" style="width:200px;" />
                             }
                         </a>
                     </td>
@@ -67,9 +67,10 @@
                     <td>@item.SymmetyName</td>
                     <td>@item.Depth</td>
                     <td>@item.Price</td>
-                    <td><input type="checkbox" style="width:20px;height:20px;" /></td>
+                    <td><input type="checkbox" style="width:20px;height:20px;" diamondId="@item.Id" /></td>
                     <td>
-                        <img src="~/assets/img/heart.png" class="img-fluid" style="width:25px;height:25px;" />
+                        <img src="~/assets/img/Heart-Unchecked.png" class="img-fluid" style="width:25px;height:25px;" />
+                        <img src="~/assets/img/Heart-Checked.png" class="img-fluid" style="width:25px;height:25px;display:none;" />
                     </td>
                     <td>
                         <a class="btn btn-sm btn-dark rounded-pill" href="/Diamond/GetSingleDiamond?diamondId=@item.Id">

@@ -436,7 +436,7 @@ namespace Business.Repository
             var data = await _context.Diamonds.ToListAsync();
             var depthRange = new DepthDTO();
             depthRange.MaxValue = data.Max(x => x.Depth).Value;
-            depthRange.MinValue = data.Min(x => x.Amount).Value;
+            depthRange.MinValue = data.Min(x => x.Depth).Value;
             return depthRange;
         }
 
@@ -454,11 +454,9 @@ namespace Business.Repository
         {
             var data = await _context.Diamonds.ToListAsync();
             var priceRange = new RatioDto();
-            //priceRange.MaxPrice = data.Max(x => x.Amount).Value;
-            //priceRange.MinPrice = data.Min(x => x.Amount).Value;
 
-            priceRange.MinValue = data.Max(x => x.Ratio).Value;
-            priceRange.MaxValue = data.Min(x => x.Ratio).Value;
+            priceRange.MaxValue = data.Max(x => x.Ratio).Value;
+            priceRange.MinValue = data.Min(x => x.Ratio).Value;
 
             return priceRange;
         }

@@ -24,7 +24,6 @@ namespace B2C_ECommerce.Controllers
         public async Task<IActionResult> GetDiamondList(DiamondFilters diamondFilters, int pageNumber = 1, int pageSize = 10)
         {
             var response = await _diamondService.GetDiamondListByFilter(diamondFilters, pageNumber, pageSize);
-
             return PartialView("~/Views/Diamond/_DiamondDataList.cshtml", response);
         }
 

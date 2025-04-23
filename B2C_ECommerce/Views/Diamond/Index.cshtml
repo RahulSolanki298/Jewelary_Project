@@ -177,6 +177,11 @@
                        return lab !== 'IGI';
                      });
                  }
+
+                 if (selectedLabs.length === 0) {
+                        selectedLabs.push('GIA', 'IGI');
+                    }
+
                  diamondFilters.LabNames=selectedLabs;
                  getDiamondDataList(diamondFilters, page, rangeVal);
             });
@@ -189,6 +194,9 @@
                      selectedLabs = selectedLabs.filter(function (lab) {
                        return lab !== 'GIA';
                      });
+                 }
+                 if (selectedLabs.length === 0) {
+                            selectedLabs.push('GIA', 'IGI');
                  }
                  diamondFilters.LabNames=selectedLabs;
                  getDiamondDataList(diamondFilters, page, rangeVal);
@@ -219,7 +227,44 @@
             $("#btnCertiClose").click(function () {
                 $("#dimCertiModal").modal("hide");
             });
-        });
+
+            let selectedCheckboxes = [];
+
+            $('#diamond-list-container').on('change',"#diamondTable tbody input[type='checkbox']" ,function () 
+            {
+                                let checkbox = $(this);
+
+                        if (checkbox.is(':checked')) {
+                            selectedCheckboxes.push(checkbox);
+
+                            if (selectedCheckboxes.length > 3) {
+                                // Uncheck the first checkbox
+                                let first = selectedCheckboxes.shift();
+                                first.prop('checked', false);
+                            }
+                        } else {
+                            // If unchecked manually, remove from the tracking list
+                            selectedCheckboxes = selectedCheckboxes.filter(cb => cb[0] !== checkbox[0]);
+                        }
+
+                    // debugger;
+                    // let checkbox = $(this);
+                    // let diamondId=$(this).attr('diamondId');
+
+                    //     if (checkbox.is(':checked')) {
+                    //         selectedCheckboxes.push(diamondId);
+
+                    //         if (selectedCheckboxes.length > 3) {
+                    //             // Uncheck the first checkbox
+                    //             let first = selectedCheckboxes.shift();
+                    //             first.prop('checked', false);
+                    //         }
+                    //     } else {
+                    //         // If unchecked manually, remove from the tracking list
+                    //         selectedCheckboxes = selectedCheckboxes.filter(cb => cb[0] !== checkbox[0]);
+                    //     }
+                    // });
+            });
 
 
         $(document).on("click", ".clsCertificate", function (e) {
@@ -651,7 +696,7 @@
 
         async function GetRatioData() {
             try {
-                // Fetching data from API
+                debugger;
                 const response = await $.ajax({
                     url: '@(SD.BaseApiUrl)/api/diamondproperty/get-ratio-ranges',
                     method: 'GET',
@@ -664,19 +709,19 @@
 
                 $("#LWRatio-slider").slider({
                     range: true,
-                    min: response.minValue,
-                    max: ratioList.maxValue,
+                    min: response.MinValue,
+                    max: response.MaxValue,
                     step: 1,
-                    values: [response.minValue, response.maxValue],
+                    values: [response.MinValue, response.MaxValue],
                     slide: function (event, ui) {
                         const fromIndex = ui.values[0];
                         const toIndex = ui.values[1];
 
-                        const fromRatio = response.minValue;
-                        const toRatio = response.maxValue;
+                        // const fromRatio = response.minValue;
+                        // const toRatio = response.maxValue;
 
-                        $("#minLWRatio").val(fromRatio.Name);
-                        $("#maxLWRatio").val(toRatio.Name);
+                        $("#minLWRatio").val(fromIndex);
+                        $("#maxLWRatio").val(toIndex);
 
                         diamondFilters.FromRatio = fromRatio.Name;
                         diamondFilters.ToRatio = toRatio.Name;
@@ -686,8 +731,8 @@
                 });
 
                 // Set initial values
-                $("#minLWRatio").val(response.minValue);
-                $("#maxLWRatio").val(response.maxValue);
+                $("#minLWRatio").val(response.MinValue);
+                $("#maxLWRatio").val(response.MaxValue);
 
 
                 diamondFilters.FromRatio = $("#minLWRatio").val();
@@ -872,7 +917,6 @@
                 }
 
         async function getDiamondDataList(diamondFilters, pageNumber = 1, pageSize = 10) {
-                    debugger;
                     showLoader();
                     return $.ajax({
                         //url: '@Url.Action("GetDiamondList", "Diamond")', // Change this to your actual route
