@@ -141,7 +141,7 @@
                 </div>
                 <!-- product details inner end -->
                 <!-- product details reviews start -->
-                <div class="product-details-reviews section-padding pb-0">
+                <div class="product-details-reviews padding-top-0 padding-bottom-20">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="product-review-info">
@@ -316,6 +316,14 @@
                 $("#dimCertiModal").modal("show");
             }
         });
+
+
+        $(document).on("click", "#btnCertiClose", function (e) {
+            e.preventDefault();
+            $("#dimCertiModal").modal("hide");
+        });
+
+        
 
     </script>
 }

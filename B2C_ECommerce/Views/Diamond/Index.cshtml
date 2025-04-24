@@ -104,19 +104,19 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <!-- modal-lg for medium size -->
         <div class="modal-content">
-            <div class="modal-header" style="display:block !important;padding:5px 0px;">
+            <div class="modal-header" style="display:block !important;padding:10px 0px;">
                 <div class="row">
                     <div class="col-xl-10 col-md-10 col-lg-10">
                         <h5 class="modal-title text-center" id="compareDiamondsModalLabel">Compare Diamonds</h5>
                     </div>
                     <div class="col-xl-2 col-md-2 col-lg-2">
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close text-center" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                 </div>
             </div>
             <div class="modal-body">
                 <div id="diamondComparisonContent">
-
+                    
                 </div>
             </div>
         </div>
@@ -301,6 +301,7 @@
 
                 // Save the updated selected diamond IDs to localStorage
                 localStorage.setItem('selectedDiamonds', JSON.stringify(selectedDiamondIds));
+                selectedDiamonds = JSON.parse(localStorage.getItem('selectedDiamonds')) || [];
                 updateSelectedDiamondCount();
             });
 
@@ -391,7 +392,7 @@
                         step: 0.1,
                         values: [response.MinCaratSize, response.MaxCaratSize],
                         slide: function (event, ui) {
-                            debugger;
+                            
                             $("#minCarat").val(ui.values[0]);
                             $("#maxCarat").val(ui.values[1]);
 
@@ -812,6 +813,7 @@
         }
 
         function updateSelectedDiamondCount() {
+            debugger;
             $('#proCounter').text('(' + selectedDiamonds.length+')');
         }
 
