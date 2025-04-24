@@ -33,12 +33,6 @@ namespace APIs.Controllers
         public async Task<ActionResult> GetDiamondByFilterData(DiamondFilters diamondFilters, int pageNumber = 1, int pageSize = 10)
         {
             var response = await _diamondRepository.GetDiamondsAsync(diamondFilters, pageNumber, pageSize);
-
-            if (response.DiamondData.Count() == 0)
-            {
-                response.DiamondData = (List<DiamondData>)await _diamondRepository.GetShapeWiseDiamondList();
-            }
-
             return Ok(response);
         }
 
@@ -48,6 +42,39 @@ namespace APIs.Controllers
             var response = await _diamondRepository.GetDiamondList();
             return Ok(response);
         }
+
+        [HttpPost("getDiamondListBydiamondIds")]
+        public async Task<ActionResult> GetDiamondListByIds(int[] diamondIds)
+        {
+            if (diamondIds.Length == 0)
+            {
+                return BadRequest("No diamond IDs provided.");
+            }
+
+            try
+            {
+
+                var response = await _diamondRepository.GetDiamondList();
+
+                var filteredDiamonds = response.Where(x => diamondIds.Contains(x.Id)).ToList();
+
+                if (!filteredDiamonds.Any())
+                {
+                    return NotFound("No diamonds found with the provided IDs.");
+                }
+
+                return Ok(filteredDiamonds);
+            }
+            catch (FormatException ex)
+            {
+                return BadRequest($"Invalid diamond ID format: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
 
         [HttpPost("BulkDiamondUpload")]
         public async Task<IActionResult> UploadDiamondWithExcelOrCsv(IFormFile file)

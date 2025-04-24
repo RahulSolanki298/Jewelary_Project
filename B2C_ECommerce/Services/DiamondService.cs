@@ -103,5 +103,39 @@ namespace B2C_ECommerce.Services
             }
         }
 
+        public async Task<IEnumerable<DiamondData>> GetSelectedDiamondByIds(int[] diamondIds)
+        {
+            try
+            {
+                // Build the request URL with the diamondIds query parameter
+                var requestUrl = $"{SD.BaseApiUrl}/api/diamond/getDiamondListBydiamondIds";
+                using var response = await _httpClient.PostAsJsonAsync(requestUrl, diamondIds);
+
+
+                // Ensure the response is successful
+                response.EnsureSuccessStatusCode(); // Throws exception if status code is not successful.
+
+                if (response.Content is null)
+                {
+                    throw new Exception("API response content is null.");
+                }
+
+                // Deserialize the response content into a List of DiamondData objects
+                var result = await response.Content.ReadFromJsonAsync<List<DiamondData>>();
+
+                return result ?? new List<DiamondData>(); // Return the result or an empty list if null
+            }
+            catch (HttpRequestException httpEx)
+            {
+                throw new Exception($"HTTP request error: {httpEx.Message}", httpEx);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching diamond data: {ex.Message}", ex);
+            }
+        }
+
+
+
     }
 }

@@ -463,7 +463,6 @@ namespace Business.Repository
                     }
                 }
 
-                // Step 4: Bulk insert new products and update existing products
                 if (productList.Count > 0)
                 {
                     await _context.Product.AddRangeAsync(productList);
@@ -474,17 +473,13 @@ namespace Business.Repository
                     _context.Product.UpdateRange(updateList);
                 }
 
-                // Step 5: Save changes to the database
                 await _context.SaveChangesAsync();
 
                 return true;
             }
             catch (Exception ex)
             {
-                // Log the exception (You can replace this with your actual logging mechanism)
                 Console.Error.WriteLine($"An error occurred: {ex.Message}");
-
-                // You can add more handling if needed (e.g., rethrow or return false)
                 return false;
             }
         }
@@ -493,21 +488,15 @@ namespace Business.Repository
         {
             try
             {
-                // Step 0: Initilize veriable
                 var updateList = new List<Product>();
                 var existingProduct = new Product();
 
-                // Step 1: Fetch all related entities in bulk to avoid repeated database calls
-
                 var karatList = await GetKaratList();
 
-                // Step 2: Create dictionaries for fast lookup by Name
                 var karatDict = karatList.ToDictionary(x => x.Name, x => x.Id);
 
-                // Lists for insert and update
                 int karatId;
 
-                // Step 3: Process each product
                 foreach (var product in products)
                 {
                     if (string.IsNullOrEmpty(product.DesignNo)
@@ -519,14 +508,13 @@ namespace Business.Repository
 
                     karatId = karatDict.GetValueOrDefault(product.Karat);
 
-                    // Check if a product already exists based on related field IDs
                     existingProduct = await _context.Product
                         .Where(x => x.ProductType == product.ProductType
                                     && x.DesignNo == product.DesignNo)
                         .FirstOrDefaultAsync();
+
                     if (existingProduct != null)
                     {
-                        // Update existing product
                         existingProduct.ProductType = product.ProductType;
                         existingProduct.ShapeId = product.ShapeId;
                         existingProduct.Carat = product.Carat;
@@ -545,17 +533,13 @@ namespace Business.Repository
                     _context.Product.UpdateRange(updateList);
                 }
 
-                // Step 5: Save changes to the database
                 await _context.SaveChangesAsync();
 
                 return true;
             }
             catch (Exception ex)
             {
-                // Log the exception (You can replace this with your actual logging mechanism)
                 Console.Error.WriteLine($"An error occurred: {ex.Message}");
-
-                // You can add more handling if needed (e.g., rethrow or return false)
                 return false;
             }
         }
@@ -609,16 +593,14 @@ namespace Business.Repository
                                       Karat = krt.Name
                                   }).Where(x => x.IsActivated).ToListAsync();
 
-            // Step 1: Group products by SKU
             var groupedProducts = products.GroupBy(p => p.Sku);
 
             var productDTOList = new List<ProductDTO>();
 
             foreach (var grp in groupedProducts)
             {
-                var firstProduct = grp.First(); // Get the first product from the group
+                var firstProduct = grp.First();
 
-                // Step 2: Get all related properties for each group
                 var metals = await (from col in _context.ProductProperty
                                     join prod in _context.Product on col.Id equals prod.ColorId
                                     join colN in _context.ProductProperty on col.ParentId equals colN.Id
@@ -655,7 +637,6 @@ namespace Business.Repository
                                     }).Distinct().ToListAsync();
 
 
-                // Step 3: Create a ProductDTO for the group and add related properties
                 var productDTO = new ProductDTO
                 {
                     Id = firstProduct.Id,

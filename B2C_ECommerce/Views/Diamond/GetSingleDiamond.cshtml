@@ -38,7 +38,7 @@
                         <div class="col-lg-7">
                             <div class="product-details-des">
                                 <div class="manufacturer-name">
-                                    <a href="#">@Model.LabShape</a>                                    
+                                    <a href="#">@Model.LabShape</a>
                                 </div>
                                 <h3 class="product-name"> @Model.Carat @Model.ColorName @Model.ShapeName @Model.ClarityName @Model.LabName</h3>
                                 <p style="font-size:medium;"> @Model.CutName Cut | @Model.ColorName Color | @Model.ClarityName Clarity</p>
@@ -72,10 +72,14 @@
                                         <span>1 Reviews</span>
                                     </div>
                                 </div>
-
-                                <h5>Short Description</h5>
+                                <br />
+                                <div class="manufacturer-name">
+                                    <h5>Short Description</h5>
+                                </div>
+                                <br />
 
                                 <div class="pro-desc">
+
                                     <p>
                                         Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
                                         eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
@@ -87,40 +91,40 @@
                                     <a class="btn btn-cart2" href="#">Add to cart</a>
                                 </div>
                                 @*<div class="quantity-cart-box d-flex align-items-center">
-            <h6 class="option-title">qty:</h6>
-            <div class="quantity">
-                <div class="pro-qty"><input type="text" value="1"></div>
-            </div>
-            <div class="action_link">
-                <a class="btn btn-cart2" href="#">Add to cart</a>
-            </div>
-        </div>*@
+                                        <h6 class="option-title">qty:</h6>
+                                        <div class="quantity">
+                                            <div class="pro-qty"><input type="text" value="1"></div>
+                                        </div>
+                                        <div class="action_link">
+                                            <a class="btn btn-cart2" href="#">Add to cart</a>
+                                        </div>
+                                    </div>*@
                                 @*<div class="pro-size">
-            <h6 class="option-title">size :</h6>
-            <select class="nice-select">
-                <option>S</option>
-                <option>M</option>
-                <option>L</option>
-                <option>XL</option>
-            </select>
-        </div>*@
+                                        <h6 class="option-title">size :</h6>
+                                        <select class="nice-select">
+                                            <option>S</option>
+                                            <option>M</option>
+                                            <option>L</option>
+                                            <option>XL</option>
+                                        </select>
+                                    </div>*@
                                 @*<div class="color-option">
-                                    <h6 class="option-title">color :</h6>
-                                    <ul class="color-categories">
-                                        <li>
-                                            <a class="c-lightblue" href="#" title="LightSteelblue"></a>
-                                        </li>
-                                        <li>
-                                            <a class="c-darktan" href="#" title="Darktan"></a>
-                                        </li>
-                                        <li>
-                                            <a class="c-grey" href="#" title="Grey"></a>
-                                        </li>
-                                        <li>
-                                            <a class="c-brown" href="#" title="Brown"></a>
-                                        </li>
-                                    </ul>
-                                </div>*@
+                                        <h6 class="option-title">color :</h6>
+                                        <ul class="color-categories">
+                                            <li>
+                                                <a class="c-lightblue" href="#" title="LightSteelblue"></a>
+                                            </li>
+                                            <li>
+                                                <a class="c-darktan" href="#" title="Darktan"></a>
+                                            </li>
+                                            <li>
+                                                <a class="c-grey" href="#" title="Grey"></a>
+                                            </li>
+                                            <li>
+                                                <a class="c-brown" href="#" title="Brown"></a>
+                                            </li>
+                                        </ul>
+                                    </div>*@
                                 <div class="useful-links">
                                     <a href="#" data-bs-toggle="tooltip" title="Compare"><i class="pe-7s-refresh-2"></i>compare</a>
                                     <a href="#" data-bs-toggle="tooltip" title="Wishlist"><i class="pe-7s-like"></i>wishlist</a>
@@ -276,3 +280,42 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="dimCertiModal" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width:100% !important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="dimCertiLabel">
+                    🧾 Diamond Certificate
+                </h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close" id="btnCertiClose"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body" id="SearchItemArea">
+                <div class="container-fluid">
+                    <iframe id="certIframe"
+                            src=""
+                            allowfullscreen=""
+                            style="width:100%; height:100vh; border:none;"></iframe>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script>
+        $(document).on("click", ".clsCertificate", function (e) {
+            e.preventDefault();
+
+            var certUrl = $(this).data("certi"); // get value from data-certi attribute
+            if (certUrl) {
+                $("#certIframe").attr("src", certUrl);
+                $("#dimCertiModal").modal("show");
+            }
+        });
+
+    </script>
+}

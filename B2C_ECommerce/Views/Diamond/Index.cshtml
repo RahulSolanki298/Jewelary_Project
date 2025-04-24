@@ -99,6 +99,30 @@
 
 
 <!-- Model Add -->
+<!-- Modal -->
+<div class="modal fade" id="compareDiamondsModal" tabindex="-1" aria-labelledby="compareDiamondsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <!-- modal-lg for medium size -->
+        <div class="modal-content">
+            <div class="modal-header" style="display:block !important;padding:5px 0px;">
+                <div class="row">
+                    <div class="col-xl-10 col-md-10 col-lg-10">
+                        <h5 class="modal-title text-center" id="compareDiamondsModalLabel">Compare Diamonds</h5>
+                    </div>
+                    <div class="col-xl-2 col-md-2 col-lg-2">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div id="diamondComparisonContent">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 
@@ -113,7 +137,7 @@
         // Initialize filters
         const getValue = id => $(id).val() || '';
         const getArrayValue = id => $(id).val() || [];
-
+        var selectedDiamonds = JSON.parse(localStorage.getItem('selectedDiamonds')) || [];
         var diamondFilters = {
                 Colors: getValue('#txtColorIds'),
                 FromCarat: getValue('#minCarat'),
@@ -147,17 +171,15 @@
         $(function () {
             // Initial Data Fetch
             loadAllFunctions();
-
+            updateSelectedDiamondCount();
             // Shape button click
             $("#shape-list").on("click", ".shape-btn", function () {
-                debugger;
                 const shapeId = $(this).attr('shapeId');
                 $(this).toggleClass('selected');
 
                 if ($(this).hasClass('selected')) {
                     if (!diamondFilters.Shapes.includes(shapeId)) {
                         diamondFilters.Shapes.push(shapeId);
-
                     }
                 } else {
                     const index = diamondFilters.Shapes.indexOf(shapeId);
@@ -189,35 +211,29 @@
                 ResetAllData();
             });
 
-            $("#chkIGI").on("click", function () {
-                if ($('#chkIGI').is(':checked')) {
+            $("#chkGIA, #chkIGI").on("click", function () {
+                // Check the current state of the checkboxes
+                var isGIAChecked = $('#chkGIA').is(':checked');
+                var isIGIChecked = $('#chkIGI').is(':checked');
+
+                // Update selectedLabs array based on the checkbox states
+                if (isGIAChecked && !selectedLabs.includes('GIA')) {
+                    selectedLabs.push('GIA');
+                } else if (!isGIAChecked) {
+                    selectedLabs = selectedLabs.filter(function (lab) {
+                        return lab !== 'GIA';
+                    });
+                }
+
+                if (isIGIChecked && !selectedLabs.includes('IGI')) {
                     selectedLabs.push('IGI');
-                } else {
+                } else if (!isIGIChecked) {
                     selectedLabs = selectedLabs.filter(function (lab) {
                         return lab !== 'IGI';
                     });
                 }
 
-                if (selectedLabs.length === 0) {
-                    selectedLabs.push('GIA', 'IGI');
-                }
-
-                diamondFilters.LabNames = selectedLabs;
-                getDiamondDataList(diamondFilters, page, rangeVal);
-            });
-
-            $("#chkGIA").on("click", function () {
-                debugger;
-                if ($('#chkGIA').is(':checked')) {
-                    selectedLabs.push('GIA');
-                } else {
-                    selectedLabs = selectedLabs.filter(function (lab) {
-                        return lab !== 'GIA';
-                    });
-                }
-                if (selectedLabs.length === 0) {
-                    selectedLabs.push('GIA', 'IGI');
-                }
+                // Update the LabNames filter
                 diamondFilters.LabNames = selectedLabs;
                 getDiamondDataList(diamondFilters, page, rangeVal);
             });
@@ -251,24 +267,73 @@
             let selectedCheckboxes = [];
             let selectedDiamondIds = [];
 
-            $('#diamond-list-container').on('change',"#diamondTable tbody input[type='checkbox']" ,function ()
-            {
-                let checkbox = $(this);
+            // Pre-check any checkboxes if their IDs are stored in localStorage
+            $('#diamondTable tbody input[type="checkbox"]').each(function () {
                 let diamondId = $(this).attr('diamondId');
+                if (selectedDiamondIds.includes(diamondId)) {
+                    $(this).prop('checked', true);
+                    selectedCheckboxes.push($(this));
+                }
+            });
+
+            // Event listener for checkbox change
+            $('#diamond-list-container').on('change', "#diamondTable tbody input[type='checkbox']", function () {
+                let checkbox = $(this);
+                let diamondId = checkbox.attr('diamondId');
 
                 if (checkbox.is(':checked')) {
+                    // Add to the arrays if checked
                     selectedCheckboxes.push(checkbox);
                     selectedDiamondIds.push(diamondId);
+
+                    // If more than 3 selected, uncheck the first checkbox
                     if (selectedCheckboxes.length > 3) {
-                        // Uncheck the first checkbox
-                        selectedDiamondIds.shift();
-                        let first = selectedCheckboxes.shift();
-                        first.prop('checked', false);
+                        // Uncheck the first checkbox and remove from the arrays
+                        selectedDiamondIds.shift();  // Remove first diamond ID
+                        let firstCheckbox = selectedCheckboxes.shift();  // Remove first checkbox
+                        firstCheckbox.prop('checked', false);
                     }
                 } else {
-                    // If unchecked manually, remove from the tracking list
+                    // If unchecked manually, remove from the arrays
                     selectedCheckboxes = selectedCheckboxes.filter(cb => cb[0] !== checkbox[0]);
-                    selectedDiamondIds = selectedDiamondIds.filter(cb => cb[0] != checkbox[0]);
+                    selectedDiamondIds = selectedDiamondIds.filter(id => id !== diamondId);
+                }
+
+                // Save the updated selected diamond IDs to localStorage
+                localStorage.setItem('selectedDiamonds', JSON.stringify(selectedDiamondIds));
+                updateSelectedDiamondCount();
+            });
+
+            $("#btnCompareDiamonds").on("click", function () {
+                let selectedDiamondIds = JSON.parse(localStorage.getItem('selectedDiamonds')) || [];
+                // If there are selected diamonds
+                if (selectedDiamondIds.length > 0) {
+
+
+                    //GetDiamondsByIds
+                    $.ajax({
+                        //url: '@Url.Action("GetDiamondsByIds", "Diamond")', // Change this to your actual route
+                        url: '/Diamond/GetDiamondsByIds', // Change this to your actual route
+                        type: 'GET',
+                        data: {
+                            diamondIds: selectedDiamondIds.join(',') // Send the array as a parameter
+                        },
+                        success: function (data) {
+                            console.log(data);
+                            $("#diamondComparisonContent").html(''); // Clear the existing content
+                            $("#diamondComparisonContent").html(data); // Insert the new content returned from the server
+                            $("#compareDiamondsModal").modal("show"); // Show the modal
+                        },
+                        error: function (error) {
+                            console.error('Error fetching data:', error);
+                        }
+                    });
+
+                }
+                else
+                {
+                    // If no diamonds are selected, show a message to the user
+                    alert("Please select at least one diamond to compare.");
                 }
 
 
@@ -703,53 +768,51 @@
 
         async function GetRatioData() {
             try {
-                debugger;
                 const response = await $.ajax({
                     url: '@(SD.BaseApiUrl)/api/diamondproperty/get-ratio-ranges',
                     method: 'GET',
                     dataType: 'json'
                 });
 
-                if (!response || typeof response.MaxValue !== 'number') {
+                // Validate response structure
+                if (!response || typeof response.MaxValue !== 'number' || typeof response.MinValue !== 'number') {
                     throw new Error('Invalid response structure');
                 }
 
+                // Set default input values
+                $("#minLWRatio").val(response.MinValue);
+                $("#maxLWRatio").val(response.MaxValue);
+
+                // Set initial filter values
+                diamondFilters.FromRatio = response.MinValue;
+                diamondFilters.ToRatio = response.MaxValue;
+
+                // Initialize jQuery UI Slider
                 $("#LWRatio-slider").slider({
                     range: true,
                     min: response.MinValue,
                     max: response.MaxValue,
-                    step: 1,
+                    step: 0.1,
                     values: [response.MinValue, response.MaxValue],
                     slide: function (event, ui) {
-                        const fromIndex = ui.values[0];
-                        const toIndex = ui.values[1];
+                        $("#minLWRatio").val(ui.values[0]);
+                        $("#maxLWRatio").val(ui.values[1]);
 
-                        // const fromRatio = response.minValue;
-                        // const toRatio = response.maxValue;
-
-                        $("#minLWRatio").val(fromIndex);
-                        $("#maxLWRatio").val(toIndex);
-
-                        diamondFilters.FromRatio = fromRatio.Name;
-                        diamondFilters.ToRatio = toRatio.Name;
+                        diamondFilters.FromRatio = ui.values[0];
+                        diamondFilters.ToRatio = ui.values[1];
 
                         getDiamondDataList(diamondFilters, page, rangeVal);
                     }
                 });
 
-                // Set initial values
-                $("#minLWRatio").val(response.MinValue);
-                $("#maxLWRatio").val(response.MaxValue);
-
-
-                diamondFilters.FromRatio = $("#minLWRatio").val();
-                diamondFilters.ToRatio = $("#maxLWRatio").val();
-
-
             } catch (error) {
                 console.error('Error fetching ratio data: ', error);
                 $('#filter-box #LWRatio-slider').html('<p>Failed to load ratio</p>');
-            }
+    }
+        }
+
+        function updateSelectedDiamondCount() {
+            $('#proCounter').text('(' + selectedDiamonds.length+')');
         }
 
         async function GetFluorData() {
@@ -968,7 +1031,10 @@
                             GetRatioData()
 
                         ]);
-                        debugger;
+                        if (selectedLabs.length === 0) {
+                            selectedLabs.push('GIA', 'IGI');
+                        }
+                        diamondFilters.LabNames = selectedLabs;
                         getDiamondDataList(diamondFilters, page, rangeVal);
                     } catch (error) {
                         console.error("An error occurred while loading data:", error);
@@ -978,8 +1044,6 @@
 
         function ResetAllData()
         {
-            diamondFilters.Shapes = getArrayValue('#shapes') || [];
-            $("#txtLabNames").val("IGI,GIA");
             var FilterPara = {
                 Colors: getValue('#txtColorIds'),
                 FromCarat: getValue('#minCarat'),
@@ -1000,6 +1064,7 @@
                 Symmeties: getValue('#txtSymmetyIds'),
                 LabNames: getValue('#txtLabNames'),
             };
+            FilterPara.Shapes = getArrayValue('#shapes') || [];
 
             GetShapeDesign();
             GetCarat();
@@ -1013,6 +1078,11 @@
             GetTableData();
             GetDepthData();
             GetRatioData();
+            if (selectedLabs.length === 0) {
+                selectedLabs.push('GIA', 'IGI');
+            }
+            FilterPara.LabNames = selectedLabs;
+            diamondFilters = FilterPara;
             getDiamondDataList(diamondFilters, page, rangeVal);
         }
 

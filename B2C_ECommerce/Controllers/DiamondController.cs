@@ -48,5 +48,15 @@ namespace B2C_ECommerce.Controllers
             ViewBag.V_OR_I = diamondProparty;
             return View(diamondDT);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDiamondsByIds(string diamondIds)
+        {
+            int[] diamondIdArray = diamondIds.Split(',')
+                                  .Select(id => int.Parse(id))
+                                  .ToArray();
+            var response = await _diamondService.GetSelectedDiamondByIds(diamondIdArray);
+            return PartialView("~/Views/Diamond/_CompareDiamonds.cshtml", response);
+        }
     }
 }

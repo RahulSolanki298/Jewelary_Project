@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Models.DiamondData>
+
+<div class="container">
+    <div class="row">
+        <!-- Card 1 -->
+        @foreach (var item in Model)
+        {
+            <div class="col-4">
+                <div class="card" style="width: 18rem;">
+                    <img src="@item.IconPath" class="card-img-top mx-auto d-block" style="max-width:120px; height:auto;padding-top:5px;" alt="Card image">
+                    <div class="card-body">
+
+                        <table class="table table-striped">
+                          <thead>
+                            <tr>
+                              <th class="text-center" colspan="2">Diamond Details</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>Shape</td>
+                              <td>@item.ShapeName</td>
+                            </tr>
+                            <tr>
+                              <td>Carat</td>
+                              <td>@item.Carat</td>
+                            </tr>
+                            <tr>
+                              <td>Color</td>
+                              <td>@item.ColorName</td>
+                            </tr>
+                            <tr>
+                              <td>Clarity</td>
+                              <td>@item.ClarityName</td>
+                            </tr>
+                             <tr>
+                              <td>Cut</td>
+                              <td>@item.CutName</td>
+                            </tr>
+                            <tr>
+                              <td>Lab</td>
+                              <td>@item.LabName</td>
+                            </tr>
+                            <tr>
+                              <td>Polish</td>
+                              <td>@item.PolishName</td>
+                            </tr>
+                            <tr>
+                              <td>Price</td>
+                              <td>@item.Price</td>
+                            </tr>
+
+                          </tbody>
+                        </table>
+                        <a class="btn btn-sm btn-dark rounded-pill" href="/Diamond/GetSingleDiamond?diamondId=@item.Id">
+                            View Diamond
+                        </a>
+                        <button class="btn btn-sm btn-dark">Add to Wishlist</button>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>

@@ -46,6 +46,15 @@ namespace B2C_ECommerce.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetSelectedProductCompare(string diamondIds)
+        {
+            
+
+            return PartialView("~/Views/Products/_ProductFilterBar.cshtml");
+        }
+
+
+        [HttpGet]
         public async Task<IActionResult> ProductDetails(string id)
         {
             var result = await _productRepository.GetProductByProductId(id);
