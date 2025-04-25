@@ -1,23 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.35706.149
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminDashboard.Server", "AdminDashboard.Server\AdminDashboard.Server.csproj", "{54EDCD5F-977C-4CA0-9FBF-311B993C4367}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminDashboard.Server", "AdminDashboard.Server\AdminDashboard.Server.csproj", "{54EDCD5F-977C-4CA0-9FBF-311B993C4367}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{845959D5-DF6C-4E50-A176-728E66DC3BAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{845959D5-DF6C-4E50-A176-728E66DC3BAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Business", "Business\Business.csproj", "{8E0C97F6-1D34-444E-B5BD-A2BA763E39A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Business", "Business\Business.csproj", "{8E0C97F6-1D34-444E-B5BD-A2BA763E39A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{467B1CE7-0DDE-4368-997C-12CD6B4C8068}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{467B1CE7-0DDE-4368-997C-12CD6B4C8068}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{11C7E9BA-2267-4B84-815A-71381BFAE291}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{11C7E9BA-2267-4B84-815A-71381BFAE291}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIs", "APIs\APIs.csproj", "{C16183CF-5B77-4C4D-AD0D-933ABE8EF1D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIs", "APIs\APIs.csproj", "{C16183CF-5B77-4C4D-AD0D-933ABE8EF1D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{15E8AE59-0395-4749-939C-EAE3446929EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Client\Client.csproj", "{15E8AE59-0395-4749-939C-EAE3446929EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "B2C_ECommerce", "B2C_ECommerce\B2C_ECommerce.csproj", "{A0357953-4401-462D-8974-A24FD08A726B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "B2C_ECommerce", "B2C_ECommerce\B2C_ECommerce.csproj", "{A0357953-4401-462D-8974-A24FD08A726B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

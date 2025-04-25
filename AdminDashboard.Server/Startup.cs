@@ -21,6 +21,7 @@ using AdminDashboard.Server.Service.IService;
 using Microsoft.AspNetCore.Components.Authorization;
 using Blazored.LocalStorage;
 using Common;
+using OfficeOpenXml;
 
 namespace AdminDashboard.Server
 {
@@ -65,6 +66,7 @@ namespace AdminDashboard.Server
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             services.AddScoped<IDiamondRepository, DiamondRepository>();
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
             services.AddAuthorizationCore();
             services.AddHttpContextAccessor();

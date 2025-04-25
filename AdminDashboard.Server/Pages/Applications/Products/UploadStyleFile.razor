@@ -47,7 +47,7 @@
 			fileContent.Add(fileStreamContent, "file", selectedFile.Name);
 
 			var httpClient = new HttpClient();
-			var response = await httpClient.PostAsync($"{SD.BaseApiUrl}/api/product/BulkProductUpload", fileContent);
+			var response = await httpClient.PostAsync($"{SD.BaseApiUrl}/api/product/BulkNewProductUpload", fileContent);
 
 			if (response.IsSuccessStatusCode)
 			{

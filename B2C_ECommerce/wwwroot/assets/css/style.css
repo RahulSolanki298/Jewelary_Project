@@ -3711,8 +3711,10 @@ textarea {
 }
 
 .color-categories li a {
-    height: 30px;
-    width: 55px;
+    /*height: 30px;
+    width: 55px;*/
+    height: 35px;
+    width: 65px;
     display: block;
 }
 
@@ -7000,7 +7002,7 @@ a {
 
 
 .product-box-with-border {
-    border: 1px solid #151542;
+    /*border: 1px solid #151542;*/
     border-radius: 6px;
     /*box-shadow: 0px 10px 20px -12px rgba(0, 0, 0, 0.75);*/
 }
@@ -7010,10 +7012,11 @@ a {
 }
 
 .product-box-desc {
-    border: 1px solid #151542;
+    /* border: 1px solid #151542;*/
     border-radius: 6px;
-    background: #e6e5e440;
     padding: 5px 5px;
+    border-top: 1px solid #bababf73;
+    background: #bababf73;
     /*box-shadow: 0px 10px 20px -12px rgba(0, 0, 0, 0.75);*/
 }
 
@@ -7373,18 +7376,20 @@ a {
 
         .size-categories li a {
             /*height: 12px;
-  width: 12px;
-  display: block;
-  border-radius: 50%;*/
+              width: 12px;
+              display: block;
+              border-radius: 50%;*/
+            font-size: 18px;
             height: 25px;
             width: 25px;
             display: block;
-            padding: 3px 5px;
+            /*padding: 3px 5px;*/
+            padding: 2px 6px;
             color: black;
         }
 
         .size-categories li:hover {
-            border: 1px solid #151542;
+           /* border: 1px solid #151542;*/
         }
 
 .color-categories-details li {
@@ -7559,4 +7564,132 @@ a {
 .compare-card {
     background: #FAFAF8;
     box-shadow: 0px 4px 45px 0px #89898940;
+}
+
+/* Custom checkbox styles */
+#diamondTable input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #333;
+    border-radius: 4px;
+    position: relative;
+    cursor: pointer;
+    background-color: white;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+    /* When the checkbox is checked */
+    #diamondTable input[type="checkbox"]:checked {
+        background-color: #151542; /* Black fill */
+        border-color: #151542; /* Optional: makes the border black when checked */
+    }
+
+        #diamondTable input[type="checkbox"]:checked::after {
+            content: "";
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 12px;
+            height: 12px;
+            background-color: #151542; /* Creates the white check mark */
+            border-radius: 2px;
+        }
+
+/**/
+
+/*input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 12px;
+    height: 12px;
+    border: 1px solid #333;
+  
+    position: relative;
+    cursor: pointer;
+    background-color: white;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+    
+input[type="checkbox"]:checked {
+        background-color: #151542;
+        border-color: #151542;  
+    }
+
+        input[type="checkbox"]:checked::after {
+            content: "";
+            position: absolute;
+            background-color: #151542;  
+        transform: rotate(45deg);
+          
+        }*/
+
+.img-with-bg{
+    background:#F8F8F8;
+}
+
+.certi-details-box {
+    padding: 5px 10px;
+    border: 1px solid #151542;
+    display: inline-block;
+    border-radius: 5px;
+}
+
+
+.blinking-image {
+    animation: blink 1.5s infinite; /* Apply the blink animation */
+}
+
+/*.blinkingTextBlue {
+    animation: 1.5s infinite blinkingBlue;
+    font-weight: 600
+}*/
+
+/*@keyframes blinkingBlue {
+    0%,100%,49% {
+        color: #3625f2
+    }
+
+    60%,99% {
+        color: transparent
+    }
+}*/
+
+@keyframes blink {
+    0%, 100%,49% {
+        opacity: 1; /* fully visible */
+    }
+
+    60%,99% {
+        opacity: 0; /* invisible at the midpoint */
+    }
+}
+
+.grid-products .item {
+    margin: 0 0 30px;
+    text-align: center;
+}
+
+    .grid-products .item .main-box {
+        width: 100%;
+        position: relative;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        box-shadow: 0px 10px 20px -12px rgba(0, 0, 0, 0.75);
+    }
+
+.product-metal-desc {
+    padding: 7px 0px;
+    align-items: center;
+    text-align: center;
+    color: #151542 !important;
+}
+
+
+.product-main-box {
+    box-shadow: 0px 10px 20px -12px rgba(0, 0, 0, 0.75);
 }

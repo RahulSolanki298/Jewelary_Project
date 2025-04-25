@@ -1,226 +1,228 @@
 ﻿
 
 <div class="row">
-	<!-- Shapes Section -->
-	<div class="col-lg-4" id="dtShape">
-		<h4>Shapes</h4>
-		<div class="diamond-icon-dt">
-			<div class="d-flex flex-wrap gap-icon-filter" id="shape-list">
-			</div>
-		</div>
-	</div>
-
-	<!-- Filters Section -->
-	<div class="col-lg-8">
-        <div class="d-flex">
-            <h4 class="mb-4 width-85">Filters</h4>
-            <div class="text-end mb-1">
-                <a class="btn btn-sm btn-dark text-capitalize" id="btnReset">
-                    <i class="fa fa-refresh"></i> Reset
-                </a>
+    <!-- Shapes Section -->
+    <div class="col-lg-4" id="dtShape">
+        <h4>Shapes</h4>
+        <div class="diamond-icon-dt">
+            <div class="d-flex flex-wrap gap-icon-filter" id="shape-list">
             </div>
+        </div>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="col-lg-8">
+        <div class="row">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <!-- Filters Title -->
+                <h4 class="mb-0">Filters</h4>
+
+                <!-- Reset Button -->
+                <div class="reset btn btn-dark text-capitalize" id="btnReset" title="RESET">RESET</div>
+            </div>
+
             @*<div class="reset btn btn-dark text-capitalize" id="btnReset" title="RESET">RESET</div>*@
         </div>
-		<div class="row">
-			<div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
-				<div class="d-flex mb-2">
-					<div class="filter-label">
-						<label for="minCarat" class="form-label" style="padding-right:2px;">Carat Size <span><img src="~/assets/img/icon/diamond-icon.png" style="width:25px;" /></span> </label>
-					</div>
-					<div class="d-flex">
-						  <input type="text" class="form-control txt-bolder me-2 range_slider" placeholder="Min Carat" id="minCarat" />
-						- <input type="text" class="form-control txt-bolder range_slider margin-left-2" placeholder="Max Carat" id="maxCarat" />
-					</div>
-				</div>
-				<div id="carat-size-slider" class="slider filter-scroll-bg"></div>
-			</div>
+        <div class="row">
+            <div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
+                <div class="d-flex mb-2">
+                    <div class="filter-label">
+                        <label for="minCarat" class="form-label" style="padding-right:2px;">Carat Size <span><img src="~/assets/img/icon/diamond-icon.png" style="width:25px;" /></span> </label>
+                    </div>
+                    <div class="d-flex">
+                        <input type="text" class="form-control txt-bolder me-2 range_slider" placeholder="Min Carat" id="minCarat" />
+                        - <input type="text" class="form-control txt-bolder range_slider margin-left-2" placeholder="Max Carat" id="maxCarat" />
+                    </div>
+                </div>
+                <div id="carat-size-slider" class="slider filter-scroll-bg"></div>
+            </div>
 
-			<div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
-				<div class="d-flex mb-2">
-					<div class="filter-label">
-						<label for="minColor" class="form-label" style="padding-right: 2px;">Color </label>
-					</div>
+            <div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
+                <div class="d-flex mb-2">
+                    <div class="filter-label">
+                        <label for="minColor" class="form-label" style="padding-right: 2px;">Color </label>
+                    </div>
 
-					<div class="d-flex">
-						<input type="hidden" id="txtColorIds" />
-						<input type="text" class="form-control txt-bolder me-2 range_slider" id="minColor" />
-						- <input type="text" class="form-control txt-bolder range_slider margin-left-2" id="maxColor" />
-					</div>
+                    <div class="d-flex">
+                        <input type="hidden" id="txtColorIds" />
+                        <input type="text" class="form-control txt-bolder me-2 range_slider" id="minColor" />
+                        - <input type="text" class="form-control txt-bolder range_slider margin-left-2" id="maxColor" />
+                    </div>
 
-				</div>
-				<div id="color-slider" class="slider filter-scroll-bg"></div>
-			</div>
+                </div>
+                <div id="color-slider" class="slider filter-scroll-bg"></div>
+            </div>
 
-			<div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
-				<div class="d-flex mb-2">
-					<div class="filter-label">
-						<label for="minCut" class="form-label" style="padding-right: 2px;">Cut</label>
-					</div>
-					<div class="d-flex">
-						<input type="hidden" id="txtCutIds" />
-						<input type="text" class="form-control txt-bolder me-2 range_slider" id="minCut" />
-						- <input type="text" class="form-control txt-bolder range_slider margin-left-2" id="maxCut" />
-					</div>
-				</div>
-				<div id="Cut-slider" class="slider filter-scroll-bg"></div>
-			</div>
+            <div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
+                <div class="d-flex mb-2">
+                    <div class="filter-label">
+                        <label for="minCut" class="form-label" style="padding-right: 2px;">Cut</label>
+                    </div>
+                    <div class="d-flex">
+                        <input type="hidden" id="txtCutIds" />
+                        <input type="text" class="form-control txt-bolder me-2 range_slider" id="minCut" />
+                        - <input type="text" class="form-control txt-bolder range_slider margin-left-2" id="maxCut" />
+                    </div>
+                </div>
+                <div id="Cut-slider" class="slider filter-scroll-bg"></div>
+            </div>
 
-			<div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
-				<div class="d-flex mb-2">
-					<div class="filter-label">
-						<label for="minPrice" class="form-label" style="padding-right: 2px;">Price <span>$</span></label>
-					</div>
-					<div class="d-flex">
-						<input type="text" class="form-control txt-bolder me-2 range_slider" placeholder="Min Price" id="minPrice" />
-						- <input type="text" class="form-control txt-bolder range_slider margin-left-2" placeholder="Max Price" id="maxPrice" />
-					</div>
-				</div>
-				<div id="price-slider" class="slider filter-scroll-bg"></div>
-			</div>
+            <div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
+                <div class="d-flex mb-2">
+                    <div class="filter-label">
+                        <label for="minPrice" class="form-label" style="padding-right: 2px;">Price <span>$</span></label>
+                    </div>
+                    <div class="d-flex">
+                        <input type="text" class="form-control txt-bolder me-2 range_slider" placeholder="Min Price" id="minPrice" />
+                        - <input type="text" class="form-control txt-bolder range_slider margin-left-2" placeholder="Max Price" id="maxPrice" />
+                    </div>
+                </div>
+                <div id="price-slider" class="slider filter-scroll-bg"></div>
+            </div>
 
-			<div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
-				<div class="d-flex mb-2">
-					<div class="filter-label">
-						<label for="minClarity" class="form-label" style="padding-right: 2px;">Clarity</label>
-					</div>
-					<div class="d-flex">
-						<input type="hidden" id="txtClarityIds" />
-						<input type="text" class="form-control txt-bolder me-2 range_slider" id="minClarity" />
-						- <input type="text" class="form-control txt-bolder range_slider margin-left-2" id="maxClarity" />
-					</div>
-				</div>
-				<div id="Clarity-slider" class="slider filter-scroll-bg"></div>
-			</div>
+            <div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
+                <div class="d-flex mb-2">
+                    <div class="filter-label">
+                        <label for="minClarity" class="form-label" style="padding-right: 2px;">Clarity</label>
+                    </div>
+                    <div class="d-flex">
+                        <input type="hidden" id="txtClarityIds" />
+                        <input type="text" class="form-control txt-bolder me-2 range_slider" id="minClarity" />
+                        - <input type="text" class="form-control txt-bolder range_slider margin-left-2" id="maxClarity" />
+                    </div>
+                </div>
+                <div id="Clarity-slider" class="slider filter-scroll-bg"></div>
+            </div>
 
 
-			<div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6 ds_fbox_inner_main6 ds_fbox_inner">
-				<!-- What metter Filter [START] -->
-				<div class="what-matter-dtlmain">
-					<input type="hidden" name="sel_matter_box_txt" id="sel_matter_box_txt" value="">
-					<div class="ds_opsun">
-						<label class="form-label" style="padding-right: 2px;">What matters to you most?</label>
-						<div class="content">
-							<button class="btn btn-dark text-capitalize" id="btnPrice">Price</button>
-							<button class="btn btn-dark text-capitalize" id="btnQuality">Quality</button>
-							<button class="btn btn-dark text-capitalize" id="btnViewAll">View All</button>
-						</div>
-					</div>
-				</div>
-			</div>
+            <div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6 ds_fbox_inner_main6 ds_fbox_inner">
+                <!-- What metter Filter [START] -->
+                <div class="what-matter-dtlmain">
+                    <input type="hidden" name="sel_matter_box_txt" id="sel_matter_box_txt" value="">
+                    <div class="ds_opsun">
+                        <label class="form-label" style="padding-right: 2px;">What matters to you most?</label>
+                        <div class="content">
+                            <button class="btn btn-dark text-capitalize" id="btnPrice">Price</button>
+                            <button class="btn btn-dark text-capitalize" id="btnQuality">Quality</button>
+                            <button class="btn btn-dark text-capitalize" id="btnViewAll">View All</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-		</div>
+        </div>
 
-	</div>
+    </div>
 
 </div>
 
 <div class="row">
-	<div class="col-xxl-8 col-xl-8 col-lg-7 col-md-12">
-		<div class="d-flex chk-filter gap-3 mt-3">
-			@* <label><input type="checkbox" id="chkAetherDiamonds" class="text-capitalize"> Aether Diamonds</label> *@
-			<label><input type="checkbox" id="chkQuickShip" class="text-capitalize"> QUICK SHIP</label>
-			<label>Report <i class="fa fa-question-circle"></i></label>
-			<input type="hidden" id="txtLabNames" value=""/>
-			<label><input type="checkbox" id="chkIGI" class="text-capitalize" title="IGI"> IGI</label>
-			<label><input type="checkbox" id="chkGIA" class="text-capitalize" title="GIA"> GIA</label>
-		</div>
-	</div>
-	<div class="col-xxl-4 col-xl-4 col-lg-5 col-md-12">
-		<div class="mt-3">
-			<button class="btn btn-dark text-capitalize" id="btnCompareDiamonds">Compare Diamonds <span id="proCounter"></span></button>
-			<button class="btn btn-dark text-capitalize" id="btnTakeQUIZ">Take A QUIZ</button>
-			<button class="btn btn-dark text-capitalize" id="btnMoreFilter">More Filter</button>
-			<button class="btn btn-dark text-capitalize" id="btnLessFilter" style="display:none;">Less Filter</button>
-		</div>
-	</div>
+    <div class="col-xxl-8 col-xl-8 col-lg-7 col-md-12">
+        <div class="d-flex chk-filter gap-3 mt-3">
+            @* <label><input type="checkbox" id="chkAetherDiamonds" class="text-capitalize"> Aether Diamonds</label> *@
+            <label><input type="checkbox" id="chkQuickShip" class="text-capitalize themecheckbox"> QUICK SHIP</label>
+            <label>Report <i class="fa fa-question-circle "></i></label>
+            <input type="hidden" id="txtLabNames" value="" />
+            <label><input type="checkbox" id="chkIGI" class="text-capitalize" title="IGI"> IGI</label>
+            <label><input type="checkbox" id="chkGIA" class="text-capitalize" title="GIA"> GIA</label>
+        </div>
+    </div>
+    <div class="col-xxl-4 col-xl-4 col-lg-5 col-md-12">
+        <div class="mt-3">
+            <button class="btn btn-dark text-capitalize" id="btnCompareDiamonds">Compare Diamonds <span id="proCounter"></span></button>
+            <button class="btn btn-dark text-capitalize" id="btnTakeQUIZ">Take A QUIZ</button>
+            <button class="btn btn-dark text-capitalize" id="btnMoreFilter">More Filter</button>
+            <button class="btn btn-dark text-capitalize" id="btnLessFilter" style="display:none;">Less Filter</button>
+        </div>
+    </div>
 </div>
 <!-- Additional Filters -->
 
 <div id="divMoreFilter" class="padding-top-40" style="display:none;">
-	<div class="row">
-		<div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
-			<div class="d-flex mb-2">
-				<div class="filter-label">
-					<label for="minClarity" class="form-label" style="padding-right: 2px;"> L:W Ratio </label>
-				</div>
-				<div class="d-flex">
-					<input type="text" class="form-control txt-bolder me-2 range_slider" id="minLWRatio" />
-					- <input type="text" class="form-control txt-bolder range_slider margin-left-2" id="maxLWRatio" />
-				</div>
-			</div>
-			<div id="LWRatio-slider" class="slider filter-scroll-bg"></div>
-		</div>
+    <div class="row">
+        <div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
+            <div class="d-flex mb-2">
+                <div class="filter-label">
+                    <label for="minClarity" class="form-label" style="padding-right: 2px;"> L:W Ratio </label>
+                </div>
+                <div class="d-flex">
+                    <input type="text" class="form-control txt-bolder me-2 range_slider" id="minLWRatio" />
+                    - <input type="text" class="form-control txt-bolder range_slider margin-left-2" id="maxLWRatio" />
+                </div>
+            </div>
+            <div id="LWRatio-slider" class="slider filter-scroll-bg"></div>
+        </div>
 
-		<div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
-			<div class="d-flex mb-2">
-				<div class="filter-label">
-					<label for="minClarity" class="form-label" style="padding-right: 2px;"> Table % </label>
-				</div>
-				<div class="d-flex">
-					<input type="hidden" id="txtTableIds" />
-					<input type="text" class="form-control txt-bolder me-2 range_slider" id="minTablePer" />
-					- <input type="text" class="form-control txt-bolder range_slider margin-left-2" id="maxTablePer" />
-				</div>
-			</div>
-			<div id="TablePer-slider" class="slider filter-scroll-bg"></div>
-		</div>
+        <div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
+            <div class="d-flex mb-2">
+                <div class="filter-label">
+                    <label for="minClarity" class="form-label" style="padding-right: 2px;"> Table % </label>
+                </div>
+                <div class="d-flex">
+                    <input type="hidden" id="txtTableIds" />
+                    <input type="text" class="form-control txt-bolder me-2 range_slider" id="minTablePer" />
+                    - <input type="text" class="form-control txt-bolder range_slider margin-left-2" id="maxTablePer" />
+                </div>
+            </div>
+            <div id="TablePer-slider" class="slider filter-scroll-bg"></div>
+        </div>
 
-		<div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
-			<div class="d-flex mb-2">
-				<div class="filter-label">
-					<label for="minClarity" class="form-label" style="padding-right: 2px;"> Depth % </label>
-				</div>
-				<div class="d-flex">
-					<input type="text" class="form-control txt-bolder me-2 range_slider" id="minDepthPer" />
-					- <input type="text" class="form-control txt-bolder range_slider margin-left-2" id="maxDepthPer" />
-				</div>
-			</div>
-			<div id="DepthPer-slider" class="slider filter-scroll-bg"></div>
-		</div>
+        <div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
+            <div class="d-flex mb-2">
+                <div class="filter-label">
+                    <label for="minClarity" class="form-label" style="padding-right: 2px;"> Depth % </label>
+                </div>
+                <div class="d-flex">
+                    <input type="text" class="form-control txt-bolder me-2 range_slider" id="minDepthPer" />
+                    - <input type="text" class="form-control txt-bolder range_slider margin-left-2" id="maxDepthPer" />
+                </div>
+            </div>
+            <div id="DepthPer-slider" class="slider filter-scroll-bg"></div>
+        </div>
 
 
-		<div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
-			<div class="d-flex mb-2">
-				<div class="filter-label">
-					<label for="minClarity" class="form-label" style="padding-right: 2px;"> Polish </label>
-				</div>
-				<div class="d-flex">
-					<input type="hidden" id="txtPolishIds" />
-					<input type="text" class="form-control txt-bolder me-2 range_slider" id="minPolish" />
-					- <input type="text" class="form-control txt-bolder range_slider margin-left-2" id="maxPolish" />
-				</div>
-			</div>
-			<div id="Polish-slider" class="slider filter-scroll-bg"></div>
-		</div>
+        <div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
+            <div class="d-flex mb-2">
+                <div class="filter-label">
+                    <label for="minClarity" class="form-label" style="padding-right: 2px;"> Polish </label>
+                </div>
+                <div class="d-flex">
+                    <input type="hidden" id="txtPolishIds" />
+                    <input type="text" class="form-control txt-bolder me-2 range_slider" id="minPolish" />
+                    - <input type="text" class="form-control txt-bolder range_slider margin-left-2" id="maxPolish" />
+                </div>
+            </div>
+            <div id="Polish-slider" class="slider filter-scroll-bg"></div>
+        </div>
 
-		<div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
-			<div class="d-flex mb-2">
-				<div class="filter-label">
-					<label for="minClarity" class="form-label" style="padding-right: 2px;"> Fluor. </label>
-				</div>
-				<div class="d-flex">
-					<input type="hidden" id="txtFluorIds" />
-					<input type="text" class="form-control txt-bolder me-2 range_slider" id="minFluor" />
-					- <input type="text" class="form-control txt-bolder range_slider margin-left-2" id="maxFluor" />
-				</div>
-			</div>
-			<div id="Fluor-slider" class="slider filter-scroll-bg"></div>
-		</div>
+        <div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
+            <div class="d-flex mb-2">
+                <div class="filter-label">
+                    <label for="minClarity" class="form-label" style="padding-right: 2px;"> Fluor. </label>
+                </div>
+                <div class="d-flex">
+                    <input type="hidden" id="txtFluorIds" />
+                    <input type="text" class="form-control txt-bolder me-2 range_slider" id="minFluor" />
+                    - <input type="text" class="form-control txt-bolder range_slider margin-left-2" id="maxFluor" />
+                </div>
+            </div>
+            <div id="Fluor-slider" class="slider filter-scroll-bg"></div>
+        </div>
 
-		<div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
-			<div class="d-flex mb-2">
-				<div class="filter-label">
-					<label for="minClarity" class="form-label" style="padding-right: 2px;"> Symmetry </label>
-				</div>
-				<div class="d-flex">
-					<input type="hidden" id="txtSymmetyIds" />
+        <div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
+            <div class="d-flex mb-2">
+                <div class="filter-label">
+                    <label for="minClarity" class="form-label" style="padding-right: 2px;"> Symmetry </label>
+                </div>
+                <div class="d-flex">
+                    <input type="hidden" id="txtSymmetyIds" />
 
-					<input type="text" class="form-control txt-bolder me-2 range_slider" id="minSymmetry" />
-					- <input type="text" class="form-control txt-bolder range_slider margin-left-2" id="maxSymmetry" />
-				</div>
-			</div>
-			<div id="Symmetry-slider" class="slider filter-scroll-bg"></div>
-		</div>
+                    <input type="text" class="form-control txt-bolder me-2 range_slider" id="minSymmetry" />
+                    - <input type="text" class="form-control txt-bolder range_slider margin-left-2" id="maxSymmetry" />
+                </div>
+            </div>
+            <div id="Symmetry-slider" class="slider filter-scroll-bg"></div>
+        </div>
 
-	</div>
+    </div>
 </div>

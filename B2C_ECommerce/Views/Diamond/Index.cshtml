@@ -106,17 +106,17 @@
         <div class="modal-content">
             <div class="modal-header" style="display:block !important;padding:10px 0px;">
                 <div class="row">
-                    <div class="col-xl-10 col-md-10 col-lg-10">
-                        <h5 class="modal-title text-center" id="compareDiamondsModalLabel">Compare Diamonds</h5>
+                    <div class="col-xl-11 col-md-11 col-lg-11">
+                        <h3 class="modal-title text-center" id="compareDiamondsModalLabel">Compare Diamonds</h3>
                     </div>
-                    <div class="col-xl-2 col-md-2 col-lg-2">
-                        <button type="button" class="btn-close text-center" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="col-xl-1 col-md-1 col-lg-1">
+                        <button type="button" class="btn-danger text-center" data-bs-dismiss="modal" aria-label="Close">X</button>
                     </div>
                 </div>
             </div>
             <div class="modal-body">
                 <div id="diamondComparisonContent">
-                    
+
                 </div>
             </div>
         </div>
@@ -133,6 +133,7 @@
         var page=1;
         var rangeVal=10;
         var selectedLabs = [];
+        let selectedCheckboxes = [];
 
         // Initialize filters
         const getValue = id => $(id).val() || '';
@@ -171,8 +172,8 @@
         $(function () {
             // Initial Data Fetch
             loadAllFunctions();
-            updateSelectedDiamondCount();
-            // Shape button click
+            resetCheckBox();
+
             $("#shape-list").on("click", ".shape-btn", function () {
                 const shapeId = $(this).attr('shapeId');
                 $(this).toggleClass('selected');
@@ -189,7 +190,6 @@
                 getDiamondDataList(diamondFilters, page, rangeVal);
             });
 
-            // More/Less Filter Toggle
             $("#btnMoreFilter").click(() => {
                 $("#divMoreFilter").show();
                 $("#btnLessFilter").show();
@@ -212,11 +212,9 @@
             });
 
             $("#chkGIA, #chkIGI").on("click", function () {
-                // Check the current state of the checkboxes
                 var isGIAChecked = $('#chkGIA').is(':checked');
                 var isIGIChecked = $('#chkIGI').is(':checked');
 
-                // Update selectedLabs array based on the checkbox states
                 if (isGIAChecked && !selectedLabs.includes('GIA')) {
                     selectedLabs.push('GIA');
                 } else if (!isGIAChecked) {
@@ -233,12 +231,10 @@
                     });
                 }
 
-                // Update the LabNames filter
                 diamondFilters.LabNames = selectedLabs;
                 getDiamondDataList(diamondFilters, page, rangeVal);
             });
 
-            //// Generic slider initializer
             function initSlider(selector, options) {
                 $(selector).slider({
                     range: true,
@@ -246,7 +242,6 @@
                 });
             }
 
-            //// Price Slider
             initSlider("#price-slider", {
                 min: 500, max: 50000, step: 0.01, values: [5000, 30000],
                 slide: (e, ui) => {
@@ -264,60 +259,43 @@
                 $("#dimCertiModal").modal("hide");
             });
 
-            let selectedCheckboxes = [];
-            let selectedDiamondIds = [];
 
-            // Pre-check any checkboxes if their IDs are stored in localStorage
-            $('#diamondTable tbody input[type="checkbox"]').each(function () {
-                let diamondId = $(this).attr('diamondId');
-                if (selectedDiamondIds.includes(diamondId)) {
-                    $(this).prop('checked', true);
-                    selectedCheckboxes.push($(this));
-                }
-            });
 
-            // Event listener for checkbox change
+            updateSelectedDiamondCount();
+
             $('#diamond-list-container').on('change', "#diamondTable tbody input[type='checkbox']", function () {
+                debugger;
                 let checkbox = $(this);
                 let diamondId = checkbox.attr('diamondId');
 
                 if (checkbox.is(':checked')) {
-                    // Add to the arrays if checked
                     selectedCheckboxes.push(checkbox);
-                    selectedDiamondIds.push(diamondId);
+                    selectedDiamonds.push(diamondId);
 
-                    // If more than 3 selected, uncheck the first checkbox
                     if (selectedCheckboxes.length > 3) {
-                        // Uncheck the first checkbox and remove from the arrays
-                        selectedDiamondIds.shift();  // Remove first diamond ID
-                        let firstCheckbox = selectedCheckboxes.shift();  // Remove first checkbox
+                        selectedDiamonds.shift();
+                        let firstCheckbox = selectedCheckboxes.shift();
                         firstCheckbox.prop('checked', false);
                     }
                 } else {
-                    // If unchecked manually, remove from the arrays
                     selectedCheckboxes = selectedCheckboxes.filter(cb => cb[0] !== checkbox[0]);
-                    selectedDiamondIds = selectedDiamondIds.filter(id => id !== diamondId);
+                    selectedDiamonds = selectedDiamondIds.filter(id => id !== diamondId);
                 }
 
-                // Save the updated selected diamond IDs to localStorage
-                localStorage.setItem('selectedDiamonds', JSON.stringify(selectedDiamondIds));
+                localStorage.setItem('selectedDiamonds', JSON.stringify(selectedDiamonds));
                 selectedDiamonds = JSON.parse(localStorage.getItem('selectedDiamonds')) || [];
                 updateSelectedDiamondCount();
             });
 
             $("#btnCompareDiamonds").on("click", function () {
-                let selectedDiamondIds = JSON.parse(localStorage.getItem('selectedDiamonds')) || [];
-                // If there are selected diamonds
-                if (selectedDiamondIds.length > 0) {
-
-
-                    //GetDiamondsByIds
+                selectedDiamonds = JSON.parse(localStorage.getItem('selectedDiamonds')) || [];
+                if (selectedDiamonds.length > 0) {
                     $.ajax({
                         //url: '@Url.Action("GetDiamondsByIds", "Diamond")', // Change this to your actual route
                         url: '/Diamond/GetDiamondsByIds', // Change this to your actual route
                         type: 'GET',
                         data: {
-                            diamondIds: selectedDiamondIds.join(',') // Send the array as a parameter
+                            diamondIds: selectedDiamonds.join(',') // Send the array as a parameter
                         },
                         success: function (data) {
                             console.log(data);
@@ -333,32 +311,32 @@
                 }
                 else
                 {
-                    // If no diamonds are selected, show a message to the user
                     alert("Please select at least one diamond to compare.");
                 }
 
 
             });
 
-        $("#diamondComparisonContent").on("change", ".compare-diamond-id", function () {
-            let selectedDiamondIds = JSON.parse(localStorage.getItem('selectedDiamonds')) || [];
-            let checkbox = $(this);
-            let diamondId = checkbox.val();
-            let card = checkbox.closest(".col-4");  // Ensure you're getting the correct .col-4 card
+            $("#diamondComparisonContent").on("change", ".compare-diamond-id", function () {
+                debugger;
+                let checkbox = $(this);
+                let diamondId = checkbox.val();
+                let card = checkbox.closest(".col-4");  // Ensure you're getting the correct .col-4 card
 
-            if (checkbox.is(':checked')) {
-                if (!selectedDiamondIds.includes(diamondId)) {
-                    selectedDiamondIds.push(diamondId);
+                if (checkbox.is(':checked')) {
+                    if (!selectedDiamonds.includes(diamondId)) {
+                        selectedDiamonds.push(diamondId);
+                    }
+                } else {
+                    selectedDiamonds = selectedDiamonds.filter(id => id !== diamondId);
+                    card.fadeOut(300, function() {
+                        card.remove();  // Fade out and remove the specific card
+                    });
                 }
-            } else {
-                selectedDiamondIds = selectedDiamondIds.filter(id => id !== diamondId);
-                card.fadeOut(300, function() {
-                    card.remove();  // Fade out and remove the specific card
-                });
-            }
 
-            localStorage.setItem('selectedDiamonds', JSON.stringify(selectedDiamondIds));
-            updateSelectedDiamondCount();
+                localStorage.setItem('selectedDiamonds', JSON.stringify(selectedDiamonds));
+                updateSelectedDiamondCount();
+                resetSelectedCheckBox(diamondId);
         });
 
 
@@ -419,7 +397,7 @@
                         step: 0.1,
                         values: [response.MinCaratSize, response.MaxCaratSize],
                         slide: function (event, ui) {
-                            
+
                             $("#minCarat").val(ui.values[0]);
                             $("#maxCarat").val(ui.values[1]);
 
@@ -1028,6 +1006,7 @@
                         success: function (data) {
                             $('#diamond-list-container').html('');
                             $('#diamond-list-container').html(data);
+                            resetCheckBox();
                             hideLoader();
                         },
                         error: function (error) {
@@ -1112,6 +1091,33 @@
             FilterPara.LabNames = selectedLabs;
             diamondFilters = FilterPara;
             getDiamondDataList(diamondFilters, page, rangeVal);
+        }
+
+
+        function resetCheckBox() {
+            debugger;
+            // Ensure this is called after the table is loaded
+            $('#diamond-list-container').find("#diamondTable tbody input[type='checkbox']").each(function () {
+                debugger;
+                let diamondId = $(this).attr('diamondId'); // Get the diamondId
+                if (selectedDiamonds.includes(diamondId)) {
+                    $(this).prop('checked', true); // Check the checkbox if the diamondId is selected
+                    selectedCheckboxes.push($(this)); // Push the checkbox to the selectedCheckboxes array
+                }
+            });
+        }
+
+        function resetSelectedCheckBox(id) {
+            debugger;
+            // Ensure this is called after the table is loaded
+            $('#diamond-list-container').find("#diamondTable tbody input[type='checkbox']").each(function () {
+                debugger;
+                let diamondId = $(this).attr('diamondId'); // Get the diamondId
+                if (id == diamondId) {
+                    $(this).prop('checked', false); // Check the checkbox if the diamondId is selected
+                    /*selectedCheckboxes.push($(this)); // Push the checkbox to the selectedCheckboxes array*/
+                }
+            });
         }
 
 

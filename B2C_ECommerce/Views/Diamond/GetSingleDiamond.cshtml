@@ -41,18 +41,21 @@
                                     <a href="#">@Model.LabShape</a>
                                 </div>
                                 <h3 class="product-name"> @Model.Carat @Model.ColorName @Model.ShapeName @Model.ClarityName @Model.LabName</h3>
-                                <p style="font-size:medium;"> @Model.CutName Cut | @Model.ColorName Color | @Model.ClarityName Clarity</p>
+                                <p style="font-size:medium;"> ( @Model.CutName ) Cut | ( @Model.ColorName ) Color | ( @Model.ClarityName ) Clarity</p>
 
-                                <a href="@Model.Certificate" data-certi="@Model.Certificate" class="text-decoration-none text-dark clsCertificate" target="_blank">
-                                    @if (Model.LabName == "IGI")
-                                    {
-                                        <img src="~/assets/img/logo/IGI.png" style="width:200px;" />
-                                    }
-                                    else if (Model.LabName == "GIA")
-                                    {
-                                        <img src="~/assets/img/logo/GIA.png" style="width:200px;" />
-                                    }
-                                </a>
+                                <div class="certi-details-box">
+                                    <a href="@Model.Certificate" data-certi="@Model.Certificate" class="text-decoration-none text-dark clsCertificate" target="_blank">
+                                        @if (Model.LabName == "IGI")
+                                        {
+                                            <img src="~/assets/img/logo/IGI.png" style="width:200px;" class="blinking-image" />
+                                        }
+                                        else if (Model.LabName == "GIA")
+                                        {
+                                            <img src="~/assets/img/logo/GIA.png" style="width:200px;" class="blinking-image" />
+                                        }
+                                    </a>
+                                    <span></span>
+                                </div>
 
                                 <div class="price-box">
                                     <p style="font-size:x-large;">
@@ -323,7 +326,7 @@
             $("#dimCertiModal").modal("hide");
         });
 
-        
+
 
     </script>
 }

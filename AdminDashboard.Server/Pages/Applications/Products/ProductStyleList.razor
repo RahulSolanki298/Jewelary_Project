@@ -106,7 +106,7 @@
             fileContent.Add(fileStreamContent, "file", selectedFile.Name);
 
             var httpClient = new HttpClient();
-            var response = await httpClient.PostAsync($"{SD.BaseApiUrl}/api/product/BulkProductUpload", fileContent);
+            var response = await httpClient.PostAsync($"{SD.BaseApiUrl}/api/product/BulkNewProductUpload", fileContent);
 
             if (response.IsSuccessStatusCode)
             {
@@ -123,11 +123,6 @@
             Snackbar.Add($"Error: {ex.Message}", Severity.Error);
         }
     }
-
-    //private async Task GetProductPropertyList()
-    //{
-    //	productList = await productRepository.GetProductStyleList();
-    //}
 
     private bool Search(ProductDTO product)
     {

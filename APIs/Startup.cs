@@ -20,7 +20,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Models.Helper;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace APIs
@@ -47,7 +46,7 @@ namespace APIs
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDBContext>()
                 .AddDefaultTokenProviders();
-
+           
             // Configure settings
             ConfigureAppSettings(services);
 
@@ -206,14 +205,16 @@ namespace APIs
         // Configure Static Files for media and uploads
         private void ConfigureStaticFiles(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            var mediaFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "UploadedFiles");
+            // Path to the "UploadedFiles" folder inside wwwroot
+            var mediaFolderPath = Path.Combine(env.WebRootPath, "UploadedFiles");
 
-            // Serve static files from the "UploadedFiles" folder
+            // Serve static files from the "UploadedFiles" folder within wwwroot
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(mediaFolderPath),
-                RequestPath = "/UploadedFiles"
+                RequestPath = "/UploadedFiles"  // URL will be /UploadedFiles
             });
         }
+
     }
 }

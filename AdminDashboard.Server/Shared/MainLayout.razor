@@ -15,9 +15,9 @@
         </MudHidden>
         <MudHidden Breakpoint="Breakpoint.MdAndUp">
             <MudIconButton Icon="@Icons.Material.Outlined.Menu"
-            Color="Color.Inherit"
-            Edge="Edge.Start"
-            OnClick="@DrawerToggle" />
+                           Color="Color.Inherit"
+                           Edge="Edge.Start"
+                           OnClick="@DrawerToggle" />
         </MudHidden>
 
         <MudHidden Breakpoint="Breakpoint.Xs">
@@ -31,10 +31,10 @@
 
         <!-- Language Selector -->
         <MudMenu Icon="@Icons.Material.Outlined.Translate"
-        Color="Color.Inherit"
-        Direction="Direction.Bottom"
-        OffsetY="true"
-        Dense="true">
+                 Color="Color.Inherit"
+                 Direction="Direction.Bottom"
+                 OffsetY="true"
+                 Dense="true">
             <MudMenuItem>English</MudMenuItem>
             <MudMenuItem>Swedish</MudMenuItem>
             <MudMenuItem>Old Norse</MudMenuItem>
@@ -42,12 +42,12 @@
 
         <!-- Links -->
         <MudMenu Icon="@Icons.Material.Outlined.Widgets"
-        Color="Color.Inherit"
-        Direction="Direction.Bottom"
-        OffsetY="true"
-        Dense="true">
+                 Color="Color.Inherit"
+                 Direction="Direction.Bottom"
+                 OffsetY="true"
+                 Dense="true">
             @*  <MudMenuItem Href="https://mudblazor.com/">MudBlazor</MudMenuItem>
-            <MudMenuItem Href="https://github.com/Garderoben/MudBlazor.Templates">Source Code</MudMenuItem> *@
+                <MudMenuItem Href="https://github.com/Garderoben/MudBlazor.Templates">Source Code</MudMenuItem> *@
         </MudMenu>
 
         <!-- User Menu -->
@@ -66,8 +66,8 @@
 
     <!-- Drawer -->
     <MudDrawer @bind-Open="_drawerOpen"
-    Elevation="25"
-    ClipMode="_themeManager.DrawerClipMode">
+               Elevation="25"
+               ClipMode="_themeManager.DrawerClipMode">
         <NavMenu />
     </MudDrawer>
 
@@ -76,9 +76,9 @@
         <MudHidden Breakpoint="Breakpoint.SmAndDown">
             <MudToolBar DisableGutters="true">
                 <MudIconButton Icon="@Icons.Material.Outlined.Menu"
-                Color="Color.Inherit"
-                OnClick="@DrawerToggle"
-                Class="ml-3" />
+                               Color="Color.Inherit"
+                               OnClick="@DrawerToggle"
+                               Class="ml-3" />
                 <MudBreadcrumbs Items="_items" />
 
                 <MudToolBarSpacer />
@@ -86,22 +86,20 @@
         </MudHidden>
 
         <!-- Page Body -->
-        <MudContainer>
-            @if (_isLoading)
-            {
-                <MudProgressCircular Indeterminate="true" Color="Color.Primary" Size="Size.Large" Class="loader-overlay" />
-            }
-            @Body
-        </MudContainer>
+        @if (_isLoading)
+        {
+            <MudProgressCircular Indeterminate="true" Color="Color.Primary" Size="Size.Large" Class="loader-overlay" />
+        }
+        @Body
     </MudMainContent>
 </MudLayout>
 
 <!-- Theme Manager Controls -->
 @* <MudThemeManagerButton OnClick="@(() => OpenThemeManager(true))" />
-<MudThemeManager Open="_themeManagerOpen"
-                 OpenChanged="OpenThemeManager"
-                 Theme="_themeManager"
-                 ThemeChanged="UpdateTheme" /> *@
+    <MudThemeManager Open="_themeManagerOpen"
+                     OpenChanged="OpenThemeManager"
+                     Theme="_themeManager"
+                     ThemeChanged="UpdateTheme" /> *@
 
 @code {
     #region Fields
@@ -116,12 +114,12 @@
     protected override void OnInitialized()
     {
         _themeManager = new ThemeManagerTheme
-            {
-                Theme = new MudBlazorAdminDashboard(),
-                DrawerClipMode = DrawerClipMode.Always,
-                FontFamily = "Montserrat",
-                DefaultBorderRadius = 3
-            };
+        {
+            Theme = new MudBlazorAdminDashboard(),
+            DrawerClipMode = DrawerClipMode.Always,
+            FontFamily = "Montserrat",
+            DefaultBorderRadius = 3
+        };
     }
     #endregion
 
@@ -140,9 +138,9 @@
     #region Breadcrumbs
     private readonly List<BreadcrumbItem> _items = new()
     {
-        new BreadcrumbItem("Personal", href: "#"),
-        new BreadcrumbItem("Dashboard", href: "#"),
-    };
+            new BreadcrumbItem("Personal", href: "#"),
+            new BreadcrumbItem("Dashboard", href: "#"),
+        };
 
     private async Task LogoutAsync()
     {

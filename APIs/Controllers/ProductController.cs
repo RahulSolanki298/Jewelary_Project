@@ -303,6 +303,7 @@ namespace APIs.Controllers
 
             foreach (var wkSheet in package.Workbook.Worksheets)
             {
+                
                 if (wkSheet.Name == "Engagement Rings")
                 {
                     var ringProducts = ProcessRingData(wkSheet);
@@ -766,7 +767,6 @@ namespace APIs.Controllers
                     product.Id = Guid.NewGuid();
                     product.CategoryName = "Rings";
                     product.UnitPrice = product.Price;
-
                     index = 1;
                 }
                 else
@@ -776,7 +776,6 @@ namespace APIs.Controllers
                     product.CategoryName = "Rings";
                     product.UnitPrice = product.Price;
 
-                    // Fallbacks
                     product.Sku = string.IsNullOrWhiteSpace(product.Sku) ? tmpSku : product.Sku;
                     product.Grades = string.IsNullOrWhiteSpace(product.Grades) ? tmpGrades : product.Grades;
                     product.StyleName = string.IsNullOrWhiteSpace(product.StyleName) ? tmpStyle : product.StyleName;
@@ -899,11 +898,7 @@ namespace APIs.Controllers
                     IsReadyforShip = baseProduct.IsReadyforShip
                 });
             }
-
             return result;
         }
-
-
-
     }
 }

@@ -12,12 +12,12 @@
 @inject IDiamondRepository _diamondRepo
 @inject ISnackbar Snackbar
 
-<MudPaper Class="p-6 mx-auto mt-4" Elevation="12" Style="max-width: 1300px; border-radius: 16px; background: linear-gradient(to right, #4facfe, #00f2fe);">
+<MudPaper Class="p-6 mx-auto mt-4" Elevation="12" >
     <MudGrid>
         <!-- Header Section -->
         <MudItem xs="12" class="d-flex justify-between align-center mb-4">
             <MudText Typo="Typo.h4" Color="Color.Inherit" Class="font-weight-bold" Style="font-size: 1.5rem; letter-spacing: 1px;">
-                💎 Diamond List
+                Diamond List
             </MudText>
             <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.UploadFile" OnClick="OpenUploadDialog" Class="transition-all duration-300 ease-in-out transform hover:scale-105">
                 Upload File
