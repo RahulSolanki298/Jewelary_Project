@@ -339,7 +339,34 @@
 
 
             });
+
+        $("#diamondComparisonContent").on("change", ".compare-diamond-id", function () {
+            let selectedDiamondIds = JSON.parse(localStorage.getItem('selectedDiamonds')) || [];
+            let checkbox = $(this);
+            let diamondId = checkbox.val();
+            let card = checkbox.closest(".col-4");  // Ensure you're getting the correct .col-4 card
+
+            if (checkbox.is(':checked')) {
+                if (!selectedDiamondIds.includes(diamondId)) {
+                    selectedDiamondIds.push(diamondId);
+                }
+            } else {
+                selectedDiamondIds = selectedDiamondIds.filter(id => id !== diamondId);
+                card.fadeOut(300, function() {
+                    card.remove();  // Fade out and remove the specific card
+                });
+            }
+
+            localStorage.setItem('selectedDiamonds', JSON.stringify(selectedDiamondIds));
+            updateSelectedDiamondCount();
         });
+
+
+
+        });
+
+
+
 
         $(document).on("click", ".clsCertificate", function (e) {
             e.preventDefault();
@@ -813,8 +840,7 @@
         }
 
         function updateSelectedDiamondCount() {
-            debugger;
-            $('#proCounter').text('(' + selectedDiamonds.length+')');
+            $('#filter-box #proCounter').text('(' + selectedDiamonds.length+')');
         }
 
         async function GetFluorData() {
