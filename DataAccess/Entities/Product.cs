@@ -30,9 +30,7 @@ namespace DataAccess.Entities
         public string Length { get; set; }
         public int? KaratId { get; set; }
         public string BandWidth { get; set; }
-
         public int? GoldPurityId { get; set; } // 18 k
-
         //public int? GoldWeightId { get; set; } // 3.00 GMS
         public string GoldWeight { get; set; }
         public string CTW { get; set; }
@@ -60,5 +58,8 @@ namespace DataAccess.Entities
         public bool? IsReadyforShip { get; set; }
         public int? AccentStoneShapeId { get; set; }
         public bool IsActivated { get; set; } = false;
+        public string VenderStyle { get; set; }
+
+        public string Diameter { get; set; }
     }
 }

@@ -84,6 +84,8 @@ namespace Models
 
         public string StyleName { get; set; }
 
+        public string VenderStyle { get; set; }
+
         public int? CollectionsId { get; set; } // Group of products
 
         public string CollectionName { get; set; }
@@ -136,6 +138,7 @@ namespace Models
 
         public decimal? WholesaleCost { get; set; }
         public string AccentStoneShapeName { get; set; }
+        public string Diameter { get; set; }
 
         public List<ProductImageAndVideoDTO> ProductImageVideos { get; set; }
         public List<ProductPropertyDTO> Metals { get; set; }

@@ -1,29 +1,47 @@
 ﻿@model IEnumerable<Models.DiamondData>
 
-<div class="container">
-    <div class="section-bg-color">
-        <div class="row">
-            @foreach (var item in Model)
-            {
-                <div class="cardcontainer">
-                    <div class="photo">
-                        <img src="@item.DiamondImagePath?auto=format%2Ccompress&cs=tinysrgb&dpr=1&w=500">
-                        @* <div class="photos">Photos</div> *@
-                    </div>
-                    <div class="content">
-                        <p class="txt4">@item.Carat @item.ColorName @item.ShapeName @item.ClarityName @item.LabName</p>
-                        <p class="txt5">A city that never sleeps</p>
-                        <p class="txt2">New York, the largest city in the U.S., is an architectural marvel with plenty of historic monuments, magnificent buildings and countless dazzling skyscrapers.</p>
-                    </div>
-                    <div class="footer">
-                        <p><a class="waves-effect waves-light btn" href="#">Read More</a><a id="heart"><span class="like"><i class="fab fa-gratipay"></i>Like</span></a></p>
-                        @* <p class="txt3"><i class="far fa-clock"></i>10 Minutes Ago <span class="comments"><i class="fas fa-comments"></i>45 Comments</span></p> *@
-                    </div>
-                </div>
-            }
-            
 
+<div class="custom-container">
+    <div class="row">
+        <div class="col-lg-12">
+            <!-- Wishlist Table Area -->
+            <div class="cart-table table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="pro-thumbnail">SrNo.</th>
+                            <th class="pro-title">Images</th>
+                            <th class="pro-price">Product</th>
+                            <th class="pro-quantity">Qty</th>
+                            <th class="pro-quantity">Rate</th>
+                            <th class="pro-subtotal">Add to Cart</th>
+                            <th class="pro-remove">Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ 
+                            int index = 1;
+                        }
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="pro-thumbnail">@(index++)</td>
+                                <td class="pro-title"><a href="#"><img class="img-fluid" style="max-width:45px;height:auto;" src="@item.IconPath" alt="Product"></a></td>
+                                <td class="pro-price">@item.Carat @item.ColorName @item.ShapeName @item.ClarityName @item.LabName</td>
+                                <td class="pro-quantity">@item.Quantity</td>
+                                <td class="pro-price">@item.Price</td>
+                                <td class="pro-subtotal">
+                                    <a href="#" class="btn btn-sqr">
+                                        Add to
+                                        Cart
+                                    </a>
+                                </td>
+                                <td class="pro-remove"><a href="#"><i class="fa fa-trash-o"></i></a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-    <!-- Wishlist Page Content End -->
-</div>
+</div>  

@@ -173,7 +173,7 @@
                 loadAllFunctions();
                 resetCheckBox();
                 getWishlistCounter();
-                // updateWishlistUI();
+                updateWishlistUI();
 
                 $("#shape-list").on("click", ".shape-btn", function () {
                     const shapeId = $(this).attr('shapeId');
@@ -285,8 +285,9 @@
                     updateSelectedDiamondCount();
                 });
 
-            $("#diamond-list-container").on("click", "#diamondTable .wishlist-toggle", function () {
-                    let diamondId = $(this).data("diamondId");
+                $("#diamond-list-container").on("click", "#diamondTable .wishlist-toggle", function () {
+                    debugger;
+                    let diamondId = $(this).data("diamondid");
                     let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
 
                     if (wishlist.includes(diamondId)) {
@@ -302,6 +303,7 @@
                     }
 
                     getWishlistCounter();
+                    updateWishlistUI();
             });
 
             $("#btnCompareDiamonds").on("click", function () {
@@ -1017,6 +1019,7 @@
                         $('#diamond-list-container').html('');
                         $('#diamond-list-container').html(data);
                         resetCheckBox();
+                        updateWishlistUI();
                         hideLoader();
                     },
                     error: function (error) {
@@ -1129,9 +1132,22 @@
 
             function updateWishlistUI() 
             {
+                debugger;
                 let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
 
-                $(".wishlist-toggle").each(function () {
+                //$(".wishlist-toggle").each(function () {
+                //    let diamondId = $(this).data("diamondid").toString();
+                //    if (wishlist.includes(diamondId)) {
+                //        $(this).find(".heart-unchecked").hide();
+                //        $(this).find(".heart-checked").show();
+                //    } else {
+                //        $(this).find(".heart-unchecked").show();
+                //        $(this).find(".heart-checked").hide();
+                //    }
+                //});
+
+
+                $('#diamond-list-container').find("#diamondTable tbody .wishlist-toggle").each(function () {
                     let diamondId = $(this).data("diamondid").toString();
                     if (wishlist.includes(diamondId)) {
                         $(this).find(".heart-unchecked").hide();
@@ -1141,6 +1157,7 @@
                         $(this).find(".heart-checked").hide();
                     }
                 });
+
             }
 
 

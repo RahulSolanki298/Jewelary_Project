@@ -29,7 +29,7 @@ namespace Business.Repository.IRepository
 
         Task<List<ProductProperty>> GetKaratList();
 
-        Task<bool> SaveNewProductList(List<ProductDTO> products);
+        Task<bool> SaveNewProductList(List<ProductDTO> products,string categoryName);
 
         Task<bool> UpdateProductDetailsByExcel(List<ProductDTO> products);
 
