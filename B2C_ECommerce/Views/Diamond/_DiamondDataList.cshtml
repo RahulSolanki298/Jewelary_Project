@@ -62,15 +62,16 @@
                     <td>@item.ColorName</td>
                     <td>@item.ClarityName</td>
                     <td>@item.CutName</td>
-
                     <td>@item.PolishName</td>
                     <td>@item.SymmetyName</td>
                     <td>@item.Depth</td>
                     <td>@item.Price</td>
                     <td><input type="checkbox" style="width:20px;height:20px;" diamondId="@item.Id" /></td>
                     <td>
-                        <img src="~/assets/img/Heart-Unchecked.png" class="img-fluid" style="width:25px;height:25px;" />
-                        <img src="~/assets/img/Heart-Checked.png" class="img-fluid" style="width:25px;height:25px;display:none;" />
+                        <a class="wishlist-toggle" data-diamondId="@item.Id">
+                            <img src="~/assets/img/Heart-Unchecked.png" class="img-fluid heart-unchecked" style="width:25px;height:25px;" />
+                            <img src="~/assets/img/Heart-Checked.png" class="img-fluid heart-checked" style="width:25px;height:25px;display:none;" />
+                        </a>
                     </td>
                     <td>
                         <a class="btn btn-sm btn-dark rounded-pill" href="/Diamond/GetSingleDiamond?diamondId=@item.Id">

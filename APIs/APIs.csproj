@@ -8,7 +8,7 @@
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="CsvHelper" Version="33.0.1" />
-    <PackageReference Include="EPPlus" Version="5.4.1" />
+    <PackageReference Include="EPPlus" Version="7.6.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.17" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.17" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.17" />
@@ -26,54 +26,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\UploadedFiles\Collections\Folders.zip" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5090\PLDR-5090-R1.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5090\PLDR-5090-R2.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5090\PLDR-5090-R3.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5090\PLDR-5090-R4.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5090\PLDR-5090-RG.mp4" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5090\PLDR-5090-W1.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5090\PLDR-5090-W2.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5090\PLDR-5090-W3.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5090\PLDR-5090-W4.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5090\PLDR-5090-WG.mp4" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5090\PLDR-5090-Y1.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5090\PLDR-5090-Y2.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5090\PLDR-5090-Y3.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5090\PLDR-5090-Y4.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5090\PLDR-5090-YG.mp4" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5091\PLDR-5091-R1.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5091\PLDR-5091-R2.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5091\PLDR-5091-R3.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5091\PLDR-5091-R4.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5091\PLDR-5091-RG.mp4" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5091\PLDR-5091-W1.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5091\PLDR-5091-W2.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5091\PLDR-5091-W3.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5091\PLDR-5091-W4.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5091\PLDR-5091-WG.mp4" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5091\PLDR-5091-Y1.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5091\PLDR-5091-Y2.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5091\PLDR-5091-Y3.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5091\PLDR-5091-Y4.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5091\PLDR-5091-YG.mp4" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5093\PLDR-5093-R1.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5093\PLDR-5093-R2.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5093\PLDR-5093-R3.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5093\PLDR-5093-R4.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5093\PLDR-5093-RG.mp4" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5093\PLDR-5093-W1.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5093\PLDR-5093-W2.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5093\PLDR-5093-W3.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5093\PLDR-5093-W4.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5093\PLDR-5093-WG.mp4" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5093\PLDR-5093-Y1.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5093\PLDR-5093-Y2.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5093\PLDR-5093-Y3.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5093\PLDR-5093-Y4.png" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-5093\PLDR-5093-YG.mp4" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-535.zip" />
-    <None Include="wwwroot\UploadedFiles\Collections\PLDR-777.zip" />
+    <Folder Include="wwwroot\UploadedFiles\Collections\" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\UploadedFiles\Styles\Band\Band_Rings_Diamond_Silver_0.5_GJSKU-001123_1.jpg" />
     <None Include="wwwroot\UploadedFiles\Styles\Band\Band_Rings_Diamond_Silver_0.5_GJSKU-001123_2.jpg" />
     <None Include="wwwroot\UploadedFiles\Styles\Band\Band_Rings_Diamond_Silver_0.5_GJSKU-001123_3.jpg" />
