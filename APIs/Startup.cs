@@ -214,7 +214,7 @@ namespace APIs
                 FileProvider = new PhysicalFileProvider(mediaFolderPath),
                 RequestPath = "/UploadedFiles"  // URL will be /UploadedFiles
             });
-        }
+        }   
 
     }
 }

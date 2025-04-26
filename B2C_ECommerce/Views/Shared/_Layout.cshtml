@@ -244,6 +244,16 @@
 
     <!-- Main JS -->
     <script src="/assets/js/main.js"></script>
+    <script>
+        $(document).ready(function(){
+            getWishlistCounter();
+        });
+        function getWishlistCounter(){
+            let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+            $("#wishlistCounter").text(wishlist.length);
+        }
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
