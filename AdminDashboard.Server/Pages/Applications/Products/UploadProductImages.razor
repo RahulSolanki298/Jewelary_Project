@@ -1,0 +1,66 @@
+﻿@using Common
+@inject ISnackbar Snackbar
+
+<MudDialog>
+	<TitleContent>
+		Add Products
+	</TitleContent>
+	<DialogContent>
+		<InputFile OnChange="HandleFileSelected" />
+		@if (isUploading == true)
+		{
+			<MudProgressCircular Color="Color.Default" Indeterminate="true" />
+		}
+		<MudToolBarSpacer />
+		<p><span style="font-weight:bold">Note :</span></p>
+		<p>Please upload zip file.</p>
+	</DialogContent>
+	<DialogActions>
+		<MudButton Color="Color.Error">Cancel</MudButton>
+	</DialogActions>
+</MudDialog>
+
+
+
+@code {
+	private IBrowserFile selectedFile;
+	private bool isUploading = false;
+	private string message;
+	private async Task HandleFileSelected(InputFileChangeEventArgs e)
+	{
+		if (e.File == null)
+		{
+			Snackbar.Add("No file selected.", Severity.Warning);
+			return;
+		}
+
+		selectedFile = e.File;
+		isUploading = true;     // Start showing the loader
+
+		try
+		{
+			var content = new MultipartFormDataContent();
+			var stream = selectedFile.OpenReadStream(maxAllowedSize: 1_073_741_824); // 1GB
+			var streamContent = new StreamContent(stream);
+			streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+
+			content.Add(streamContent, "file", selectedFile.Name);
+
+			var httpClient = new HttpClient();
+			var response = await httpClient.PostAsync($"{SD.BaseApiUrl}/api/product/BulkProductCollectionImagesUpload", content);
+
+			if (response.IsSuccessStatusCode)
+			{
+				message = "File uploaded successfully!";
+			}
+			else
+			{
+				message = "Upload failed. Try again.";
+			}
+		}
+		catch (Exception ex)
+		{
+			message = $"Upload error: {ex.Message}";
+		}
+	}
+}

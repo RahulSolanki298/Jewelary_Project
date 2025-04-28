@@ -49,5 +49,6 @@ namespace Business.Repository.IRepository
 
         Task<ProductWeight> GetProductWeightData(ProductWeightDTO weightDTO);
 
+        Task<bool> SaveEarringsList(List<ProductDTO> products, string categoryName);
     }
 }

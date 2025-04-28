@@ -1,4 +1,6 @@
 ﻿@using Common
+@using Newtonsoft.Json
+@using global::Models
 @inject ISnackbar Snackbar
 
 <MudDialog>
@@ -15,17 +17,76 @@
 		<p><span style="font-weight:bold">Note :</span></p>
 		<p>Please upload file with the style. (ex: Essentials, Solitaire Ring, Mini Huggies)</p>
 		<p>Download Excel Format : <MudButton Color="Color.Primary">Download</MudButton></p>
+
+		<MudToolBarSpacer />
+		<MudTable Elevation="5" Items="productList">
+			<HeaderContent>
+				<MudTh>Product</MudTh>
+				<MudTh>Vendor</MudTh>
+				<MudTh>Style</MudTh>
+				<MudTh>Length</MudTh>
+				<MudTh>Band Width</MudTh>
+				<MudTh>Weight</MudTh>
+				<MudTh>Grades</MudTh>
+				<MudTh>Diamond Type</MudTh>
+				<MudTh>Price (14k)</MudTh>
+			</HeaderContent>
+			<RowTemplate>
+				<MudTd DataLabel="Product">
+					<MudTextField @bind-Value="context.Title" />
+				</MudTd>
+				<MudTd DataLabel="VenderName">
+					<MudTextField @bind-Value="context.VenderName" />
+				</MudTd>
+				<MudTd DataLabel="VenderStyle">
+					<MudTextField @bind-Value="context.VenderStyle" />
+				</MudTd>
+				<MudTd DataLabel="Length">
+					<MudTextField @bind-Value="context.Length" />
+				</MudTd>
+				<MudTd DataLabel="BandWidth">
+					<MudTextField @bind-Value="context.BandWidth" />
+				</MudTd>
+				<MudTd DataLabel="GoldWeight">
+					<MudTextField @bind-Value="context.GoldWeight" />
+				</MudTd>
+				<MudTd DataLabel="Grades">
+					<MudTextField @bind-Value="context.Grades" />
+				</MudTd>
+				<MudTd DataLabel="DyamondType">
+					<MudTextField @bind-Value="context.ProductType" />
+				</MudTd>
+				<MudTd DataLabel="Price">
+					<MudTextField @bind-Value="context.Price" />
+				</MudTd>
+			</RowTemplate>
+			<PagerContent>
+				<MudTablePager PageSizeOptions="new int[]{5}" />
+			</PagerContent>
+		</MudTable>
+
+		<InputFile OnChange="HandleDataSave" />
+		@if (isUploading == true)
+		{
+			<MudProgressCircular Color="Color.Default" Indeterminate="true" />
+		}
+
+
 	</DialogContent>
-	<DialogActions>
-		<MudButton Color="Color.Error">Cancel</MudButton>
-	</DialogActions>
+
+	
 </MudDialog>
+
+
 
 
 
 @code {
 	private IBrowserFile selectedFile;
 	private bool isUploading = false;
+	private IEnumerable<ProductDTO> productList { get; set; } = new List<ProductDTO>();
+
+
 	private async Task HandleFileSelected(InputFileChangeEventArgs e)
 	{
 		if (e.File == null)
@@ -47,11 +108,13 @@
 			fileContent.Add(fileStreamContent, "file", selectedFile.Name);
 
 			var httpClient = new HttpClient();
-			var response = await httpClient.PostAsync($"{SD.BaseApiUrl}/api/product/BulkNewProductUpload", fileContent);
+			var response = await httpClient.PostAsync($"{SD.BaseApiUrl}/api/product/ExcelUploadForProduct", fileContent);
 
 			if (response.IsSuccessStatusCode)
 			{
 				Snackbar.Add("Product collection uploaded successfully!", Severity.Success);
+				var json = await response.Content.ReadAsStringAsync();
+				productList = JsonConvert.DeserializeObject<List<ProductDTO>>(json);
 			}
 			else
 			{
@@ -64,5 +127,11 @@
 			isUploading = false;
 			Snackbar.Add($"Error: {ex.Message}", Severity.Error);
 		}
+	}
+
+	private async Task HandleDataSave()
+	{
+
+
 	}
 }

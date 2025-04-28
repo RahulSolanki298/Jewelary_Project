@@ -142,6 +142,7 @@ namespace Business.Repository
                             Title = $"{product.CategoryName} {product.ColorName} {product.CaratName} {product.ProductType} {product.Sku}",
                             Sku = product.Sku,
                             CTW = product.CTW,
+                            Vendor = product.VenderName,
                             CategoryId = categoryId,
                             SubCategoryId = subCategoryId,
                             CaratSizeId = caratSizeId,
@@ -553,21 +554,21 @@ namespace Business.Repository
         public async Task<IEnumerable<ProductDTO>> GetProductStyleList()
         {
             var products = await (from product in _context.Product
+                                  join evt in _context.EventSites on product.EventId equals evt.Id
                                   join krt in _context.ProductProperty on product.KaratId equals krt.Id
                                   join cat in _context.Category on product.CategoryId equals cat.Id
                                   join color in _context.ProductProperty on product.ColorId equals color.Id into colorGroup
                                   from color in colorGroup.DefaultIfEmpty()
-                                  join shape in _context.ProductProperty on product.ShapeId equals shape.Id into shapeGroup
+                                  join shape in _context.ProductProperty on product.CenterShapeId equals shape.Id into shapeGroup
                                   from shape in shapeGroup.DefaultIfEmpty()
                                   join clarity in _context.ProductProperty on product.ClarityId equals clarity.Id into clarityGroup
                                   from clarity in clarityGroup.DefaultIfEmpty()
                                   join size in _context.ProductProperty on product.CenterCaratId equals size.Id into sizeGroup
                                   from size in sizeGroup.DefaultIfEmpty()
-                                  
                                   select new ProductDTO
                                   {
                                       Id = product.Id,
-                                      Title = product.Title,
+                                      Title = evt.EventName,
                                       BandWidth = product.BandWidth,
                                       Length = product.Length,
                                       CaratName = product.Carat,
@@ -579,6 +580,7 @@ namespace Business.Repository
                                       ClarityName = clarity.Name,
                                       ShapeName = shape.Name,
                                       ShapeId = shape != null ? shape.Id : (int?)null,
+                                      CenterShapeName = shape.Name,
                                       UnitPrice = product.UnitPrice,
                                       Price = product.Price,
                                       IsActivated = product.IsActivated,
@@ -586,8 +588,13 @@ namespace Business.Repository
                                       Description = product.Description,
                                       Sku = product.Sku,
                                       ProductType = cat.ProductType,
-                                      VenderStyle=product.VenderStyle,
+                                      VenderName = product.Vendor,
+                                      Grades = product.Grades,
+                                      GoldWeight = product.GoldWeight,
+                                      IsReadyforShip = product.IsReadyforShip,
+                                      VenderStyle = product.VenderStyle,
                                       CenterCaratName = size.Name,
+                                      Quantity = product.Quantity,
                                       KaratId = krt != null ? krt.Id : (int?)null,
                                       Karat = krt.Name
                                   }).Where(x => x.IsActivated).ToListAsync();
@@ -635,7 +642,18 @@ namespace Business.Repository
                                         IsActivated = col.IsActive.HasValue ? col.IsActive.Value : false
                                     }).Distinct().ToListAsync();
 
-
+                var prices = await (from pr in _context.ProductPrices
+                                    join prod in _context.Product on pr.ProductId equals prod.Id.ToString()
+                                    join kt in _context.ProductProperty on pr.ProductId equals kt.ParentId.ToString()
+                                    where pr.ProductId == firstProduct.Id.ToString()
+                                    select new ProductPriceDTO
+                                    {
+                                        Id = pr.Id,
+                                        KaratName = kt.Name,
+                                        ProductId = prod.Id.ToString(),
+                                        ProductPrice = prod.Price,
+                                        KaratId = pr.KaratId
+                                    }).Distinct().ToListAsync();
 
                 var productDTO = new ProductDTO
                 {
@@ -652,6 +670,10 @@ namespace Business.Repository
                     ShapeId = firstProduct.ShapeId,
                     UnitPrice = firstProduct.UnitPrice,
                     Price = firstProduct.Price,
+                    CenterCaratId = firstProduct.CenterCaratId,
+                    CenterCaratName = firstProduct.CenterCaratName,
+                    CenterShapeId = firstProduct.CenterShapeId,
+                    CenterShapeName = firstProduct.CenterShapeName,
                     IsActivated = firstProduct.IsActivated,
                     CaratSizeId = firstProduct.CaratSizeId,
                     Description = firstProduct.Description,
@@ -661,12 +683,18 @@ namespace Business.Repository
                     Metals = metals,
                     CaratSizes = caratSizes,
                     Shapes = shapes,
+                    Grades = firstProduct.Grades,
                     BandWidth = firstProduct.BandWidth,
+                    GoldWeight = firstProduct.GoldWeight,
+                    MMSize = firstProduct.MMSize,
+                    VenderStyle = firstProduct.VenderStyle,
                     Length = firstProduct.Length,
                     Karat = firstProduct.Karat,
                     KaratId = firstProduct.KaratId,
+                    VenderName = firstProduct.VenderName,
+                    WholesaleCost = firstProduct.WholesaleCost,
                     ProductImageVideos = new List<ProductImageAndVideoDTO>(),
-                    Prices = new List<ProductPriceDTO>()
+                    Prices = prices
                 };
 
                 //  await _context.ProductPrices.Where(x => x.ProductId == firstProduct.Id.ToString()).ToListAsync();
@@ -682,7 +710,8 @@ namespace Business.Repository
                     var imageVideo = new ProductImageAndVideoDTO
                     {
                         ImageUrl = imageUrl,
-                        VideoUrl = videoUrl
+                        VideoUrl = videoUrl,
+                        IsDefault = image.IsDefault,
                     };
 
                     productDTO.ProductImageVideos.Add(imageVideo);
@@ -897,14 +926,171 @@ namespace Business.Repository
             }
         }
 
-        public async Task<bool> SaveNewProductList(List<ProductDTO> products,string categoryName)
+        public async Task<bool> SaveNewProductList(List<ProductDTO> products, string categoryName)
+        {
+            try
+            {
+                // Step 0: Initialize variables
+                var styleDT = new ProductStyles();
+                var colors = await GetColorList();
+                var categories = await _context.Category.ToListAsync();
+                var subCategories = await _context.SubCategory.ToListAsync();
+                var clarities = await GetClarityList();
+                var carats = await GetCaratList();
+                var karats = await GetKaratList();
+                var shapes = await GetShapeList();
+
+                // Step 1: Create dictionaries for fast lookup
+                var colorDict = colors.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
+                var categoryDict = categories.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
+                var clarityDict = clarities.ToDictionary(x => x.Name, x => x.Id);
+                var caratDict = carats.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
+                var KaratDict = karats.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
+                var shapeDict = shapes.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
+
+                // Step 2: Retrieve existing products from database in bulk
+                var categoryId = categoryDict.GetValueOrDefault(categoryName);
+                var existingProducts = await _context.Product
+                    .Where(x => x.CategoryId == categoryId)
+                    .ToListAsync();
+
+                var productList = new List<Product>();
+                var productPrices = new List<ProductPrices>();
+                var productWeights = new List<ProductWeight>();
+
+                // Step 3: Process each product
+                foreach (var product in products)
+                {
+                    if (string.IsNullOrEmpty(product.ColorName)
+                        || string.IsNullOrEmpty(categoryName)
+                        || string.IsNullOrEmpty(product.Karat))
+                    {
+                        continue;
+                    }
+
+                    var colorId = colorDict.GetValueOrDefault(product.ColorName);
+                    var caratId = caratDict.GetValueOrDefault(product.CenterCaratName);
+                    var shapeId = shapeDict.GetValueOrDefault(product.CenterShapeName);
+                    var karatId = KaratDict.GetValueOrDefault(product.Karat);
+
+                    var events = await GetEventSitesByName(product.EventName);
+
+                    var existingProduct = existingProducts
+                        .FirstOrDefault(x => x.ColorId == colorId
+                                             && x.KaratId == karatId
+                                             && x.Sku == product.Sku);
+
+                    if (existingProduct != null)
+                    {
+                        // Update existing product
+                        existingProduct.Title = $"{product.CTW} {product.ShapeName} {product.CaratName} {product.ProductType}";
+                        existingProduct.Sku = product.Sku;
+                        existingProduct.Price = product.Price;
+                        existingProduct.UnitPrice = product.UnitPrice;
+                        existingProduct.Quantity = product.Quantity;
+                        existingProduct.IsActivated = product.IsActivated;
+                        existingProduct.KaratId = karatId;
+                        existingProduct.CenterCaratId = caratId;
+                        existingProduct.BandWidth = product.BandWidth;
+                        existingProduct.GoldWeight = product.GoldWeight;
+                        existingProduct.Grades = product.Grades;
+                        existingProduct.MMSize = product.MMSize;
+                        existingProduct.CTW = product.CTW;
+                        existingProduct.Certificate = product.Certificate;
+                        existingProduct.CenterShapeId = shapeId;
+                        existingProduct.AccentStoneShapeId = product.AccentStoneShapeId;
+                        existingProduct.IsReadyforShip = product.IsReadyforShip;
+                        existingProduct.EventId = events.Id;
+                        _context.Product.Update(existingProduct);
+                    }
+                    else
+                    {
+                        // Insert new product
+                        var newProduct = new Product
+                        {
+                            Title = $"{product.CTW} {product.ShapeName} {product.CaratName} {product.ProductType}",
+                            Sku = product.Sku ?? throw new ArgumentNullException(nameof(product.Sku)),
+                            CategoryId = categoryId,
+                            KaratId = karatId,
+                            CenterCaratId = caratId,
+                            Length = product.Length,
+                            ColorId = colorId,
+                            Description = product.Description,
+                            IsActivated = product.IsActivated,
+                            BandWidth = product.BandWidth,
+                            Price = product.Price > 0 ? product.Price : 0m,
+                            UnitPrice = product.UnitPrice,
+                            Quantity = product.Quantity,
+                            ProductType = product.ProductType,
+                            GoldWeight = product.GoldWeight,
+                            Grades = product.Grades,
+                            MMSize = product.MMSize,
+                            NoOfStones = product.NoOfStones,
+                            DiaWT = product.DiaWT,
+                            CenterShapeId = product.CenterShapeId,
+                            Certificate = product.Certificate,
+                            AccentStoneShapeId = product.AccentStoneShapeId,
+                            IsReadyforShip = product.IsReadyforShip,
+                            EventId = events.Id,
+                            CTW = product.CTW,
+                            Vendor = product.VenderName,
+                            VenderStyle = product.VenderStyle,
+                            Diameter = product.Diameter,
+                            Id = Guid.NewGuid()
+                        };
+
+                        productList.Add(newProduct);
+
+                        // Add associated prices and weights for new product
+                        productPrices.Add(new ProductPrices
+                        {
+                            KaratId = karatId,
+                            ProductId = newProduct.Id.ToString(),
+                            ProductPrice = product.Price
+                        });
+
+                        productWeights.Add(new ProductWeight
+                        {
+                            KaratId = karatId,
+                            ProductId = newProduct.Id.ToString(),
+                            Weight = !string.IsNullOrEmpty(product.GoldWeight) ? Convert.ToDecimal(product.GoldWeight) : 0
+                        });
+                    }
+                }
+
+                // Step 4: Perform all database operations in bulk
+                if (productList.Any())
+                {
+                    await _context.Product.AddRangeAsync(productList);
+                }
+                if (productPrices.Any())
+                {
+                    await _context.ProductPrices.AddRangeAsync(productPrices);
+                }
+                if (productWeights.Any())
+                {
+                    await _context.ProductWeights.AddRangeAsync(productWeights);
+                }
+
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+                return false;
+            }
+        }
+
+
+        public async Task<bool> SaveEarringsList(List<ProductDTO> products, string categoryName)
         {
             try
             {
                 // Step 0: Initilize veriable
                 var newProduct = new Product();
                 var existingProduct = new Product();
-                int styleId = 0;
 
                 var styleDT = new ProductStyles();
                 var colors = await GetColorList();
@@ -924,12 +1110,8 @@ namespace Business.Repository
                 var colorDict = colors.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
                 var categoryDict = categories.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
                 //var subCategoryDict = subCategories.ToDictionary(x => x.Name, x => x.Id);
-                var clarityDict = clarities.ToDictionary(x => x.Name, x => x.Id);
-                var caratDict = carats.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
                 var KaratDict = karats.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
                 var shapeDict = shapes.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
-                //var weightDict = goldWeight.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
-                //var purityDict = .ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
 
                 // Lists for insert and update
                 var productList = new List<Product>();
@@ -948,107 +1130,98 @@ namespace Business.Repository
 
                     colorId = colorDict.GetValueOrDefault(product.ColorName);
                     categoryId = categoryDict.GetValueOrDefault(categoryName);
-                    //subCategoryId = subCategoryDict.GetValueOrDefault(product.SubCategoryName);
-                    //clarityId = clarityDict.GetValueOrDefault(product.ClarityName);
-                    caratId = caratDict.GetValueOrDefault(product.CenterCaratName);
-                    shapeId = shapeDict.GetValueOrDefault(product.CenterShapeName);
+                    shapeId = shapeDict.GetValueOrDefault(product.AccentStoneShapeName);
                     karatId = KaratDict.GetValueOrDefault(product.Karat);
 
                     var events = await GetEventSitesByName(product.EventName);
 
 
-                    //existingProduct = await _context.Product
-                    //    .Where(x => x.CategoryId == categoryId
-                    //                && x.ColorId == colorId
-                    //                && x.KaratId == karatId
-                    //                && x.Sku == product.Sku)
-                    //    .FirstOrDefaultAsync();
+                    existingProduct = await _context.Product
+                        .Where(x => x.CategoryId == categoryId
+                                    && x.ColorId == colorId
+                                    && x.KaratId == karatId
+                                    && x.Sku == product.Sku)
+                        .FirstOrDefaultAsync();
 
-                    //if (existingProduct != null)
-                    //{
-
-                    //    // Update existing product
-                    //    existingProduct.Title = $"{product.CTW} {product.ShapeName} {product.CaratName} {product.ProductType}";
-                    //    existingProduct.Sku = product.Sku;
-                    //    existingProduct.Price = product.Price;
-                    //    existingProduct.UnitPrice = product.UnitPrice;
-                    //    existingProduct.Quantity = product.Quantity;
-                    //    existingProduct.IsActivated = product.IsActivated;
-                    //    existingProduct.KaratId = karatId;
-                    //    existingProduct.CenterCaratId = caratId;
-                    //    existingProduct.ShapeId = shapeId;
-                    //    existingProduct.BandWidth = product.BandWidth;
-                    //    existingProduct.GoldWeight = product.GoldWeight;
-                    //    existingProduct.Grades = product.Grades;
-                    //    existingProduct.MMSize = product.MMSize;
-                    //    existingProduct.CTW = product.CTW;
-                    //    existingProduct.Certificate = product.Certificate;
-                    //    existingProduct.CenterShapeId = shapeId;
-                    //    existingProduct.AccentStoneShapeId = product.AccentStoneShapeId;
-                    //    existingProduct.IsReadyforShip = product.IsReadyforShip;
-                    //    existingProduct.EventId = events.Id;
-                    //    _context.Product.Update(existingProduct);
-                    //    await _context.SaveChangesAsync();
-
-                    //}
-                    //else
-                    //{
-                    // Insert new product
-                    newProduct = new Product
+                    if (existingProduct != null)
                     {
-                        Title = $"{product.CTW} {product.ShapeName} {product.CaratName} {product.ProductType}",
-                        Sku = product.Sku ?? throw new ArgumentNullException(nameof(product.Sku)), // Ensures Sku is not null
-                        CategoryId = categoryId,
-                        KaratId = karatId,
-                        CenterCaratId = caratId,
-                        Length = product.Length,
-                        ColorId = colorId,
-                        Description = product.Description,
-                        IsActivated = product.IsActivated,
-                        BandWidth = product.BandWidth,
-                        Price = product.Price > 0 ? product.Price : 0m,
-                        UnitPrice = product.UnitPrice,
-                        Quantity = product.Quantity,
-                        ProductType = product.ProductType,
-                        GoldWeight = product.GoldWeight,
-                        Grades = product.Grades,
-                        ShapeId = shapeId,
-                        MMSize = product.MMSize,
-                        NoOfStones = product.NoOfStones,
-                        DiaWT = product.DiaWT,
-                        CenterShapeId = product.CenterShapeId,
-                        Certificate = product.Certificate,
-                        AccentStoneShapeId = product.AccentStoneShapeId,
-                        IsReadyforShip = product.IsReadyforShip,
-                        EventId = events.Id,
-                        CTW = product.CTW,
-                        VenderStyle = product.StyleName,
-                        Diameter = product.Diameter,
-                    Id = Guid.NewGuid()
-                    };
 
-                    //productList.Add(newProduct);
-                    await _context.Product.AddAsync(newProduct);
-                    await _context.SaveChangesAsync();
+                        // Update existing product
+                        existingProduct.Title = $"{product.CTW} {product.ShapeName} {product.CaratName} {product.ProductType}";
+                        existingProduct.Sku = product.Sku;
+                        existingProduct.Price = product.Price;
+                        existingProduct.UnitPrice = product.UnitPrice;
+                        existingProduct.Quantity = product.Quantity;
+                        existingProduct.IsActivated = product.IsActivated;
+                        existingProduct.KaratId = karatId;
+                        //existingProduct.ShapeId = shapeId;
+                        existingProduct.BandWidth = product.BandWidth;
+                        existingProduct.GoldWeight = product.GoldWeight;
+                        existingProduct.Grades = product.Grades;
+                        existingProduct.MMSize = product.MMSize;
+                        existingProduct.CTW = product.CTW;
+                        existingProduct.Certificate = product.Certificate;
+                        existingProduct.AccentStoneShapeId = product.AccentStoneShapeId;
+                        existingProduct.IsReadyforShip = product.IsReadyforShip;
+                        existingProduct.EventId = events.Id;
+                        _context.Product.Update(existingProduct);
+                        await _context.SaveChangesAsync();
 
-                    await _context.ProductPrices.AddAsync(new ProductPrices
+                    }
+                    else
                     {
-                        KaratId = karatId,
-                        ProductId = newProduct.Id.ToString(),
-                        ProductPrice = product.Price
-                    });
-                    await _context.SaveChangesAsync();
+                        // Insert new product
+                        newProduct = new Product
+                        {
+                            Title = $"{events.EventName}",
+                            Sku = product.Sku ?? throw new ArgumentNullException(nameof(product.Sku)), // Ensures Sku is not null
+                            CategoryId = categoryId,
+                            KaratId = karatId,
+                            ColorId = colorId,
+                            Description = product.Description,
+                            IsActivated = product.IsActivated,
+                            Price = product.Price > 0 ? product.Price : 0m,
+                            UnitPrice = product.UnitPrice,
+                            Quantity = product.Quantity,
+                            ProductType = product.ProductType,
+                            GoldWeight = product.GoldWeight,
+                            Grades = product.Grades,
+                            MMSize = product.MMSize,
+                            NoOfStones = product.NoOfStones,
+                            DiaWT = product.DiaWT,
+                            Certificate = product.Certificate,
+                            AccentStoneShapeId = product.AccentStoneShapeId,
+                            IsReadyforShip = product.IsReadyforShip,
+                            EventId = events.Id,
+                            CTW = product.CTW,
+                            Vendor = product.VenderName,
+                            VenderStyle = product.VenderStyle,
+                            Diameter = product.Diameter,
+                            Id = Guid.NewGuid()
+                        };
 
-                    var data = new ProductWeight();
-                    data.KaratId = karatId;
-                    data.ProductId = newProduct.Id.ToString();
-                    data.Weight = !string.IsNullOrEmpty(product.GoldWeight) ? Convert.ToDecimal(product.GoldWeight) : 0;
+                        //productList.Add(newProduct);
+                        await _context.Product.AddAsync(newProduct);
+                        await _context.SaveChangesAsync();
 
-                    await _context.ProductWeights.AddAsync(data);
-                    await _context.SaveChangesAsync();
+                        await _context.ProductPrices.AddAsync(new ProductPrices
+                        {
+                            KaratId = karatId,
+                            ProductId = newProduct.Id.ToString(),
+                            ProductPrice = product.Price
+                        });
+                        await _context.SaveChangesAsync();
+
+                        var data = new ProductWeight();
+                        data.KaratId = karatId;
+                        data.ProductId = newProduct.Id.ToString();
+                        data.Weight = !string.IsNullOrEmpty(product.GoldWeight) ? Convert.ToDecimal(product.GoldWeight) : 0;
+
+                        await _context.ProductWeights.AddAsync(data);
+                        await _context.SaveChangesAsync();
+                    }
+
                 }
-
-                //}
 
 
                 return true;

@@ -1,0 +1,38 @@
+﻿@using MudBlazor
+@using global::Models
+@inject IDialogService DialogService
+
+<MudDialog>
+    <DialogContent>
+        @* <MudCarousel @bind-SelectedIndex="_selectedIndex" Height="400px">
+            @for (int i = 0; i < ImageList.Count; i++)
+            {
+                <MudCarouselItem>
+                    <img src="@($"{BaseApiUrl}/{ImageList[i].ImageUrl}")" style="max-height: 400px; width: auto; display: block; margin: 0 auto;" />
+                </MudCarouselItem>
+            }
+        </MudCarousel> *@
+
+
+        <!-- Thumbnail row -->
+        <MudGrid GutterSize="2" Class="mt-2">
+            @for (int i = 0; i < ImageList.Count; i++)
+            {
+                <MudItem xs="2">
+                    <MudPaper Style="cursor:pointer; padding: 4px;" OnClick="() => _selectedIndex = i">
+                        <img src="@($"{BaseApiUrl}/{ImageList[i].ImageUrl}")" style="width:100%; height:auto;" />
+                    </MudPaper>
+                </MudItem>
+            }
+        </MudGrid>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public List<ProductImageAndVideoDTO> ImageList { get; set; }
+    [Parameter] public string BaseApiUrl { get; set; }
+
+    private int _selectedIndex = 0;
+}

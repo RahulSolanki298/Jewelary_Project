@@ -18,11 +18,8 @@
             <MudText Typo="Typo.h6">Product List</MudText>
             <MudToolBarSpacer />
 
-            @*<MudButton @onclick="OpenDialog" Variant="Variant.Filled" Color="Color.Primary">
-                Upload File
-            </MudButton>*@
-
             <MudButton OnClick="@(() => OpenDialogAsync(_fullScreen))" Variant="Variant.Filled" Color="Color.Primary">Upload File</MudButton>
+            <MudButton OnClick="@(() => OpenDialog())" Variant="Variant.Filled" Color="Color.Secondary">Upload Images</MudButton>
 
         </MudPaper>
     </MudItem>
@@ -45,7 +42,9 @@
                 <MudTd DataLabel="ImageUrl">
                     @if (@context.ProductImageVideos.Count > 0 && !string.IsNullOrWhiteSpace(context.ProductImageVideos.FirstOrDefault().ImageUrl))
                     {
-                        <img src="@SD.BaseApiUrl\@context.ProductImageVideos.FirstOrDefault().ImageUrl" style="max-width:35px;height:auto;" />
+                        <MudPaper Style="cursor: pointer; display:inline-block;" @onclick="@(() => OpenImageDialog(context.ProductImageVideos))">
+                            <img src="@SD.BaseApiUrl/@context.ProductImageVideos.First().ImageUrl" style="max-width:35px;height:auto;" />
+                        </MudPaper>
                     }
                     else
                     {
@@ -53,13 +52,13 @@
                     }
                 </MudTd>
                 <MudTd DataLabel="Product">
-                    @context.ShapeName @context.BandWidth @context.Length @context.Sku
+                    @context.Title
                 </MudTd>
                 <MudTd DataLabel="VenderName">@context.VenderName</MudTd>
-                <MudTd DataLabel="StyleName">@context.StyleName</MudTd>
+                <MudTd DataLabel="VenderStyle">@context.VenderStyle</MudTd>
                 <MudTd DataLabel="Length">@context.Length</MudTd>
                 <MudTd DataLabel="BandWidth">@context.BandWidth</MudTd>
-                <MudTd DataLabel="Weights">@context.Weights</MudTd>
+                <MudTd DataLabel="GoldWeight">@context.GoldWeight</MudTd>
                 <MudTd DataLabel="Grades">@context.Grades</MudTd>
                 <MudTd DataLabel="DyamondType">@context.ProductType</MudTd>
                 <MudTd DataLabel="Price">@context.Price</MudTd>
@@ -162,7 +161,7 @@
     private void OpenDialog()
     {
         var options = new DialogOptions { CloseButton = true };
-        Dialog.Show<UploadStyleFile>("Show Upload Collection", options);
+        Dialog.Show<UploadProductImages>("Show Products", options);
     }
 
     private void Edit(Guid productId)
@@ -194,7 +193,29 @@
 
     private void OpenDialogAsync(DialogOptions options)
     {
-        Dialog.Show<UploadStyleFile>("Custom Options Dialog", options);
+        Dialog.Show<UploadStyleFile>("Upload Product File (.xls)", options);
     }
+
+    private void OpenImageDialog(List<ProductImageAndVideoDTO> images)
+    {
+        if (images == null || images.Count == 0)
+            return;
+
+        var parameters = new DialogParameters
+        {
+            { "ImageList", images }
+        };
+
+        var options = new DialogOptions
+            {
+                MaxWidth = MaxWidth.Medium,
+                FullWidth = false,
+                CloseButton = true
+            };
+
+        Dialog.Show<ProductImageViewer>("Product Images", parameters, options);
+    }
+
+
 
 }

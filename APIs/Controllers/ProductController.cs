@@ -287,6 +287,58 @@ namespace APIs.Controllers
             }
         }
 
+        [HttpPost("ExcelUploadForProduct")]
+        public async Task<IActionResult> ExcelUpload(IFormFile file)
+        {
+            List<ProductDTO> ProductUpload = new List<ProductDTO>();
+
+            if (file == null || file.Length == 0)
+                return BadRequest("No file uploaded.");
+
+            if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
+                return BadRequest("Invalid file format. Please upload an Excel (.xlsx) file.");
+
+            using var stream = new MemoryStream();
+            await file.CopyToAsync(stream);
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            using var package = new ExcelPackage(stream);
+
+            foreach (var wkSheet in package.Workbook.Worksheets)
+            {
+
+                if (wkSheet.Name.Trim().ToLower() == "engagement rings")
+                {
+                    var ringProducts = ProcessRingData(wkSheet);
+                    ProductUpload.AddRange(ringProducts);
+                }
+                else if (wkSheet.Name.Trim().ToLower() == "wedding bands")
+                {
+                    var weddings = ProcessBandsData(wkSheet);
+                    ProductUpload.AddRange(weddings);
+                }
+                else if (wkSheet.Name.Trim().ToLower() == "earrings")
+                {
+                    var weddings = ProcessEarringsData(wkSheet);
+                    ProductUpload.AddRange(weddings);
+                }
+                else if (wkSheet.Name.Trim().ToLower() == "pendants")
+                {
+                    var weddings = ProcessPendantsData(wkSheet);
+                    ProductUpload.AddRange(weddings);
+                }
+                else if (wkSheet.Name.Trim().ToLower() == "bracelets")
+                {
+                    var weddings = ProcessBraceletsData(wkSheet);
+                    ProductUpload.AddRange(weddings);
+                }
+            }
+
+            return Ok(ProductUpload);
+
+        }
+
+
         [HttpPost("BulkNewProductUpload")]
         public async Task<IActionResult> UploadNewExcel(IFormFile file)
         {
@@ -318,17 +370,17 @@ namespace APIs.Controllers
                 else if (wkSheet.Name.Trim().ToLower() == "earrings")
                 {
                     var weddings = ProcessEarringsData(wkSheet);
-                    await _productRepository.SaveNewProductList(weddings, "Earrings"); 
+                    await _productRepository.SaveEarringsList(weddings, "Earrings"); 
                 }
                 else if (wkSheet.Name.Trim().ToLower() == "pendants")
                 {
                     var weddings = ProcessPendantsData(wkSheet);
-                    await _productRepository.SaveNewProductList(weddings, "Pendants"); // Hypothetical method
+                    await _productRepository.SaveEarringsList(weddings, "Pendants"); // Hypothetical method
                 }
                 else if (wkSheet.Name.Trim().ToLower() == "bracelets")
                 {
-                    //var weddings = ProcessWeddingData(worksheet);
-                    //await _weddingRepository.SaveWeddingList(weddings); // Hypothetical method
+                    var weddings = ProcessBraceletsData(wkSheet);
+                    await _productRepository.SaveEarringsList(weddings, "Bracelets"); // Hypothetical method
                 }
             }
 
@@ -804,6 +856,7 @@ namespace APIs.Controllers
                 product = new ProductDTO
                 {
                     EventName = worksheet.Cells[row, 5].Text,
+                    Title= worksheet.Cells[row, 5].Text,
                     VenderName = worksheet.Cells[row, 6].Text,
                     VenderStyle = worksheet.Cells[row, 7].Text,
                     Sku = worksheet.Cells[row, 7].Text,
@@ -825,7 +878,7 @@ namespace APIs.Controllers
                     UnitPrice = ConvertStringToDecimal(worksheet.Cells[row, 24].Text),
                     Description = worksheet.Cells[row, 33].Text,
                     WholesaleCost = decimal.TryParse(worksheet.Cells[row, 27].Text, out var hCost) ? hCost : (decimal?)null,
-                    IsReadyforShip = string.IsNullOrWhiteSpace(worksheet.Cells[row, 1].Text) && worksheet.Cells[row, 1].Text == SD.ReadyToPdp
+                    IsReadyforShip = !string.IsNullOrWhiteSpace(worksheet.Cells[row, 1].Text) && worksheet.Cells[row, 1].Text == SD.ReadyToPdp ? true : false,
                 };
 
                 if (!string.IsNullOrWhiteSpace(product.EventName) && !string.IsNullOrWhiteSpace(product.VenderName) && !string.IsNullOrWhiteSpace(product.VenderStyle) && !string.IsNullOrWhiteSpace(product.Sku))
@@ -838,6 +891,7 @@ namespace APIs.Controllers
                 else
                 {
                     product.EventName = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
+                    product.Title= string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
                     product.VenderName = string.IsNullOrWhiteSpace(product.VenderName) ? tempProducts.VenderName : product.VenderName;
                     product.VenderStyle = string.IsNullOrWhiteSpace(product.VenderStyle) ? tempProducts.VenderStyle : product.VenderStyle;
                     product.Sku = string.IsNullOrWhiteSpace(product.Sku) ? tempProducts.Sku : product.Sku;
@@ -853,7 +907,7 @@ namespace APIs.Controllers
                     product.MMSize = string.IsNullOrWhiteSpace(product.MMSize) ? tempProducts.MMSize : product.MMSize;
                     product.DiaWT = product.DiaWT == 0 ? tempProducts.DiaWT : product.DiaWT;
                     product.NoOfStones = product.NoOfStones == 0 ? tempProducts.NoOfStones : product.NoOfStones;
-                    product.Grades = string.IsNullOrWhiteSpace(product.Grades) ? tempProducts.Sku : product.Grades;
+                    product.Grades = string.IsNullOrWhiteSpace(product.Grades) ? tempProducts.Grades : product.Grades;
                     product.ProductType = string.IsNullOrWhiteSpace(product.ProductType) ? tempProducts.ProductType : product.ProductType;
                     product.Price = product.Price == 0 ? tempProducts.Price : product.Price;
                     product.UnitPrice = product.Price == 0 ? tempProducts.UnitPrice : product.UnitPrice;
@@ -863,7 +917,6 @@ namespace APIs.Controllers
                     products.Add(product);
                     newProductList = CreateRingVariantsFromColor(product);
                     products.AddRange(newProductList);
-
                 }
             }
             
@@ -882,6 +935,7 @@ namespace APIs.Controllers
             {
                 product = new ProductDTO
                 {
+                    Title = worksheet.Cells[row, 5].Text,
                     EventName = worksheet.Cells[row, 5].Text,
                     VenderName = worksheet.Cells[row, 6].Text,
                     VenderStyle = worksheet.Cells[row, 7].Text,
@@ -902,7 +956,7 @@ namespace APIs.Controllers
                     UnitPrice = ConvertStringToDecimal(worksheet.Cells[row, 23].Text),
                     Description = worksheet.Cells[row, 32].Text,
                     WholesaleCost = decimal.TryParse(worksheet.Cells[row, 26].Text, out var hCost) ? hCost : 0,
-                    IsReadyforShip = string.IsNullOrWhiteSpace(worksheet.Cells[row, 1].Text) && worksheet.Cells[row, 1].Text == SD.ReadyToPdp
+                    IsReadyforShip = string.IsNullOrWhiteSpace(worksheet.Cells[row, 1].Text) && worksheet.Cells[row, 1].Text == SD.ReadyToPdp ? true : false,
                 };
 
                 if (!string.IsNullOrWhiteSpace(product.EventName) && !string.IsNullOrWhiteSpace(product.VenderName) && !string.IsNullOrWhiteSpace(product.VenderStyle) && !string.IsNullOrWhiteSpace(product.Sku))
@@ -915,14 +969,13 @@ namespace APIs.Controllers
                 else
                 {
                     product.EventName = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
+                    product.Title= string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
                     product.VenderName = string.IsNullOrWhiteSpace(product.VenderName) ? tempProducts.VenderName : product.VenderName;
                     product.VenderStyle = string.IsNullOrWhiteSpace(product.VenderStyle) ? tempProducts.VenderStyle : product.VenderStyle;
                     product.Sku = string.IsNullOrWhiteSpace(product.Sku) ? tempProducts.Sku : product.Sku;
-                    product.BandWidth = string.IsNullOrWhiteSpace(product.BandWidth) ? tempProducts.BandWidth : product.BandWidth;
+                    product.Diameter = string.IsNullOrWhiteSpace(product.Diameter) ? tempProducts.Diameter : product.Diameter;
                     product.GoldWeight = string.IsNullOrWhiteSpace(product.GoldWeight) ? tempProducts.GoldWeight : product.GoldWeight;
                     product.CTW = string.IsNullOrWhiteSpace(product.CTW) ? tempProducts.CTW : product.CTW;
-                    product.CenterShapeName = string.IsNullOrWhiteSpace(product.CenterShapeName) ? tempProducts.CenterShapeName : product.CenterShapeName;
-                    product.CenterCaratName = string.IsNullOrWhiteSpace(product.CenterCaratName) ? tempProducts.CenterCaratName : product.CenterCaratName;
                     product.ColorName = string.IsNullOrWhiteSpace(product.ColorName) ? tempProducts.ColorName : product.ColorName;
                     product.AccentStoneShapeName = string.IsNullOrWhiteSpace(product.AccentStoneShapeName) ? tempProducts.AccentStoneShapeName : product.AccentStoneShapeName;
                     product.MMSize = string.IsNullOrWhiteSpace(product.MMSize) ? tempProducts.MMSize : product.MMSize;
@@ -957,6 +1010,7 @@ namespace APIs.Controllers
             {
                 product = new ProductDTO
                 {
+                    Title= worksheet.Cells[row, 5].Text,
                     EventName = worksheet.Cells[row, 5].Text,
                     VenderName = worksheet.Cells[row, 6].Text,
                     VenderStyle = worksheet.Cells[row, 7].Text,
@@ -964,20 +1018,18 @@ namespace APIs.Controllers
                     Diameter = worksheet.Cells[row, 8].Text,
                     GoldWeight = worksheet.Cells[row, 11].Text,
                     CTW = worksheet.Cells[row, 12].Text,
-                    CenterShapeName = worksheet.Cells[row, 13].Text,
-                    CenterCaratName = worksheet.Cells[row, 14].Text,
                     ColorName = worksheet.Cells[row, 15].Text,
-                    AccentStoneShapeName = worksheet.Cells[row, 16].Text,
-                    MMSize = worksheet.Cells[row, 17].Text,
-                    DiaWT = decimal.TryParse(worksheet.Cells[row, 18].Text, out var diaWt) ? diaWt : 0,
-                    NoOfStones = int.TryParse(worksheet.Cells[row, 19].Text, out var noOfStones) ? noOfStones : 0,
-                    Grades = worksheet.Cells[row, 20].Text,
-                    ProductType = worksheet.Cells[row, 21].Text,
-                    Price = ConvertStringToDecimal(worksheet.Cells[row, 22].Text),
-                    UnitPrice = ConvertStringToDecimal(worksheet.Cells[row, 22].Text),
-                    Description = worksheet.Cells[row, 31].Text,
-                    WholesaleCost = decimal.TryParse(worksheet.Cells[row, 25].Text, out var hCost) ? hCost : 0,
-                    IsReadyforShip = string.IsNullOrWhiteSpace(worksheet.Cells[row, 1].Text) && worksheet.Cells[row, 1].Text == SD.ReadyToPdp
+                    AccentStoneShapeName = worksheet.Cells[row, 17].Text,
+                    MMSize = worksheet.Cells[row, 18].Text,
+                    DiaWT = decimal.TryParse(worksheet.Cells[row, 19].Text, out var diaWt) ? diaWt : 0,
+                    NoOfStones = int.TryParse(worksheet.Cells[row, 20].Text, out var noOfStones) ? noOfStones : 0,
+                    Grades = worksheet.Cells[row, 21].Text,
+                    ProductType = worksheet.Cells[row, 22].Text,
+                    Price = ConvertStringToDecimal(worksheet.Cells[row, 23].Text),
+                    UnitPrice = ConvertStringToDecimal(worksheet.Cells[row, 23].Text),
+                    Description = worksheet.Cells[row, 32].Text,
+                    WholesaleCost = decimal.TryParse(worksheet.Cells[row, 26].Text, out var hCost) ? hCost : 0,
+                    IsReadyforShip = !string.IsNullOrWhiteSpace(worksheet.Cells[row, 1].Text) && worksheet.Cells[row, 1].Text == SD.ReadyToPdp ? true : false,
                 };
 
                 if (!string.IsNullOrWhiteSpace(product.EventName) && !string.IsNullOrWhiteSpace(product.VenderName) && !string.IsNullOrWhiteSpace(product.VenderStyle) && !string.IsNullOrWhiteSpace(product.Sku))
@@ -991,20 +1043,19 @@ namespace APIs.Controllers
                 {
                     product.Diameter = string.IsNullOrWhiteSpace(product.Diameter) ? tempProducts.Diameter : product.Diameter;
                     product.EventName = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
+                    product.Title= string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
                     product.VenderName = string.IsNullOrWhiteSpace(product.VenderName) ? tempProducts.VenderName : product.VenderName;
                     product.VenderStyle = string.IsNullOrWhiteSpace(product.VenderStyle) ? tempProducts.VenderStyle : product.VenderStyle;
                     product.Sku = string.IsNullOrWhiteSpace(product.Sku) ? tempProducts.Sku : product.Sku;
                     product.BandWidth = string.IsNullOrWhiteSpace(product.BandWidth) ? tempProducts.BandWidth : product.BandWidth;
                     product.GoldWeight = string.IsNullOrWhiteSpace(product.GoldWeight) ? tempProducts.GoldWeight : product.GoldWeight;
                     product.CTW = string.IsNullOrWhiteSpace(product.CTW) ? tempProducts.CTW : product.CTW;
-                    product.CenterShapeName = string.IsNullOrWhiteSpace(product.CenterShapeName) ? tempProducts.CenterShapeName : product.CenterShapeName;
-                    product.CenterCaratName = string.IsNullOrWhiteSpace(product.CenterCaratName) ? tempProducts.CenterCaratName : product.CenterCaratName;
                     product.ColorName = string.IsNullOrWhiteSpace(product.ColorName) ? tempProducts.ColorName : product.ColorName;
                     product.AccentStoneShapeName = string.IsNullOrWhiteSpace(product.AccentStoneShapeName) ? tempProducts.AccentStoneShapeName : product.AccentStoneShapeName;
                     product.MMSize = string.IsNullOrWhiteSpace(product.MMSize) ? tempProducts.MMSize : product.MMSize;
                     product.DiaWT = product.DiaWT == 0 ? tempProducts.DiaWT : product.DiaWT;
                     product.NoOfStones = product.NoOfStones == 0 ? tempProducts.NoOfStones : product.NoOfStones;
-                    product.Grades = string.IsNullOrWhiteSpace(product.Grades) ? tempProducts.Sku : product.Grades;
+                    product.Grades = string.IsNullOrWhiteSpace(product.Grades) ? tempProducts.Grades : product.Grades;
                     product.ProductType = string.IsNullOrWhiteSpace(product.ProductType) ? tempProducts.ProductType : product.ProductType;
                     product.Price = product.Price == 0 ? tempProducts.Price : product.Price;
                     product.UnitPrice = product.Price == 0 ? tempProducts.UnitPrice : product.UnitPrice;
@@ -1033,6 +1084,7 @@ namespace APIs.Controllers
             {
                 product = new ProductDTO
                 {
+                    Title = worksheet.Cells[row, 5].Text,
                     EventName = worksheet.Cells[row, 5].Text,
                     VenderName = worksheet.Cells[row, 6].Text,
                     VenderStyle = worksheet.Cells[row, 7].Text,
@@ -1051,7 +1103,7 @@ namespace APIs.Controllers
                     UnitPrice = ConvertStringToDecimal(worksheet.Cells[row, 23].Text),
                     Description = worksheet.Cells[row, 32].Text,
                     WholesaleCost = decimal.TryParse(worksheet.Cells[row, 26].Text, out var hCost) ? hCost : 0,
-                    IsReadyforShip = string.IsNullOrWhiteSpace(worksheet.Cells[row, 1].Text) && worksheet.Cells[row, 1].Text == SD.ReadyToPdp
+                    IsReadyforShip = !string.IsNullOrWhiteSpace(worksheet.Cells[row, 1].Text) && worksheet.Cells[row, 1].Text == SD.ReadyToPdp ? true : false
                 };
 
                 if (!string.IsNullOrWhiteSpace(product.EventName) && !string.IsNullOrWhiteSpace(product.VenderName) && !string.IsNullOrWhiteSpace(product.VenderStyle) && !string.IsNullOrWhiteSpace(product.Sku))
@@ -1064,10 +1116,11 @@ namespace APIs.Controllers
                 else
                 {
                     product.EventName = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
+                    product.Title = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
                     product.VenderName = string.IsNullOrWhiteSpace(product.VenderName) ? tempProducts.VenderName : product.VenderName;
                     product.VenderStyle = string.IsNullOrWhiteSpace(product.VenderStyle) ? tempProducts.VenderStyle : product.VenderStyle;
                     product.Sku = string.IsNullOrWhiteSpace(product.Sku) ? tempProducts.Sku : product.Sku;
-                    product.Length= string.IsNullOrWhiteSpace(product.Length) ? tempProducts.Sku : product.Length;
+                    product.Length= string.IsNullOrWhiteSpace(product.Length) ? tempProducts.Length : product.Length;
                     product.GoldWeight = string.IsNullOrWhiteSpace(product.GoldWeight) ? tempProducts.GoldWeight : product.GoldWeight;
                     product.CTW = string.IsNullOrWhiteSpace(product.CTW) ? tempProducts.CTW : product.CTW;
                     product.ColorName = string.IsNullOrWhiteSpace(product.ColorName) ? tempProducts.ColorName : product.ColorName;
@@ -1075,7 +1128,7 @@ namespace APIs.Controllers
                     product.MMSize = string.IsNullOrWhiteSpace(product.MMSize) ? tempProducts.MMSize : product.MMSize;
                     product.DiaWT = product.DiaWT == 0 ? tempProducts.DiaWT : product.DiaWT;
                     product.NoOfStones = product.NoOfStones == 0 ? tempProducts.NoOfStones : product.NoOfStones;
-                    product.Grades = string.IsNullOrWhiteSpace(product.Grades) ? tempProducts.Sku : product.Grades;
+                    product.Grades = string.IsNullOrWhiteSpace(product.Grades) ? tempProducts.Grades : product.Grades;
                     product.ProductType = string.IsNullOrWhiteSpace(product.ProductType) ? tempProducts.ProductType : product.ProductType;
                     product.Price = product.Price == 0 ? tempProducts.Price : product.Price;
                     product.UnitPrice = product.Price == 0 ? tempProducts.UnitPrice : product.UnitPrice;
@@ -1093,76 +1146,78 @@ namespace APIs.Controllers
         }
 
 
-        //private List<ProductDTO> ProcessBraceletsData(ExcelWorksheet worksheet)
-        //{
-        //    var newProductList = new List<ProductDTO>();
-        //    var products = new List<ProductDTO>();
-        //    var tempProducts = new ProductDTO();
-        //    int rowCount = worksheet.Dimension.Rows;
-        //    ProductDTO product = null;
+        private List<ProductDTO> ProcessBraceletsData(ExcelWorksheet worksheet)
+        {
+            var newProductList = new List<ProductDTO>();
+            var products = new List<ProductDTO>();
+            var tempProducts = new ProductDTO();
+            int rowCount = worksheet.Dimension.Rows;
+            ProductDTO product = null;
 
-        //    for (int row = 5; row <= rowCount; row++)
-        //    {
-        //        product = new ProductDTO
-        //        {
-        //            EventName = worksheet.Cells[row, 5].Text,
-        //            VenderName = worksheet.Cells[row, 6].Text,
-        //            VenderStyle = worksheet.Cells[row, 7].Text,
-        //            Sku = worksheet.Cells[row, 7].Text,
-        //            Length = worksheet.Cells[row, 9].Text,
-        //            GoldWeight = worksheet.Cells[row, 11].Text,
-        //            CTW = worksheet.Cells[row, 12].Text,
-        //            ColorName = worksheet.Cells[row, 15].Text,
-        //            AccentStoneShapeName = worksheet.Cells[row, 17].Text,
-        //            MMSize = worksheet.Cells[row, 18].Text,
-        //            DiaWT = decimal.TryParse(worksheet.Cells[row, 19].Text, out var diaWt) ? diaWt : 0,
-        //            NoOfStones = int.TryParse(worksheet.Cells[row, 20].Text, out var noOfStones) ? noOfStones : 0,
-        //            Grades = worksheet.Cells[row, 21].Text,
-        //            ProductType = worksheet.Cells[row, 22].Text,
-        //            Price = ConvertStringToDecimal(worksheet.Cells[row, 23].Text),
-        //            UnitPrice = ConvertStringToDecimal(worksheet.Cells[row, 23].Text),
-        //            Description = worksheet.Cells[row, 32].Text,
-        //            WholesaleCost = decimal.TryParse(worksheet.Cells[row, 26].Text, out var hCost) ? hCost : 0,
-        //            IsReadyforShip = string.IsNullOrWhiteSpace(worksheet.Cells[row, 1].Text) && worksheet.Cells[row, 1].Text == SD.ReadyToPdp
-        //        };
+            for (int row = 5; row <= rowCount; row++)
+            {
+                product = new ProductDTO
+                {
+                    Title = worksheet.Cells[row, 5].Text,
+                    EventName = worksheet.Cells[row, 5].Text,
+                    VenderName = worksheet.Cells[row, 6].Text,
+                    VenderStyle = worksheet.Cells[row, 7].Text,
+                    Sku = worksheet.Cells[row, 7].Text,
+                    Length = worksheet.Cells[row, 9].Text,
+                    GoldWeight = worksheet.Cells[row, 11].Text,
+                    CTW = worksheet.Cells[row, 12].Text,
+                    ColorName = worksheet.Cells[row, 15].Text,
+                    AccentStoneShapeName = worksheet.Cells[row, 17].Text,
+                    MMSize = worksheet.Cells[row, 18].Text,
+                    DiaWT = decimal.TryParse(worksheet.Cells[row, 19].Text, out var diaWt) ? diaWt : 0,
+                    NoOfStones = int.TryParse(worksheet.Cells[row, 20].Text, out var noOfStones) ? noOfStones : 0,
+                    Grades = worksheet.Cells[row, 21].Text,
+                    ProductType = worksheet.Cells[row, 22].Text,
+                    Price = ConvertStringToDecimal(worksheet.Cells[row, 23].Text),
+                    UnitPrice = ConvertStringToDecimal(worksheet.Cells[row, 23].Text),
+                    Description = worksheet.Cells[row, 31].Text,
+                    WholesaleCost = decimal.TryParse(worksheet.Cells[row, 26].Text, out var hCost) ? hCost : 0,
+                    IsReadyforShip = !string.IsNullOrWhiteSpace(worksheet.Cells[row, 1].Text) && worksheet.Cells[row, 1].Text == SD.ReadyToPdp ? true : false
+                };
 
-        //        if (!string.IsNullOrWhiteSpace(product.EventName) && !string.IsNullOrWhiteSpace(product.VenderName) && !string.IsNullOrWhiteSpace(product.VenderStyle) && !string.IsNullOrWhiteSpace(product.Sku))
-        //        {
-        //            tempProducts = new ProductDTO();
-        //            tempProducts = product;
-        //            newProductList = CreateRingVariantsFromColor(product);
-        //            products.AddRange(newProductList);
-        //        }
-        //        else
-        //        {
-        //            product.EventName = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
-        //            product.VenderName = string.IsNullOrWhiteSpace(product.VenderName) ? tempProducts.VenderName : product.VenderName;
-        //            product.VenderStyle = string.IsNullOrWhiteSpace(product.VenderStyle) ? tempProducts.VenderStyle : product.VenderStyle;
-        //            product.Sku = string.IsNullOrWhiteSpace(product.Sku) ? tempProducts.Sku : product.Sku;
-        //            product.Length = string.IsNullOrWhiteSpace(product.Length) ? tempProducts.Sku : product.Length;
-        //            product.GoldWeight = string.IsNullOrWhiteSpace(product.GoldWeight) ? tempProducts.GoldWeight : product.GoldWeight;
-        //            product.CTW = string.IsNullOrWhiteSpace(product.CTW) ? tempProducts.CTW : product.CTW;
-        //            product.ColorName = string.IsNullOrWhiteSpace(product.ColorName) ? tempProducts.ColorName : product.ColorName;
-        //            product.AccentStoneShapeName = string.IsNullOrWhiteSpace(product.AccentStoneShapeName) ? tempProducts.AccentStoneShapeName : product.AccentStoneShapeName;
-        //            product.MMSize = string.IsNullOrWhiteSpace(product.MMSize) ? tempProducts.MMSize : product.MMSize;
-        //            product.DiaWT = product.DiaWT == 0 ? tempProducts.DiaWT : product.DiaWT;
-        //            product.NoOfStones = product.NoOfStones == 0 ? tempProducts.NoOfStones : product.NoOfStones;
-        //            product.Grades = string.IsNullOrWhiteSpace(product.Grades) ? tempProducts.Sku : product.Grades;
-        //            product.ProductType = string.IsNullOrWhiteSpace(product.ProductType) ? tempProducts.ProductType : product.ProductType;
-        //            product.Price = product.Price == 0 ? tempProducts.Price : product.Price;
-        //            product.UnitPrice = product.Price == 0 ? tempProducts.UnitPrice : product.UnitPrice;
-        //            product.Description = string.IsNullOrWhiteSpace(product.Description) ? tempProducts.Description : product.Description;
-        //            product.WholesaleCost = product.WholesaleCost > 0 ? tempProducts.WholesaleCost : product.WholesaleCost;
-        //            product.IsReadyforShip = product.IsReadyforShip != true ? tempProducts.IsReadyforShip : product.IsReadyforShip;
-        //            products.Add(product);
-        //            newProductList = CreateRingVariantsFromColor(product);
-        //            products.AddRange(newProductList);
+                if (!string.IsNullOrWhiteSpace(product.EventName) && !string.IsNullOrWhiteSpace(product.VenderName) && !string.IsNullOrWhiteSpace(product.VenderStyle) && !string.IsNullOrWhiteSpace(product.Sku))
+                {
+                    tempProducts = new ProductDTO();
+                    tempProducts = product;
+                    newProductList = CreateRingVariantsFromColor(product);
+                    products.AddRange(newProductList);
+                }
+                else
+                {
+                    product.EventName = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
+                    product.Title = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
+                    product.VenderName = string.IsNullOrWhiteSpace(product.VenderName) ? tempProducts.VenderName : product.VenderName;
+                    product.VenderStyle = string.IsNullOrWhiteSpace(product.VenderStyle) ? tempProducts.VenderStyle : product.VenderStyle;
+                    product.Sku = string.IsNullOrWhiteSpace(product.Sku) ? tempProducts.Sku : product.Sku;
+                    product.Length = string.IsNullOrWhiteSpace(product.Length) ? tempProducts.Length : product.Length;
+                    product.GoldWeight = string.IsNullOrWhiteSpace(product.GoldWeight) ? tempProducts.GoldWeight : product.GoldWeight;
+                    product.CTW = string.IsNullOrWhiteSpace(product.CTW) ? tempProducts.CTW : product.CTW;
+                    product.ColorName = string.IsNullOrWhiteSpace(product.ColorName) ? tempProducts.ColorName : product.ColorName;
+                    product.AccentStoneShapeName = string.IsNullOrWhiteSpace(product.AccentStoneShapeName) ? tempProducts.AccentStoneShapeName : product.AccentStoneShapeName;
+                    product.MMSize = string.IsNullOrWhiteSpace(product.MMSize) ? tempProducts.MMSize : product.MMSize;
+                    product.DiaWT = product.DiaWT == 0 ? tempProducts.DiaWT : product.DiaWT;
+                    product.NoOfStones = product.NoOfStones == 0 ? tempProducts.NoOfStones : product.NoOfStones;
+                    product.Grades = string.IsNullOrWhiteSpace(product.Grades) ? tempProducts.Grades : product.Grades;
+                    product.ProductType = string.IsNullOrWhiteSpace(product.ProductType) ? tempProducts.ProductType : product.ProductType;
+                    product.Price = product.Price == 0 ? tempProducts.Price : product.Price;
+                    product.UnitPrice = product.Price == 0 ? tempProducts.UnitPrice : product.UnitPrice;
+                    product.Description = string.IsNullOrWhiteSpace(product.Description) ? tempProducts.Description : product.Description;
+                    product.WholesaleCost = product.WholesaleCost > 0 ? tempProducts.WholesaleCost : product.WholesaleCost;
+                    product.IsReadyforShip = product.IsReadyforShip != true ? tempProducts.IsReadyforShip : product.IsReadyforShip;
+                    products.Add(product);
+                    newProductList = CreateRingVariantsFromColor(product);
+                    products.AddRange(newProductList);
 
-        //        }
-        //    }
+                }
+            }
 
-        //    return products;
-        //}
+            return products;
+        }
 
         #endregion
 
@@ -1316,7 +1371,7 @@ namespace APIs.Controllers
                     Id = baseProduct.Id,
                     CategoryName = baseProduct.CategoryName,
                     VenderName = baseProduct.VenderName,
-                    StyleName = baseProduct.StyleName,
+                    VenderStyle = baseProduct.VenderStyle,
                     Sku = baseProduct.Sku,
                     Length = baseProduct.Length,
                     BandWidth = baseProduct.BandWidth,

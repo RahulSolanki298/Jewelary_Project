@@ -1,0 +1,87 @@
+﻿@using Models
+@using MudBlazor
+@using global::Models
+@using Common;
+
+<MudDialog>
+    <DialogContent>
+        <MudCard>
+            @if (SelectedMedia?.VideoUrl != null && SelectedMedia?.VideoUrl !="-")
+            {
+                <video controls style="max-width:300px;height:auto;">
+                    <source src="@BuildMediaUrl(SelectedMedia.VideoUrl)" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            }
+            else
+            {
+                <img src="@BuildImageUrl(SelectedMedia?.ImageUrl)" style="max-width:300px;height:auto;" />
+            }
+
+            <MudCardContent>
+                @foreach (var image in ImageList.Where(x=>x.ImageUrl !=null))
+                {
+                    <MudPaper Style="cursor: pointer; display:inline-block;" @onclick="() => ChangeMainImage(image.ImageUrl)">
+                        <img src="@($"{SD.BaseApiUrl}/{image.ImageUrl}")" style="max-width:35px;height:auto;" />
+                    </MudPaper>
+                }
+                @foreach (var image in ImageList.Where(x => x.VideoUrl != null))
+                {
+                    <MudPaper Style="cursor: pointer; display:inline-block;" @onclick="() => ChangeMainImage(image.ImageUrl,true)">
+                        <img src="/images/video-icon.svg" style="max-width:35px;height:auto;" />
+                    </MudPaper>
+                }
+            </MudCardContent>
+        </MudCard>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    private bool arrows = true;
+    private bool bullets = true;
+    private bool enableSwipeGesture = true;
+    private bool autocycle = true;
+    private Transition transition = Transition.Slide;
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public List<ProductImageAndVideoDTO> ImageList { get; set; }
+
+    private ProductImageAndVideoDTO SelectedMedia { get; set; }
+
+    protected override void OnInitialized()
+    {
+        // Set default selected media
+        SelectedMedia = ImageList.FirstOrDefault(x => x.IsDefault==true) ?? ImageList.FirstOrDefault();
+    }
+
+    private void SelectMedia(ProductImageAndVideoDTO media)
+    {
+        SelectedMedia = media;
+    }
+
+    private void ChangeMainImage(string mediaUrl, bool isVideo = false)
+    {
+        if (isVideo)
+        {
+            SelectedMedia.VideoUrl = mediaUrl;
+            SelectedMedia.ImageUrl = null;  
+        }
+        else
+        {
+            SelectedMedia.ImageUrl = mediaUrl;
+            SelectedMedia.VideoUrl = null;  
+        }
+    }
+
+    private string BuildImageUrl(string imageUrl)
+        => string.IsNullOrWhiteSpace(imageUrl)
+            ? "/images/No_Image_Available.jpg"
+            : $"{SD.BaseApiUrl}/{imageUrl}";
+
+    private string BuildMediaUrl(string videoUrl)
+        => string.IsNullOrWhiteSpace(videoUrl)
+            ? string.Empty
+            : $"{SD.BaseApiUrl}/{videoUrl}";
+
+}
