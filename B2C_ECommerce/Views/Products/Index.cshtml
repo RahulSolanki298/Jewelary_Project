@@ -340,6 +340,11 @@
                     }
                 });
 
+                $('#showMoreBtn').click(() => {
+                    debugger;
+                    rangeVal += 10;
+                    GetProducts(filters, page, rangeVal); // Reload the table with new page size
+                });
 
                 $("#minPrice1").val("$" + $("#price-slider1").slider("values", 0));
                 $("#maxPrice1").val("$" + $("#price-slider1").slider("values", 1));
@@ -477,13 +482,13 @@
                     const baseUrl = '@SD.BaseApiUrl'.replace(/\\/g, '/');
 
                     console.log($(".activemetalname[data-sku='" + productId + "']"));
-                    console.log($(".price-regular[data-sku='" + productId + "']"));
-                    console.log($(".price-old[data-sku='" + productId + "']"));
+                    console.log($(".price-regular[data-sku='" + response.Price + "']"));
+                    console.log($(".price-old[data-sku='" + response.Price + "']"));
 
                     $(".activemetalname[data-sku='" + productId + "']").text(response.colorName);
 
-                    $(".price-regular[data-sku='" + productId + "']").text(" $ " + response.Price);
-                    $(".price-old[data-sku='" + productId + "']").html('<del>' + response.unitPrice + '</del>');
+                    //$(".price-regular[data-sku='" + productId + "']").text(" $ " + response.Price);
+                    //$(".price-old[data-sku='" + productId + "']").html('<del>' + response.unitPrice + '</del>');
 
                     const images = (response.productImageVideos || []).filter(x => x.imageUrl && x.imageUrl !== "-");
                     if (images.length > 0) {
@@ -545,8 +550,8 @@
 
                     $(".activemetalname[data-sku='" + productId + "']").text(response.colorName);
 
-                    $(".price-regular[data-sku='" + productId + "']").text(response.Price);
-                    $(".price-old[data-sku='" + productId + "']").html('<del>' + response.unitPrice + '</del>');
+                    //$(".price-regular[data-sku='" + productId + "']").text(response.Price);
+                    //$(".price-old[data-sku='" + productId + "']").html('<del>' + response.unitPrice + '</del>');
 
                     const images = (response.productImageVideos || []).filter(x => x.imageUrl && x.imageUrl !== "-");
                     if (images.length > 0) {

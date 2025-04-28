@@ -569,6 +569,8 @@ namespace Business.Repository
                                   {
                                       Id = product.Id,
                                       Title = evt.EventName,
+                                      EventId=product.EventId,
+                                      EventName=evt.EventName,
                                       BandWidth = product.BandWidth,
                                       Length = product.Length,
                                       CaratName = product.Carat,
@@ -709,8 +711,8 @@ namespace Business.Repository
 
                     var imageVideo = new ProductImageAndVideoDTO
                     {
-                        ImageUrl = imageUrl,
-                        VideoUrl = videoUrl,
+                        ImageUrl = string.IsNullOrWhiteSpace(imageUrl) ? null : imageUrl,
+                        VideoUrl = string.IsNullOrWhiteSpace(videoUrl) ? null : videoUrl,
                         IsDefault = image.IsDefault,
                     };
 
@@ -971,6 +973,7 @@ namespace Business.Repository
                     var colorId = colorDict.GetValueOrDefault(product.ColorName);
                     var caratId = caratDict.GetValueOrDefault(product.CenterCaratName);
                     var shapeId = shapeDict.GetValueOrDefault(product.CenterShapeName);
+                    var AshapeId = shapeDict.GetValueOrDefault(product.AccentStoneShapeName);
                     var karatId = KaratDict.GetValueOrDefault(product.Karat);
 
                     var events = await GetEventSitesByName(product.EventName);
@@ -978,12 +981,15 @@ namespace Business.Repository
                     var existingProduct = existingProducts
                         .FirstOrDefault(x => x.ColorId == colorId
                                              && x.KaratId == karatId
-                                             && x.Sku == product.Sku);
+                                             && x.Sku == product.Sku
+                                             && x.CategoryId.Value == categoryId
+                                             && x.ProductType==product.ProductType);
+
 
                     if (existingProduct != null)
                     {
                         // Update existing product
-                        existingProduct.Title = $"{product.CTW} {product.ShapeName} {product.CaratName} {product.ProductType}";
+                        existingProduct.Title = $"{product.EventName}";
                         existingProduct.Sku = product.Sku;
                         existingProduct.Price = product.Price;
                         existingProduct.UnitPrice = product.UnitPrice;
@@ -998,9 +1004,10 @@ namespace Business.Repository
                         existingProduct.CTW = product.CTW;
                         existingProduct.Certificate = product.Certificate;
                         existingProduct.CenterShapeId = shapeId;
-                        existingProduct.AccentStoneShapeId = product.AccentStoneShapeId;
+                        existingProduct.AccentStoneShapeId = AshapeId;
                         existingProduct.IsReadyforShip = product.IsReadyforShip;
                         existingProduct.EventId = events.Id;
+                        existingProduct.WholesaleCost = product.WholesaleCost;
                         _context.Product.Update(existingProduct);
                     }
                     else
@@ -1008,7 +1015,8 @@ namespace Business.Repository
                         // Insert new product
                         var newProduct = new Product
                         {
-                            Title = $"{product.CTW} {product.ShapeName} {product.CaratName} {product.ProductType}",
+                            Title = $"{product.EventName}",
+                            WholesaleCost=product.WholesaleCost,
                             Sku = product.Sku ?? throw new ArgumentNullException(nameof(product.Sku)),
                             CategoryId = categoryId,
                             KaratId = karatId,
@@ -1029,7 +1037,7 @@ namespace Business.Repository
                             DiaWT = product.DiaWT,
                             CenterShapeId = product.CenterShapeId,
                             Certificate = product.Certificate,
-                            AccentStoneShapeId = product.AccentStoneShapeId,
+                            AccentStoneShapeId = AshapeId,
                             IsReadyforShip = product.IsReadyforShip,
                             EventId = events.Id,
                             CTW = product.CTW,
@@ -1276,6 +1284,7 @@ namespace Business.Repository
         public async Task<ProductDTO> GetProductWithDetails(string productId)
         {
             var products = await (from product in _context.Product
+                                  join evt in _context.EventSites on product.EventId equals evt.Id
                                   join cat in _context.Category on product.CategoryId equals cat.Id
                                   join color in _context.ProductProperty on product.ColorId equals color.Id into colorGroup
                                   from color in colorGroup.DefaultIfEmpty()
@@ -1290,8 +1299,10 @@ namespace Business.Repository
                                   select new ProductDTO
                                   {
                                       Id = product.Id,
-                                      Title = product.Title,
-                                      BandWidth = product.BandWidth.ToString(),
+                                      Title = evt.EventName,
+                                      EventName=evt.EventName,
+                                      EventId=product.EventId,
+                                      BandWidth = product.BandWidth,
                                       Length = product.Length,
                                       CaratName = product.Carat,
                                       CategoryId = cat.Id,
@@ -1391,8 +1402,17 @@ namespace Business.Repository
 
             foreach (var image in productImages)
             {
-                var imageUrl = _context.FileManager.FirstOrDefault(x => x.Id == image.ImageLgId)?.FileUrl ?? "-";
-                var videoUrl = _context.FileManager.FirstOrDefault(x => x.Id == image.VideoId)?.FileUrl ?? "-";
+                string imageUrl = "-";
+                string videoUrl = "-";
+
+                if (image.ImageLgId.HasValue)
+                {
+                    imageUrl = _context.FileManager.FirstOrDefault(x => x.Id == image.ImageLgId.Value)?.FileUrl ?? "-";
+                }
+                else if (image.VideoId.HasValue)
+                {
+                    videoUrl = _context.FileManager.FirstOrDefault(x => x.Id == image.VideoId.Value)?.FileUrl ?? "-";
+                }
 
                 var imageVideo = new ProductImageAndVideoDTO
                 {
@@ -1418,30 +1438,39 @@ namespace Business.Repository
                                   from color in colorGroup.DefaultIfEmpty()
                                   join shape in _context.ProductProperty on product.ShapeId equals shape.Id into shapeGroup
                                   from shape in shapeGroup.DefaultIfEmpty()
+                                  join cen_shape in _context.ProductProperty on product.CenterShapeId equals cen_shape.Id into cen_shapeGroup
+                                  from cen_shape in cen_shapeGroup.DefaultIfEmpty()
+                                  join cen_crt in _context.ProductProperty on product.CenterCaratId equals cen_crt.Id into cen_CrtGroup
+                                  from cen_crt in cen_CrtGroup.DefaultIfEmpty()
                                   join clarity in _context.ProductProperty on product.ClarityId equals clarity.Id into clarityGroup
                                   from clarity in clarityGroup.DefaultIfEmpty()
-                                  join size in _context.ProductProperty on product.CenterCaratId equals size.Id into sizeGroup
+                                  join size in _context.ProductProperty on product.CaratSizeId equals size.Id into sizeGroup
                                   from size in sizeGroup.DefaultIfEmpty()
                                   join sty in _context.ProductProperty on product.StyleId equals sty.Id into styleGroup
                                   from sty in styleGroup.DefaultIfEmpty()
                                   join kt in _context.ProductProperty on product.KaratId equals kt.Id into ktGroup
                                   from kt in ktGroup.DefaultIfEmpty()
+                                  where product.IsActivated != false && product.Sku == sku
                                   select new ProductDTO
                                   {
                                       Id = product.Id,
                                       Title = product.Title,
-                                      BandWidth = product.BandWidth.ToString(),
+                                      BandWidth = product.BandWidth,
                                       Length = product.Length,
                                       CaratName = product.Carat,
                                       CategoryId = cat.Id,
                                       CategoryName = cat.Name,
-                                      ColorId = color.Id,
-                                      ColorName = color.Name,
-                                      ClarityId = clarity.Id,
-                                      ClarityName = clarity.Name,
-                                      ShapeName = shape.Name,
-                                      ShapeId = shape.Id,
-                                      UnitPrice = product.UnitPrice,
+                                      ColorId = color != null ? color.Id : (int?)null,
+                                      ColorName = color != null ? color.Name : null,
+                                      ClarityId = clarity != null ? clarity.Id : (int?)null,
+                                      ClarityName = clarity != null ? clarity.Name : null,
+                                      ShapeName = shape != null ? shape.Name : null,
+                                      ShapeId = shape != null ? shape.Id : (int?)null,
+                                      CenterCaratId = cen_crt != null ? cen_crt.Id : (int?)null,
+                                      CenterCaratName = cen_crt != null ? cen_crt.Name : null,
+                                      CenterShapeId = cen_shape != null ? cen_shape.Id : (int?)null,
+                                      CenterShapeName = cen_shape != null ? cen_shape.Name : null,
+                                      UnitPrice = product.Price,
                                       Price = product.Price,
                                       IsActivated = product.IsActivated,
                                       CaratSizeId = product.CaratSizeId,
@@ -1450,8 +1479,9 @@ namespace Business.Repository
                                       ProductType = cat.ProductType,
                                       StyleId = product.StyleId,
                                       KaratId = product.KaratId,
-                                      Karat = kt.Name
-                                  }).Where(x => x.IsActivated != false && x.Sku == sku).ToListAsync();
+                                      Karat = kt != null ? kt.Name : null
+                                  }).ToListAsync();
+
 
             var query = products.AsQueryable();
 
@@ -1493,7 +1523,7 @@ namespace Business.Repository
                                     }).Distinct().ToListAsync();
 
             var shapes = await (from col in _context.ProductProperty
-                                join prod in _context.Product on col.Id equals prod.ShapeId
+                                join prod in _context.Product on col.Id equals prod.CenterShapeId
                                 join colN in _context.ProductProperty on col.ParentId equals colN.Id
                                 where colN.Name == SD.Shape && prod.Sku == firstProduct.Sku
                                 select new ProductPropertyDTO
@@ -1519,6 +1549,10 @@ namespace Business.Repository
                 ClarityName = firstProduct.ClarityName,
                 ShapeName = firstProduct.ShapeName,
                 ShapeId = firstProduct.ShapeId,
+                CenterShapeName=firstProduct.CenterShapeName,
+                CenterShapeId=firstProduct.CenterShapeId,
+                CenterCaratId=firstProduct.CenterCaratId,
+                CenterCaratName=firstProduct.CenterCaratName,
                 UnitPrice = firstProduct.UnitPrice,
                 Price = firstProduct.Price,
                 IsActivated = firstProduct.IsActivated,
@@ -1547,8 +1581,8 @@ namespace Business.Repository
 
                 var imageVideo = new ProductImageAndVideoDTO
                 {
-                    ImageUrl = imageUrl,
-                    VideoUrl = videoUrl
+                    ImageUrl = string.IsNullOrWhiteSpace(imageUrl) ?null : imageUrl,
+                    VideoUrl = string.IsNullOrWhiteSpace(videoUrl) && videoUrl != null ? null :videoUrl
                 };
 
                 productDTO.ProductImageVideos.Add(imageVideo);

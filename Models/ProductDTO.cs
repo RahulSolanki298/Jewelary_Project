@@ -21,7 +21,7 @@ namespace Models
         public string ProductSize { get; set; }
 
         public string Gender { get; set; }
-
+        
         public string Sku { get; set; }  // OTN23U01-D300R0B 
 
         public string Title { get; set; }

@@ -17,7 +17,7 @@
             top: 0;
             left: 0;
             width: 100%;
-           /* height: 100%;*/
+            /* height: 100%;*/
             object-fit: cover;
             /*display: none;*/
             z-index: 2;
@@ -42,7 +42,7 @@
 
 <!-- page main wrapper start -->
 <div class="shop-main-wrapper section-padding pb-0">
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <!-- product details wrapper start -->
             <div class="col-lg-12 order-1 order-lg-2">
@@ -50,51 +50,57 @@
                 <div class="product-details-inner">
                     <div class="row">
                         <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6">
-                            <div class="product-large-slider">
+                            <div class="product-large-slider pro-large-img img">
                                 @if (Model != null && Model.ProductImageVideos.Count > 0)
                                 {
+                                    @foreach (var item in Model.ProductImageVideos)
+                                    {
+                                        if (!string.IsNullOrEmpty(item.ImageUrl) && item.ImageUrl != "-")
+                                        {
+                                            <div class="pro-large-img img-with-bg">
+                                                <img src="@($"{SD.BaseApiUrl}/{item.ImageUrl}")" class="currImg" alt="Product Image" />
+                                            </div>
+                                        }
+                                        else if (!string.IsNullOrEmpty(item.VideoUrl) && item.VideoUrl != "-")
+                                        {
+                                            <video class="product-video" muted loop playsinline autoplay>
+                                                <source src="@($"{SD.BaseApiUrl}/{item.VideoUrl}")" type="video/mp4" />
+                                            </video>
+                                        }
+                                    }
 
-                                    foreach (var item in Model.ProductImageVideos.Where(x => x.ImageUrl != null && x.ImageUrl != "-"))
-                                    {
-                                        <div class="pro-large-img img-with-bg">
-                                            <img src="@($"{SD.BaseApiUrl}/{item?.ImageUrl}")" class="currImg" />
-                                        </div>
-                                    }
-                                    foreach (var item in Model.ProductImageVideos.Where(x => x.VideoUrl != null && x.VideoUrl != "-"))
-                                    {
-                                        <video class="product-video" muted loop playsinline autoplay>
-                                            <source src="@($"{SD.BaseApiUrl}/{item.VideoUrl}")" type="video/mp4" />
-                                        </video>
-                                    }
                                 }
                             </div>
                             <div class="pro-nav slick-row-10 slick-arrow-style pt-2">
                                 @if (Model != null && Model.ProductImageVideos.Count > 0)
                                 {
-
-                                    foreach (var item in Model.ProductImageVideos.Where(x => x.ImageUrl != null && x.ImageUrl != "-"))
+                                    foreach (var item in Model.ProductImageVideos)
                                     {
-                                        <div class="pro-nav-thumb product-details-img-border img-with-bg">
-                                            <img src="@($"{SD.BaseApiUrl}/{item?.ImageUrl}")" class="figure-img" />
-                                        </div>
-                                    }
-                                    foreach (var item in Model.ProductImageVideos.Where(x => x.VideoUrl != null && x.VideoUrl != "-"))
-                                    {
-                                        <div class="pro-nav-thumb product-details-img-border img-with-bg">
-                                            <img src="~/assets/img/video/video-icon.svg" class="figure-img" />
-                                        </div>
+                                        if (!string.IsNullOrEmpty(item.ImageUrl) && item.ImageUrl != "-")
+                                        {
+                                            <div class="pro-nav-thumb product-details-img-border img-with-bg smImgUrl">
+                                                <img src="@($"{SD.BaseApiUrl}/{item?.ImageUrl}")" class="figure-img" alt="Thumbnail" />
+                                            </div>
+                                        }
+                                        else if (!string.IsNullOrEmpty(item.VideoUrl) && item.VideoUrl != "-")
+                                        {
+                                            <div class="pro-nav-thumb product-details-img-border img-with-bg smImgUrl">
+                                                <img src="~/assets/img/video/video-icon.svg" class="figure-img" alt="Video Icon" />
+                                            </div>
+                                        }
                                     }
                                 }
                             </div>
                         </div>
                         <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6">
                             <div class="product-details-des">
-                                <h3 class="product-name">@Model.ShapeName @Model.BandWidth @Model.Length @Model.Sku</h3>
+                                @*<h3 class="product-name">@Model.ShapeName @Model.BandWidth @Model.Length @Model.Sku</h3>*@
+                                <h3 class="product-name">@(Model.Title != null ? Model.Title : Model.EventName) </h3>
                                 <span class="text-black-50">@Model.Karat @Model.ColorName @Model.ProductType @Model.CenterCaratName</span>
 
                                 <div class="price-box  d-flex">
-                                    <span class="price-regular" style="font-size: x-large; font-family: Castoro serif; ">$70.00</span>
-                                    <span class="price-old"><del>$90.00</del></span>
+                                    <span class="price-regular" style="font-size: x-large; font-family: Castoro serif; ">$@Model.Price USD</span>
+                                    <span class="price-old"><del>$@Model.UnitPrice</del> USD</span>
 
                                     <div class="ratings" style="padding-left:15px;">
                                         <span><i class="fa fa-star-o"></i></span>
@@ -120,7 +126,7 @@
                                 </div>
 
                                 <div class="pt-3">
-                                    <h6 class="option-title"> <span style="font-weight:bold;">Diamond Shape</span> : <span class="active-shape">@Model.ShapeName</span> </h6>
+                                    <h6 class="option-title"> <span style="font-weight:bold;">Diamond Shape</span> : <span class="active-shape">@(Model.CenterShapeName != null ? Model.CenterShapeName : "-")</span> </h6>
                                     <ul class="shape-categories-details">
                                         @foreach (var shape in Model.Shapes)
                                         {
@@ -157,7 +163,7 @@
                                     <span>In stock</span>
                                 </div>
                                 <p class="pro-desc">
-                                    @Model.Description
+                                    @*@Model.Description*@
                                 </p>
                                 <div class="quantity-cart-box d-flex align-items-center">
                                     <div class="action_link">
@@ -635,7 +641,6 @@
         GetProductByColorId(productId, colorId);
     });
 });
-
 function GetProductByColorId(productId, colorId) {
     debugger;
     $.ajax({
@@ -651,71 +656,74 @@ function GetProductByColorId(productId, colorId) {
             debugger;
         const baseUrl = '@SD.BaseApiUrl'.replace(/\\/g, '/');
 
-        // Update color name
-            // @Model.ShapeName @Model.BandWidth @Model.Length @Model.Sku
-            $(".product-name").text(response.shapeName + ' ' + response.bandWidth + ' '+ response.length + ' '+response.sku);
-
-        // Update prices
-        $(".price-regular[data-sku='" + productId + "']").text('{response.Price}');
-            $(".price-old[data-sku='" + productId + "']").html('<del>' + response.unitPrice + '</del>');
-
-            $(".active-shape").text(response.shapeName);
-            $(".active-metal").text(response.colorName);
+        // Update basic product info
+        $(".product-name").text(response.title);
+        $(".price-regular[data-sku='" + productId + "']").text(response.Price);
+        $(".price-old[data-sku='" + productId + "']").html('<del>' + response.unitPrice + '</del>');
+        $(".active-metal").text(response.colorName);
 
         // Update images
-        //const images = (response.productImageVideos || []).filter(x => x.imageUrl && x.imageUrl !== "-");
-        //    if (images.length > 0) {
-        //        debugger;
-        //    const priImg = baseUrl + '/' + images[0].imageUrl.replace(/\\/g, '/');
-        //    $(".product-large-slider .pro-large-img img").first().attr("src", priImg).attr("alt", response.colorName + " - Primary Image");
-        //    $(".pro-nav .pro-nav-thumb img").first().attr("src", priImg);
-        //}
+        const images = (response.productImageVideos || []).filter(x => x.imageUrl && x.imageUrl !== "-");
 
-        //    if (images.length > 1) {
-        //        debugger;
-        //        const secImg = baseUrl + '/' + images[1].imageUrl.replace(/\\/g, '/');
-        //        $(".product-large-slider .pro-large-img img").eq(1).attr("src", secImg).attr("alt", response.colorName + " - Secondary Image");
-        //        $(".pro-nav .pro-nav-thumb img").eq(1).attr("src", secImg);
+        // Clear main images
+        $(".product-large-slider .pro-large-img img").attr("src", "").attr("alt", "");
 
-        //    }
+        // Prepare navigation HTML
+        let navHtml = "";
 
-            const images = (response.productImageVideos || []).filter(x => x.imageUrl && x.imageUrl !== "-");
+        if (images.length > 0) {
+            images.forEach((image, index) => {
+                const imgUrl = baseUrl + '/' + image.imageUrl.replace(/\\/g, '/');
+                const altText = response.colorName + " - Image " + (index + 1);
 
-            if (images.length > 0) {
-               
-                // Assuming baseUrl is predefined and ends with a slash.
-
-                // Loop through all images and update the main slider and thumbnail navigation.
-                images.forEach((image, index) => {
-                    const imgUrl = baseUrl + '/' + image.imageUrl.replace(/\\/g, '/');
-                    const altText = response.colorName + " - Image " + (index + 1); // Alt text for each image
-
-                    // Update the main image slider
-                    $(".product-large-slider .pro-large-img img").eq(index).attr("src", imgUrl).attr("alt", altText);
-
-                    // Update the thumbnail navigation
-                    $(".pro-nav .pro-nav-thumb img").eq(index).attr("src", imgUrl);
-                });
-
-                // If there are more images than the available thumbnails, you can append additional thumbnails dynamically
-                if (images.length > $(".pro-nav .pro-nav-thumb img").length) {
-                    // Loop over the remaining images and append them to the thumbnail section
-                    images.slice($(".pro-nav .pro-nav-thumb img").length).forEach((image, index) => {
-                        const imgUrl = baseUrl + '/' + image.imageUrl.replace(/\\/g, '/');
-                        $(".pro-nav").append(
-                            `<div class="pro-nav-thumb product-details-img-border img-with-bg">
-                    <img src="${imgUrl}" alt="Thumbnail ${index + 1}" class="figure-img"/>
-                </div>`
-                        );
+                // Set main large images
+                $(".product-large-slider .pro-large-img img").eq(index)
+                    .attr("src", imgUrl)
+                    .attr("alt", altText)
+                    .css({
+                        width: '100%',
+                        height: 'auto'
                     });
-                }
-            }
 
+                // Build navigation thumbnails
+                
+            });
+            images.forEach((image, index) => {
+                navHtml = `
+                    <div class="swiper-slide">
+                        <div class="pro-nav-thumb product-details-img-border img-with-bg">
+                            <img src="${baseUrl + '/' + image.imageUrl.replace(/\\/g, '/')}" alt="Thumbnail ${index + 1}" class="figure-img" />
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Hide extra large images if any
+            $(".product-large-slider .pro-large-img img").slice(images.length).hide();
+            $(".product-large-slider .pro-large-img img").slice(0, images.length).show();
+        }
+
+        // Set navigation HTML inside correct wrapper
+        $(".smImgUrl").html(navHtml); // or $(".pro-nav").html(navHtml); if you want
+
+        // Reinitialize swiper if needed
+        if (typeof Swiper !== "undefined") {
+            new Swiper('.pro-nav', {
+                slidesPerView: 4,
+                spaceBetween: 10,
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+            });
+        }
     })
     .fail(function (xhr, status, error) {
         console.error('AJAX error:', status, error);
     });
 }
+
+
 
 
     </script>

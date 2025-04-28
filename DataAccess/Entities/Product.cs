@@ -59,7 +59,7 @@ namespace DataAccess.Entities
         public int? AccentStoneShapeId { get; set; }
         public bool IsActivated { get; set; } = false;
         public string VenderStyle { get; set; }
-
+        public decimal? WholesaleCost { get; set; }
         public string Diameter { get; set; }
     }
 }

@@ -44,10 +44,10 @@
 
                     <div class="product-caption text-left product-box-desc">
                         <div class="product-identity">
-                            <p class="manufacturer-name"><a href="#" class="pro-title" data-title="@item.Title">@item.ShapeName @item.BandWidth @item.Length @item.Sku</a></p>
+                            <p class="manufacturer-name"><a href="#" class="pro-title" data-title="@item.Title">@item.Title</a></p>
                         </div>
                         <div class="price-box">
-                            <span class="price-regular f-16" data-sku="@item.Sku">$ @item.Price</span>
+                            <span class="price-regular f-16" data-sku="@item.Sku">$ @item.Price USD</span>
                             @*<span class="price-old" data-sku="@item.Sku"><del>@item.UnitPrice</del></span>*@
                         </div>
 
@@ -73,7 +73,7 @@
                                 @foreach (var carat in item.CaratSizes)
                                 {
                                     <li>
-                                        <a class="@carat.Name caratName f-14" @(carat.Name == item.CaratName ? "selected" : null) caratId="@carat.Id" title="@carat.Name" href="javascript:void(0)" productId="@item.Sku">@carat.Name</a>
+                                        <a class="@carat.Name caratName f-14" @(carat.Name == item.CenterCaratName ? "selected" : null) caratId="@carat.Id" title="@carat.Name" href="javascript:void(0)" productId="@item.Sku">@carat.Name</a>
                                     </li>
                                 }
                             </ul>
