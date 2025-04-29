@@ -42,11 +42,28 @@
         $(document).ready(function () {
 
             getWishList();
+
+            $('#diamondComparisonContent').on('click', '.remove-from-wishlist', function (e) {
+                e.preventDefault();
+
+                var productId = $(this).data('productid');
+
+                var wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+
+                // Convert both sides to strings
+                wishlist = wishlist.filter(id => String(id) !== String(productId));
+
+                localStorage.setItem('wishlist', JSON.stringify(wishlist));
+
+                alert('Item removed from wishlist!');
+
+                location.reload();
+            });
+
+
         });
 
         function getWishList() {
-            debugger;
-
             if (wishlist.length > 0) {
                 $.ajax({
                     url: '/Wishlist/GetWishListByIds', // Change this to your actual route
@@ -55,7 +72,6 @@
                         diamondIds: wishlist.join(',') // Send the array as a parameter
                     },
                     success: function (data) {
-                        console.log(data);
                         $("#diamondComparisonContent").html(''); // Clear the existing content
                         $("#diamondComparisonContent").html(data); // Insert the new content returned from the server
                     },

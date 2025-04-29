@@ -155,3 +155,54 @@ Product Single Card - Start
 /* ===========
 Product Single Card - End
 ============= */
+
+/* Header Animation */
+.animate-header {
+    animation: fadeSlideDown 1s ease-in-out forwards;
+    opacity: 0;
+}
+
+@keyframes fadeSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Card hover and animation */
+.animate-card {
+    animation: fadeInUp 1s ease forwards;
+    opacity: 0;
+    transition-delay: 0.2s;
+}
+
+.product-active {
+    border: 1px solid #151542;
+    background-color: #DDF0E1;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hover-scale {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .hover-scale:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }

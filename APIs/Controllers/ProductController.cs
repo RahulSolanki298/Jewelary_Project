@@ -181,7 +181,8 @@ namespace APIs.Controllers
 
 
         [HttpPost("BulkProductCollectionImagesUpload")]
-        [RequestSizeLimit(1073741824)]  // Limit the upload size to 1GB
+        //[RequestSizeLimit(1073741824)]  // Limit the upload size to 1GB
+        [RequestSizeLimit(5368709120)]  // Limit the upload size to 5GB
         public async Task<IActionResult> UploadProductCollectionImages(IFormFile zipFile)
         {
             try
@@ -485,15 +486,10 @@ namespace APIs.Controllers
             }
 
             // Pagination
-            //var pagedResult = query
-            //    .Skip((pageNumber - 1) * pageSize)
-            //    .Take(pageSize)
-            //    .ToList();
-
-            var pagedResult = query.Where(x => x.ProductImageVideos.Count > 0)
-               .Skip((pageNumber - 1) * pageSize)
-               .Take(pageSize)
-               .ToList();
+            var pagedResult = query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
 
             return Ok(pagedResult);
         }

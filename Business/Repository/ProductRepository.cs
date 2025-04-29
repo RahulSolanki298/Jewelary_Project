@@ -581,7 +581,7 @@ namespace Business.Repository
                                       ClarityId = clarity != null ? clarity.Id : (int?)null,
                                       ClarityName = clarity.Name,
                                       ShapeName = shape.Name,
-                                      ShapeId = shape != null ? shape.Id : (int?)null,
+                                      //ShapeId = shape != null ? shape.Id : (int?)null,
                                       CenterShapeName = shape.Name,
                                       UnitPrice = product.UnitPrice,
                                       Price = product.Price,
@@ -595,6 +595,8 @@ namespace Business.Repository
                                       GoldWeight = product.GoldWeight,
                                       IsReadyforShip = product.IsReadyforShip,
                                       VenderStyle = product.VenderStyle,
+                                      CenterCaratId = size.Id,
+                                      CenterShapeId = shape != null ? shape.Id : (int?)null,
                                       CenterCaratName = size.Name,
                                       Quantity = product.Quantity,
                                       KaratId = krt != null ? krt.Id : (int?)null,
@@ -633,7 +635,7 @@ namespace Business.Repository
                                         }).Distinct().ToListAsync();
 
                 var shapes = await (from col in _context.ProductProperty
-                                    join prod in _context.Product on col.Id equals prod.ShapeId
+                                    join prod in _context.Product on col.Id equals prod.CenterShapeId
                                     join colN in _context.ProductProperty on col.ParentId equals colN.Id
                                     where colN.Name == SD.Shape && prod.Sku == firstProduct.Sku
                                     select new ProductPropertyDTO
@@ -1283,52 +1285,67 @@ namespace Business.Repository
 
         public async Task<ProductDTO> GetProductWithDetails(string productId)
         {
-            var products = await (from product in _context.Product
-                                  join evt in _context.EventSites on product.EventId equals evt.Id
-                                  join cat in _context.Category on product.CategoryId equals cat.Id
-                                  join color in _context.ProductProperty on product.ColorId equals color.Id into colorGroup
-                                  from color in colorGroup.DefaultIfEmpty()
-                                  join shape in _context.ProductProperty on product.ShapeId equals shape.Id into shapeGroup
-                                  from shape in shapeGroup.DefaultIfEmpty()
-                                  join clarity in _context.ProductProperty on product.ClarityId equals clarity.Id into clarityGroup
-                                  from clarity in clarityGroup.DefaultIfEmpty()
-                                  join size in _context.ProductProperty on product.CenterCaratId equals size.Id into sizeGroup
-                                  from size in sizeGroup.DefaultIfEmpty()
-                                  join sty in _context.ProductProperty on product.StyleId equals sty.Id into styleGroup
-                                  from sty in styleGroup.DefaultIfEmpty()
-                                  select new ProductDTO
-                                  {
-                                      Id = product.Id,
-                                      Title = evt.EventName,
-                                      EventName=evt.EventName,
-                                      EventId=product.EventId,
-                                      BandWidth = product.BandWidth,
-                                      Length = product.Length,
-                                      CaratName = product.Carat,
-                                      CategoryId = cat.Id,
-                                      CategoryName = cat.Name,
-                                      ColorId = color.Id,
-                                      ColorName = color.Name,
-                                      ClarityId = clarity.Id,
-                                      ClarityName = clarity.Name,
-                                      ShapeName = shape.Name,
-                                      ShapeId = shape.Id,
-                                      UnitPrice = product.UnitPrice,
-                                      Price = product.Price,
-                                      IsActivated = product.IsActivated,
-                                      CaratSizeId = product.CaratSizeId,
-                                      Description = product.Description,
-                                      Sku = product.Sku,
-                                      ProductType = cat.ProductType,
-                                      StyleId = product.StyleId
-                                  }).Where(x => x.IsActivated != false && x.Id.ToString() == productId).FirstOrDefaultAsync();
+            //if (!Guid.TryParse(productId, out Guid parsedProductId))
+            //    return null; // or throw an appropriate exception based on your error strategy
+
+            var productQuery = await (
+      from product in _context.Product
+      where product.IsActivated && product.Id.ToString() == productId
+      join evt in _context.EventSites on product.EventId equals evt.Id
+      join cat in _context.Category on product.CategoryId equals cat.Id
+
+      join colorProp in _context.ProductProperty on product.ColorId equals colorProp.Id into colorGroup
+      from color in colorGroup.DefaultIfEmpty()
+
+      join shapeProp in _context.ProductProperty on product.CenterShapeId equals shapeProp.Id into shapeGroup
+      from shape in shapeGroup.DefaultIfEmpty()
+
+      join ashapeProp in _context.ProductProperty on product.AccentStoneShapeId equals ashapeProp.Id into ashapeGroup
+      from ashape in ashapeGroup.DefaultIfEmpty()
+
+      join clarityProp in _context.ProductProperty on product.ClarityId equals clarityProp.Id into clarityGroup
+      from clarity in clarityGroup.DefaultIfEmpty()
+
+      join sizeProp in _context.ProductProperty on product.CenterCaratId equals sizeProp.Id into sizeGroup
+      from size in sizeGroup.DefaultIfEmpty()
+
+      select new ProductDTO
+      {
+          Id = product.Id,
+          Title = evt.EventName,
+          EventName = evt.EventName,
+          EventId = product.EventId,
+          BandWidth = product.BandWidth,
+          Length = product.Length,
+          CaratName = product.Carat,
+          CategoryId = cat.Id,
+          CategoryName = cat.Name,
+          ProductType = cat.ProductType,
+          ColorId = product.ColorId,
+          ColorName = color.Name,
+          ClarityId = product.ClarityId,
+          ClarityName = clarity.Name,
+          CenterShapeId =product.CenterShapeId,
+          CenterShapeName = shape.Name,
+          AccentStoneShapeId = product.AccentStoneShapeId,
+          AccentStoneShapeName = ashape.Name,
+          CaratSizeId = product.CaratSizeId,
+          Description = product.Description,
+          Sku = product.Sku,
+          UnitPrice = product.UnitPrice,
+          Price = product.Price,
+          IsActivated = product.IsActivated
+      }
+  ).AsNoTracking().FirstOrDefaultAsync();
+
+
 
             // Step 1: Group products by SKU
             //var groupedProducts = products.GroupBy(p => p.Sku);
 
 
 
-            var firstProduct = products; // Get the first product from the group
+            var firstProduct = productQuery; // Get the first product from the group
 
             // Step 2: Get all related properties for each group
             var metals = await (from col in _context.ProductProperty
@@ -1355,7 +1372,7 @@ namespace Business.Repository
                                     }).Distinct().ToListAsync();
 
             var shapes = await (from col in _context.ProductProperty
-                                join prod in _context.Product on col.Id equals prod.ShapeId
+                                join prod in _context.Product on col.Id equals prod.CenterShapeId
                                 join colN in _context.ProductProperty on col.ParentId equals colN.Id
                                 where colN.Name == SD.Shape && prod.Sku == firstProduct.Sku
                                 select new ProductPropertyDTO
@@ -1379,12 +1396,13 @@ namespace Business.Repository
                 ColorName = firstProduct.ColorName,
                 ClarityId = firstProduct.ClarityId,
                 ClarityName = firstProduct.ClarityName,
-                ShapeName = firstProduct.ShapeName,
-                ShapeId = firstProduct.ShapeId,
+                CenterShapeId = firstProduct.CenterShapeId,
+                CenterShapeName = firstProduct.CenterShapeName,
                 UnitPrice = firstProduct.UnitPrice,
                 Price = firstProduct.Price,
                 IsActivated = firstProduct.IsActivated,
-                CaratSizeId = firstProduct.CaratSizeId,
+                CenterCaratId = firstProduct.CenterCaratId,
+                CenterCaratName = firstProduct.CenterCaratName,
                 Description = firstProduct.Description,
                 Sku = firstProduct.Sku,
                 ProductType = firstProduct.ProductType,

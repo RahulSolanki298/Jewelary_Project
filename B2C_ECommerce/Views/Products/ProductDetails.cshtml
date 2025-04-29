@@ -71,20 +71,20 @@
 
                                 }
                             </div>
-                            <div class="pro-nav slick-row-10 slick-arrow-style pt-2">
+                            <div class="pro-nav slick-row-10 slick-arrow-style pt-2 smImgUrl">
                                 @if (Model != null && Model.ProductImageVideos.Count > 0)
                                 {
                                     foreach (var item in Model.ProductImageVideos)
                                     {
                                         if (!string.IsNullOrEmpty(item.ImageUrl) && item.ImageUrl != "-")
                                         {
-                                            <div class="pro-nav-thumb product-details-img-border img-with-bg smImgUrl">
+                                            <div class="pro-nav-thumb product-details-img-border img-with-bg">
                                                 <img src="@($"{SD.BaseApiUrl}/{item?.ImageUrl}")" class="figure-img" alt="Thumbnail" />
                                             </div>
                                         }
                                         else if (!string.IsNullOrEmpty(item.VideoUrl) && item.VideoUrl != "-")
                                         {
-                                            <div class="pro-nav-thumb product-details-img-border img-with-bg smImgUrl">
+                                            <div class="pro-nav-thumb product-details-img-border img-with-bg">
                                                 <img src="~/assets/img/video/video-icon.svg" class="figure-img" alt="Video Icon" />
                                             </div>
                                         }
@@ -101,14 +101,15 @@
                                 <div class="price-box  d-flex">
                                     <span class="price-regular" style="font-size: x-large; font-family: Castoro serif; ">$@Model.Price USD</span>
                                     <span class="price-old"><del>$@Model.UnitPrice</del> USD</span>
-
+                                </div>
+                                <div class="price-box  d-flex">
+                                    <label>Leave Review</label>
                                     <div class="ratings" style="padding-left:15px;">
                                         <span><i class="fa fa-star-o"></i></span>
                                         <span><i class="fa fa-star-o"></i></span>
                                         <span><i class="fa fa-star-o"></i></span>
                                         <span><i class="fa fa-star-o"></i></span>
                                         <span><i class="fa fa-star-o"></i></span>
-                                        <span>1 Reviews</span>
                                     </div>
                                 </div>
                                 <hr />
@@ -142,13 +143,13 @@
                                 <div class="pt-4">
                                     <h5 class="offer-text"><strong>Carat Weight :</strong> @Model.CaratName</h5>
                                     @*<ul class="size-categories-details">
-                                            @foreach (var item in Model.CaratSizes)
-                                            {
-                                                <li>
-                                                    <a class="text-black-50" href="#" >@item.Name</a>
-                                                </li>
-                                            }
-                                        </ul>*@
+                @foreach (var item in Model.CaratSizes)
+                {
+                    <li>
+                        <a class="text-black-50" href="#" >@item.Name</a>
+                    </li>
+                }
+            </ul>*@
                                     <div class="product-countdown">
 
                                         @foreach (var item in Model.CaratSizes)
@@ -215,7 +216,7 @@
                             <div class="product-review-info">
                                 <ul class="nav review-tab">
                                     <li>
-                                        <a class="active" data-bs-toggle="tab" href="#tab_one">description</a>
+                                        <a class="active" data-bs-toggle="tab" href="#tab_one">Product Details</a>
                                     </li>
                                     <li>
                                         <a data-bs-toggle="tab" href="#tab_two">information</a>
@@ -230,6 +231,16 @@
                                             <p>
                                                 @Model.Description
                                             </p>
+
+                                            <div>
+                                                <ul>
+                                                    <li> <span class="text-dark">Carat Weight :</span> @Model.GoldWeight</li>
+                                                    <li> <span class="text-dark">Center Stone :</span> @Model.CenterCaratName</li>
+                                                    <li> <span class="text-dark">Center Shape :</span> @Model.CenterShapeName</li>
+                                                    <li> <span class="text-dark">Diamond Quality :</span> @Model.Grades @Model.Certificate</li>
+                                                    <li> <span class="text-dark">Band Width :</span> @Model.BandWidth</li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="tab_two">
@@ -669,7 +680,8 @@ function GetProductByColorId(productId, colorId) {
         $(".product-large-slider .pro-large-img img").attr("src", "").attr("alt", "");
 
         // Prepare navigation HTML
-        let navHtml = "";
+            let navHtml = "";
+            $(".slick-list .draggable .slick-track").html("");
 
         if (images.length > 0) {
             images.forEach((image, index) => {
@@ -689,13 +701,10 @@ function GetProductByColorId(productId, colorId) {
                 
             });
             images.forEach((image, index) => {
-                navHtml = `
-                    <div class="swiper-slide">
-                        <div class="pro-nav-thumb product-details-img-border img-with-bg">
-                            <img src="${baseUrl + '/' + image.imageUrl.replace(/\\/g, '/')}" alt="Thumbnail ${index + 1}" class="figure-img" />
-                        </div>
-                    </div>
-                `;
+                navHtml += `
+                        <div class="slick-slide slick-cloned" data-slick-index="${index + 1}" id="" aria-hidden="true" style="width: 298px;"><div><div class="pro-nav-thumb product-details-img-border img-with-bg" style="width: 100%; display: inline-block;">
+                              <img src="${baseUrl + '/' + image.imageUrl.replace(/\\/g, '/')}" class="figure-img" alt="Thumbnail">
+                        </div></div></div>`;
             });
 
             // Hide extra large images if any
@@ -704,7 +713,7 @@ function GetProductByColorId(productId, colorId) {
         }
 
         // Set navigation HTML inside correct wrapper
-        $(".smImgUrl").html(navHtml); // or $(".pro-nav").html(navHtml); if you want
+        $(".slick-list .draggable .slick-track").html(navHtml); // or $(".pro-nav").html(navHtml); if you want
 
         // Reinitialize swiper if needed
         if (typeof Swiper !== "undefined") {
