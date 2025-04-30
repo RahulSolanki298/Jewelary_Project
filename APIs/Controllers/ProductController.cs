@@ -1,6 +1,7 @@
 ﻿using Business.Repository.IRepository;
 using Common;
 using DataAccess.Entities;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -23,10 +24,14 @@ namespace APIs.Controllers
     {
         private readonly IProductRepository _productRepository;
         private readonly IProductPropertyRepository _productPropertyRepository;
-        public ProductController(IProductRepository productRepository, IProductPropertyRepository productPropertyRepository)
+        private readonly IWebHostEnvironment _env;
+        public ProductController(IProductRepository productRepository, 
+            IProductPropertyRepository productPropertyRepository,
+            IWebHostEnvironment env)
         {
             _productRepository = productRepository;
             _productPropertyRepository = productPropertyRepository;
+            _env=env;
         }
 
         #region Useful APIS
@@ -181,7 +186,6 @@ namespace APIs.Controllers
 
 
         [HttpPost("BulkProductCollectionImagesUpload")]
-        //[RequestSizeLimit(1073741824)]  // Limit the upload size to 1GB
         [RequestSizeLimit(5368709120)]  // Limit the upload size to 5GB
         public async Task<IActionResult> UploadProductCollectionImages(IFormFile zipFile)
         {
@@ -194,11 +198,10 @@ namespace APIs.Controllers
                     return BadRequest("No file uploaded.");
                 }
 
-                string extractedFolder = Path.Combine("UploadedFiles", "Collections");
+                string extractedFolder = Path.Combine(_env.WebRootPath, "UploadedFiles", "Collections");
                 Directory.CreateDirectory(extractedFolder);
 
                 string zipPath = Path.Combine(extractedFolder, zipFile.FileName);
-                // Save the uploaded ZIP file
                 using (var fileStream = new FileStream(zipPath, FileMode.Create))
                 {
                     await zipFile.CopyToAsync(fileStream);
@@ -210,23 +213,19 @@ namespace APIs.Controllers
                 {
                     foreach (ZipArchiveEntry entry in archive.Entries)
                     {
-                        // Only process image or video files
                         if (entry.Name.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
                             entry.Name.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
                             entry.Name.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
                             entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
                         {
-                            // Extract style name from the entry (assuming method works correctly)
                             var styleName = _productRepository.ExtractStyleName(entry.Name);
-                            if (styleName == null) continue;  // Skip if style name extraction fails
+                            if (styleName == null) continue;  
 
-                            // Get MetalId from ColorName
                             var metalId = await _productRepository.GetMetalId(styleName.ColorName);
-                            if (metalId == 0) continue;  // Skip if no metal ID found
+                            if (metalId == 0) continue;
 
-                            // Get product by design number
                             prdDesignDT = await _productRepository.GetProductDataByDesignNo(styleName.DesignNo, metalId);
-                            if (prdDesignDT.Count == 0) continue;  // Skip if no product found for design number
+                            if (prdDesignDT.Count == 0) continue;
 
                             foreach (var pro in prdDesignDT)
                             {
@@ -238,21 +237,18 @@ namespace APIs.Controllers
                                     ShapeId = pro.ShapeId
                                 };
 
-                                // Create folder for StyleName
                                 string folderPath = Path.Combine(extractedFolder, styleName.DesignNo);
                                 if (!Directory.Exists(folderPath))
                                 {
                                     Directory.CreateDirectory(folderPath);
                                 }
 
-                                // Save extracted file
                                 string destinationPath = Path.Combine(folderPath, entry.Name);
                                 entry.ExtractToFile(destinationPath, overwrite: true);
+                                string relativePath = Path.Combine("UploadedFiles", "Collections", styleName.DesignNo, entry.Name).Replace("\\", "/");
 
-                                // Save image/video path in the database
-                                int pId = await _productRepository.SaveImageVideoPath(destinationPath);
+                                int pId = await _productRepository.SaveImageVideoPath(relativePath);
 
-                                // Assign product image details based on file type
                                 if (entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
                                 {
                                     prdDT.VideoId = pId;
@@ -271,11 +267,15 @@ namespace APIs.Controllers
                                     prdDT.ImageIndexNumber = styleName.Index;
                                 }
 
-                                // Save the product image/video details asynchronously
                                 await _productRepository.SaveImageVideoAsync(prdDT);
                             }
                         }
                     }
+                }
+
+                if (System.IO.File.Exists(zipPath))
+                {
+                    System.IO.File.Delete(zipPath);
                 }
 
                 return Ok("File Uploaded Successfully.");
@@ -483,6 +483,11 @@ namespace APIs.Controllers
             if (filters.ToCarat.HasValue)
             {
                 query = query.Where(p => Convert.ToDecimal(p.CenterCaratName) <= filters.ToCarat.Value);
+            }
+
+            if (filters.categories.Length > 0)
+            {
+                query = query.Where(p => filters.categories.Contains(p.CategoryName));
             }
 
             // Pagination
