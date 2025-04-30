@@ -12,6 +12,8 @@ namespace DataAccess.Entities
 
         public string ProductId { get; set; }
 
+        public int? DiamondId { get; set; }
+
         public int Quantity { get; set; }
 
         public decimal UnitPrice { get; set; }
@@ -29,5 +31,6 @@ namespace DataAccess.Entities
         public DateTime CreatedDate { get; set; } = DateTime.Now;
 
         public DateTime UpdatedDate { get; set; } = DateTime.Now;
+
     }
 }

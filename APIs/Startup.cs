@@ -180,7 +180,7 @@ namespace APIs
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             // Development specific settings
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.IsProduction())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();

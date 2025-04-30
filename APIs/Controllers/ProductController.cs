@@ -485,9 +485,25 @@ namespace APIs.Controllers
                 query = query.Where(p => Convert.ToDecimal(p.CenterCaratName) <= filters.ToCarat.Value);
             }
 
-            if (filters.categories.Length > 0)
+            if (filters.categories != null  && filters.categories.Length > 0 && filters.categories[0] != null)
             {
                 query = query.Where(p => filters.categories.Contains(p.CategoryName));
+            }
+
+            if (!string.IsNullOrEmpty(filters.OrderBy))
+            {
+                switch (filters.OrderBy.ToLower())
+                {
+                    case "asc":
+                        query = query.OrderBy(p => p.Title); // assuming product has a Name property
+                        break;
+                    case "desc":
+                        query = query.OrderByDescending(p => p.Title);
+                        break;
+                    case "price":
+                        query = query.OrderBy(p => p.Price);
+                        break;
+                }
             }
 
             // Pagination
@@ -1447,6 +1463,7 @@ namespace APIs.Controllers
                     AccentStoneShapeName = baseProduct.AccentStoneShapeName,
                     Description = baseProduct.Description,
                     IsReadyforShip = baseProduct.IsReadyforShip,
+                    WholesaleCost=baseProduct.WholesaleCost,
                     Diameter = baseProduct.Diameter
                 });
             }

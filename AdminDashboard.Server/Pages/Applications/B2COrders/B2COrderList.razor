@@ -11,7 +11,7 @@
 
 <MudTable Elevation="10" Items="RequestOrders">
 	<ToolBarContent>
-		<MudText Typo="Typo.h6">B2C Order Request List</MudText>
+		<MudText Typo="Typo.h6">Order List</MudText>
 		<MudToolBarSpacer />
 	</ToolBarContent>
 	<HeaderContent>
@@ -74,7 +74,7 @@
 	protected override async Task OnInitializedAsync()
 	{
 		IsLoading = true;
-		await GetOrderRequests();
+		//await GetOrderRequests();
 		IsLoading = false;
 	}
 

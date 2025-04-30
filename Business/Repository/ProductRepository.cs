@@ -124,7 +124,7 @@ namespace Business.Repository
                     if (existingProduct != null)
                     {
                         // Update existing product
-                        existingProduct.Title = $"{product.CategoryName} {product.ColorName} {product.CaratName} {product.ProductType} {product.Sku}";
+                        existingProduct.Title = $"{product.Title}";
                         existingProduct.Sku = product.Sku;
                         existingProduct.CTW = product.CTW;
                         existingProduct.Price = product.Price;
@@ -136,10 +136,9 @@ namespace Business.Repository
                     }
                     else
                     {
-                        // Insert new product
                         newProduct = new Product
                         {
-                            Title = $"{product.CategoryName} {product.ColorName} {product.CaratName} {product.ProductType} {product.Sku}",
+                            Title = $"{product.Title}",
                             Sku = product.Sku,
                             CTW = product.CTW,
                             Vendor = product.VenderName,
@@ -569,8 +568,8 @@ namespace Business.Repository
                                   {
                                       Id = product.Id,
                                       Title = evt.EventName,
-                                      EventId=product.EventId,
-                                      EventName=evt.EventName,
+                                      EventId = product.EventId,
+                                      EventName = evt.EventName,
                                       BandWidth = product.BandWidth,
                                       Length = product.Length,
                                       CaratName = product.Carat,
@@ -973,7 +972,7 @@ namespace Business.Repository
                     }
 
                     var colorId = colorDict.GetValueOrDefault(product.ColorName);
-                    var caratId = caratDict.GetValueOrDefault(product.CenterCaratName);
+                    var caratId = GetProductCarat(product.CenterCaratName);
                     var shapeId = shapeDict.GetValueOrDefault(product.CenterShapeName);
                     var AshapeId = shapeDict.GetValueOrDefault(product.AccentStoneShapeName);
                     var karatId = KaratDict.GetValueOrDefault(product.Karat);
@@ -985,7 +984,7 @@ namespace Business.Repository
                                              && x.KaratId == karatId
                                              && x.Sku == product.Sku
                                              && x.CategoryId.Value == categoryId
-                                             && x.ProductType==product.ProductType);
+                                             && x.ProductType == product.ProductType);
 
 
                     if (existingProduct != null)
@@ -1018,7 +1017,7 @@ namespace Business.Repository
                         var newProduct = new Product
                         {
                             Title = $"{product.EventName}",
-                            WholesaleCost=product.WholesaleCost,
+                            WholesaleCost = product.WholesaleCost,
                             Sku = product.Sku ?? throw new ArgumentNullException(nameof(product.Sku)),
                             CategoryId = categoryId,
                             KaratId = karatId,
@@ -1037,7 +1036,7 @@ namespace Business.Repository
                             MMSize = product.MMSize,
                             NoOfStones = product.NoOfStones,
                             DiaWT = product.DiaWT,
-                            CenterShapeId = product.CenterShapeId,
+                            CenterShapeId = shapeId,
                             Certificate = product.Certificate,
                             AccentStoneShapeId = AshapeId,
                             IsReadyforShip = product.IsReadyforShip,
@@ -1157,7 +1156,7 @@ namespace Business.Repository
                     {
 
                         // Update existing product
-                        existingProduct.Title = $"{product.CTW} {product.ShapeName} {product.CaratName} {product.ProductType}";
+                        existingProduct.Title = product.EventName;
                         existingProduct.Sku = product.Sku;
                         existingProduct.Price = product.Price;
                         existingProduct.UnitPrice = product.UnitPrice;
@@ -1171,9 +1170,11 @@ namespace Business.Repository
                         existingProduct.MMSize = product.MMSize;
                         existingProduct.CTW = product.CTW;
                         existingProduct.Certificate = product.Certificate;
-                        existingProduct.AccentStoneShapeId = product.AccentStoneShapeId;
+                        existingProduct.AccentStoneShapeId = shapeId;
                         existingProduct.IsReadyforShip = product.IsReadyforShip;
                         existingProduct.EventId = events.Id;
+                        existingProduct.WholesaleCost = product.WholesaleCost;
+                        existingProduct.Description = product.Description;
                         _context.Product.Update(existingProduct);
                         await _context.SaveChangesAsync();
 
@@ -1183,7 +1184,7 @@ namespace Business.Repository
                         // Insert new product
                         newProduct = new Product
                         {
-                            Title = $"{events.EventName}",
+                            Title = events.EventName,
                             Sku = product.Sku ?? throw new ArgumentNullException(nameof(product.Sku)), // Ensures Sku is not null
                             CategoryId = categoryId,
                             KaratId = karatId,
@@ -1200,7 +1201,7 @@ namespace Business.Repository
                             NoOfStones = product.NoOfStones,
                             DiaWT = product.DiaWT,
                             Certificate = product.Certificate,
-                            AccentStoneShapeId = product.AccentStoneShapeId,
+                            AccentStoneShapeId = shapeId,
                             IsReadyforShip = product.IsReadyforShip,
                             EventId = events.Id,
                             CTW = product.CTW,
@@ -1285,65 +1286,59 @@ namespace Business.Repository
 
         public async Task<ProductDTO> GetProductWithDetails(string productId)
         {
-            //if (!Guid.TryParse(productId, out Guid parsedProductId))
-            //    return null; // or throw an appropriate exception based on your error strategy
-
             var productQuery = await (
-      from product in _context.Product
-      where product.IsActivated && product.Id.ToString() == productId
-      join evt in _context.EventSites on product.EventId equals evt.Id
-      join cat in _context.Category on product.CategoryId equals cat.Id
+                  from product in _context.Product
+                  where product.IsActivated && product.Id.ToString() == productId
+                  join evt in _context.EventSites on product.EventId equals evt.Id
+                  join cat in _context.Category on product.CategoryId equals cat.Id
 
-      join colorProp in _context.ProductProperty on product.ColorId equals colorProp.Id into colorGroup
-      from color in colorGroup.DefaultIfEmpty()
+                  join colorProp in _context.ProductProperty on product.ColorId equals colorProp.Id into colorGroup
+                  from color in colorGroup.DefaultIfEmpty()
 
-      join shapeProp in _context.ProductProperty on product.CenterShapeId equals shapeProp.Id into shapeGroup
-      from shape in shapeGroup.DefaultIfEmpty()
+                  join shapeProp in _context.ProductProperty on product.CenterShapeId equals shapeProp.Id into shapeGroup
+                  from shape in shapeGroup.DefaultIfEmpty()
 
-      join ashapeProp in _context.ProductProperty on product.AccentStoneShapeId equals ashapeProp.Id into ashapeGroup
-      from ashape in ashapeGroup.DefaultIfEmpty()
+                  join ashapeProp in _context.ProductProperty on product.AccentStoneShapeId equals ashapeProp.Id into ashapeGroup
+                  from ashape in ashapeGroup.DefaultIfEmpty()
 
-      join clarityProp in _context.ProductProperty on product.ClarityId equals clarityProp.Id into clarityGroup
-      from clarity in clarityGroup.DefaultIfEmpty()
+                  join clarityProp in _context.ProductProperty on product.ClarityId equals clarityProp.Id into clarityGroup
+                  from clarity in clarityGroup.DefaultIfEmpty()
 
-      join sizeProp in _context.ProductProperty on product.CenterCaratId equals sizeProp.Id into sizeGroup
-      from size in sizeGroup.DefaultIfEmpty()
+                  join sizeProp in _context.ProductProperty on product.CenterCaratId equals sizeProp.Id into sizeGroup
+                  from size in sizeGroup.DefaultIfEmpty()
 
-      select new ProductDTO
-      {
-          Id = product.Id,
-          Title = evt.EventName,
-          EventName = evt.EventName,
-          EventId = product.EventId,
-          BandWidth = product.BandWidth,
-          Length = product.Length,
-          CaratName = product.Carat,
-          CategoryId = cat.Id,
-          CategoryName = cat.Name,
-          ProductType = cat.ProductType,
-          ColorId = product.ColorId,
-          ColorName = color.Name,
-          ClarityId = product.ClarityId,
-          ClarityName = clarity.Name,
-          CenterShapeId =product.CenterShapeId,
-          CenterShapeName = shape.Name,
-          AccentStoneShapeId = product.AccentStoneShapeId,
-          AccentStoneShapeName = ashape.Name,
-          CaratSizeId = product.CaratSizeId,
-          Description = product.Description,
-          Sku = product.Sku,
-          UnitPrice = product.UnitPrice,
-          Price = product.Price,
-          IsActivated = product.IsActivated
-      }
-  ).AsNoTracking().FirstOrDefaultAsync();
+                  select new ProductDTO
+                  {
+                      Id = product.Id,
+                      Title = evt.EventName,
+                      EventName = evt.EventName,
+                      EventId = product.EventId,
+                      BandWidth = product.BandWidth,
+                      Length = product.Length,
+                      CaratName = product.Carat,
+                      CategoryId = cat.Id,
+                      CategoryName = cat.Name,
+                      ProductType = cat.ProductType,
+                      ColorId = product.ColorId,
+                      ColorName = color.Name,
+                      ClarityId = product.ClarityId,
+                      ClarityName = clarity.Name,
+                      CenterShapeId = product.CenterShapeId,
+                      CenterShapeName = shape.Name,
+                      AccentStoneShapeId = product.AccentStoneShapeId,
+                      AccentStoneShapeName = ashape.Name,
+                      CaratSizeId = product.CaratSizeId,
+                      Description = product.Description,
+                      Sku = product.Sku,
+                      UnitPrice = product.UnitPrice,
+                      Price = product.Price,
+                      IsActivated = product.IsActivated
+                  }
+              ).AsNoTracking().FirstOrDefaultAsync();
 
 
 
             // Step 1: Group products by SKU
-            //var groupedProducts = products.GroupBy(p => p.Sku);
-
-
 
             var firstProduct = productQuery; // Get the first product from the group
 
@@ -1567,10 +1562,10 @@ namespace Business.Repository
                 ClarityName = firstProduct.ClarityName,
                 ShapeName = firstProduct.ShapeName,
                 ShapeId = firstProduct.ShapeId,
-                CenterShapeName=firstProduct.CenterShapeName,
-                CenterShapeId=firstProduct.CenterShapeId,
-                CenterCaratId=firstProduct.CenterCaratId,
-                CenterCaratName=firstProduct.CenterCaratName,
+                CenterShapeName = firstProduct.CenterShapeName,
+                CenterShapeId = firstProduct.CenterShapeId,
+                CenterCaratId = firstProduct.CenterCaratId,
+                CenterCaratName = firstProduct.CenterCaratName,
                 UnitPrice = firstProduct.UnitPrice,
                 Price = firstProduct.Price,
                 IsActivated = firstProduct.IsActivated,
@@ -1599,8 +1594,8 @@ namespace Business.Repository
 
                 var imageVideo = new ProductImageAndVideoDTO
                 {
-                    ImageUrl = string.IsNullOrWhiteSpace(imageUrl) ?null : imageUrl,
-                    VideoUrl = string.IsNullOrWhiteSpace(videoUrl) && videoUrl != null ? null :videoUrl
+                    ImageUrl = string.IsNullOrWhiteSpace(imageUrl) ? null : imageUrl,
+                    VideoUrl = string.IsNullOrWhiteSpace(videoUrl) && videoUrl != null ? null : videoUrl
                 };
 
                 productDTO.ProductImageVideos.Add(imageVideo);
@@ -1672,6 +1667,38 @@ namespace Business.Repository
                 await _context.SaveChangesAsync();
             }
             return priceDT;
+        }
+
+        private int GetProductCarat(string carat)
+        {
+            var caratId = GetCaratId().Result;
+
+            // Use EF.Functions.Like for partial matching (fuzzy search)
+            if (!string.IsNullOrEmpty(carat))
+            {
+                var crt = GetCaratList().Result.Where(x => x.Name == carat.ToString()).FirstOrDefault();
+                if (crt != null)
+                {
+                    return crt.Id;
+                }
+                else
+                {
+                    var pp = new ProductProperty
+                    {
+                        ParentId = caratId,
+                        Name = carat.ToString(),
+                        IsActive = true,
+                    };
+                    _context.ProductProperty.Add(pp);
+                    _context.SaveChanges();
+                    return pp.Id;
+                }
+
+            }
+
+
+
+            return 0;
         }
 
 

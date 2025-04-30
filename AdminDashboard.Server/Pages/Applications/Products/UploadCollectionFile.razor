@@ -3,7 +3,7 @@
 
 <MudDialog>
 	<TitleContent>
-		Add Products 
+		Add Products Images
 	</TitleContent>
 	<DialogContent>
 		<InputFile OnChange="HandleFileSelected" />
@@ -13,7 +13,7 @@
 		}
 		<MudToolBarSpacer />
 		<p><span style="font-weight:bold">Note :</span></p>
-		<p>Please upload file with the collections. (ex: Essentials, Solitaire Ring, Mini Huggies)</p>
+		<p>Please upload product images. (ex: Essentials, Solitaire Ring, Mini Huggies)</p>
 		<p>Download Excel Format : <MudButton Color="Color.Primary">Download</MudButton></p>
 	</DialogContent>
 	<DialogActions>
@@ -24,45 +24,55 @@
 
 
 @code {
-	private IBrowserFile selectedFile;
-	private bool isUploading = false;
-	private async Task HandleFileSelected(InputFileChangeEventArgs e)
-	{
-		if (e.File == null)
-		{
-			Snackbar.Add("No file selected.", Severity.Warning);
-			return;
-		}
+    private IBrowserFile selectedFile;
+    private bool isUploading = false;
 
-		selectedFile = e.File;
-		isUploading = true;     // Start showing the loader
+    [Inject]
+    private HttpClient Http { get; set; }
 
-		try
-		{
-			var fileContent = new MultipartFormDataContent();
-			var stream = selectedFile.OpenReadStream(maxAllowedSize: 10_000_000); // Set max size limit (10MB in this case)
-			var fileStreamContent = new StreamContent(stream);
-			fileStreamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
 
-			fileContent.Add(fileStreamContent, "file", selectedFile.Name);
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        selectedFile = e.File;
+        isUploading = true;     // Start showing the loader
 
-			var httpClient = new HttpClient();
-			var response = await httpClient.PostAsync($"{SD.BaseApiUrl}/api/product/BulkProductCollectionUpload", fileContent);
+        if (selectedFile == null)
+        {
+            Snackbar.Add("No file selected.", Severity.Warning);
+            return;
+        }
 
-			if (response.IsSuccessStatusCode)
-			{
-				Snackbar.Add("Product collection uploaded successfully!", Severity.Success);
-			}
-			else
-			{
-				Snackbar.Add("Failed to upload products. Please try again.", Severity.Error);
-			}
-			isUploading = false;
-		}
-		catch (Exception ex)
-		{
-			isUploading = false;
-			Snackbar.Add($"Error: {ex.Message}", Severity.Error);
-		}
-	}
+        try
+        {
+            var fileContent = new MultipartFormDataContent();
+
+            //options.MultipartBodyLengthLimit = 5368709120;
+            var stream = selectedFile.OpenReadStream(maxAllowedSize: 5_368_709_120);
+
+            var fileStreamContent = new StreamContent(stream);
+            fileStreamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+
+            fileContent.Add(fileStreamContent, "file", selectedFile.Name);
+
+            var response = await Http.PostAsync($"{SD.BaseApiUrl}/api/product/BulkProductCollectionUpload", fileContent);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Snackbar.Add("Product collection uploaded successfully!", Severity.Success);
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                Snackbar.Add("Failed to upload product images. Please try again.", Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            isUploading = false;
+        }
+    }
 }

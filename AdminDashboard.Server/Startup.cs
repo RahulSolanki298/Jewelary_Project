@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Blazored.LocalStorage;
 using Common;
 using OfficeOpenXml;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace AdminDashboard.Server
 {
@@ -61,6 +62,7 @@ namespace AdminDashboard.Server
             services.AddScoped<IProductPropertyRepository, ProductPropertyRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IB2BOrdersRepository, B2BOrdersRepository>();
+            services.AddScoped<IB2COrdersRepository, B2COrdersRepository>();
             services.AddBlazoredLocalStorage();
             services.AddScoped<ILocalStorageService,LocalStorageService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
@@ -73,6 +75,11 @@ namespace AdminDashboard.Server
             services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddServerSideBlazor();
             services.AddMudServices();
+            services.Configure<FormOptions>(options =>
+            {
+                options.MultipartBodyLengthLimit = 5_368_709_120; // 5 GB
+            });
+
 
             // Configure HttpClient
             services.AddScoped<HttpClient>(sp => new HttpClient

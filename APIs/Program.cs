@@ -22,7 +22,7 @@ namespace APIs
                 {
                     webBuilder.ConfigureKestrel(serverOptions =>
                     {
-                        serverOptions.Limits.MaxRequestBodySize = 52428800; // 50 MB
+                        serverOptions.Limits.MaxRequestBodySize = 5368709120; // 50 MB
                     });
 
                     webBuilder.UseStartup<Startup>();

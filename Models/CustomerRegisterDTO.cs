@@ -17,8 +17,10 @@ namespace Models
 
         public string Gender { get; set; }
 
+        [Phone]
         public string PhoneNumber { get; set; }
-        
+
+        [EmailAddress]
         public string EmailId { get; set; }
 
 

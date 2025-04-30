@@ -1132,20 +1132,7 @@
 
             function updateWishlistUI() 
             {
-                debugger;
                 let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
-
-                //$(".wishlist-toggle").each(function () {
-                //    let diamondId = $(this).data("diamondid").toString();
-                //    if (wishlist.includes(diamondId)) {
-                //        $(this).find(".heart-unchecked").hide();
-                //        $(this).find(".heart-checked").show();
-                //    } else {
-                //        $(this).find(".heart-unchecked").show();
-                //        $(this).find(".heart-checked").hide();
-                //    }
-                //});
-
 
                 $('#diamond-list-container').find("#diamondTable tbody .wishlist-toggle").each(function () {
                     let diamondId = $(this).data("diamondid").toString();

@@ -17,6 +17,9 @@
 
         public decimal? ToCarat { get; set; }
 
+        public string OrderBy { get; set; } // Options: "asc", "desc", "price"
+
+
 
     }
 }

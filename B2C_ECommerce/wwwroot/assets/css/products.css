@@ -182,8 +182,8 @@ Product Single Card - End
 }
 
 .product-active {
-    border: 1px solid #151542;
-    background-color: #DDF0E1;
+    border: 1px solid white;
+    background-color: #151542;
 }
 
 @keyframes fadeInUp {
