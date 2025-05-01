@@ -7,72 +7,73 @@
 	<TitleContent>
 		Add Products 
 	</TitleContent>
-	<DialogContent>
-		<InputFile OnChange="HandleFileSelected" />
-		@if (isUploading == true)
-		{
-			<MudProgressCircular Color="Color.Default" Indeterminate="true" />
-		}
-		<MudToolBarSpacer />
-		<p><span style="font-weight:bold">Note :</span></p>
-		<p>Please upload file with the style. (ex: Essentials, Solitaire Ring, Mini Huggies)</p>
-		<p>Download Excel Format : <MudButton Color="Color.Primary">Download</MudButton></p>
+    <DialogContent>
+        <InputFile OnChange="HandleFileSelected" />
+        @if (isUploading == true)
+        {
+            <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+        }
+        <MudToolBarSpacer />
+        <p><span style="font-weight:bold">Note :</span></p>
+        <p>Please upload file with the style. (ex: Essentials, Solitaire Ring, Mini Huggies)</p>
+        <p>Download Excel Format : <MudButton Color="Color.Primary">Download</MudButton></p>
 
-		<MudToolBarSpacer />
-		<MudTable Elevation="5" Items="productList">
-			<HeaderContent>
-				<MudTh>Product</MudTh>
-				<MudTh>Vendor</MudTh>
-				<MudTh>Style</MudTh>
-				<MudTh>Length</MudTh>
-				<MudTh>Band Width</MudTh>
-				<MudTh>Weight</MudTh>
-				<MudTh>Grades</MudTh>
-				<MudTh>Diamond Type</MudTh>
-				<MudTh>Price (14k)</MudTh>
-			</HeaderContent>
-			<RowTemplate>
-				<MudTd DataLabel="Product">
-					<MudTextField @bind-Value="context.EventName" />
-				</MudTd>
-				<MudTd DataLabel="VenderName">
-					<MudTextField @bind-Value="context.VenderName" />
-				</MudTd>
-				<MudTd DataLabel="VenderStyle">
-					<MudTextField @bind-Value="context.VenderStyle" />
-				</MudTd>
-				<MudTd DataLabel="Length">
-					<MudTextField @bind-Value="context.Length" />
-				</MudTd>
-				<MudTd DataLabel="BandWidth">
-					<MudTextField @bind-Value="context.BandWidth" />
-				</MudTd>
-				<MudTd DataLabel="GoldWeight">
-					<MudTextField @bind-Value="context.GoldWeight" />
-				</MudTd>
-				<MudTd DataLabel="Grades">
-					<MudTextField @bind-Value="context.Grades" />
-				</MudTd>
-				<MudTd DataLabel="DyamondType">
-					<MudTextField @bind-Value="context.ProductType" />
-				</MudTd>
-				<MudTd DataLabel="Price">
-					<MudTextField @bind-Value="context.Price" />
-				</MudTd>
-			</RowTemplate>
-			<PagerContent>
-				<MudTablePager PageSizeOptions="new int[]{5}" />
-			</PagerContent>
-		</MudTable>
+        <MudToolBarSpacer />
+        <MudTable Elevation="5" Items="productList">
+            <HeaderContent>
+                <MudTh>Product</MudTh>
+                <MudTh>Vendor</MudTh>
+                <MudTh>Style</MudTh>
+                <MudTh>Length</MudTh>
+                <MudTh>Band Width</MudTh>
+                <MudTh>Weight</MudTh>
+                <MudTh>Grades</MudTh>
+                <MudTh>Diamond Type</MudTh>
+                <MudTh>Price (14k)</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Product">
+                    <MudTextField @bind-Value="context.EventName" />
+                </MudTd>
+                <MudTd DataLabel="VenderName">
+                    <MudTextField @bind-Value="context.VenderName" />
+                </MudTd>
+                <MudTd DataLabel="VenderStyle">
+                    <MudTextField @bind-Value="context.VenderStyle" />
+                </MudTd>
+                <MudTd DataLabel="Length">
+                    <MudTextField @bind-Value="context.Length" />
+                </MudTd>
+                <MudTd DataLabel="BandWidth">
+                    <MudTextField @bind-Value="context.BandWidth" />
+                </MudTd>
+                <MudTd DataLabel="GoldWeight">
+                    <MudTextField @bind-Value="context.GoldWeight" />
+                </MudTd>
+                <MudTd DataLabel="Grades">
+                    <MudTextField @bind-Value="context.Grades" />
+                </MudTd>
+                <MudTd DataLabel="DyamondType">
+                    <MudTextField @bind-Value="context.ProductType" />
+                </MudTd>
+                <MudTd DataLabel="Price">
+                    <MudTextField @bind-Value="context.Price" />
+                </MudTd>
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager PageSizeOptions="new int[]{5}" />
+            </PagerContent>
+        </MudTable>
 
-        <MudFab @onclick="@(() => HandleDataSave())" Color="Color.Primary" Icon="@Icons.Material.Filled.Add" Size="Size.Small" IconSize="Size.Medium" />
-		@if (isUploading == true)
-		{
-			<MudProgressCircular Color="Color.Default" Indeterminate="true" />
-		}
+        @*<MudFab @onclick="@(() => HandleDataSave())" Color="Color.Primary" Icon="@Icons.Material.Filled.Save" Size="Size.Small" IconSize="Size.Large" />*@
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto text-center" @onclick="@(() => HandleDataSave())" >Verify Datasheet</MudButton>
+        @if (isUploading == true)
+        {
+            <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+        }
 
 
-	</DialogContent>
+    </DialogContent>
 
 	
 </MudDialog>

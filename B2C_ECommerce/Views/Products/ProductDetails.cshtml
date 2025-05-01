@@ -681,7 +681,7 @@ function GetProductByColorId(productId, colorId) {
 
         // Prepare navigation HTML
             let navHtml = "";
-            $(".slick-list .draggable .slick-track").html("");
+            
 
         if (images.length > 0) {
             images.forEach((image, index) => {
@@ -702,18 +702,24 @@ function GetProductByColorId(productId, colorId) {
             });
             images.forEach((image, index) => {
                 navHtml += `
-                        <div class="slick-slide slick-cloned" data-slick-index="${index + 1}" id="" aria-hidden="true" style="width: 298px;"><div><div class="pro-nav-thumb product-details-img-border img-with-bg" style="width: 100%; display: inline-block;">
-                              <img src="${baseUrl + '/' + image.imageUrl.replace(/\\/g, '/')}" class="figure-img" alt="Thumbnail">
+                        <div class="slick-slide slick-cloned" data-slick-index="${index + 1}" id="" aria-hidden="true" style="width: 298px;">
+                                <div>
+                                    <div class="pro-nav-thumb product-details-img-border img-with-bg" style="width: 100%; display: inline-block;">
+                                        <img src="${baseUrl + '/' + image.imageUrl.replace(/\\/g, '/')}" class="figure-img" alt="Thumbnail">
                         </div></div></div>`;
             });
+
+            $(".smImgUrl").html("");
+            $(".smImgUrl").html(navHtml);
 
             // Hide extra large images if any
             $(".product-large-slider .pro-large-img img").slice(images.length).hide();
             $(".product-large-slider .pro-large-img img").slice(0, images.length).show();
+
         }
 
         // Set navigation HTML inside correct wrapper
-        $(".slick-list .draggable .slick-track").html(navHtml); // or $(".pro-nav").html(navHtml); if you want
+        
 
         // Reinitialize swiper if needed
         if (typeof Swiper !== "undefined") {

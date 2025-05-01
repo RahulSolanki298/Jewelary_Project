@@ -10,8 +10,9 @@ namespace AdminDashboard.Server.Theme
             {
                 Primary = Colors.Blue.Darken1,
                 Secondary = Colors.DeepPurple.Accent2,
+                //Background = Colors.Grey.Lighten5,
                 Background = Colors.Grey.Lighten5,
-                AppbarBackground = Colors.Grey.Darken1,
+                AppbarBackground = "#151542",
                 DrawerBackground = "#FFF",
                 DrawerText = "rgba(0,0,0, 0.7)",
                 Success = "#06d79c"
