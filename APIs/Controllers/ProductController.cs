@@ -503,6 +503,9 @@ namespace APIs.Controllers
                     case "price":
                         query = query.OrderBy(p => p.Price);
                         break;
+                    case "priceMax":
+                        query = query.OrderByDescending(p => p.Price);
+                        break;
                 }
             }
 
