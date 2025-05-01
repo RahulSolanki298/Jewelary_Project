@@ -76,7 +76,7 @@
             <div class="col-lg-12 col-md-6 order-2 order-md-1">
                 <div class="text-lg-center padding-top-30">
                     <div class="product-amount">
-                        <p id="NoItems">250 <span>Items</span></p>
+                        <p id="NoItems"><span class="f-16"> 250</span> <span class="f-16">Items</span></p>
                     </div>
                 </div>
             </div>
@@ -93,10 +93,11 @@
                                 <div class="product-short">
                                     <p>Sort By : </p>
                                     <select class="nice-select" name="sortby" id="selectSort">
-                                        <option value="asc">Name (A - Z)</option>
-                                        <option value="desc">Name (Z - A)</option>
-                                        <option value="price">Price (Low &gt; High)</option>
-                                        <option value="priceMax">Price (High &gt; Low)</option>
+                                        @*<option value="asc">Name (A - Z)</option>
+                                        <option value="desc">Name (Z - A)</option>*@
+                                        <option value="newest">Newest </option>
+                                        <option value="price">Price: Low To High</option>
+                                        <option value="priceMax">Price: High To Low</option>
                                     </select>
                                 </div>
                             </div>
@@ -231,7 +232,7 @@
         <div class="row">
             <div class="row p-5">
                 <div class="col-xl-12 text-center">
-                    <button id="showMoreBtn" class="btn btn-dark text-capitalize">Show More</button>
+                    <button id="showMoreBtn" class="btn btn-dark shop-now-btn f-15 txt-align-center text-upper">View More</button>
                 </div>
             </div>
         </div>
@@ -464,8 +465,8 @@
                    });
 
 
-                    $("#minPrice1").val("$" + $("#price-slider1").slider("values", 0));
-                    $("#maxPrice1").val("$" + $("#price-slider1").slider("values", 1));
+                    $("#minPrice1").val("$ " + $("#price-slider1").slider("values", 0));
+                    $("#maxPrice1").val("$ " + $("#price-slider1").slider("values", 1));
 
                     $("#minCaratSize").val($("#carat-size-slider").slider("values", 0));
                     $("#maxCaratSize").val($("#carat-size-slider").slider("values", 1));
@@ -506,8 +507,8 @@
                     step: 1,
                     values: [minPrice, maxPrice],
                     slide: function (event, ui) {
-                        $("#minPrice1").val(ui.values[0]);
-                        $("#maxPrice1").val(ui.values[1]);
+                        $("#minPrice1").val("$ " + ui.values[0]);
+                        $("#maxPrice1").val("$ " + ui.values[1]);
 
                         filters.FromPrice=ui.values[0];
                         filters.ToPrice=ui.values[1];
@@ -516,8 +517,8 @@
                     }
                 });
 
-                $("#minPrice1").val(minPrice);
-                $("#maxPrice1").val(maxPrice);
+                $("#minPrice1").val("$ " + minPrice);
+                $("#maxPrice1").val("$ " + maxPrice);
 
                 var minCarat = parseFloat($("#minCarat").val()) || 0;
                 var maxCarat = parseFloat($("#maxCarat").val()) || 5;
