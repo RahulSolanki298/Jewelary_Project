@@ -83,7 +83,7 @@ namespace B2C_ECommerce.Controllers
                 return RedirectToAction("Index");
             }
 
-            return RedirectToAction("Index");
+            return Json("Index");
         }
 
 

@@ -97,7 +97,6 @@ namespace APIs
             services.Configure<FormOptions>(options =>
             {
                 options.ValueLengthLimit = int.MaxValue;
-                //options.MultipartBodyLengthLimit = 1073741824; // 1 GB
                 options.MultipartBodyLengthLimit = 5368709120; // 5 GB
                 options.MemoryBufferThreshold = int.MaxValue;
             });

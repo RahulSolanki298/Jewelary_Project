@@ -287,6 +287,80 @@ namespace APIs.Controllers
             }
         }
 
+        [HttpPost("BulkProductImagesUploadFromFolder")]
+        public async Task<IActionResult> UploadProductImagesFromFolder([FromForm] string folderPath)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(folderPath) || !Directory.Exists(folderPath))
+                {
+                    return BadRequest("Folder path is invalid or doesn't exist.");
+                }
+
+                var productImages = new List<ProductImages>();
+                var allFiles = Directory.GetFiles(folderPath, "*.*", SearchOption.AllDirectories)
+                                        .Where(f => f.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                                                    f.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
+                                                    f.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
+                                                    f.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase));
+
+                foreach (var file in allFiles)
+                {
+                    var fileName = Path.GetFileName(file);
+
+                    var styleName = _productRepository.ExtractStyleName(fileName);
+                    if (styleName == null) continue;
+
+                    var metalId = await _productRepository.GetMetalId(styleName.ColorName);
+                    if (metalId == 0) continue;
+
+                    var prdDesignDT = await _productRepository.GetProductDataByDesignNo(styleName.DesignNo, metalId);
+                    if (prdDesignDT.Count == 0) continue;
+
+                    foreach (var pro in prdDesignDT)
+                    {
+                        var prdDT = new ProductImages
+                        {
+                            ProductId = pro.Id.ToString(),
+                            MetalId = metalId,
+                            Sku = styleName.DesignNo,
+                            ShapeId = pro.ShapeId
+                        };
+
+                        // Copy image to structured folder
+                        string destFolder = Path.Combine(_env.WebRootPath, "UploadedFiles", "Collections", styleName.DesignNo);
+                        Directory.CreateDirectory(destFolder);
+
+                        string destPath = Path.Combine(destFolder, fileName);
+                        System.IO.File.Copy(file, destPath, overwrite: true);
+
+                        string relativePath = Path.Combine("UploadedFiles", "Collections", styleName.DesignNo, fileName).Replace("\\", "/");
+                        int pId = await _productRepository.SaveImageVideoPath(relativePath);
+
+                        if (fileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+                        {
+                            prdDT.VideoId = pId;
+                        }
+                        else
+                        {
+                            prdDT.ImageLgId = pId;
+                            prdDT.IsDefault = styleName.Index == 1;
+                            prdDT.ImageIndexNumber = styleName.Index;
+                        }
+
+                        await _productRepository.SaveImageVideoAsync(prdDT);
+                    }
+                }
+
+                return Ok("Images processed and uploaded successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
+
+
         [HttpPost("ExcelUploadForProduct")]
         public async Task<IActionResult> ExcelUpload(IFormFile file)
         {
