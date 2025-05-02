@@ -97,7 +97,7 @@ namespace APIs
             services.Configure<FormOptions>(options =>
             {
                 options.ValueLengthLimit = int.MaxValue;
-                options.MultipartBodyLengthLimit = 5368709120; // 5 GB
+                //options.MultipartBodyLengthLimit = 5368709120; // 5 GB
                 options.MemoryBufferThreshold = int.MaxValue;
             });
         }
@@ -178,18 +178,23 @@ namespace APIs
         // Configure the HTTP request pipeline
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // Development specific settings
-            if (env.IsDevelopment() || env.IsProduction())
+            app.UseDeveloperExceptionPage(); // Optional: only show in development
+
+            // Serve Swagger JSON and UI
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
             {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "APIs v1"));
-            }
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "APIs v1");
+                c.RoutePrefix = "swagger"; // visit /swagger to view UI
+            });
 
             app.UseHttpsRedirection();
             app.UseCors("AllowAllOrigins");
 
-            // Static files settings
+            // Serve static files for Swagger UI and other content
+            app.UseStaticFiles(); // <--- IMPORTANT
+
+            // Custom static files (uploaded files, etc.)
             ConfigureStaticFiles(app, env);
 
             app.UseRouting();
@@ -201,6 +206,7 @@ namespace APIs
                 endpoints.MapControllers();
             });
         }
+
 
         // Configure Static Files for media and uploads
         private void ConfigureStaticFiles(IApplicationBuilder app, IWebHostEnvironment env)

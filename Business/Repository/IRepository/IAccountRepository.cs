@@ -23,5 +23,7 @@ namespace Business.Repository.IRepository
         Task<List<ApplicationUser>> GetBusinessAccountData();
 
         Task<List<ApplicationUser>> GetEmployeeList();
+
+        Task<SupplierDataDTO> GetSupplierData(string supplierId);
     }
 }

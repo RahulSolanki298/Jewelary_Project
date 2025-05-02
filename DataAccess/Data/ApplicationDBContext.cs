@@ -73,6 +73,10 @@ namespace DataAccess.Data
 
         public DbSet<EventSites> EventSites { get; set; }
 
+        public DbSet<UserAddress> UserAddress { get; set; }
+
+        public DbSet<CompanyData> CompanyData { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

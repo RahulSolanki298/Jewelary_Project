@@ -5,18 +5,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Pages\Applications\B2BCustomers\**" />
     <Compile Remove="Pages\Applications\Customers\**" />
     <Compile Remove="Pages\Applications\DiamondProperty\**" />
     <Compile Remove="Pages\Applications\ProductImages\**" />
     <Compile Remove="Pages\LogManager\**" />
+    <Content Remove="Pages\Applications\B2BCustomers\**" />
     <Content Remove="Pages\Applications\Customers\**" />
     <Content Remove="Pages\Applications\DiamondProperty\**" />
     <Content Remove="Pages\Applications\ProductImages\**" />
     <Content Remove="Pages\LogManager\**" />
+    <EmbeddedResource Remove="Pages\Applications\B2BCustomers\**" />
     <EmbeddedResource Remove="Pages\Applications\Customers\**" />
     <EmbeddedResource Remove="Pages\Applications\DiamondProperty\**" />
     <EmbeddedResource Remove="Pages\Applications\ProductImages\**" />
     <EmbeddedResource Remove="Pages\LogManager\**" />
+    <None Remove="Pages\Applications\B2BCustomers\**" />
     <None Remove="Pages\Applications\Customers\**" />
     <None Remove="Pages\Applications\DiamondProperty\**" />
     <None Remove="Pages\Applications\ProductImages\**" />
@@ -52,7 +56,6 @@
 
   <ItemGroup>
     <Folder Include="Logs\" />
-    <Folder Include="Pages\Applications\B2BCustomers\" />
   </ItemGroup>
 
 </Project>

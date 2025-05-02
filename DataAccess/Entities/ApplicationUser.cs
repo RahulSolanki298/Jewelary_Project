@@ -18,6 +18,10 @@ namespace DataAccess.Entities
 
         public string AadharCardNo { get; set; }
 
+        public string GstNumber { get; set; }
+
+        public string ProfileImg { get; set; }
+
         public string TextPassword { get; set; }
 
         public bool IsBusinessAccount { get; set; } = false;

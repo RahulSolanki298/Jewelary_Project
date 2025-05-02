@@ -5,7 +5,7 @@ namespace Models
 {
     public class SupplierRegisterDTO
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         [Required(ErrorMessage ="Please enter your first name.")]
         public string FirstName { get; set; }
@@ -32,6 +32,8 @@ namespace Models
         public bool IsBusinessAccount { get; set; } = false;
 
         public int? BusinessAccId { get; set; }
+
+        public string GstNumber { get; set; }
 
         public string ActivationStatus { get; set; }
 

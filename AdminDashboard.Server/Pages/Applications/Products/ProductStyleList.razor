@@ -23,8 +23,118 @@
 
         </MudPaper>
     </MudItem>
-    <MudItem xl="12">
-        <MudTable Elevation="10" Items="productList" Hover="@hower" Dense="@dense">
+    
+
+
+
+    
+</MudGrid>
+
+<MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+    <MudTabPanel Text="Engagement-Ring">
+        <MudItem xl="12">
+            <MudTable Elevation="10" Items="ringsList" Hover="@hower" Dense="@dense">
+                <HeaderContent>
+                    <MudTh>Image</MudTh>
+                    <MudTh>Product</MudTh>
+                    <MudTh>Vendor</MudTh>
+                    <MudTh>Style</MudTh>
+                    <MudTh>Length</MudTh>
+                    <MudTh>Band Width</MudTh>
+                    <MudTh>Weight</MudTh>
+                    <MudTh>Grades</MudTh>
+                    <MudTh>Diamond Type</MudTh>
+                    <MudTh>Price (14k)</MudTh>
+                    <MudTh>Actions</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="ImageUrl">
+                        @if (@context.ProductImageVideos.Count > 0 && !string.IsNullOrWhiteSpace(context.ProductImageVideos.FirstOrDefault().ImageUrl))
+                        {
+                            <MudPaper Style="cursor: pointer; display:inline-block;" @onclick="@(() => OpenImageDialog(context.ProductImageVideos))">
+                                <img src="@SD.BaseApiUrl/@context.ProductImageVideos.First().ImageUrl" style="max-width:35px;height:auto;" />
+                            </MudPaper>
+                        }
+                        else
+                        {
+                            <img src="/images/No_Image_Available.jpg" style="max-width:35px;height:auto;" />
+                        }
+                    </MudTd>
+                    <MudTd DataLabel="Product">
+                        @context.Title
+                    </MudTd>
+                    <MudTd DataLabel="VenderName">@context.VenderName</MudTd>
+                    <MudTd DataLabel="VenderStyle">@context.VenderStyle</MudTd>
+                    <MudTd DataLabel="Length">@context.Length</MudTd>
+                    <MudTd DataLabel="BandWidth">@context.BandWidth</MudTd>
+                    <MudTd DataLabel="GoldWeight">@context.GoldWeight</MudTd>
+                    <MudTd DataLabel="Grades">@context.Grades</MudTd>
+                    <MudTd DataLabel="DyamondType">@context.ProductType</MudTd>
+                    <MudTd DataLabel="Price">@context.Price</MudTd>
+                    <MudTd>
+                        <MudFab @onclick="@(() => Edit(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
+                        <MudFab @onclick="@(() => Delete(context.Id))" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
+                    </MudTd>
+                </RowTemplate>
+                <PagerContent>
+                    <MudTablePager PageSizeOptions="new int[]{5,10,20,50,100}" />
+                </PagerContent>
+            </MudTable>
+        </MudItem>
+    </MudTabPanel>
+    <MudTabPanel Text="Wedding Bands">
+        <MudItem xl="12">
+            <MudTable Elevation="10" Items="bandsList" Hover="@hower" Dense="@dense">
+                <HeaderContent>
+                    <MudTh>Image</MudTh>
+                    <MudTh>Product</MudTh>
+                    <MudTh>Vendor</MudTh>
+                    <MudTh>Style</MudTh>
+                    <MudTh>Length</MudTh>
+                    <MudTh>Band Width</MudTh>
+                    <MudTh>Weight</MudTh>
+                    <MudTh>Grades</MudTh>
+                    <MudTh>Diamond Type</MudTh>
+                    <MudTh>Price (14k)</MudTh>
+                    <MudTh>Actions</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="ImageUrl">
+                        @if (@context.ProductImageVideos.Count > 0 && !string.IsNullOrWhiteSpace(context.ProductImageVideos.FirstOrDefault().ImageUrl))
+                        {
+                            <MudPaper Style="cursor: pointer; display:inline-block;" @onclick="@(() => OpenImageDialog(context.ProductImageVideos))">
+                                <img src="@SD.BaseApiUrl/@context.ProductImageVideos.First().ImageUrl" style="max-width:35px;height:auto;" />
+                            </MudPaper>
+                        }
+                        else
+                        {
+                            <img src="/images/No_Image_Available.jpg" style="max-width:35px;height:auto;" />
+                        }
+                    </MudTd>
+                    <MudTd DataLabel="Product">
+                        @context.Title
+                    </MudTd>
+                    <MudTd DataLabel="VenderName">@context.VenderName</MudTd>
+                    <MudTd DataLabel="VenderStyle">@context.VenderStyle</MudTd>
+                    <MudTd DataLabel="Length">@context.Length</MudTd>
+                    <MudTd DataLabel="BandWidth">@context.BandWidth</MudTd>
+                    <MudTd DataLabel="GoldWeight">@context.GoldWeight</MudTd>
+                    <MudTd DataLabel="Grades">@context.Grades</MudTd>
+                    <MudTd DataLabel="DyamondType">@context.ProductType</MudTd>
+                    <MudTd DataLabel="Price">@context.Price</MudTd>
+                    <MudTd>
+                        <MudFab @onclick="@(() => Edit(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
+                        <MudFab @onclick="@(() => Delete(context.Id))" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
+                    </MudTd>
+                </RowTemplate>
+                <PagerContent>
+                    <MudTablePager PageSizeOptions="new int[]{5,10,20,50,100}" />
+                </PagerContent>
+            </MudTable>
+        </MudItem>
+    </MudTabPanel>
+    <MudTabPanel Text="Earrings">
+        <MudTable Elevation="10" Items="earringsList" Hover="@hower" Dense="@dense">
             <HeaderContent>
                 <MudTh>Image</MudTh>
                 <MudTh>Product</MudTh>
@@ -71,22 +181,120 @@
                 <MudTablePager PageSizeOptions="new int[]{5,10,20,50,100}" />
             </PagerContent>
         </MudTable>
+    </MudTabPanel>
 
+    <MudTabPanel Text="Pendants">
+        <MudTable Elevation="10" Items="pendantsList" Hover="@hower" Dense="@dense">
+            <HeaderContent>
+                <MudTh>Image</MudTh>
+                <MudTh>Product</MudTh>
+                <MudTh>Vendor</MudTh>
+                <MudTh>Style</MudTh>
+                <MudTh>Length</MudTh>
+                <MudTh>Band Width</MudTh>
+                <MudTh>Weight</MudTh>
+                <MudTh>Grades</MudTh>
+                <MudTh>Diamond Type</MudTh>
+                <MudTh>Price (14k)</MudTh>
+                <MudTh>Actions</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="ImageUrl">
+                    @if (@context.ProductImageVideos.Count > 0 && !string.IsNullOrWhiteSpace(context.ProductImageVideos.FirstOrDefault().ImageUrl))
+                    {
+                        <MudPaper Style="cursor: pointer; display:inline-block;" @onclick="@(() => OpenImageDialog(context.ProductImageVideos))">
+                            <img src="@SD.BaseApiUrl/@context.ProductImageVideos.First().ImageUrl" style="max-width:35px;height:auto;" />
+                        </MudPaper>
+                    }
+                    else
+                    {
+                        <img src="/images/No_Image_Available.jpg" style="max-width:35px;height:auto;" />
+                    }
+                </MudTd>
+                <MudTd DataLabel="Product">
+                    @context.Title
+                </MudTd>
+                <MudTd DataLabel="VenderName">@context.VenderName</MudTd>
+                <MudTd DataLabel="VenderStyle">@context.VenderStyle</MudTd>
+                <MudTd DataLabel="Length">@context.Length</MudTd>
+                <MudTd DataLabel="BandWidth">@context.BandWidth</MudTd>
+                <MudTd DataLabel="GoldWeight">@context.GoldWeight</MudTd>
+                <MudTd DataLabel="Grades">@context.Grades</MudTd>
+                <MudTd DataLabel="DyamondType">@context.ProductType</MudTd>
+                <MudTd DataLabel="Price">@context.Price</MudTd>
+                <MudTd>
+                    <MudFab @onclick="@(() => Edit(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
+                    <MudFab @onclick="@(() => Delete(context.Id))" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
+                </MudTd>
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager PageSizeOptions="new int[]{5,10,20,50,100}" />
+            </PagerContent>
+        </MudTable>
+    </MudTabPanel>
 
-        <MudSwitch @bind-Checked="@hower" Color="Color.Primary" Label="Hover" />
-        <MudSwitch @bind-Checked="@dense" Color="Color.Secondary" Label="Dense" />
+    <MudTabPanel Text="Bracelets">
+        <MudTable Elevation="10" Items="braceletsList" Hover="@hower" Dense="@dense">
+            <HeaderContent>
+                <MudTh>Image</MudTh>
+                <MudTh>Product</MudTh>
+                <MudTh>Vendor</MudTh>
+                <MudTh>Style</MudTh>
+                <MudTh>Length</MudTh>
+                <MudTh>Band Width</MudTh>
+                <MudTh>Weight</MudTh>
+                <MudTh>Grades</MudTh>
+                <MudTh>Diamond Type</MudTh>
+                <MudTh>Price (14k)</MudTh>
+                <MudTh>Actions</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="ImageUrl">
+                    @if (@context.ProductImageVideos.Count > 0 && !string.IsNullOrWhiteSpace(context.ProductImageVideos.FirstOrDefault().ImageUrl))
+                    {
+                        <MudPaper Style="cursor: pointer; display:inline-block;" @onclick="@(() => OpenImageDialog(context.ProductImageVideos))">
+                            <img src="@SD.BaseApiUrl/@context.ProductImageVideos.First().ImageUrl" style="max-width:35px;height:auto;" />
+                        </MudPaper>
+                    }
+                    else
+                    {
+                        <img src="/images/No_Image_Available.jpg" style="max-width:35px;height:auto;" />
+                    }
+                </MudTd>
+                <MudTd DataLabel="Product">
+                    @context.Title
+                </MudTd>
+                <MudTd DataLabel="VenderName">@context.VenderName</MudTd>
+                <MudTd DataLabel="VenderStyle">@context.VenderStyle</MudTd>
+                <MudTd DataLabel="Length">@context.Length</MudTd>
+                <MudTd DataLabel="BandWidth">@context.BandWidth</MudTd>
+                <MudTd DataLabel="GoldWeight">@context.GoldWeight</MudTd>
+                <MudTd DataLabel="Grades">@context.Grades</MudTd>
+                <MudTd DataLabel="DyamondType">@context.ProductType</MudTd>
+                <MudTd DataLabel="Price">@context.Price</MudTd>
+                <MudTd>
+                    <MudFab @onclick="@(() => Edit(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
+                    <MudFab @onclick="@(() => Delete(context.Id))" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
+                </MudTd>
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager PageSizeOptions="new int[]{5,10,20,50,100}" />
+            </PagerContent>
+        </MudTable>
+    </MudTabPanel>
 
-        <MudMessageBox @ref="_mudMessageBox" Title="Delete" CancelText="Cancel">
-            <MessageContent>
-                Are you sure you want to delete?
-            </MessageContent>
-            <YesButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever">Delete!</MudButton>
-            </YesButton>
-        </MudMessageBox>
+    <MudSwitch @bind-Checked="@hower" Color="Color.Primary" Label="Hover" />
+    <MudSwitch @bind-Checked="@dense" Color="Color.Secondary" Label="Dense" />
 
-    </MudItem>
-</MudGrid>
+    <MudMessageBox @ref="_mudMessageBox" Title="Delete" CancelText="Cancel">
+        <MessageContent>
+            Are you sure you want to delete?
+        </MessageContent>
+        <YesButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever">Delete!</MudButton>
+        </YesButton>
+    </MudMessageBox>
+</MudTabs>
 
 @code {
 
@@ -99,6 +307,13 @@
     private string searchstring = "";
     private ProductDTO product = new ProductDTO();
     private IEnumerable<ProductDTO> productList { get; set; } = new List<ProductDTO>();
+    private IEnumerable<ProductDTO> ringsList { get; set; } = new List<ProductDTO>();
+    private IEnumerable<ProductDTO> bandsList { get; set; } = new List<ProductDTO>();
+    private IEnumerable<ProductDTO> earringsList { get; set; } = new List<ProductDTO>();
+    private IEnumerable<ProductDTO> pendantsList { get; set; } = new List<ProductDTO>();
+    private IEnumerable<ProductDTO> braceletsList { get; set; } = new List<ProductDTO>();
+
+
     private bool IsLoading { get; set; } = false;
     private int currentPage = 0;
     private int pageSize = 5;
@@ -184,6 +399,11 @@
         try
         {
             productList = await Http.GetFromJsonAsync<List<ProductDTO>>($"{SD.BaseApiUrl}/api/Product/GetProductDetailsList");
+            ringsList = productList.Where(x => x.CategoryName == "Rings");
+            bandsList = productList.Where(x => x.CategoryName == "Bands");
+            earringsList = productList.Where(x => x.CategoryName == "Earrings");
+            pendantsList = productList.Where(x => x.CategoryName == "Pendants");
+            braceletsList = productList.Where(x => x.CategoryName == "Rings");
         }
         catch (Exception ex)
         {
@@ -207,11 +427,11 @@
         };
 
         var options = new DialogOptions
-            {
-                MaxWidth = MaxWidth.Medium,
-                FullWidth = false,
-                CloseButton = true
-            };
+        {
+            MaxWidth = MaxWidth.Medium,
+            FullWidth = false,
+            CloseButton = true
+        };
 
         Dialog.Show<ProductImageViewer>("Product Images", parameters, options);
     }

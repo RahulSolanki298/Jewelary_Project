@@ -37,7 +37,7 @@ namespace Business.Repository
                 ActivationStatus = customerRegister.ActivationStatus,
                 Gender = customerRegister.Gender,
                 IsBusinessAccount = false,
-                PhoneNumber = customerRegister.PhoneNumber
+                PhoneNumber = customerRegister.PhoneNumber,
             };
 
             var result = await _userManager.CreateAsync(user, customerRegister.TextPassword);
@@ -199,6 +199,7 @@ namespace Business.Repository
                     UserName = supplierRegister.EmailId,
                     ActivationStatus = supplierRegister.ActivationStatus,
                     Gender = supplierRegister.Gender,
+                    GstNumber=supplierRegister.GstNumber,
                     IsBusinessAccount = false,
                     PhoneNumber = supplierRegister.PhoneNumber
                 };
@@ -219,6 +220,7 @@ namespace Business.Repository
             }
         }
 
+
         public async Task<List<ApplicationUser>> GetCustomerData()
         {
             var resultDT = await _userManager.GetUsersInRoleAsync("Customer");
@@ -229,6 +231,75 @@ namespace Business.Repository
         {
             var resultDT = await _userManager.GetUsersInRoleAsync("Supplier");
             return resultDT.ToList();
+        }
+
+        public async Task<SupplierDataDTO> GetSupplierData(string supplierId)
+        {
+            var data = new SupplierDataDTO();
+            data.SupplierInfo = new SupplierRegisterDTO();
+            data.SupplierAddress = new List<UserAddressDTO>();
+            data.SupplierInfo = await (from ausr in _context.ApplicationUser
+                                       where ausr.Id == supplierId
+                                       select new SupplierRegisterDTO
+                                       {
+                                           Id = ausr.Id,
+                                           FirstName = ausr.FirstName,
+                                           MiddleName = ausr.MiddleName,
+                                           LastName = ausr.LastName,
+                                           EmailId = ausr.Email,
+                                           PhoneNumber = ausr.PhoneNumber,
+                                           AadharCardNo = ausr.AadharCardNo,
+                                           Gender = ausr.Gender,
+                                           PancardNo = ausr.PancardNo,
+                                           ActivationStatus = ausr.ActivationStatus,
+                                           TextPassword = ausr.TextPassword
+                                       }).FirstOrDefaultAsync();
+
+            data.CompanyInfo = await (from comp in _context.CompanyData
+                                      join ausr in _context.ApplicationUser on comp.VendarId equals ausr.Id
+                                      where comp.VendarId == supplierId
+                                       select new CompanyDataDTO
+                                       {
+                                           Id = comp.Id,
+                                           CompanyLogo = comp.CompanyLogo,
+                                           CompanyName = comp.CompanyName,
+                                           AddressLine1 = comp.AddressLine1,
+                                           AddressLine2 = comp.AddressLine2,
+                                           CityName = comp.CityName,
+                                           CountryName = comp.CountryName,
+                                           EmailId = comp.EmailId,
+                                           Registration_Number = comp.Registration_Number,
+                                           Description = comp.Description,
+                                           Founded_Date = comp.Founded_Date,
+                                           VendarId = comp.VendarId,
+                                           ZipCode = comp.ZipCode,
+                                           Website = comp.Website,
+                                           StateName=comp.StateName,
+                                           PhoneNo1=comp.PhoneNo1,
+                                           PhoneNo2=comp.PhoneNo2,
+                                           CreatedBy=comp.CreatedBy,
+                                           UpdatedBy=comp.UpdatedBy
+                                       }).FirstOrDefaultAsync();
+
+            data.SupplierAddress = await (from adr in _context.UserAddress 
+                                          join ausr in _context.ApplicationUser on adr.UserId equals ausr.Id
+                                          where adr.UserId == supplierId
+                                          select new UserAddressDTO
+                                          {
+                                              Id=adr.Id,
+                                              UserId=ausr.Id,
+                                              AddressLine1=adr.AddressLine1,
+                                              AddressLine2=adr.AddressLine2,
+                                              CityName=adr.CityName,
+                                              StateName=adr.StateName,
+                                              Location=adr.Location,
+                                              Pincode=adr.Pincode,
+                                              IsDefaultAddress=adr.IsDefaultAddress
+                                          }).ToListAsync();
+
+            data.ChangePassword = new ChangePasswordDTO();
+
+            return data;
         }
 
         public async Task<List<ApplicationUser>> GetBusinessAccountData()

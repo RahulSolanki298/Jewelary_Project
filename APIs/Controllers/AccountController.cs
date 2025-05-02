@@ -58,6 +58,8 @@ namespace APIs.Controllers
                 FirstName = userRequestDTO.FirstName,
                 LastName = userRequestDTO.LastName,
                 PhoneNumber = userRequestDTO.PhoneNo,
+                IsCustomer=true,
+                CustomerCode= await GenerateCustomerCode(),
                 EmailConfirmed = true
             };
 
@@ -178,7 +180,8 @@ namespace APIs.Controllers
                 FirstName = userRequestDTO.FirstName,
                 LastName = userRequestDTO.LastName,
                 PhoneNumber = userRequestDTO.PhoneNo,
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                TextPassword=userRequestDTO.Password
             };
 
             var result = await _userManager.CreateAsync(user, userRequestDTO.Password);
@@ -229,6 +232,16 @@ namespace APIs.Controllers
                     });
                 }
 
+                // Only allow users with Admin or Supplier roles to sign in
+                if (!roles.Contains("Admin") && !roles.Contains("Supplier"))
+                {
+                    return Unauthorized(new AuthenticationResponseDTO
+                    {
+                        IsAuthSuccessful = false,
+                        ErrorMessage = "Access denied. Only Admin or Supplier roles are allowed."
+                    });
+                }
+
                 // Build the list of claims, including the user's role(s)
                 var claims = await GetClaims(user);
 
@@ -272,6 +285,22 @@ namespace APIs.Controllers
             }
         }
 
+        [HttpGet("get-user-profile/{userId}")]
+        [AllowAnonymous]
+        public async Task<ActionResult> GetUserProfile(string userId)
+        {
+            try
+            {
+                var usrProfile = _userManager.Users.FirstOrDefault(x=>x.Id.Equals(userId.ToString()));
+
+                return Ok(usrProfile);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
         private SigningCredentials GetSigningCredentials()
         {
             var secret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_aPISettings.SecretKey));
@@ -294,6 +323,19 @@ namespace APIs.Controllers
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
             return claims;
+        }
+
+        private async Task<string> GenerateCustomerCode()
+        {
+            // Simulate async work, e.g., database or remote service call
+            await Task.Delay(10);
+
+            string prefix = "JF";
+            string timestamp = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+            string randomDigits = new Random().Next(1000, 9999).ToString();
+
+            string customerCode = $"{prefix}-{timestamp}-{randomDigits}";
+            return customerCode;
         }
     }
 }
