@@ -76,7 +76,7 @@
     private bool hower = true;
     private bool dense = true;
     private string searchstring = "";
-    private IEnumerable<DataAccess.Entities.Category> Categories { get; set; } = new List<DataAccess.Entities.Category>();
+    private IEnumerable<DataAccess.Entities.Category> Categories = new List<DataAccess.Entities.Category>();
     private DataAccess.Entities.ProductProperty productProperty = new DataAccess.Entities.ProductProperty();
     private IEnumerable<DataAccess.Entities.ProductProperty> productPropertyList { get; set; } = new List<DataAccess.Entities.ProductProperty>();
     private IEnumerable<ProductPropertyDTO> parentPropertyList { get; set; } = new List<ProductPropertyDTO>();

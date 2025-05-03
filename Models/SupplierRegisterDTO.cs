@@ -35,6 +35,8 @@ namespace Models
 
         public string GstNumber { get; set; }
 
+        public string ProfileImage { get; set; }
+
         public string ActivationStatus { get; set; }
 
         

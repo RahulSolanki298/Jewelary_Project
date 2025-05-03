@@ -233,7 +233,7 @@ namespace Business.Repository
             return resultDT.ToList();
         }
 
-        public async Task<SupplierDataDTO> GetSupplierData(string supplierId)
+        public async Task<SupplierDataDTO> GetSupplierAllData(string supplierId)
         {
             var data = new SupplierDataDTO();
             data.SupplierInfo = new SupplierRegisterDTO();

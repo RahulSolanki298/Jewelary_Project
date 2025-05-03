@@ -291,7 +291,7 @@ namespace APIs.Controllers
         {
             try
             {
-                var usrProfile = _userManager.Users.FirstOrDefault(x=>x.Id.Equals(userId.ToString()));
+                var usrProfile = _accountRepository.GetSupplierAllData(userId);
 
                 return Ok(usrProfile);
             }

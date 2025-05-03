@@ -36,8 +36,8 @@ namespace AdminDashboard.Server.Service
 
                     if (authResponse.IsAuthSuccessful)
                     {
-                        //await _localStorage.SetItemAsync("authToken", authResponse.Token);
-                        //((CustomAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(authResponse.Token);
+                        await _localStorage.SetItemAsync("authToken", authResponse.Token);
+                        ((CustomAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(authResponse.Token);
                     }
 
                     return authResponse;
