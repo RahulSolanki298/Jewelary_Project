@@ -9,136 +9,217 @@
 @inject IB2COrdersRepository _OrderRepo
 @inject ISnackbar Snackbar
 
-<MudTable Elevation="10" Items="RequestOrders">
-	<ToolBarContent>
-		<MudText Typo="Typo.h6">Order List</MudText>
-		<MudToolBarSpacer />
-	</ToolBarContent>
-	<HeaderContent>
-		<MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.OrderDate)">Category</MudTableSortLabel></MudTh>
-		<MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.OrderCode)">Carat</MudTableSortLabel></MudTh>
-		<MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.CustomerCode)">Clarity</MudTableSortLabel></MudTh>
-		<MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.NoOfQty)">Color</MudTableSortLabel></MudTh>
-		<MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.NetAmount)">Size</MudTableSortLabel></MudTh>
-		@* <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.CollectionName)">Collection</MudTableSortLabel></MudTh> *@
-		<MudTh>Actions</MudTh>
-	</HeaderContent>
-	@* <RowTemplate>
-		<MudTd DataLabel="OrderDate">@context.OrderDate</MudTd>
-		<MudTd DataLabel="OrderCode">@context.OrderCode</MudTd>
-		<MudTd DataLabel="CustomerCode">@context.CustomerCode</MudTd>
-		<MudTd DataLabel="NoOfQty">@context.NoOfQty</MudTd>
-		<MudTd DataLabel="NetAmount">@context.NetAmount</MudTd>
-		<MudTd>
-			<MudFab @onclick="@(() => Edit(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
-			<MudFab @onclick="@(() => Delete(context.Id))" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
-		</MudTd>
-	</RowTemplate> *@
-	<PagerContent>
-		<MudTablePager PageSizeOptions="new int[]{5,10,20,50,100}" />
-	</PagerContent>
-</MudTable>
+<MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+    <MudTabPanel Text="Order Request">
+        <MudItem xl="12">
+            <MudTable Elevation="10" Items="RequestOrders">
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">Order Request</MudText>
+                    <MudToolBarSpacer />
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.OrderDate)">Category</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.OrderCode)">Carat</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.CustomerCode)">Clarity</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.NoOfQty)">Color</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.NetAmount)">Size</MudTableSortLabel></MudTh>
+                    <MudTh>Actions</MudTh>
+                </HeaderContent>
+                <PagerContent>
+                    <MudTablePager PageSizeOptions="new int[]{5,10,20,50,100}" />
+                </PagerContent>
+            </MudTable>
+        </MudItem>
+    </MudTabPanel>
+    <MudTabPanel Text="Accept Orders">
+        <MudItem xl="12">
+            <MudTable Elevation="10" Items="RequestOrders">
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">Accept Orders</MudText>
+                    <MudToolBarSpacer />
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.OrderDate)">Category</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.OrderCode)">Carat</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.CustomerCode)">Clarity</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.NoOfQty)">Color</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.NetAmount)">Size</MudTableSortLabel></MudTh>
+                    <MudTh>Actions</MudTh>
+                </HeaderContent>
+                <PagerContent>
+                    <MudTablePager PageSizeOptions="new int[]{5,10,20,50,100}" />
+                </PagerContent>
+            </MudTable>
+        </MudItem>
+    </MudTabPanel>
+
+    <MudTabPanel Text="Processing">
+        <MudItem xl="12">
+            <MudTable Elevation="10" Items="RequestOrders">
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">Processing</MudText>
+                    <MudToolBarSpacer />
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.OrderDate)">Category</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.OrderCode)">Carat</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.CustomerCode)">Clarity</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.NoOfQty)">Color</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.NetAmount)">Size</MudTableSortLabel></MudTh>
+                    <MudTh>Actions</MudTh>
+                </HeaderContent>
+                <PagerContent>
+                    <MudTablePager PageSizeOptions="new int[]{5,10,20,50,100}" />
+                </PagerContent>
+            </MudTable>
+        </MudItem>
+    </MudTabPanel>
+    <MudTabPanel Text="Ready For Shipment">
+        <MudItem xl="12">
+            <MudTable Elevation="10" Items="RequestOrders">
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">Ready For Shipment</MudText>
+                    <MudToolBarSpacer />
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.OrderDate)">Category</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.OrderCode)">Carat</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.CustomerCode)">Clarity</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.NoOfQty)">Color</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.NetAmount)">Size</MudTableSortLabel></MudTh>
+                    <MudTh>Actions</MudTh>
+                </HeaderContent>
+                <PagerContent>
+                    <MudTablePager PageSizeOptions="new int[]{5,10,20,50,100}" />
+                </PagerContent>
+            </MudTable>
+        </MudItem>
+    </MudTabPanel>
+    <MudTabPanel Text="Shipped">
+        <MudItem xl="12">
+            <MudTable Elevation="10" Items="RequestOrders">
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">Shipped</MudText>
+                    <MudToolBarSpacer />
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.OrderDate)">Category</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.OrderCode)">Carat</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.CustomerCode)">Clarity</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.NoOfQty)">Color</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.NetAmount)">Size</MudTableSortLabel></MudTh>
+                    <MudTh>Actions</MudTh>
+                </HeaderContent>
+                <PagerContent>
+                    <MudTablePager PageSizeOptions="new int[]{5,10,20,50,100}" />
+                </PagerContent>
+            </MudTable>
+        </MudItem>
+    </MudTabPanel>
+    <MudTabPanel Text="Delivered">
+        <MudItem xl="12">
+            <MudTable Elevation="10" Items="RequestOrders">
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">Delivered</MudText>
+                    <MudToolBarSpacer />
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.OrderDate)">Category</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.OrderCode)">Carat</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.CustomerCode)">Clarity</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.NoOfQty)">Color</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.NetAmount)">Size</MudTableSortLabel></MudTh>
+                    <MudTh>Actions</MudTh>
+                </HeaderContent>
+                <PagerContent>
+                    <MudTablePager PageSizeOptions="new int[]{5,10,20,50,100}" />
+                </PagerContent>
+            </MudTable>
+        </MudItem>
+    </MudTabPanel>
+    <MudTabPanel Text="Complated">
+        <MudItem xl="12">
+            <MudTable Elevation="10" Items="RequestOrders">
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">Complated</MudText>
+                    <MudToolBarSpacer />
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.OrderDate)">Category</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.OrderCode)">Carat</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.CustomerCode)">Clarity</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.NoOfQty)">Color</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<CustomerOrders, object>(x=>x.NetAmount)">Size</MudTableSortLabel></MudTh>
+                    <MudTh>Actions</MudTh>
+                </HeaderContent>
+                <PagerContent>
+                    <MudTablePager PageSizeOptions="new int[]{5,10,20,50,100}" />
+                </PagerContent>
+            </MudTable>
+        </MudItem>
+    </MudTabPanel>
+</MudTabs>
+
 
 <MudSwitch @bind-Checked="@hower" Color="Color.Primary" Label="Hover" />
 <MudSwitch @bind-Checked="@dense" Color="Color.Secondary" Label="Dense" />
 
 <MudMessageBox @ref="_mudMessageBox" Title="Delete" CancelText="Cancel">
-	<MessageContent>
-		Are you sure you want to delete?
-	</MessageContent>
-	<YesButton>
-		<MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever">Delete!</MudButton>
-	</YesButton>
+    <MessageContent>
+        Are you sure you want to delete?
+    </MessageContent>
+    <YesButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever">Delete!</MudButton>
+    </YesButton>
 </MudMessageBox>
 
 @code {
 
-	private IBrowserFile selectedFile;
-	private IEnumerable<CustomerOrders> RequestOrders { get; set; } = new List<CustomerOrders>();
+    private IBrowserFile selectedFile;
+    private IEnumerable<CustomerOrders> RequestOrders { get; set; } = new List<CustomerOrders>();
 
-	private readonly DialogOptions _maxWidth = new() { MaxWidth = MaxWidth.Medium, FullWidth = true };
-	private bool hower = true;
-	private bool dense = true;
-	private string searchstring = "";
+    private readonly DialogOptions _maxWidth = new() { MaxWidth = MaxWidth.Medium, FullWidth = true };
+    private bool hower = true;
+    private bool dense = true;
+    private string searchstring = "";
 
-	private CustomerOrders product = new CustomerOrders();
+    private CustomerOrders product = new CustomerOrders();
 
-	private bool IsLoading { get; set; } = false;
-	private int currentPage = 0;
-	private int pageSize = 5;
+    private bool IsLoading { get; set; } = false;
+    private int currentPage = 0;
+    private int pageSize = 5;
 
-	private MudMessageBox _mudMessageBox;
-	private MudDialog BulkAddDialog;
-	private string uploadedFilePath = "";
+    private MudMessageBox _mudMessageBox;
+    private MudDialog BulkAddDialog;
+    private string uploadedFilePath = "";
 
-	protected override async Task OnInitializedAsync()
-	{
-		IsLoading = true;
-		//await GetOrderRequests();
-		IsLoading = false;
-	}
+    protected override async Task OnInitializedAsync()
+    {
+    }
 
-	private async Task HandleFileSelected(InputFileChangeEventArgs e)
-	{
-		if (e.File == null)
-		{
-			Snackbar.Add("No file selected.", Severity.Warning);
-			return;
-		}
+    private async Task GetOrderRequests()
+    {
+        RequestOrders = await _OrderRepo.GetB2COrderRequestList();
+    }
 
-		selectedFile = e.File;
+    private bool Search(ProductDTO product)
+    {
+        return product.Title?.Contains(searchstring, StringComparison.OrdinalIgnoreCase) == true;
+    }
 
-		try
-		{
-			var fileContent = new MultipartFormDataContent();
-			var stream = selectedFile.OpenReadStream(maxAllowedSize: 10_000_000); // Set max size limit (10MB in this case)
-			var fileStreamContent = new StreamContent(stream);
-			fileStreamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+    private void Edit(Guid productId)
+    {
+        // Implement edit logic here
+    }
 
-			fileContent.Add(fileStreamContent, "file", selectedFile.Name);
+    private void Delete(Guid productId)
+    {
+        // Implement delete logic here
+    }
 
-			var httpClient = new HttpClient();
-			var response = await httpClient.PostAsync($"{SD.BaseApiUrl}/api/product/BulkProductCollectionUpload", fileContent);
-
-			if (response.IsSuccessStatusCode)
-			{
-				Snackbar.Add("Product collection uploaded successfully!", Severity.Success);
-				await _OrderRepo.GetB2COrderRequestList(); // Refresh the product list after successful upload
-			}
-			else
-			{
-				Snackbar.Add("Failed to upload products. Please try again.", Severity.Error);
-			}
-		}
-		catch (Exception ex)
-		{
-			Snackbar.Add($"Error: {ex.Message}", Severity.Error);
-		}
-	}
-
-	private async Task GetOrderRequests()
-	{
-		RequestOrders = await _OrderRepo.GetB2COrderRequestList();
-	}
-
-	private bool Search(ProductDTO product)
-	{
-		return product.Title?.Contains(searchstring, StringComparison.OrdinalIgnoreCase) == true;
-	}
-
-	private void Edit(Guid productId)
-	{
-		// Implement edit logic here
-	}
-
-	private void Delete(Guid productId)
-	{
-		// Implement delete logic here
-	}
-
-	private void OnBulkAddProductClick()
-	{
-		BulkAddDialog.Show();
-	}
+    private void OnBulkAddProductClick()
+    {
+        BulkAddDialog.Show();
+    }
 
 }

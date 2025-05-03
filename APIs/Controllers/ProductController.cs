@@ -185,10 +185,11 @@ namespace APIs.Controllers
         }
 
 
-        [HttpPost("BulkProductCollectionImagesUpload")]
-        [RequestSizeLimit(5368709120)]  // Limit the upload size to 5GB
-        public async Task<IActionResult> UploadProductCollectionImages(IFormFile zipFile)
-        {
+         [HttpPost("BulkProductCollectionImagesUpload")]
+         [RequestFormLimits(MultipartBodyLengthLimit = 5368709120)]
+         [RequestSizeLimit(5368709120)]
+        public async Task<IActionResult> UploadProductCollectionImages([FromForm] IFormFile zipFile)
+         {
             try
             {
                 List<DataAccess.Entities.Product> prdDesignDT = new List<DataAccess.Entities.Product>();

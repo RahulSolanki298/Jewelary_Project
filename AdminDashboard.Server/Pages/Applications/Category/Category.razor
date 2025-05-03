@@ -87,9 +87,8 @@
 
     private bool Search(DataAccess.Entities.Category category)
     {
-        if (category.Name != null && category.ProductType != null &&
-            category.Name.Contains(searchstring, StringComparison.OrdinalIgnoreCase) ||
-            category.ProductType.Contains(searchstring, StringComparison.OrdinalIgnoreCase))
+        if (category.Name != null &&
+            category.Name.Contains(searchstring, StringComparison.OrdinalIgnoreCase))
         {
             return true;
         }

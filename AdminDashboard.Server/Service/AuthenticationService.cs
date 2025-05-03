@@ -34,12 +34,6 @@ namespace AdminDashboard.Server.Service
                 {
                     var authResponse = await JsonSerializer.DeserializeAsync<AuthenticationResponseDTO>(await response.Content.ReadAsStreamAsync());
 
-                    if (authResponse.IsAuthSuccessful)
-                    {
-                        await _localStorage.SetItemAsync("authToken", authResponse.Token);
-                        ((CustomAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(authResponse.Token);
-                    }
-
                     return authResponse;
                 }
                 else

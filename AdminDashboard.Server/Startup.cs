@@ -23,6 +23,7 @@ using Blazored.LocalStorage;
 using Common;
 using OfficeOpenXml;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace AdminDashboard.Server
 {
@@ -41,6 +42,15 @@ namespace AdminDashboard.Server
             services.AddDbContext<ApplicationDBContext>(options =>
                 options.UseSqlServer(_config.GetConnectionString("DefaultConnection"))
             );
+
+            services.Configure<KestrelServerOptions>(serverOptions =>
+            {
+                serverOptions.Limits.MaxRequestBodySize = long.MaxValue;// 50 MB
+            });
+            services.Configure<IISServerOptions>(serverOptions =>
+            {
+                serverOptions.MaxRequestBodySize = long.MaxValue;// 50 MB
+            });
 
             // Configure Identity
             services.AddIdentity<ApplicationUser, IdentityRole>()

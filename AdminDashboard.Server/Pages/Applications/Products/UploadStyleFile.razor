@@ -19,6 +19,12 @@
         <p>Download Excel Format : <MudButton Color="Color.Primary">Download</MudButton></p>
 
         <MudToolBarSpacer />
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto text-center" @onclick="@(() => HandleDataSave())">Verify Datasheet</MudButton>
+        @if (isUploading == true)
+        {
+            <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+        }
+        
         <MudTable Elevation="5" Items="productList">
             <HeaderContent>
                 <MudTh>Product</MudTh>
@@ -64,17 +70,7 @@
                 <MudTablePager PageSizeOptions="new int[]{5}" />
             </PagerContent>
         </MudTable>
-
-        @*<MudFab @onclick="@(() => HandleDataSave())" Color="Color.Primary" Icon="@Icons.Material.Filled.Save" Size="Size.Small" IconSize="Size.Large" />*@
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto text-center" @onclick="@(() => HandleDataSave())" >Verify Datasheet</MudButton>
-        @if (isUploading == true)
-        {
-            <MudProgressCircular Color="Color.Default" Indeterminate="true" />
-        }
-
-
     </DialogContent>
-
 	
 </MudDialog>
 

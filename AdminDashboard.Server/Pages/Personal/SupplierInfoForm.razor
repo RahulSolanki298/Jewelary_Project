@@ -1,0 +1,21 @@
+﻿@using global::Models
+
+<MudForm @ref="_form">
+    <MudTextField Label="First Name" @bind-Value="Model.FirstName" Required="true" />
+    <MudTextField Label="Middle Name" @bind-Value="Model.MiddleName" Required="true" />
+    <MudTextField Label="Last Name" @bind-Value="Model.LastName" Required="true" />
+    <MudTextField Label="PancardNo" @bind-Value="Model.PancardNo" Required="true" />
+    <MudTextField Label="Aadharcard" @bind-Value="Model.AadharCardNo" Required="true" />
+</MudForm>
+
+@code {
+        [Parameter]
+        public SupplierRegisterDTO Model { get; set; }
+
+    private MudForm _form;
+
+    public void ValidateAsync() 
+    {
+        _form.Validate();
+    }
+}

@@ -20,14 +20,14 @@
                     </MudCardHeader>
                     <MudCardContent>
                         <div class="d-flex justify-center mb-4">
-                            <MudAvatar Image="@SupplierData.SupplierInfo.ProfileImage" Style="height:100px; width:100px;">
+                            <MudAvatar Image="@AvatarImageLink" Style="height:100px; width:100px;">
                                 @if (AvatarImageLink == null)
                                 {
                                     <MudIcon Icon="@AvatarIcon" Size="Size.Large"></MudIcon>
                                 }
                             </MudAvatar>
                         </div>
-                        <MudText Align="Align.Center">@SupplierData.SupplierInfo.FirstName @SupplierData.SupplierInfo.LastName</MudText>
+                        <MudText Align="Align.Center">@FirstName @LastName</MudText>
                         <MudText Align="Align.Center">@JobTitle</MudText>
                     </MudCardContent>
                     <MudCardActions Class="d-flex justify-center">
@@ -45,16 +45,16 @@
                     <MudCardContent>
                         <MudGrid>
                             <MudItem xs="12" md="6">
-                                <MudTextField @bind-Value="@SupplierData.SupplierInfo.FirstName" Label="First Name" Variant="Variant.Outlined" />
+                                <MudTextField @bind-Value="@FirstName" Label="First Name" Variant="Variant.Outlined" />
                             </MudItem>
                             <MudItem xs="12" md="6">
-                                <MudTextField @bind-Value="@SupplierData.SupplierInfo.LastName" Label="Last Name" Variant="Variant.Outlined" />
+                                <MudTextField @bind-Value="@LastName" Label="Last Name" Variant="Variant.Outlined" />
                             </MudItem>
                             <MudItem xs="12" md="6">
                                 <MudTextField @bind-Value="JobTitle" Label="Job Title" Variant="Variant.Outlined" />
                             </MudItem>
                             <MudItem xs="12" md="6">
-                                <MudTextField @bind-Value="@SupplierData.SupplierInfo.EmailId" Label="Email" Variant="Variant.Outlined" HelperText="Dont worry, we shall not spam!" InputType="InputType.Email" />
+                                <MudTextField @bind-Value="Email" Label="Email" Variant="Variant.Outlined" HelperText="Dont worry, we shall not spam!" InputType="InputType.Email" />
                             </MudItem>
                             <MudItem xs="12">
                                 <MudText>
@@ -85,7 +85,7 @@
                 <MudCardContent>
                     <MudGrid>
                         <MudItem xs="12" md="6">
-                            <MudTextField @bind-Value="@SupplierData.CompanyInfo.CompanyName" Label="Company Name" Variant="Variant.Outlined" />
+                            <MudTextField @bind-Value="FirstName" Label="Company Name" Variant="Variant.Outlined" />
                         </MudItem>
                         <MudItem xs="12" md="6">
                             <MudTextField @bind-Value="LastName" Label="First Name" Variant="Variant.Outlined" />

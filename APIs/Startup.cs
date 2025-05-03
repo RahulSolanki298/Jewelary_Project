@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -59,6 +60,15 @@ namespace APIs
             // Add repositories and services
             ConfigureRepositories(services);
 
+            services.Configure<KestrelServerOptions>(serverOptions =>
+            {
+                serverOptions.Limits.MaxRequestBodySize = long.MaxValue;// 50 MB
+            });
+            services.Configure<IISServerOptions>(serverOptions =>
+            {
+                serverOptions.MaxRequestBodySize = long.MaxValue;// 50 MB
+            });
+
             // Configure CORS
             services.AddCors(options =>
                 options.AddPolicy("AllowAllOrigins", builder =>
@@ -97,7 +107,7 @@ namespace APIs
             services.Configure<FormOptions>(options =>
             {
                 options.ValueLengthLimit = int.MaxValue;
-                //options.MultipartBodyLengthLimit = 5368709120; // 5 GB
+                options.MultipartBodyLengthLimit = 5368709120; // 5 GB
                 options.MemoryBufferThreshold = int.MaxValue;
             });
         }

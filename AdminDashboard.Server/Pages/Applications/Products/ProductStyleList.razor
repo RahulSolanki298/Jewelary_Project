@@ -14,27 +14,31 @@
 
 <MudGrid>
     <MudItem xs="12">
-        <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">
-            <MudText Typo="Typo.h6">Product List</MudText>
-            <MudToolBarSpacer />
-
-            <MudButton OnClick="@(() => OpenDialogAsync(_fullScreen))" Variant="Variant.Filled" Color="Color.Primary">Upload File</MudButton>
-            <MudButton OnClick="@(() => OpenDialog())" Variant="Variant.Filled" Color="Color.Secondary">Upload Images</MudButton>
-
+        <MudPaper Class="d-flex justify-end align-start mud-width-full px-4 py-2">
+            <MudButton OnClick="@(() => OpenDialogAsync(_fullScreen))"
+                       Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Size="Size.Small"
+                       Class="me-2">
+                Upload File
+            </MudButton>
+            <MudButton OnClick="@(() => OpenDialog())"
+                       Variant="Variant.Filled"
+                       Color="Color.Secondary"
+                       Size="Size.Small">
+                Upload Images
+            </MudButton>
         </MudPaper>
     </MudItem>
-    
-
-
-
-    
 </MudGrid>
+
 
 <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
     <MudTabPanel Text="Engagement-Ring">
         <MudItem xl="12">
-            <MudTable Elevation="10" Items="ringsList" Hover="@hower" Dense="@dense">
+            <MudTable Elevation="10" Items="ringsList">
                 <HeaderContent>
+                    <MudTh><input type="checkbox" /></MudTh>
                     <MudTh>Image</MudTh>
                     <MudTh>Product</MudTh>
                     <MudTh>Vendor</MudTh>
@@ -42,12 +46,14 @@
                     <MudTh>Length</MudTh>
                     <MudTh>Band Width</MudTh>
                     <MudTh>Weight</MudTh>
-                    <MudTh>Grades</MudTh>
-                    <MudTh>Diamond Type</MudTh>
                     <MudTh>Price (14k)</MudTh>
-                    <MudTh>Actions</MudTh>
+                    <MudTh>Price (18k)</MudTh>
+                    <MudTh>Price (Plat)</MudTh>
                 </HeaderContent>
                 <RowTemplate>
+                    <MudTd>
+                        <input type="checkbox" />
+                    </MudTd>
                     <MudTd DataLabel="ImageUrl">
                         @if (@context.ProductImageVideos.Count > 0 && !string.IsNullOrWhiteSpace(context.ProductImageVideos.FirstOrDefault().ImageUrl))
                         {
@@ -61,20 +67,17 @@
                         }
                     </MudTd>
                     <MudTd DataLabel="Product">
-                        @context.Title
+                        <h3> @context.Title</h3>
+                        <p>@context.Grades @context.CTW @context.CenterShapeName @context.CategoryName</p>
                     </MudTd>
                     <MudTd DataLabel="VenderName">@context.VenderName</MudTd>
                     <MudTd DataLabel="VenderStyle">@context.VenderStyle</MudTd>
                     <MudTd DataLabel="Length">@context.Length</MudTd>
                     <MudTd DataLabel="BandWidth">@context.BandWidth</MudTd>
                     <MudTd DataLabel="GoldWeight">@context.GoldWeight</MudTd>
-                    <MudTd DataLabel="Grades">@context.Grades</MudTd>
-                    <MudTd DataLabel="DyamondType">@context.ProductType</MudTd>
                     <MudTd DataLabel="Price">@context.Price</MudTd>
-                    <MudTd>
-                        <MudFab @onclick="@(() => Edit(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
-                        <MudFab @onclick="@(() => Delete(context.Id))" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
-                    </MudTd>
+                    <MudTd DataLabel="Price">@context.Price</MudTd>
+                    <MudTd DataLabel="Price">@context.Price</MudTd>
                 </RowTemplate>
                 <PagerContent>
                     <MudTablePager PageSizeOptions="new int[]{5,10,20,50,100}" />
@@ -84,7 +87,7 @@
     </MudTabPanel>
     <MudTabPanel Text="Wedding Bands">
         <MudItem xl="12">
-            <MudTable Elevation="10" Items="bandsList" Hover="@hower" Dense="@dense">
+            <MudTable Elevation="10" Items="bandsList">
                 <HeaderContent>
                     <MudTh>Image</MudTh>
                     <MudTh>Product</MudTh>
@@ -134,7 +137,7 @@
         </MudItem>
     </MudTabPanel>
     <MudTabPanel Text="Earrings">
-        <MudTable Elevation="10" Items="earringsList" Hover="@hower" Dense="@dense">
+        <MudTable Elevation="10" Items="earringsList">
             <HeaderContent>
                 <MudTh>Image</MudTh>
                 <MudTh>Product</MudTh>
@@ -184,7 +187,7 @@
     </MudTabPanel>
 
     <MudTabPanel Text="Pendants">
-        <MudTable Elevation="10" Items="pendantsList" Hover="@hower" Dense="@dense">
+        <MudTable Elevation="10" Items="pendantsList">
             <HeaderContent>
                 <MudTh>Image</MudTh>
                 <MudTh>Product</MudTh>
@@ -234,7 +237,7 @@
     </MudTabPanel>
 
     <MudTabPanel Text="Bracelets">
-        <MudTable Elevation="10" Items="braceletsList" Hover="@hower" Dense="@dense">
+        <MudTable Elevation="10" Items="braceletsList">
             <HeaderContent>
                 <MudTh>Image</MudTh>
                 <MudTh>Product</MudTh>
@@ -283,8 +286,56 @@
         </MudTable>
     </MudTabPanel>
 
-    <MudSwitch @bind-Checked="@hower" Color="Color.Primary" Label="Hover" />
-    <MudSwitch @bind-Checked="@dense" Color="Color.Secondary" Label="Dense" />
+    <MudTabPanel Text="Others">
+        <MudTable Elevation="10" Items="productList">
+            <HeaderContent>
+                <MudTh>Image</MudTh>
+                <MudTh>Product</MudTh>
+                <MudTh>Vendor</MudTh>
+                <MudTh>Style</MudTh>
+                <MudTh>Length</MudTh>
+                <MudTh>Band Width</MudTh>
+                <MudTh>Weight</MudTh>
+                <MudTh>Grades</MudTh>
+                <MudTh>Diamond Type</MudTh>
+                <MudTh>Price (14k)</MudTh>
+                <MudTh>Actions</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="ImageUrl">
+                    @if (@context.ProductImageVideos.Count > 0 && !string.IsNullOrWhiteSpace(context.ProductImageVideos.FirstOrDefault().ImageUrl))
+                    {
+                        <MudPaper Style="cursor: pointer; display:inline-block;" @onclick="@(() => OpenImageDialog(context.ProductImageVideos))">
+                            <img src="@SD.BaseApiUrl/@context.ProductImageVideos.First().ImageUrl" style="max-width:35px;height:auto;" />
+                        </MudPaper>
+                    }
+                    else
+                    {
+                        <img src="/images/No_Image_Available.jpg" style="max-width:35px;height:auto;" />
+                    }
+                </MudTd>
+                <MudTd DataLabel="Product">
+                    @context.Title
+                </MudTd>
+                <MudTd DataLabel="VenderName">@context.VenderName</MudTd>
+                <MudTd DataLabel="VenderStyle">@context.VenderStyle</MudTd>
+                <MudTd DataLabel="Length">@context.Length</MudTd>
+                <MudTd DataLabel="BandWidth">@context.BandWidth</MudTd>
+                <MudTd DataLabel="GoldWeight">@context.GoldWeight</MudTd>
+                <MudTd DataLabel="Grades">@context.Grades</MudTd>
+                <MudTd DataLabel="DyamondType">@context.ProductType</MudTd>
+                <MudTd DataLabel="Price">@context.Price</MudTd>
+                <MudTd>
+                    <MudFab @onclick="@(() => Edit(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
+                    <MudFab @onclick="@(() => Delete(context.Id))" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
+                </MudTd>
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager PageSizeOptions="new int[]{5,10,20,50,100}" />
+            </PagerContent>
+        </MudTable>
+    </MudTabPanel>
+
 
     <MudMessageBox @ref="_mudMessageBox" Title="Delete" CancelText="Cancel">
         <MessageContent>
@@ -302,8 +353,7 @@
 
     private readonly DialogOptions _fullScreen = new() { FullScreen = true, CloseButton = true };
     private readonly DialogOptions _maxWidth = new() { MaxWidth = MaxWidth.ExtraLarge, FullWidth = true, CloseButton = true };
-    private bool hower = true;
-    private bool dense = true;
+
     private string searchstring = "";
     private ProductDTO product = new ProductDTO();
     private IEnumerable<ProductDTO> productList { get; set; } = new List<ProductDTO>();
@@ -422,7 +472,7 @@
             return;
 
         var parameters = new DialogParameters
-        {
+    {
             { "ImageList", images }
         };
 

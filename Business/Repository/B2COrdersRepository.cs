@@ -26,7 +26,7 @@ namespace Business.Repository
                           join sts in _context.CustomerOrderStatus on ord.OrderId.ToString() equals sts.OrderId
                           join status in _context.OrderStatus on sts.CurrentStatusId equals status.Id
                           where status.Name == SD.Requested
-                          select ord).ToListAsync();
+                          select ord).OrderByDescending(x => x.CreatedDate).ToListAsync();
         }
 
         public async Task<IEnumerable<CustomerOrders>> GetB2COrderCancleList()
@@ -35,7 +35,7 @@ namespace Business.Repository
                          join sts in _context.CustomerOrderStatus on ord.OrderId.ToString() equals sts.OrderId
                          join status in _context.OrderStatus on sts.CurrentStatusId equals status.Id
                          where status.Name == SD.Cancelled
-                         select ord).ToListAsync();
+                         select ord).OrderByDescending(x => x.CreatedDate).ToListAsync();
         }
 
         public async Task<IEnumerable<CustomerOrders>> GetB2COrderProcessingList()
@@ -44,7 +44,7 @@ namespace Business.Repository
                           join sts in _context.CustomerOrderStatus on ord.OrderId.ToString() equals sts.OrderId
                           join status in _context.OrderStatus on sts.CurrentStatusId equals status.Id
                           where status.Name == SD.Processing
-                          select ord).ToListAsync();
+                          select ord).OrderByDescending(x => x.CreatedDate).ToListAsync();
         }
 
         public async Task<IEnumerable<CustomerOrders>> GetB2COrderRejectList()
@@ -62,7 +62,7 @@ namespace Business.Repository
                           join sts in _context.CustomerOrderStatus on ord.OrderId.ToString() equals sts.OrderId
                           join status in _context.OrderStatus on sts.CurrentStatusId equals status.Id
                           where status.Name == SD.ReadyForShipment
-                          select ord).ToListAsync();
+                          select ord).OrderByDescending(x => x.CreatedDate).ToListAsync();
         }
 
         public async Task<IEnumerable<CustomerOrders>> GetB2COrderShippedList()
@@ -71,7 +71,7 @@ namespace Business.Repository
                           join sts in _context.CustomerOrderStatus on ord.OrderId.ToString() equals sts.OrderId
                           join status in _context.OrderStatus on sts.CurrentStatusId equals status.Id
                           where status.Name == SD.Shipped
-                          select ord).ToListAsync();
+                          select ord).OrderByDescending(x => x.CreatedDate).ToListAsync();
         }
 
         public async Task<IEnumerable<CustomerOrders>> GetB2COrderDeliveredList()
@@ -80,7 +80,7 @@ namespace Business.Repository
                           join sts in _context.CustomerOrderStatus on ord.OrderId.ToString() equals sts.OrderId
                           join status in _context.OrderStatus on sts.CurrentStatusId equals status.Id
                           where status.Name == SD.Delivered
-                          select ord).ToListAsync();
+                          select ord).OrderByDescending(x => x.CreatedDate).ToListAsync();
         }
 
         public async Task<IEnumerable<CustomerOrders>> GetB2COrderComplatedList()
@@ -89,7 +89,7 @@ namespace Business.Repository
                           join sts in _context.CustomerOrderStatus on ord.OrderId.ToString() equals sts.OrderId
                           join status in _context.OrderStatus on sts.CurrentStatusId equals status.Id
                           where status.Name == SD.Complated
-                          select ord).ToListAsync();
+                          select ord).OrderByDescending(x => x.CreatedDate).ToListAsync();
         }
 
         public async Task<IEnumerable<CustomerOrders>> GetB2COrderRequestList()
@@ -98,7 +98,7 @@ namespace Business.Repository
                          join sts in _context.CustomerOrderStatus on ord.OrderId.ToString() equals sts.OrderId
                          join status in _context.OrderStatus on sts.CurrentStatusId equals status.Id
                          where status.Name == SD.Requested
-                         select ord).ToListAsync();
+                         select ord).OrderByDescending(x=>x.CreatedDate).ToListAsync();
         }
     }
 }

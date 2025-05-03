@@ -291,7 +291,7 @@ namespace APIs.Controllers
         {
             try
             {
-                var usrProfile = _accountRepository.GetSupplierAllData(userId);
+                var usrProfile = await _accountRepository.GetSupplierAllData(userId);
 
                 return Ok(usrProfile);
             }

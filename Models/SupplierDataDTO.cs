@@ -4,13 +4,13 @@ namespace Models
 {
     public class SupplierDataDTO
     {
-        public  SupplierRegisterDTO SupplierInfo { get; set; }
+        public SupplierRegisterDTO SupplierInfo { get; set; } = new();
 
-        public List<UserAddressDTO> SupplierAddress { get; set; }
+        public List<UserAddressDTO> SupplierAddress { get; set; } = new();
 
-        public CompanyDataDTO CompanyInfo { get; set; }
+        public CompanyDataDTO CompanyInfo { get; set; } = new();
 
-        public ChangePasswordDTO ChangePassword { get; set; }
+        public ChangePasswordDTO ChangePassword { get; set; } = new();
 
     }
 }

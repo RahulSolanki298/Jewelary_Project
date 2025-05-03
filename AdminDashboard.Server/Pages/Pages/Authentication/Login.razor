@@ -5,6 +5,8 @@
 @using System.ComponentModel.DataAnnotations
 @using AdminDashboard.Server.Service.IService
 @using global::Models
+@inject HttpClient Http
+@inject ISnackbar Snackbar
 
 @inject IAuthenticationService AdminLoginService
 @inject IJSRuntime JSRuntime
@@ -75,39 +77,46 @@
     string Message;
     bool isLoading = false;
 
-
+    [Inject]
+    public IJSRuntime jSRuntime { get; set; }
 
     private async Task OnValidSubmit(EditContext context)
     {
+        isLoading = true;
+        success = false;
+        Message = string.Empty;
+        StateHasChanged();
+
         try
         {
-            isLoading = true;
-            StateHasChanged();
-           
-
             var response = await AdminLoginService.AdminSignInAsync(loginModel);
 
             if (response.IsAuthSuccessful)
             {
-                await JSRuntime.InvokeVoidAsync("localStorage.setItem", "token", response.Token);
+                // Store token in localStorage
+                await jSRuntime.InvokeVoidAsync("localStorage.setItem", "token", response.Token);
+
+                // Assuming these values are part of the response or accessible through a separate method
+                var userId = response.userDTO.Id ?? string.Empty;
+                var email = response.userDTO.Email ?? string.Empty;
+                var role = response.userDTO.Roles;
+
+                await jSRuntime.InvokeVoidAsync("localStorage.setItem", "userId", userId);
+                await jSRuntime.InvokeVoidAsync("localStorage.setItem", "email", email);
+                await jSRuntime.InvokeVoidAsync("localStorage.setItem", "role", role);
 
                 success = true;
-                StateHasChanged();
                 NavigationManager.NavigateTo("/personal/dashboard");
             }
             else
-            {
-                success = false;
-            }
-
-            if (!success)
             {
                 Message = "Invalid Username or Password. Please try again.";
             }
         }
         catch (Exception ex)
         {
-            success = false;
+            // Optional: Log exception
+            Console.Error.WriteLine($"Login failed: {ex.Message}");
             Message = "Something went wrong. Please try again later.";
         }
         finally
@@ -116,4 +125,5 @@
             StateHasChanged();
         }
     }
+
 }
