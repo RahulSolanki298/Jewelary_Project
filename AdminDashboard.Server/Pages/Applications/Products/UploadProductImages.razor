@@ -3,9 +3,12 @@
 
 <MudDialog>
 	<TitleContent>
-		Add Products
+		Add Product Images
 	</TitleContent>
 	<DialogContent>
+
+
+
 		<InputFile OnChange="HandleFileSelected" />
 		@if (isUploading == true)
 		{
@@ -40,13 +43,15 @@
 
         try
         {
-            var maxFileSize = 5L * 1024 * 1024 * 1024;
+            var maxFileSize = 5L * 1024 * 1024 * 1024; ;
             using var stream = selectedFile.OpenReadStream(maxFileSize);
             using var content = new MultipartFormDataContent();
             using var streamContent = new StreamContent(stream);
 
-            streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
-            content.Add(streamContent, "zipFile", selectedFile.Name);
+            //streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+            //content.Add(streamContent, "zipFile", selectedFile.Name);
+
+            content.Add(new StreamContent(stream), "zipFile", selectedFile.Name);
 
 
             using var httpClient = new HttpClient

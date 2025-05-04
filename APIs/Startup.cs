@@ -154,6 +154,7 @@ namespace APIs
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IDiamondPropertyRepository, DiamondPropertyRepository>();
             services.AddScoped<IDiamondRepository, DiamondRepository>();
+            services.AddScoped<IB2COrdersRepository, B2COrdersRepository>();
         }
 
         // Configure Swagger for API documentation

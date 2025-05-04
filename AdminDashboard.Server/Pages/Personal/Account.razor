@@ -261,7 +261,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-
         SupplierData = await Http.GetFromJsonAsync<SupplierDataDTO>($"{SD.BaseApiUrl}/api/get-user-profile/{userId}");
     }
 

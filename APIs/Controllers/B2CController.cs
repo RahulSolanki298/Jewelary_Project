@@ -85,7 +85,7 @@ namespace APIs.Controllers
         }
 
 
-        [HttpPost("Order-Processing-List")]
+        [HttpGet("Order-Processing-List")]
         [AllowAnonymous]
         public async Task<ActionResult> GetOrderProcessingAsync()
         {

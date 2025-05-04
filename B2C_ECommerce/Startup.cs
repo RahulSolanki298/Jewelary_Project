@@ -34,6 +34,7 @@ namespace B2C_ECommerce
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IDiamondService, DiamondService>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IB2COrdersRepository, B2COrdersRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

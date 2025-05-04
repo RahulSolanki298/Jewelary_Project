@@ -1,24 +1,24 @@
 ﻿@page "/applications/diamonds/diamond-list"
 
-@using AdminDashboard.Server.Pages.Applications.Products
-@using Business.Repository
 @using Business.Repository.IRepository
-@using System.IO
 @using Common
-@using OfficeOpenXml
 @using global::Models
 
 @inject IDialogService Dialog
 @inject IDiamondRepository _diamondRepo
+@inject NavigationManager NavigationManager
 @inject ISnackbar Snackbar
 
-<MudPaper Class="p-6 mx-auto mt-4" Elevation="12" >
+<MudPaper Class="p-6 mx-auto mt-4" Elevation="12">
     <MudGrid>
         <!-- Header Section -->
         <MudItem xs="12" class="d-flex justify-between align-center mb-4">
             <MudText Typo="Typo.h4" Color="Color.Inherit" Class="font-weight-bold" Style="font-size: 1.5rem; letter-spacing: 1px;">
                 Diamond List
             </MudText>
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.ArrowForward" OnClick="AddDiamond" Class="transition-all duration-300 ease-in-out transform hover:scale-105">
+                Go to Add Product
+            </MudButton>
             <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.UploadFile" OnClick="OpenUploadDialog" Class="transition-all duration-300 ease-in-out transform hover:scale-105">
                 Upload File
             </MudButton>
@@ -91,17 +91,17 @@
 
     private readonly List<(string Label, string Property, Func<DiamondData, object> SortExpression)> tableColumns = new()
     {
-        ("Name", "ShapeName", x => x.ShapeName),
-        ("Carat", "Carat", x => x.Carat),
-        ("Color", "ColorName", x => x.ColorName),
-        ("Clarity", "ClarityName", x => x.ClarityName),
-        ("Cut", "CutName", x => x.CutName),
-        ("Certificate", "Certificate", x => x.Certificate),
-        ("Polish", "PolishName", x => x.PolishName),
-        ("Symmetry", "SymmetryName", x => x.SymmetyName),
-        ("Depth", "Depth", x => x.Depth),
-        ("Price", "Price", x => x.Price)
-    };
+            ("Name", "ShapeName", x => x.ShapeName),
+            ("Carat", "Carat", x => x.Carat),
+            ("Color", "ColorName", x => x.ColorName),
+            ("Clarity", "ClarityName", x => x.ClarityName),
+            ("Cut", "CutName", x => x.CutName),
+            ("Certificate", "Certificate", x => x.Certificate),
+            ("Polish", "PolishName", x => x.PolishName),
+            ("Symmetry", "SymmetryName", x => x.SymmetyName),
+            ("Depth", "Depth", x => x.Depth),
+            ("Price", "Price", x => x.Price)
+        };
 
     protected override async Task OnInitializedAsync() => await LoadDiamondList();
 
@@ -136,7 +136,7 @@
         {
             using var stream = selectedFile.OpenReadStream(maxAllowedSize: 10_000_000);
             using var fileContent = new MultipartFormDataContent
-            {
+        {
                 { new StreamContent(stream), "file", selectedFile.Name }
             };
 
@@ -166,5 +166,10 @@
     private void OnBulkAddProductClick()
     {
         BulkAddDialog.Show();
+    }
+
+    private void AddDiamond()
+    {
+        NavigationManager.NavigateTo("/applications/diamond/add-diamond");
     }
 }

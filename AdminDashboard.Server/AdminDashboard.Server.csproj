@@ -28,6 +28,7 @@
     <PackageReference Include="Blazored.LocalStorage" Version="2.0.2" />
     <PackageReference Include="Blazored.TextEditor" Version="1.0.3" />
     <PackageReference Include="EPPlus" Version="6.0.4" />
+    <PackageReference Include="Heron.MudCalendar" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="5.0.17" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.0" />

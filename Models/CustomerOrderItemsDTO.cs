@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace DataAccess.Entities
+namespace Models
 {
-    public class CustomerOrderItems
+    public class CustomerOrderItemsDTO
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         public string OrderId { get; set; }
 
@@ -31,6 +31,5 @@ namespace DataAccess.Entities
         public DateTime? CreatedDate { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
-
     }
 }

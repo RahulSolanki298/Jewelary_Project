@@ -186,10 +186,10 @@ namespace APIs.Controllers
 
 
          [HttpPost("BulkProductCollectionImagesUpload")]
-         [RequestFormLimits(MultipartBodyLengthLimit = 5368709120)]
-         [RequestSizeLimit(5368709120)]
+        [RequestFormLimits(MultipartBodyLengthLimit = 5368709120)]
+        [RequestSizeLimit(5368709120)]
         public async Task<IActionResult> UploadProductCollectionImages([FromForm] IFormFile zipFile)
-         {
+        {
             try
             {
                 List<DataAccess.Entities.Product> prdDesignDT = new List<DataAccess.Entities.Product>();
@@ -608,7 +608,6 @@ namespace APIs.Controllers
         {
             var products = await _productRepository.GetProductByColorId(sku, colorId, 0);
             return Ok(products);
-
         }
 
 

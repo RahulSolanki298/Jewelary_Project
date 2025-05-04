@@ -79,7 +79,7 @@
 
         //public static string BaseApiUrl = "https://localhost:44302"; // https://jswebapi.com
         // public static string BaseApiUrl = "https://localhost:4050"; // https://jswebapi.com
-         public static string BaseApiUrl = "http://192.168.29.11:8082"; // https://jswebapi.com
+        public static string BaseApiUrl = "http://192.168.29.11:8082"; // https://jswebapi.com
 
 
 

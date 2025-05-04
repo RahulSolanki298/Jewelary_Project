@@ -27,7 +27,7 @@
                 }
                 @foreach (var image in ImageList.Where(x => x.VideoUrl != null))
                 {
-                    <MudPaper Style="cursor: pointer; display:inline-block;" @onclick="() => ChangeMainImage(image.ImageUrl,true)">
+                    <MudPaper Style="cursor: pointer; display:inline-block;" @onclick="() => ChangeMainImage(image.VideoUrl,true)">
                         <img src="/images/video-icon.svg" style="max-width:35px;height:auto;" />
                     </MudPaper>
                 }

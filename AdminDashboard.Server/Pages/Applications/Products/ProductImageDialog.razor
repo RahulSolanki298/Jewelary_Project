@@ -4,16 +4,6 @@
 
 <MudDialog>
     <DialogContent>
-        @* <MudCarousel @bind-SelectedIndex="_selectedIndex" Height="400px">
-            @for (int i = 0; i < ImageList.Count; i++)
-            {
-                <MudCarouselItem>
-                    <img src="@($"{BaseApiUrl}/{ImageList[i].ImageUrl}")" style="max-height: 400px; width: auto; display: block; margin: 0 auto;" />
-                </MudCarouselItem>
-            }
-        </MudCarousel> *@
-
-
         <!-- Thumbnail row -->
         <MudGrid GutterSize="2" Class="mt-2">
             @for (int i = 0; i < ImageList.Count; i++)

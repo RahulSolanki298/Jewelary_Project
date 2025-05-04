@@ -82,7 +82,6 @@ namespace AdminDashboard.Server
 
             services.AddAuthorizationCore();
             services.AddHttpContextAccessor();
-            services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddServerSideBlazor();
             services.AddMudServices();
             services.Configure<FormOptions>(options =>
@@ -90,6 +89,13 @@ namespace AdminDashboard.Server
                 options.MultipartBodyLengthLimit = 5_368_709_120; // 5 GB
             });
 
+            services.AddHttpClient("MyApiClient", client =>
+            {
+                client.BaseAddress = new Uri($"{SD.BaseApiUrl}");
+                client.Timeout = TimeSpan.FromMinutes(30); // Increase timeout for large uploads
+            });
+
+            services.AddRazorPages().AddRazorRuntimeCompilation();
 
             // Configure HttpClient
             services.AddScoped<HttpClient>(sp => new HttpClient
@@ -131,6 +137,13 @@ namespace AdminDashboard.Server
 
             // Database Seeding
             Seeding(app.ApplicationServices, dbInitializer);
+
+            app.Use(async (context, next) =>
+            {
+                context.Features.Get<IHttpMaxRequestBodySizeFeature>().MaxRequestBodySize = 5368709120; // 5 GB
+                await next.Invoke();
+            });
+
 
             app.UseEndpoints(endpoints =>
             {

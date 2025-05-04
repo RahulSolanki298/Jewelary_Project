@@ -41,9 +41,9 @@ namespace Business.Repository
         public async Task<IEnumerable<CustomerOrders>> GetB2COrderProcessingList()
         {
             return await (from ord in _context.CustomerOrders
-                          join sts in _context.CustomerOrderStatus on ord.OrderId.ToString() equals sts.OrderId
-                          join status in _context.OrderStatus on sts.CurrentStatusId equals status.Id
-                          where status.Name == SD.Processing
+                          //join sts in _context.CustomerOrderStatus on ord.OrderId.ToString() equals sts.OrderId
+                          //join status in _context.OrderStatus on sts.CurrentStatusId equals status.Id
+                          //where status.Name != SD.Requested && status.Name != SD.Cancelled && status.Name != SD.Complated
                           select ord).OrderByDescending(x => x.CreatedDate).ToListAsync();
         }
 
@@ -52,8 +52,8 @@ namespace Business.Repository
             return await (from ord in _context.CustomerOrders
                           join sts in _context.CustomerOrderStatus on ord.OrderId.ToString() equals sts.OrderId
                           join status in _context.OrderStatus on sts.CurrentStatusId equals status.Id
-                          where status.Name == SD.OrderRejected
-                          select ord).ToListAsync();
+                          where status.Name == SD.OrderRejected 
+                          select ord).OrderByDescending(x=>x.OrderDate).ToListAsync();
         }
 
         public async Task<IEnumerable<CustomerOrders>> GetB2COrderReadyForShipmentList()
@@ -100,5 +100,9 @@ namespace Business.Repository
                          where status.Name == SD.Requested
                          select ord).OrderByDescending(x=>x.CreatedDate).ToListAsync();
         }
+
+
+        
+
     }
 }
