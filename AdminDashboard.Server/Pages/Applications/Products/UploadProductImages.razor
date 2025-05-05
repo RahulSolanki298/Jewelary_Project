@@ -2,32 +2,41 @@
 @inject ISnackbar Snackbar
 
 <MudDialog>
-	<TitleContent>
-		Add Product Images
-	</TitleContent>
-	<DialogContent>
+    <TitleContent>
+        Add Product Images
+    </TitleContent>
+    <DialogContent>
+        <MudCheckBox @bind-Checked="isFileUpload" Label="Upload a file?" />
 
+        @if (isFileUpload)
+        {
+            <InputFile OnChange="HandleFileSelected" />
+        }
+        else
+        {
+            <InputText @bind-Value="FolderPath"></InputText>
+            <MudButton OnClick="UploadImages">Upload Images</MudButton>
+        }
 
+        @if (isUploading)
+        {
+            <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+        }
 
-		<InputFile OnChange="HandleFileSelected" />
-		@if (isUploading == true)
-		{
-			<MudProgressCircular Color="Color.Default" Indeterminate="true" />
-		}
-		<MudToolBarSpacer />
-		<p><span style="font-weight:bold">Note :</span></p>
-		<p>Please upload zip file.</p>
-	</DialogContent>
-	<DialogActions>
-		<MudButton Color="Color.Error">Cancel</MudButton>
-	</DialogActions>
+        <MudToolBarSpacer />
+        <p><span style="font-weight:bold">Note :</span></p>
+        <p>Please upload zip file.</p>
+    </DialogContent>
 </MudDialog>
 
 
 
 @code {
     private IBrowserFile selectedFile;
+    private bool isFileUpload = false;
     private bool isUploading = false;
+    public string FolderPath = string.Empty;
+
     private string message;
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
@@ -47,9 +56,6 @@
             using var stream = selectedFile.OpenReadStream(maxFileSize);
             using var content = new MultipartFormDataContent();
             using var streamContent = new StreamContent(stream);
-
-            //streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
-            //content.Add(streamContent, "zipFile", selectedFile.Name);
 
             content.Add(new StreamContent(stream), "zipFile", selectedFile.Name);
 
@@ -79,6 +85,39 @@
         finally
         {
             isUploading = false; // Hide the loader
+        }
+    }
+
+    private async Task UploadImages()
+    {
+        if (string.IsNullOrWhiteSpace(FolderPath))
+        {
+            Console.WriteLine("Folder path cannot be empty.");
+            return;
+        }
+
+        // Prepare content for the POST request
+        var content = new MultipartFormDataContent();
+        content.Add(new StringContent(FolderPath), "folderPath");
+
+        using var httpClient = new HttpClient
+        {
+            BaseAddress = new Uri(SD.BaseApiUrl)
+        };
+        ///FolderPath
+        var response = await httpClient.PostAsync("api/product/BulkProductImagesUploadFromFolder", content);
+        var result = await response.Content.ReadAsStringAsync();
+
+        // Log the result from the API
+        Console.WriteLine(result);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Console.WriteLine("Images uploaded successfully.");
+        }
+        else
+        {
+            Console.WriteLine($"Failed: {result}");
         }
     }
 
