@@ -3,40 +3,59 @@
 @{
     ViewData["Title"] = "ProductDetails";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    <link href="https://cdn.jsdelivr.net/npm/lightslider@1.1.6/dist/css/lightslider.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/fancyapps/ui@4.0/dist/fancybox.css" rel="stylesheet" />
     <style>
-        .imageblock {
-            margin-left: 15px;
-        }
 
-        .media-container {
-            position: relative;
-        }
+    .demo {
+        width: 780px;
+        margin: 20px auto;
+    }
 
-        .product-video {
-            position: absolute;
-            top: 0;
-            left: 0;
+    #lightSliderVertical li 
+    {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 400px; /* adjust as needed */
             width: 100%;
-            /* height: 100%;*/
-            object-fit: cover;
-            /*display: none;*/
-            z-index: 2;
+            overflow: hidden;
+            background-color: #f9f9f9; /* optional, helps visualize spacing */
+    }
+
+     #lightSliderVertical li img,
+     #lightSliderVertical li video {
+         max-height: 100%;
+         max-width: 100%;
+         object-fit: contain;
+         display: block;
+     }
+
+        .img-zoom {
+            transition: transform 0.3s ease;
+            cursor: zoom-in;
         }
 
-        .metalHide {
+            .img-zoom:hover {
+                transform: scale(1.1);
+            }
+
+
+    .metalHide {
             color: black;
             font-size: 16px;
             font-weight: normal;
             border: none;
         }
 
-        .metalShow {
+    .metalShow {
             color: black;
             font-size: 16px;
             font-weight: bold;
             border: 1px solid black;
             display: block;
         }
+
     </style>
 }
 
@@ -50,48 +69,42 @@
                 <div class="product-details-inner">
                     <div class="row">
                         <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6">
-                            <div class="product-large-slider pro-large-img img">
-                                @if (Model != null && Model.ProductImageVideos.Count > 0)
-                                {
-                                    @foreach (var item in Model.ProductImageVideos)
-                                    {
-                                        if (!string.IsNullOrEmpty(item.ImageUrl) && item.ImageUrl != "-")
+                            <div class="demo">
+                                <div class="vertical-slider-wrapper d-flex">
+                                    <ul id="lightSliderVertical" class="img-with-bg">
+                                        @if (Model != null && Model.ProductImageVideos.Count > 0)
                                         {
-                                            <div class="pro-large-img img-with-bg">
-                                                <img src="@($"{SD.BaseApiUrl}/{item.ImageUrl}")" class="currImg" alt="Product Image" />
-                                            </div>
+                                            foreach (var item in Model.ProductImageVideos)
+                                            {
+                                                if (!string.IsNullOrEmpty(item.ImageUrl) && item.ImageUrl != "-")
+                                                {
+                                                    <li data-thumb="@($"{SD.BaseApiUrl}/{item.ImageUrl}")">
+                                                        <a href="@($"{SD.BaseApiUrl}/{item.ImageUrl}")"
+                                                           data-fancybox="gallery"
+                                                           data-caption="Product Image"
+                                                           data-thumb="@($"{SD.BaseApiUrl}/{item.ImageUrl}")"
+                                                           data-zoomable="true">
+                                                            <img src="@($"{SD.BaseApiUrl}/{item.ImageUrl}")" class="img-zoom" />
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (!string.IsNullOrEmpty(item.VideoUrl) && item.VideoUrl != "-")
+                                                {
+                                                    <li data-thumb="/assets/img/video/video-icon.svg">
+                                                        <a href="@($"{SD.BaseApiUrl}/{item.VideoUrl}")" data-fancybox="gallery" data-caption="Product Video">
+                                                            <video muted loop playsinline autoplay style="max-width: 100%;">
+                                                                <source src="@($"{SD.BaseApiUrl}/{item.VideoUrl}")" type="video/mp4" />
+                                                            </video>
+                                                        </a>
+                                                    </li>
+                                                }
+                                            }
                                         }
-                                        else if (!string.IsNullOrEmpty(item.VideoUrl) && item.VideoUrl != "-")
-                                        {
-                                            <video class="product-video" muted loop playsinline autoplay>
-                                                <source src="@($"{SD.BaseApiUrl}/{item.VideoUrl}")" type="video/mp4" />
-                                            </video>
-                                        }
-                                    }
-
-                                }
-                            </div>
-                            <div class="pro-nav slick-row-10 slick-arrow-style pt-2 smImgUrl">
-                                @if (Model != null && Model.ProductImageVideos.Count > 0)
-                                {
-                                    foreach (var item in Model.ProductImageVideos)
-                                    {
-                                        if (!string.IsNullOrEmpty(item.ImageUrl) && item.ImageUrl != "-")
-                                        {
-                                            <div class="pro-nav-thumb product-details-img-border img-with-bg">
-                                                <img src="@($"{SD.BaseApiUrl}/{item?.ImageUrl}")" class="figure-img" alt="Thumbnail" />
-                                            </div>
-                                        }
-                                        else if (!string.IsNullOrEmpty(item.VideoUrl) && item.VideoUrl != "-")
-                                        {
-                                            <div class="pro-nav-thumb product-details-img-border img-with-bg">
-                                                <img src="~/assets/img/video/video-icon.svg" class="figure-img" alt="Video Icon" />
-                                            </div>
-                                        }
-                                    }
-                                }
+                                    </ul>
+                                </div>
                             </div>
                         </div>
+
                         <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6">
                             <div class="product-details-des">
                                 @*<h3 class="product-name">@Model.ShapeName @Model.BandWidth @Model.Length @Model.Sku</h3>*@
@@ -143,13 +156,13 @@
                                 <div class="pt-4">
                                     <h5 class="offer-text"><strong>Carat Weight :</strong> @Model.CaratName</h5>
                                     @*<ul class="size-categories-details">
-                @foreach (var item in Model.CaratSizes)
-                {
-                    <li>
-                        <a class="text-black-50" href="#" >@item.Name</a>
-                    </li>
-                }
-            </ul>*@
+                                            @foreach (var item in Model.CaratSizes)
+                                            {
+                                                <li>
+                                                    <a class="text-black-50" href="#" >@item.Name</a>
+                                                </li>
+                                            }
+                                        </ul>*@
                                     <div class="product-countdown">
 
                                         @foreach (var item in Model.CaratSizes)
@@ -641,105 +654,114 @@
     </div>
 </section>
 
-@section Scripts{
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/lightslider@1.1.6/dist/js/lightslider.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+    <script src="/assets/js/plugins/jqueryui.min.js"></script>
+    <script src="/assets/js/plugins/image-zoom.min.js"></script>
+    <script src="/assets/js/plugins/imagesloaded.pkgd.min.js"></script>
     <script>
-        $(document).ready(function () {
-    // Handle color change click
-    $(document).on("click", ".metalColor", function () {
-        const colorId = $(this).attr("metalId");
-        const productId = $(this).attr("productId");
+        let vSlider;
 
-        GetProductByColorId(productId, colorId);
-    });
-});
-function GetProductByColorId(productId, colorId) {
-    debugger;
-    $.ajax({
-        url: '/Products/ProductDetailsByColorId',
-        data: {
-            sku: productId,
-            colorId: parseInt(colorId)
-        },
-        type: 'GET',
-        dataType: 'json'
-    })
-        .done(function (response) {
-            debugger;
-        const baseUrl = '@SD.BaseApiUrl'.replace(/\\/g, '/');
+        function initializeSlider() {
+            if (vSlider) vSlider.destroy();
 
-        // Update basic product info
-        $(".product-name").text(response.title);
-        $(".price-regular[data-sku='" + productId + "']").text(response.Price);
-        $(".price-old[data-sku='" + productId + "']").html('<del>' + response.unitPrice + '</del>');
-        $(".active-metal").text(response.colorName);
-
-        // Update images
-        const images = (response.productImageVideos || []).filter(x => x.imageUrl && x.imageUrl !== "-");
-
-        // Clear main images
-        $(".product-large-slider .pro-large-img img").attr("src", "").attr("alt", "");
-
-        // Prepare navigation HTML
-            let navHtml = "";
-            
-
-        if (images.length > 0) {
-            images.forEach((image, index) => {
-                const imgUrl = baseUrl + '/' + image.imageUrl.replace(/\\/g, '/');
-                const altText = response.colorName + " - Image " + (index + 1);
-
-                // Set main large images
-                $(".product-large-slider .pro-large-img img").eq(index)
-                    .attr("src", imgUrl)
-                    .attr("alt", altText)
-                    .css({
-                        width: '100%',
-                        height: 'auto'
+            vSlider = $("#lightSliderVertical").lightSlider({
+                gallery: true,
+                item: 1,
+                loop: true,
+                slideMargin: 0,
+                thumbItem: 5,
+                galleryMargin: 10,
+                thumbMargin: 10,
+                vertical: true,
+                onSliderLoad: function () {
+                    Fancybox.bind("#lightSliderVertical a", {
+                        groupAll: true,
+                        backFocus: false,
+                        buttons: [
+                            'slideShow',
+                            'share',
+                            'zoom',
+                            'fullScreen',
+                            'thumbs',
+                            'download',
+                            'close'
+                        ]
                     });
-
-                // Build navigation thumbnails
-                
+                }
             });
-            images.forEach((image, index) => {
-                navHtml += `
-                        <div class="slick-slide slick-cloned" data-slick-index="${index + 1}" id="" aria-hidden="true" style="width: 298px;">
-                                <div>
-                                    <div class="pro-nav-thumb product-details-img-border img-with-bg" style="width: 100%; display: inline-block;">
-                                        <img src="${baseUrl + '/' + image.imageUrl.replace(/\\/g, '/')}" class="figure-img" alt="Thumbnail">
-                        </div></div></div>`;
-            });
-
-            $(".smImgUrl").html("");
-            $(".smImgUrl").html(navHtml);
-
-            // Hide extra large images if any
-            $(".product-large-slider .pro-large-img img").slice(images.length).hide();
-            $(".product-large-slider .pro-large-img img").slice(0, images.length).show();
-
         }
 
-        // Set navigation HTML inside correct wrapper
-        
+        $(document).ready(function () {
+            initializeSlider();
 
-        // Reinitialize swiper if needed
-        if (typeof Swiper !== "undefined") {
-            new Swiper('.pro-nav', {
-                slidesPerView: 4,
-                spaceBetween: 10,
-                navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev',
+            $(document).on("click", ".metalColor", function () {
+                const colorId = $(this).attr("metalId");
+                const productId = $(this).attr("productId");
+                GetProductByColorId(productId, colorId);
+            });
+
+            $(window).on('resize', function () {
+                initializeSlider(); // Re-init on resize
+            });
+        });
+
+        function GetProductByColorId(productId, colorId) {
+            $.ajax({
+                url: '/Products/ProductDetailsByColorId',
+                data: {
+                    sku: productId,
+                    colorId: parseInt(colorId)
                 },
+                type: 'GET',
+                dataType: 'json'
+            }).done(function (response) {
+                const baseUrl = '@SD.BaseApiUrl'.replace(/\\/g, '/');
+
+                $(".product-name").text(response.title);
+                $(".price-regular[data-sku='" + productId + "']").text(response.Price);
+                $(".price-old[data-sku='" + productId + "']").html('<del>' + response.unitPrice + '</del>');
+                $(".active-metal").text(response.colorName);
+
+                const images = (response.productImageVideos || []).filter(x => x.imageUrl && x.imageUrl !== "-");
+
+                let sliderHtml = "";
+
+                images.forEach((image, index) => {
+                    const imgUrl = baseUrl + '/' + image.imageUrl.replace(/\\/g, '/');
+                    const altText = response.colorName + " - Image " + (index + 1);
+
+                    sliderHtml += `
+                        <li data-thumb="${imgUrl}">
+                            <a href="${imgUrl}" data-fancybox="gallery" data-caption="${altText}">
+                                <img src="${imgUrl}" alt="${altText}" />
+                            </a>
+                        </li>`;
+                });
+
+                const videos = (response.productImageVideos || []).filter(x => x.videoUrl && x.videoUrl !== "-");
+                let vdoSliderHtml = "";
+
+                videos.forEach((vdo, index) => {
+                    const vdoUrl = baseUrl + '/' + vdo.videoUrl.replace(/\\/g, '/');
+                    const altText = response.colorName + " - Image " + (index + 1);
+
+                    sliderHtml += `
+                        <li data-thumb="/assets/img/video/video-icon.svg">
+                            <a href="${vdoUrl}" data-fancybox="gallery" data-caption="${altText}">
+                                <video muted="" loop="" playsinline="" autoplay="" style="max-width: 100%;">
+                                                                <source src="${vdoUrl}" type="video/mp4">
+                                                            </video>
+                            </a>
+                        </li>`;
+                });
+
+                $("#lightSliderVertical").html(sliderHtml);
+                initializeSlider();
+            }).fail(function (xhr, status, error) {
+                console.error("AJAX Error:", status, error);
             });
         }
-    })
-    .fail(function (xhr, status, error) {
-        console.error('AJAX error:', status, error);
-    });
-}
-
-
-
-
     </script>
 }

@@ -14,8 +14,8 @@
         }
         else
         {
-            <InputText @bind-Value="FolderPath"></InputText>
-            <MudButton OnClick="UploadImages">Upload Images</MudButton>
+            @*<InputText @bind-Value="FolderPath"></InputText>*@
+            @*<MudButton OnClick="UploadImages">Upload Images</MudButton>*@
         }
 
         @if (isUploading)
@@ -88,37 +88,37 @@
         }
     }
 
-    private async Task UploadImages()
-    {
-        if (string.IsNullOrWhiteSpace(FolderPath))
-        {
-            Console.WriteLine("Folder path cannot be empty.");
-            return;
-        }
+    //private async Task UploadImages()
+    //{
+    //    if (string.IsNullOrWhiteSpace(FolderPath))
+    //    {
+    //        Console.WriteLine("Folder path cannot be empty.");
+    //        return;
+    //    }
 
-        // Prepare content for the POST request
-        var content = new MultipartFormDataContent();
-        content.Add(new StringContent(FolderPath), "folderPath");
+    //    // Prepare content for the POST request
+    //    var content = new MultipartFormDataContent();
+    //    content.Add(new StringContent(FolderPath), "folderPath");
 
-        using var httpClient = new HttpClient
-        {
-            BaseAddress = new Uri(SD.BaseApiUrl)
-        };
-        ///FolderPath
-        var response = await httpClient.PostAsync("api/product/BulkProductImagesUploadFromFolder", content);
-        var result = await response.Content.ReadAsStringAsync();
+    //    using var httpClient = new HttpClient
+    //    {
+    //        BaseAddress = new Uri(SD.BaseApiUrl)
+    //    };
+    //    ///FolderPath
+    //    var response = await httpClient.PostAsync("api/product/BulkProductImagesUploadFromFolder", content);
+    //    var result = await response.Content.ReadAsStringAsync();
 
-        // Log the result from the API
-        Console.WriteLine(result);
+    //    // Log the result from the API
+    //    Console.WriteLine(result);
 
-        if (response.IsSuccessStatusCode)
-        {
-            Console.WriteLine("Images uploaded successfully.");
-        }
-        else
-        {
-            Console.WriteLine($"Failed: {result}");
-        }
-    }
+    //    if (response.IsSuccessStatusCode)
+    //    {
+    //        Console.WriteLine("Images uploaded successfully.");
+    //    }
+    //    else
+    //    {
+    //        Console.WriteLine($"Failed: {result}");
+    //    }
+    //}
 
 }
