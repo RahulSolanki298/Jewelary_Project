@@ -1,10 +1,11 @@
 ﻿@model IEnumerable<Models.DiamondShapeData>
+@using Common
 
 @foreach (var item in Model)
 {
 	<div class="shape-btn text-center" shapeId="@item.Id">
 		<input type="hidden" value="@item.Id" />
-		<img src="@item.IconPath" alt="@item.Name" style="height:60px;" />
+		<img src="@SD.ShapeImgUrl@item.IconPath" alt="@item.Name" style="height:60px;" />
 		<span>@item.Name</span>
 	</div>
 }

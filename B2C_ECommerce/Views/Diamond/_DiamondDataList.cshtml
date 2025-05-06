@@ -1,5 +1,5 @@
 ﻿@model Models.DiamondAllDataDto
-
+@using Common;
 
 <div class="row mb-12">
     <div class="col-md-12 ml-auto text-center">
@@ -50,11 +50,11 @@
                         <a href="#" data-certi="@item.Certificate" class="text-decoration-none text-dark clsCertificate">
                             @if (item.LabName == "IGI")
                             {
-                                <img src="~/assets/img/logo/IGI.png" style="width:200px;" />
+                                <img src="@SD.ImgUrl/assets/img/logo/IGI.png" style="width:200px;" />
                             }
                             else if (item.LabName == "GIA")
                             {
-                                <img src="~/assets/img/logo/GIA.png" style="width:200px;" />
+                                <img src="@SD.ImgUrl/assets/img/logo/GIA.png" style="width:200px;" />
                             }
                         </a>
                     </td>
@@ -70,8 +70,8 @@
                     <td><input type="checkbox" style="width:20px;height:20px;" diamondId="@item.Id" /></td>
                     <td>
                         <a class="wishlist-toggle" data-diamondId="@item.Id">
-                            <img src="~/assets/img/Heart-Unchecked.png" class="img-fluid heart-unchecked" style="width:25px;height:25px;" />
-                            <img src="~/assets/img/Heart-Checked.png" class="img-fluid heart-checked" style="width:25px;height:25px;display:none;" />
+                            <img src="@SD.ImgUrl/assets/img/Heart-Unchecked.png" class="img-fluid heart-unchecked" style="width:25px;height:25px;" />
+                            <img src="@SD.ImgUrl/assets/img/Heart-Checked.png" class="img-fluid heart-checked" style="width:25px;height:25px;display:none;" />
                         </a>
                     </td>
                     <td>

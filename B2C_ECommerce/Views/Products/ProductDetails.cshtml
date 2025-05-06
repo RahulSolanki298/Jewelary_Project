@@ -5,6 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     <link href="https://cdn.jsdelivr.net/npm/lightslider@1.1.6/dist/css/lightslider.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/fancyapps/ui@4.0/dist/fancybox.css" rel="stylesheet" />
+
     <style>
 
     .demo {
@@ -78,22 +79,22 @@
                                             {
                                                 if (!string.IsNullOrEmpty(item.ImageUrl) && item.ImageUrl != "-")
                                                 {
-                                                    <li data-thumb="@($"{SD.BaseApiUrl}/{item.ImageUrl}")">
-                                                        <a href="@($"{SD.BaseApiUrl}/{item.ImageUrl}")"
+                                                    <li data-thumb="@($"{SD.ImgUrl}/{item.ImageUrl}")">
+                                                        <a href="@($"{SD.ImgUrl}/{item.ImageUrl}")"
                                                            data-fancybox="gallery"
                                                            data-caption="Product Image"
-                                                           data-thumb="@($"{SD.BaseApiUrl}/{item.ImageUrl}")"
+                                                           data-thumb="@($"{SD.ImgUrl}/{item.ImageUrl}")"
                                                            data-zoomable="true">
-                                                            <img src="@($"{SD.BaseApiUrl}/{item.ImageUrl}")" class="img-zoom" />
+                                                            <img src="@($"{SD.ImgUrl}/{item.ImageUrl}")" class="img-zoom" />
                                                         </a>
                                                     </li>
                                                 }
                                                 else if (!string.IsNullOrEmpty(item.VideoUrl) && item.VideoUrl != "-")
                                                 {
                                                     <li data-thumb="/assets/img/video/video-icon.svg">
-                                                        <a href="@($"{SD.BaseApiUrl}/{item.VideoUrl}")" data-fancybox="gallery" data-caption="Product Video">
+                                                        <a href="@($"{SD.ImgUrl}/{item.VideoUrl}")" data-fancybox="gallery" data-caption="Product Video">
                                                             <video muted loop playsinline autoplay style="max-width: 100%;">
-                                                                <source src="@($"{SD.BaseApiUrl}/{item.VideoUrl}")" type="video/mp4" />
+                                                                <source src="@($"{SD.ImgUrl}/{item.VideoUrl}")" type="video/mp4" />
                                                             </video>
                                                         </a>
                                                     </li>
@@ -146,7 +147,7 @@
                                         {
                                             <li>
                                                 <a href="#" title="@shape.Name">
-                                                    <img class="shape-img" src="@shape.IconPath" title="@shape.Name" />
+                                                    <img class="shape-img" src="@SD.ShapeImgUrl@shape.IconPath" title="@shape.Name" />
                                                 </a>
                                             </li>
                                         }
@@ -657,9 +658,9 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/lightslider@1.1.6/dist/js/lightslider.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
-    <script src="/assets/js/plugins/jqueryui.min.js"></script>
-    <script src="/assets/js/plugins/image-zoom.min.js"></script>
-    <script src="/assets/js/plugins/imagesloaded.pkgd.min.js"></script>
+    <script src="@Url.Content("~/assets/js/plugins/jqueryui.min.js")" asp-append-version="true"></script>
+    <script src="@Url.Content("~/assets/js/plugins/image-zoom.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/plugins/imagesloaded.pkgd.min.js")"></script>
     <script>
         let vSlider;
 
@@ -709,7 +710,7 @@
 
         function GetProductByColorId(productId, colorId) {
             $.ajax({
-                url: '/Products/ProductDetailsByColorId',
+                url: '@Url.Action("ProductDetailsByColorId", "Products")',
                 data: {
                     sku: productId,
                     colorId: parseInt(colorId)
@@ -717,7 +718,7 @@
                 type: 'GET',
                 dataType: 'json'
             }).done(function (response) {
-                const baseUrl = '@SD.BaseApiUrl'.replace(/\\/g, '/');
+                const baseUrl = '@SD.ImgUrl'.replace(/\\/g, '/');
 
                 $(".product-name").text(response.title);
                 $(".price-regular[data-sku='" + productId + "']").text(response.Price);

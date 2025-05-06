@@ -286,7 +286,7 @@
                 });
 
                 $("#diamond-list-container").on("click", "#diamondTable .wishlist-toggle", function () {
-                    debugger;
+                    
                     let diamondId = $(this).data("diamondid");
                     let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
 
@@ -307,7 +307,6 @@
             });
 
             $("#btnCompareDiamonds").on("click", function () {
-                    debugger;
                     selectedDiamonds = JSON.parse(localStorage.getItem('selectedDiamonds')) || [];
                     if (selectedDiamonds.length > 0) {
                         $.ajax({
@@ -1007,8 +1006,7 @@
             {
                 showLoader();
                 return $.ajax({
-                    //url: '@Url.Action("GetDiamondList", "Diamond")', // Change this to your actual route
-                    url: '/Diamond/GetDiamondList', // Change this to your actual route
+                    url: '@Url.Action("GetDiamondList", "Diamond")', // Change this to your actual route
                     type: 'POST',
                     data: {
                         diamondFilters: diamondFilters,

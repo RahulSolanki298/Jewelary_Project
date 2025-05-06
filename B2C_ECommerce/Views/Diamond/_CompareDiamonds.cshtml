@@ -56,7 +56,7 @@
 
                           </tbody>
                         </table>
-                        <a class="btn btn-sm btn-dark " href="/Diamond/GetSingleDiamond?diamondId=@item.Id" target="_blank">
+                        <a class="btn btn-sm btn-dark " href="@Url.Action("GetSingleDiamond","Diamond")?diamondId=@item.Id" target="_blank">
                             View Diamond
                         </a>
                         <button class="btn btn-sm btn-dark btnWishlist" data-diamondId="@item.Id">Add to Wishlist</button>

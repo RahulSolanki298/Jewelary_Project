@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace B2C_ECommerce.Controllers
 {
+    [Route("JewelFacet/Wishlist")]
     public class WishlistController : Controller
     {
         private readonly IDiamondService _diamondService;

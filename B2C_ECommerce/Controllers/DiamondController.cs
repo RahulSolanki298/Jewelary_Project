@@ -7,6 +7,8 @@ using Models;
 
 namespace B2C_ECommerce.Controllers
 {
+
+    [Route("JewelFacet/Diamond")]
     public class DiamondController : Controller
     {
         private readonly IDiamondService _diamondService;

@@ -11,7 +11,7 @@
                 @foreach (var item in Model.Shapes)
                 {
                     <div class="shape-item" shapeId="@item.Id">
-                        <img src="@item.IconPath" alt="@item.Name">
+                        <img src="@SD.ShapeImgUrl@item.IconPath" alt="@item.Name">
                         <span class="shape-name">@item.Name</span>
                     </div>
                 }
@@ -24,13 +24,14 @@
         <h4>Metal</h4>
         @if (Model.Colors != null)
         {
-            @*<div class="color-grid">*@
             @foreach (var item in Model.Colors)
             {
                 <div class="metal-item metal-grp" metalId="@item.Id">
-                        <input class="checkbox metalcheckbox" metalId="@item.Id" type="checkbox"><div class="metal-color @item.SymbolName"></div> @item.Name</div>
+                        <input class="checkbox metalcheckbox" metalId="@item.Id" type="checkbox">
+                        <div class="metal-color @item.SymbolName"></div> 
+                        @item.Name
+                </div>
             }
-            @*</div>*@
         }
     </div>
 

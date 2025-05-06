@@ -50,7 +50,6 @@
 
                 var wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
 
-                // Convert both sides to strings
                 wishlist = wishlist.filter(id => String(id) !== String(productId));
 
                 localStorage.setItem('wishlist', JSON.stringify(wishlist));
@@ -66,14 +65,14 @@
         function getWishList() {
             if (wishlist.length > 0) {
                 $.ajax({
-                    url: '/Wishlist/GetWishListByIds', // Change this to your actual route
+                    url: '@Url.Action("GetWishListByIds", "Wishlist")',
                     type: 'GET',
                     data: {
-                        diamondIds: wishlist.join(',') // Send the array as a parameter
+                        diamondIds: wishlist.join(',')
                     },
                     success: function (data) {
-                        $("#diamondComparisonContent").html(''); // Clear the existing content
-                        $("#diamondComparisonContent").html(data); // Insert the new content returned from the server
+                        $("#diamondComparisonContent").html('');
+                        $("#diamondComparisonContent").html(data);
                     },
                     error: function (error) {
                         console.error('Error fetching data:', error);

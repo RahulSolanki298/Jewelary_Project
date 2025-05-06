@@ -9,6 +9,8 @@ using Newtonsoft.Json;
 
 namespace B2C_ECommerce.Controllers
 {
+
+    [Route("JewelFacet/Products")]
     public class ProductsController : Controller
     {
         private readonly IProductService _productRepository;

@@ -33,8 +33,8 @@
                 <div class="product-item">
                     <figure class="product-thumb product-box-with-border media-container">
                         <a class="img-with-bg" href="@Url.Action("ProductDetails", "Products", new { id = item.Id })">
-                            <img class="pri-img media-item" src="@($"{SD.BaseApiUrl}/{priImg}")" />
-                            <img class="sec-img media-item" src="@($"{SD.BaseApiUrl}/{secImg}")" />
+                            <img class="pri-img media-item" src="@($"{SD.ImgUrl}/{priImg}")" />
+                            <img class="sec-img media-item" src="@($"{SD.ImgUrl}/{secImg}")" />
 
                             @*<video class="product-video" muted loop preload="none" playsinline>
                         <source src="@($"{SD.BaseApiUrl}/{vdoUrl}")" type="video/mp4" />
@@ -86,7 +86,7 @@
                                 {
                                     <li>
                                         <a href="#" title="@shape.Name">
-                                            <img src="@shape.IconPath" />
+                                            <img src="@SD.ShapeImgUrl@shape.IconPath" />
                                         </a>
                                     </li>
                                 }
