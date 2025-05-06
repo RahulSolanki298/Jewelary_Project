@@ -76,7 +76,7 @@
             <div class="col-lg-12 col-md-6 order-2 order-md-1">
                 <div class="text-lg-center padding-top-30">
                     <div class="product-amount">
-                        <p id="NoItems"><span class="f-16"> 250</span> <span class="f-16">Items</span></p>
+                        <p id="NoItems"><span class="f-16" id="txtNoOfProducts"> 250</span> <span class="f-16">Items</span></p>
                     </div>
                 </div>
             </div>
@@ -242,7 +242,7 @@
 @section Scripts {
     @*<script src="assets/js/plugins/slick.min.js"></script>*@
 
-    <script>
+<script>
             var page = 1;
             var rangeVal = 10;
 
@@ -476,7 +476,7 @@
             function GetProductFilters()
             {
                $.ajax({
-                   url: '/Products/GetProductFilters',
+                   url: '@Url.Action("GetProductFilters", "Products")',
                    type: 'GET',
                    dataType: 'html'
                })
@@ -549,10 +549,10 @@
                 $("#maxCarat").val(maxCarat);
             }
 
-            async function GetProducts(filters, pageNumber = 1, pageSize = 10) {
+        async function GetProducts(filters, pageNumber = 1, pageSize = 10) {
                     showLoader();
                     return $.ajax({
-                        url: '/Products/GetProductList', // Ensure this route matches your controller/action
+                        url: '@Url.Action("GetProductList", "Products")', // Ensure this route matches your controller/action
                         type: 'POST',
                         data: {
                             filters: filters,  // Ensure this matches your action parameter name if model binding
@@ -562,6 +562,7 @@
                         success: function (data) {
                             $('#MyProductsImg').html('');   // Clear existing content
                             $('#MyProductsImg').html(data); // Use 'data' instead of 'response'
+                            $("#txtNoOfProducts").text("0");
                             hideLoader();
                         },
                         error: function (error) {
@@ -587,7 +588,7 @@
 
             function GetProductByColorId(productId, colorId) {
                 $.ajax({
-                    url: '/Products/ProductDetailsByColorId',
+                    url: '@Url.Action("ProductDetailsByColorId", "Products")',
                     data: {
                         sku: productId,
                         colorId: parseInt(colorId),
@@ -651,7 +652,7 @@
 
             function GetProductByCaratId(productId, caratId) {
                 $.ajax({
-                    url: '/Products/ProductDetailsByCaratId',
+                    url: '@Url.Action("ProductDetailsByCaratId", "Products")',
                     data: {
                         sku: productId,
                         caratId: parseInt(caratId)
@@ -720,6 +721,6 @@
 
            return formatted;
         }
-    </script>
+</script>
 
 }
