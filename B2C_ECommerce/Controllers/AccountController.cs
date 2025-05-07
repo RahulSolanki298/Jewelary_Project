@@ -13,7 +13,6 @@ using Newtonsoft.Json;
 namespace B2C_ECommerce.Controllers
 {
 
-    [Route("JewelFacet/Account")]
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;

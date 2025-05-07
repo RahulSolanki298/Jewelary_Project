@@ -6,6 +6,8 @@
 @using System.Net.Http.Json
 @using global::Models
 @using Business.Repository.IRepository
+@inject IJSRuntime JS
+
 
 <MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4">Account</MudText>
 <MudTabs Elevation="25" Color="Color.Transparent" Rounded="true" PanelClass="mt-6">
@@ -20,14 +22,14 @@
                     </MudCardHeader>
                     <MudCardContent>
                         <div class="d-flex justify-center mb-4">
-                            <MudAvatar Image="@AvatarImageLink" Style="height:100px; width:100px;">
+                            <MudAvatar Image="@SupplierData.SupplierInfo.ProfileImage" Style="height:100px; width:100px;">
                                 @if (AvatarImageLink == null)
                                 {
                                     <MudIcon Icon="@AvatarIcon" Size="Size.Large"></MudIcon>
                                 }
                             </MudAvatar>
                         </div>
-                        <MudText Align="Align.Center">@FirstName @LastName</MudText>
+                        <MudText Align="Align.Center">@SupplierData.SupplierInfo.FirstName @SupplierData.SupplierInfo.LastName</MudText>
                         <MudText Align="Align.Center">@JobTitle</MudText>
                     </MudCardContent>
                     <MudCardActions Class="d-flex justify-center">
@@ -45,10 +47,10 @@
                     <MudCardContent>
                         <MudGrid>
                             <MudItem xs="12" md="6">
-                                <MudTextField @bind-Value="@FirstName" Label="First Name" Variant="Variant.Outlined" />
+                                <MudTextField @bind-Value="@SupplierData.SupplierInfo.FirstName" Label="First Name" Variant="Variant.Outlined" />
                             </MudItem>
                             <MudItem xs="12" md="6">
-                                <MudTextField @bind-Value="@LastName" Label="Last Name" Variant="Variant.Outlined" />
+                                <MudTextField @bind-Value="@SupplierData.SupplierInfo.LastName" Label="Last Name" Variant="Variant.Outlined" />
                             </MudItem>
                             <MudItem xs="12" md="6">
                                 <MudTextField @bind-Value="JobTitle" Label="Job Title" Variant="Variant.Outlined" />
@@ -85,7 +87,7 @@
                 <MudCardContent>
                     <MudGrid>
                         <MudItem xs="12" md="6">
-                            <MudTextField @bind-Value="FirstName" Label="Company Name" Variant="Variant.Outlined" />
+                            <MudTextField @bind-Value="@compDT.CompanyName" Label="Company Name" Variant="Variant.Outlined" />
                         </MudItem>
                         <MudItem xs="12" md="6">
                             <MudTextField @bind-Value="LastName" Label="First Name" Variant="Variant.Outlined" />
@@ -252,6 +254,7 @@
     private bool IsLoading { get; set; } = false;
 
     public SupplierDataDTO SupplierData = new SupplierDataDTO();
+    public CompanyDataDTO compDT = new CompanyDataDTO();
 
     [Inject]
     public HttpClient Http { get; set; }
@@ -261,7 +264,14 @@
 
     protected override async Task OnInitializedAsync()
     {
-        SupplierData = await Http.GetFromJsonAsync<SupplierDataDTO>($"{SD.BaseApiUrl}/api/get-user-profile/{userId}");
+        userId = await JS.InvokeAsync<string>("localStorageInterop.getUserId");
+
+        SupplierData = await Http.GetFromJsonAsync<SupplierDataDTO>($"{SD.BaseApiUrl}/api/account/get-user-profile/{userId}");
+        if (SupplierData.CompanyInfo != null)
+        {
+            compDT = SupplierData.CompanyInfo;
+        }
+    
     }
 
 

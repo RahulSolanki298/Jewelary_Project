@@ -9,7 +9,6 @@ using B2C_ECommerce.Models;
 
 namespace B2C_ECommerce.Controllers
 {
-    [Route("JewelFacet/Home")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

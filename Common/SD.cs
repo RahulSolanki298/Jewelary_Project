@@ -79,9 +79,9 @@
         public static string ShapeImgUrl = "http://192.168.100.153:8083/JewelFacet/";
         public static string ImgUrl = "http://192.168.100.153:8082/JewelFacet";
         //public static string BaseApiUrl = "https://localhost:44302"; // https://jswebapi.com
-        //public static string BaseApiUrl = "https://localhost:4050"; // https://jswebapi.com
+        public static string BaseApiUrl = "https://localhost:4050"; // https://jswebapi.com
         // public static string BaseApiUrl = "http://192.168.29.11:8082"; // https://jswebapi.com
-        public static string BaseApiUrl = "http://192.168.100.153:8082"; // https://jswebapi.com
+        //public static string BaseApiUrl = "http://192.168.100.153:8082"; // https://jswebapi.com
 
 
 
