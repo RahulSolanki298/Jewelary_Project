@@ -76,6 +76,9 @@
         public static string IGI = "IGI";
         public static string GIA = "GIA";
 
+// LOCAL
+
+
         public static string ShapeImgUrl = "http://192.168.100.153:8083/JewelFacet";
         public static string ImgUrl = "http://192.168.100.153/JewelFacet";
         //public static string BaseApiUrl = "https://localhost:44302"; // https://jswebapi.com

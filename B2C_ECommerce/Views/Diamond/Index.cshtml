@@ -390,7 +390,8 @@
 
                 try {
                     // Fetch data from the server (child partial view)
-                    const response = await fetch('/Diamond/GetShapeList');
+                    //const response = await fetch('/Diamond/GetShapeList');
+                    const response = await fetch('/JewelFacet/Diamond/GetShapeList');
 
                     if (!response.ok) {
                         throw new Error('Failed to fetch shapes');
@@ -1006,7 +1007,7 @@
             {
                 showLoader();
                 return $.ajax({
-                    url: '/JewelFacet/Products/GetDiamondList',
+                    url: '/JewelFacet/Diamond/GetDiamondList',
                     //url: '@Url.Action("GetDiamondList", "Diamond")', // Change this to your actual route
                     type: 'POST',
                     data: {
