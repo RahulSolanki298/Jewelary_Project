@@ -311,7 +311,7 @@
                     if (selectedDiamonds.length > 0) {
                         $.ajax({
                             //url: '@Url.Action("GetDiamondsByIds", "Diamond")', // Change this to your actual route
-                            url: '/Diamond/GetDiamondsByIds', // Change this to your actual route
+                            url: '/JewelFacet/Diamond/GetDiamondsByIds', // Change this to your actual route
                             type: 'GET',
                             data: {
                                 diamondIds: selectedDiamonds.join(',') // Send the array as a parameter
@@ -1006,7 +1006,8 @@
             {
                 showLoader();
                 return $.ajax({
-                    url: '@Url.Action("GetDiamondList", "Diamond")', // Change this to your actual route
+                    url: '/JewelFacet/Products/GetDiamondList',
+                    //url: '@Url.Action("GetDiamondList", "Diamond")', // Change this to your actual route
                     type: 'POST',
                     data: {
                         diamondFilters: diamondFilters,

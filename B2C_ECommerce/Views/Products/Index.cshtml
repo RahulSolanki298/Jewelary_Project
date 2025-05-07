@@ -243,7 +243,7 @@
 @section Scripts {
     @*<script src="assets/js/plugins/slick.min.js"></script>*@
 
-    <script>
+<script>
             var page = 1;
             var rangeVal = 10;
 
@@ -477,7 +477,8 @@
             function GetProductFilters()
             {
                $.ajax({
-                   url: '@Url.Action("GetProductFilters", "Products")',
+                   //url: '@Url.Action("GetProductFilters", "Products")',
+                   url: '/JewelFacet/Products/GetProductFilters',
                    type: 'GET',
                    dataType: 'html'
                })
@@ -553,7 +554,8 @@
         async function GetProducts(filters, pageNumber = 1, pageSize = 10) {
                     showLoader();
                     return $.ajax({
-                        url: '@Url.Action("GetProductList", "Products")', // Ensure this route matches your controller/action
+                       // url: '@Url.Action("GetProductList", "Products")', // Ensure this route matches your controller/action
+                        url: '/JewelFacet/Products/GetProductList',
                         type: 'POST',
                         data: {
                             filters: filters,  // Ensure this matches your action parameter name if model binding
@@ -589,7 +591,9 @@
 
             function GetProductByColorId(productId, colorId) {
                 $.ajax({
-                    url: '@Url.Action("ProductDetailsByColorId", "Products")',
+                    //url: '@Url.Action("ProductDetailsByColorId", "Products")',
+                    url: '/JewelFacet/Products/ProductDetailsByColorId',
+
                     data: {
                         sku: productId,
                         colorId: parseInt(colorId),
@@ -653,7 +657,8 @@
 
             function GetProductByCaratId(productId, caratId) {
                 $.ajax({
-                    url: '@Url.Action("ProductDetailsByCaratId", "Products")',
+                   // url: '@Url.Action("ProductDetailsByCaratId", "Products")',
+                    url: '/JewelFacet/Products/ProductDetailsByCaratId',
                     data: {
                         sku: productId,
                         caratId: parseInt(caratId)
@@ -722,6 +727,6 @@
 
            return formatted;
         }
-    </script>
+</script>
 
 }
