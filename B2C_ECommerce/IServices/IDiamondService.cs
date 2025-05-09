@@ -12,5 +12,17 @@ namespace B2C_ECommerce.IServices
         Task<IEnumerable<DiamondShapeData>> GetShapeListAsync();
 
         Task<IEnumerable<DiamondData>> GetSelectedDiamondByIds(int[] diamondIds);
+
+        Task<IEnumerable<DiamondColorData>> GetColorListAsync();
+
+        Task<IEnumerable<DiamondPropertyDTO>> GetCutListAsync();
+
+        Task<TableRangeDTO> GetTableRangesAsync();
+
+        Task<PriceRanges> GetProductPriceRangeData();
+
+        Task<IEnumerable<DiamondPropertyDTO>> GetCaratListAsync();
+
+        Task<DepthDTO> GetDepthRangesAsync();
     }
 }

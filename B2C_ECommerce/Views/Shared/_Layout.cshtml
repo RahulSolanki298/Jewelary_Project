@@ -5,19 +5,22 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title> @ViewData["Title"]</title>
 	<link rel="icon" type="image/x-icon" asp-href-include="~/assets/img/logo/logo_QKP_icon.ico">
-	@*<link href="/s/css?family=Lato:300,300i,400,400i,700,900" rel="stylesheet">*@
-	<link rel="stylesheet" asp-href-include="~/assets/css/vendor/bootstrap.min.css">
-	<link rel="stylesheet" asp-href-include="~/assets/css/vendor/pe-icon-7-stroke.css">
-	<link rel="stylesheet" asp-href-include="~/assets/css/vendor/font-awesome.min.css">
-	<link rel="stylesheet" asp-href-include="~/assets/css/plugins/slick.min.css">
-	<link rel="stylesheet" asp-href-include="~/assets/css/plugins/animate.css">
-	<link rel="stylesheet" asp-href-include="~/assets/css/plugins/nice-select.css">
-	<link rel="stylesheet" asp-href-include="~/assets/css/plugins/jqueryui.min.css">
-	<link asp-href-include="~/assets/css/bootstrap-multiselect.css" rel="stylesheet" />
-    <link asp-href-include="~/assets/css/hover.css" rel="stylesheet" />
-	<link rel="stylesheet" asp-href-include="~/assets/css/style.css">
-	<link rel="stylesheet" asp-href-include="~/css/site.css">
-	
+    <environment include="Development">
+        <link rel="stylesheet" href="~/assets/css/vendor/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/assets/css/vendor/pe-icon-7-stroke.css" />
+        <link rel="stylesheet" href="~/assets/css/vendor/font-awesome.min.css" />
+        <link rel="stylesheet" href="~/assets/css/plugins/slick.min.css" />
+        <link rel="stylesheet" href="~/assets/css/plugins/animate.css" />
+        <link rel="stylesheet" href="~/assets/css/plugins/nice-select.css" />
+        <link rel="stylesheet" href="~/assets/css/plugins/jqueryui.min.css" />
+        <link rel="stylesheet" href="~/assets/css/bootstrap-multiselect.css" />
+        <link rel="stylesheet" href="~/assets/css/hover.css" />
+        <link rel="stylesheet" href="~/assets/css/style.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/assets/css/site.min.css" asp-append-version="true" />
+    </environment>
 </head>
 <body>
     @Html.Partial("_Header")
@@ -211,38 +214,31 @@
             </div>
         </div>
     </div>
-    <!-- Modernizer JS -->
-    <script src="@Url.Content("~/assets/js/vendor/modernizr-3.6.0.min.js")" asp-append-version="true"></script>
 
-    <!-- jQuery JS -->
-    <script src="@Url.Content("~/assets/js/vendor/jquery-3.6.0.min.js")" asp-append-version="true"></script>
-    <!-- Bootstrap JS -->
-    <script src="@Url.Content("~/assets/js/vendor/bootstrap.bundle.min.js")" asp-append-version="true"></script>
-    <!-- slick Slider JS -->
-    <script src="@Url.Content("~/assets/js/plugins/slick.min.js")" asp-append-version="true"></script>
-    <!-- Countdown JS -->
-    <script src="@Url.Content("~/assets/js/plugins/countdown.min.js")" asp-append-version="true"></script>
-    <!-- Nice Select JS -->
-    <script src="@Url.Content("~/assets/js/plugins/nice-select.min.js")" asp-append-version="true"></script>
-    <!-- jquery UI JS -->
-    <script src="@Url.Content("~/assets/js/plugins/jqueryui.min.js")" asp-append-version="true"></script>
-    <!-- Image zoom JS -->
-    <script src="@Url.Content("~/assets/js/plugins/image-zoom.min.js")" asp-append-version="true"></script>
-    <!-- Images loaded JS -->
-    <script src="@Url.Content("~/assets/js/plugins/imagesloaded.pkgd.min.js")" asp-append-version="true"></script>
-    <!-- mail-chimp active js -->
-    <script src="@Url.Content("~/assets/js/plugins/ajaxchimp.js")" asp-append-version="true"></script>
-    <!-- contact form dynamic js -->
-    <script src="@Url.Content("~/assets/js/plugins/ajax-mail.js")" asp-append-version="true"></script>
-    <!-- google map api -->
+    <environment include="Development">
+        <script src="~/assets/js/vendor/modernizr-3.6.0.min.js"></script>
+        <script src="~/assets/js/vendor/jquery-3.6.0.min.js"></script>
+        <script src="~/assets/js/vendor/bootstrap.bundle.min.js"></script>
+        <script src="~/assets/js/plugins/slick.min.js"></script>
+        <script src="~/assets/js/plugins/countdown.min.js"></script>
+        <script src="~/assets/js/plugins/nice-select.min.js"></script>
+        <script src="~/assets/js/plugins/jqueryui.min.js"></script>
+        <script src="~/assets/js/plugins/image-zoom.min.js"></script>
+        <script src="~/assets/js/plugins/imagesloaded.pkgd.min.js"></script>
+        <script src="~/assets/js/plugins/ajaxchimp.js"></script>
+        <script src="~/assets/js/plugins/ajax-mail.js"></script>
+        <script src="~/assets/js/plugins/google-map.js"></script>
+        <script src="~/assets/js/bootstrap-multiselect.js"></script>
+        <script src="~/assets/js/main.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/assets/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+
+    <!-- External scripts -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfmCVTjRI007pC1Yk2o2d_EhgkjTsFVN8"></script>
-    <!-- google map active js -->
-    <script src="@Url.Content("~/assets/js/plugins/google-map.js")" asp-append-version="true"></script>
 
-    <script src="@Url.Content("~/assets/js/bootstrap-multiselect.js")" asp-append-version="true"></script>
-
-    <!-- Main JS -->
-    <script src="@Url.Content("~/assets/js/main.js")" asp-append-version="true"></script>
+    <!-- Inline script stays the same -->
     <script>
         $(document).ready(function () {
             getWishlistCounter();
@@ -252,6 +248,7 @@
             $("#wishlistCounter").text(wishlist.length);
         }
     </script>
+
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

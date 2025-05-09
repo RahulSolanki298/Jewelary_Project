@@ -73,36 +73,6 @@ namespace B2C_ECommerce.Services
             }
         }
 
-        public async Task<IEnumerable<DiamondShapeData>> GetShapeListAsync()
-        {
-            try
-            {
-                //Get-Collection-List
-                var requestUrl = $"{SD.BaseApiUrl}/api/diamondproperty/get-shape-list";
-
-                using var response = await _httpClient.GetAsync(requestUrl);
-
-                response.EnsureSuccessStatusCode(); // Throws exception if status code is not successful.
-
-                if (response.Content is null)
-                {
-                    throw new Exception("API response content is null.");
-                }
-
-                var result = await response.Content.ReadFromJsonAsync<List<DiamondShapeData>>();
-
-                return result ?? new List<DiamondShapeData>();
-            }
-            catch (HttpRequestException httpEx)
-            {
-                throw new Exception($"HTTP request error: {httpEx.Message}", httpEx);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error fetching sub categories: {ex.Message}", ex);
-            }
-        }
-
         public async Task<IEnumerable<DiamondData>> GetSelectedDiamondByIds(int[] diamondIds)
         {
             try
@@ -134,8 +104,215 @@ namespace B2C_ECommerce.Services
                 throw new Exception($"Error fetching diamond data: {ex.Message}", ex);
             }
         }
+        
+        public async Task<IEnumerable<DiamondShapeData>> GetShapeListAsync()
+        {
+            try
+            {
+                //Get-Collection-List
+                var requestUrl = $"{SD.BaseApiUrl}/api/diamondproperty/get-shape-list";
 
+                using var response = await _httpClient.GetAsync(requestUrl);
 
+                response.EnsureSuccessStatusCode(); // Throws exception if status code is not successful.
+
+                if (response.Content is null)
+                {
+                    throw new Exception("API response content is null.");
+                }
+
+                var result = await response.Content.ReadFromJsonAsync<List<DiamondShapeData>>();
+
+                return result ?? new List<DiamondShapeData>();
+            }
+            catch (HttpRequestException httpEx)
+            {
+                throw new Exception($"HTTP request error: {httpEx.Message}", httpEx);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching sub categories: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<IEnumerable<DiamondColorData>> GetColorListAsync()
+        {
+            try
+            {
+                //Get-Collection-List
+                var requestUrl = $"{SD.BaseApiUrl}/api/diamondproperty/get-color-list";
+
+                using var response = await _httpClient.GetAsync(requestUrl);
+
+                response.EnsureSuccessStatusCode(); // Throws exception if status code is not successful.
+
+                if (response.Content is null)
+                {
+                    throw new Exception("API response content is null.");
+                }
+
+                var result = await response.Content.ReadFromJsonAsync<List<DiamondColorData>>();
+
+                return result ?? new List<DiamondColorData>();
+            }
+            catch (HttpRequestException httpEx)
+            {
+                throw new Exception($"HTTP request error: {httpEx.Message}", httpEx);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching sub categories: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<IEnumerable<DiamondPropertyDTO>> GetCaratListAsync()
+        {
+            try
+            {
+                //Get-Collection-List
+                var requestUrl = $"{SD.BaseApiUrl}/api/diamondproperty/get-carat-list";
+
+                using var response = await _httpClient.GetAsync(requestUrl);
+
+                response.EnsureSuccessStatusCode(); // Throws exception if status code is not successful.
+
+                if (response.Content is null)
+                {
+                    throw new Exception("API response content is null.");
+                }
+
+                var result = await response.Content.ReadFromJsonAsync<List<DiamondPropertyDTO>>();
+
+                return result ?? new List<DiamondPropertyDTO>();
+            }
+            catch (HttpRequestException httpEx)
+            {
+                throw new Exception($"HTTP request error: {httpEx.Message}", httpEx);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching sub categories: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<IEnumerable<DiamondPropertyDTO>> GetCutListAsync()
+        {
+            try
+            {
+                //Get-Collection-List
+                var requestUrl = $"{SD.BaseApiUrl}/api/diamondproperty/get-cut-list";
+
+                using var response = await _httpClient.GetAsync(requestUrl);
+
+                response.EnsureSuccessStatusCode(); // Throws exception if status code is not successful.
+
+                if (response.Content is null)
+                {
+                    throw new Exception("API response content is null.");
+                }
+
+                var result = await response.Content.ReadFromJsonAsync<List<DiamondPropertyDTO>>();
+
+                return result ?? new List<DiamondPropertyDTO>();
+            }
+            catch (HttpRequestException httpEx)
+            {
+                throw new Exception($"HTTP request error: {httpEx.Message}", httpEx);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching sub categories: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<TableRangeDTO> GetTableRangesAsync()
+        {
+            try
+            {
+                //Get-Collection-List
+                var requestUrl = $"{SD.BaseApiUrl}/api/diamondproperty/get-table-ranges";
+
+                using var response = await _httpClient.GetAsync(requestUrl);
+
+                response.EnsureSuccessStatusCode(); // Throws exception if status code is not successful.
+
+                if (response.Content is null)
+                {
+                    throw new Exception("API response content is null.");
+                }
+
+                var result = await response.Content.ReadFromJsonAsync<TableRangeDTO>();
+
+                return result ?? new TableRangeDTO();
+            }
+            catch (HttpRequestException httpEx)
+            {
+                throw new Exception($"HTTP request error: {httpEx.Message}", httpEx);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching sub categories: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<DepthDTO> GetDepthRangesAsync()
+        {
+            try
+            {
+                //Get-Collection-List
+                var requestUrl = $"{SD.BaseApiUrl}/api/diamondproperty/get-depth-ranges";
+
+                using var response = await _httpClient.GetAsync(requestUrl);
+
+                response.EnsureSuccessStatusCode(); // Throws exception if status code is not successful.
+
+                if (response.Content is null)
+                {
+                    throw new Exception("API response content is null.");
+                }
+
+                var result = await response.Content.ReadFromJsonAsync<DepthDTO>();
+
+                return result ?? new DepthDTO();
+            }
+            catch (HttpRequestException httpEx)
+            {
+                throw new Exception($"HTTP request error: {httpEx.Message}", httpEx);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching sub categories: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<PriceRanges> GetProductPriceRangeData()
+        {
+            try
+            {
+                var requestUrl = $"{SD.BaseApiUrl}/api/diamondProperty/get-price-ranges";
+
+                using var response = await _httpClient.GetAsync(requestUrl);
+
+                response.EnsureSuccessStatusCode(); // Throws exception if status code is not successful.
+
+                if (response.Content is null)
+                {
+                    throw new Exception("API response content is null.");
+                }
+
+                var result = await response.Content.ReadFromJsonAsync<PriceRanges>();
+
+                return result ?? new PriceRanges();
+            }
+            catch (HttpRequestException httpEx)
+            {
+                throw new Exception($"HTTP request error: {httpEx.Message}", httpEx);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching diamond list: {ex.Message}", ex);
+            }
+        }
 
     }
 }
