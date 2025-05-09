@@ -32,13 +32,20 @@ namespace B2C_ECommerce.Controllers
         public async Task<IActionResult> GetShapeList()
         {
             var response = await _diamondService.GetShapeListAsync();
-            return PartialView("~/Views/Diamond/_ShapeList.cshtml", response);
+            return PartialView("_ShapeList", response);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetCaratList()
         {
             var response = await _diamondService.GetCaratListAsync();
+            return Json(response);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCaratSizeRangeAsync()
+        {
+            var response = await _diamondService.GetCaratSizeRangeAsync();
             return Json(response);
         }
 
@@ -60,7 +67,7 @@ namespace B2C_ECommerce.Controllers
         public async Task<IActionResult> GetClarityList()
         {
             var response = await _diamondService.GetClarityListAsync();
-            return Json(response);
+                return Json(response);
         }
 
         [HttpGet]
@@ -86,6 +93,57 @@ namespace B2C_ECommerce.Controllers
                                   .ToArray();
             var response = await _diamondService.GetSelectedDiamondByIds(diamondIdArray);
             return PartialView("~/Views/Diamond/_CompareDiamonds.cshtml", response);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTableRanges()
+        {
+            var response = await _diamondService.GetTableRangesAsync();
+            return Json(response);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDepthRanges()
+        {
+            var response = await _diamondService.GetDepthRangesAsync();
+            return Json(response);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetRatioRanges()
+        {
+            var response = await _diamondService.GetRatioRangesAsync();
+            return Json(response);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPolishList()
+        {
+            var response = await _diamondService.GetPolishListAsync();
+            return Json(response);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetFluorList()
+        {
+            var response = await _diamondService.GetFluorListAsync();
+            return Json(response);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetSymmetryList()
+        {
+            var response = await _diamondService.GetSymmetryListAsync();
+            return Json(response);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetPriceRange()
+        {
+            var response = await _diamondService.GetProductPriceRangeData();
+            return Json(response);
         }
     }
 }

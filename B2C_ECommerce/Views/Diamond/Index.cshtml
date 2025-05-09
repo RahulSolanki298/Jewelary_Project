@@ -375,7 +375,7 @@
                 });
             });
 
-            $(document).on("click", ".clsCertificate", function (e) {
+        $(document).on("click", ".clsCertificate", function (e) {
                 e.preventDefault();
 
                 var certUrl = $(this).data("certi"); // get value from data-certi attribute
@@ -385,7 +385,7 @@
                 }
             });
 
-           function GetShapeDesign() {
+        function GetShapeDesign() {
                 const $shapeListContainer = $('#filter-box #shape-list');
 
                 $.ajax({
@@ -402,46 +402,49 @@
                 });
             }
 
+        async function GetCarat()
+        {
+            debugger;
+            try {
+                const response = await $.ajax({
+                    url: '@Url.Action("GetCaratSizeRangeAsync", "Diamond")',
+                    method: 'GET',
+                    dataType: 'json',
+                });
 
-            async function GetCarat() {
-                    try {
-                        var response = await $.ajax({
-                            url: '@Url.Action("GetCaratList", "Diamond")', // API endpoint
-                            method: 'GET',
-                            dataType: 'json',
-                        });
-
-                        $("#carat-size-slider").slider({
-                            range: true,
-                            min: response.MinCaratSize,
-                            max: response.MaxCaratSize,
-                            step: 0.1,
-                            values: [response.MinCaratSize, response.MaxCaratSize],
-                            slide: function (event, ui) {
-
-                                $("#minCarat").val(ui.values[0]);
-                                $("#maxCarat").val(ui.values[1]);
-
-                                diamondFilters.FromCarat=ui.values[0];
-                                diamondFilters.ToCarat=ui.values[1];
-
-                                getDiamondDataList(diamondFilters,page,rangeVal);
-                            }
-                        });
-
-                        // Set initial values
-                        $("#minCarat").val(response.MinCaratSize);
-                        $("#maxCarat").val(response.MaxCaratSize);
-                        diamondFilters.FromCarat = $("#minCarat").val();
-                        diamondFilters.ToCarat = $("#maxCarat").val();
-
-                    } catch (error) {
-                        console.error('Error fetching data: ', error);
-                        $('#filter-box #shape-list').html('<p>Failed to load shapes</p>');
-                    }
+                if (!response || typeof response.MaxCaratSize !== 'number') {
+                    throw new Error('Invalid response structure');
                 }
 
-            async function GetColorData() {
+                $("#carat-size-slider").slider({
+                    range: true,
+                    min: response.MinCaratSize,
+                    max: response.MaxCaratSize,
+                    step: 0.1,
+                    values: [response.MinCaratSize, response.MaxCaratSize],
+                    slide: function (event, ui) {
+                        $("#minCarat").val(ui.values[0]);
+                        $("#maxCarat").val(ui.values[1]);
+
+                        diamondFilters.FromCarat = ui.values[0];
+                        diamondFilters.ToCarat = ui.values[1];
+
+                        getDiamondDataList(diamondFilters, page, rangeVal);
+                    }
+                });
+
+                $("#minCarat").val(response.MinCaratSize);
+                $("#maxCarat").val(response.MaxCaratSize);
+                diamondFilters.FromCarat = response.MinCaratSize;
+                diamondFilters.ToCarat = response.MaxCaratSize;
+
+            } catch (error) {
+                console.error('Error fetching data: ', error);
+                $('#filter-box #Carat-list').html('<p>Failed to load price ranges</p>');
+            }
+        }
+
+        async function GetColorData() {
                     try {
                         var response = await $.ajax({
                             url:'@Url.Action("GetColorList", "Diamond")',
@@ -503,7 +506,7 @@
                 }
             }
 
-            async function GetCutData() {
+        async function GetCutData() {
                 try {
                     const response = await $.ajax({
                         url:'@Url.Action("GetCutList", "Diamond")',
@@ -564,7 +567,7 @@
                 }
             }
 
-            async function GetClarityData() {
+        async function GetClarityData() {
                 try {
                     const response = await $.ajax({
                         url:'@Url.Action("GetClarityList", "Diamond")',
@@ -593,12 +596,12 @@
                             const fromClarity = clarityList[fromIndex];
                             const toClarity = clarityList[toIndex];
 
-                            $("#minClarity").val(fromClarity.Name);
-                            $("#maxClarity").val(toClarity.Name);
+                            $("#minClarity").val(fromClarity.name);
+                            $("#maxClarity").val(toClarity.name);
 
                             const selectedClarityIds = clarityList
                                 .slice(fromIndex, toIndex + 1)
-                                .map(item => item.Id);
+                                .map(item => item.id);
 
                             $("#txtClarityIds").val(selectedClarityIds.join(','));
 
@@ -610,11 +613,11 @@
                     });
 
                     // Set initial display
-                    $("#minClarity").val(clarityList[0].Name);
-                    $("#maxClarity").val(clarityList[clarityList.length - 1].Name);
+                    $("#minClarity").val(clarityList[0].name);
+                    $("#maxClarity").val(clarityList[clarityList.length - 1].name);
 
                     // Set all clarity Ids initially
-                    const initialClarityIds = clarityList.map(item => item.Id);
+                    const initialClarityIds = clarityList.map(item => item.id);
                     $("#txtClarityIds").val(initialClarityIds.join(','));
                     diamondFilters.Clarities = $("#txtClarityIds").val();
 
@@ -624,11 +627,11 @@
                 }
             }
 
-            async function GetPolishData() {
-                try {
+        async function GetPolishData() {
+             try {
                     // Fetching data from API
                     const response = await $.ajax({
-                        url: '@(SD.BaseApiUrl)/api/diamondproperty/get-polish-list',
+                        url: '@Url.Action("GetPolishList", "Diamond")',
                         method: 'GET',
                         dataType: 'json'
                     });
@@ -684,12 +687,12 @@
                     console.error('Error fetching data: ', error);
                     $('#filter-box #price-list').html('<p>Failed to load price ranges</p>');
             }
-    }
+        }
 
-            async function GetTableData() {
+        async function GetTableData() {
                 try {
                     const response = await $.ajax({
-                      url: '@(SD.BaseApiUrl)/api/diamondproperty/get-table-ranges', // API endpoint
+                      url: '@Url.Action("GetTableRanges", "Diamond")',
                       method: 'GET', // GET request
                       dataType: 'json', // Expecting JSON response
                     });
@@ -732,14 +735,14 @@
                   }
             }
 
-            async function GetDepthData() {
+        async function GetDepthData() {
                     try {
                         // Fetching price data from the API
                         const response = await $.ajax({
-                              url: '@(SD.BaseApiUrl)/api/diamondproperty/get-depth-ranges', // API endpoint
-                          method: 'GET', // GET request
-                          dataType: 'json', // Expecting JSON response
-                        });
+                              url: '@Url.Action("GetDepthRanges", "Diamond")',
+                              method: 'GET', // GET request
+                              dataType: 'json', // Expecting JSON response
+                            });
 
                         // Ensure the response contains MaxPrice
                         if (!response || typeof response.MaxValue !== 'number') {
@@ -776,10 +779,10 @@
                     }
             }
 
-            async function GetRatioData() {
+        async function GetRatioData() {
                 try {
                     const response = await $.ajax({
-                        url: '@(SD.BaseApiUrl)/api/diamondproperty/get-ratio-ranges',
+                        url: '@Url.Action("GetRatioRanges", "Diamond")',
                         method: 'GET',
                         dataType: 'json'
                     });
@@ -821,15 +824,15 @@
         }
             }
 
-            function updateSelectedDiamondCount() {
+        function updateSelectedDiamondCount() {
                 $('#filter-box #proCounter').text('(' + selectedDiamonds.length+')');
             }
 
-            async function GetFluorData() {
+        async function GetFluorData() {
                 try {
                     // Fetching data from API
                     const response = await $.ajax({
-                        url: '@(SD.BaseApiUrl)/api/diamondproperty/get-fluor-list',
+                        url: '@Url.Action("GetFluorList", "Diamond")',
                         method: 'GET',
                         dataType: 'json'
                     });
@@ -886,11 +889,11 @@
                 }
             }
 
-            async function GetSymmetryData() {
+        async function GetSymmetryData() {
                 try {
                     // Fetching data from API
                     const response = await $.ajax({
-                        url: '@(SD.BaseApiUrl)/api/diamondproperty/get-symmetry-list',
+                        url: '@Url.Action("GetSymmetryList", "Diamond")',
                         method: 'GET',
                         dataType: 'json',
                     });
@@ -946,23 +949,23 @@
                 }
             }
 
-            async function GetPriceData()
+        async function GetPriceData()
             {
                         try {
                                 // Fetching price data from the API
                                 const response = await $.ajax({
-                                  url: '@(SD.BaseApiUrl)/api/diamondproperty/get-price-ranges', // API endpoint
+                                  url: '@Url.Action("GetPriceRange", "Diamond")',
                                   method: 'GET', // GET request
                                   dataType: 'json', // Expecting JSON response
                                 });
 
                                 // Ensure the response contains MaxPrice
-                                if (!response || typeof response.MaxPrice !== 'number') {
+                                if (!response || typeof response.maxPrice !== 'number') {
                                   throw new Error('Invalid response structure');
                                 }
 
-                                const maxPrice = response.MaxPrice;
-                                const minPrice = response.MinPrice;
+                                const maxPrice = response.maxPrice;
+                                const minPrice = response.minPrice;
 
                                 // Initialize the price slider
                                 $("#price-slider").slider({
@@ -996,7 +999,7 @@
                               }
             }
 
-            async function getDiamondDataList(diamondFilters, pageNumber = 1, pageSize = 10)
+        async function getDiamondDataList(diamondFilters, pageNumber = 1, pageSize = 10)
             {
                 showLoader();
                 return $.ajax({
@@ -1025,7 +1028,7 @@
                 });
             }
 
-            async function loadAllFunctions() {
+        async function loadAllFunctions() {
                         showLoader();
                         try {
                             await Promise.all([
@@ -1054,7 +1057,7 @@
                         hideLoader();
                     }
 
-            function ResetAllData()
+        function ResetAllData()
             {
                 var FilterPara = {
                     Colors: getValue('#txtColorIds'),
@@ -1098,7 +1101,7 @@
                 getDiamondDataList(diamondFilters, page, rangeVal);
             }
 
-            function resetCheckBox() {
+        function resetCheckBox() {
                 $('#diamond-list-container').find("#diamondTable tbody input[type='checkbox']").each(function () {
                     let diamondId = $(this).attr('diamondId');
                     if (selectedDiamonds.includes(diamondId)) {
@@ -1108,7 +1111,7 @@
                 });
             }
 
-            function resetSelectedCheckBox(id) {
+        function resetSelectedCheckBox(id) {
                 $('#diamond-list-container').find("#diamondTable tbody input[type='checkbox']").each(function () {
                     let diamondId = $(this).attr('diamondId');
                     if (id == diamondId) {
@@ -1117,12 +1120,12 @@
                 });
             }
 
-            function getWishlistCounter() {
+        function getWishlistCounter() {
                 let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
                 $("#wishlistCounter").text(wishlist.length);
             }
 
-            function updateWishlistUI()
+        function updateWishlistUI()
             {
                 let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
 
