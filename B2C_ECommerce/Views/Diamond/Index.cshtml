@@ -286,7 +286,7 @@
                 });
 
                 $("#diamond-list-container").on("click", "#diamondTable .wishlist-toggle", function () {
-                    
+
                     let diamondId = $(this).data("diamondid");
                     let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
 
@@ -335,7 +335,7 @@
 
 
                 });
-            
+
             $("#diamondComparisonContent").on("change", ".compare-diamond-id", function () {
                     let checkbox = $(this);
                     let diamondId = checkbox.val();
@@ -357,7 +357,7 @@
                     resetSelectedCheckBox(diamondId);
             });
 
-            $("#diamondComparisonContent").on("click", ".btnWishlist", function () 
+            $("#diamondComparisonContent").on("click", ".btnWishlist", function ()
             {
                     let diamondId = $(this).data('diamondid').toString(); // Convert to string
 
@@ -390,7 +390,7 @@
 
                 try {
                     // Fetch data from the server (child partial view)
-                    const response = await fetch('/Diamond/GetShapeList');
+                    const response = await fetch('@Url.Action("GetShapeList", "Diamond")');
 
                     if (!response.ok) {
                         throw new Error('Failed to fetch shapes');
@@ -412,7 +412,8 @@
             async function GetCarat() {
                     try {
                         var response = await $.ajax({
-                            url: '@(SD.BaseApiUrl)/api/diamondproperty/get-carat-ranges', // API endpoint
+                            //url: '@(SD.BaseApiUrl)/api/diamondproperty/get-carat-ranges', // API endpoint
+                            url: '@Url.Action("GetCaratList", "Diamond")', // API endpoint
                             method: 'GET',
                             dataType: 'json',
                         });
@@ -450,7 +451,8 @@
             async function GetColorData() {
                     try {
                         var response = await $.ajax({
-                            url: '@(SD.BaseApiUrl)/api/diamondproperty/diamond-property/get-color-list',
+                            //url: '@(SD.BaseApiUrl)/api/diamondproperty/diamond-property/get-color-list',
+                            url:'@Url.Action("GetColorList", "Diamond")',
                             method: 'GET',
                             dataType: 'json',
                         });
@@ -478,13 +480,13 @@
                                 const minColor = colorList[startIndex];
                                 const maxColor = colorList[endIndex];
 
-                                $("#minColor").val(minColor.Name);
-                                $("#maxColor").val(maxColor.Name);
+                                $("#minColor").val(minColor.name);
+                                $("#maxColor").val(maxColor.name);
 
 
                                 const selectedColorIds = colorList
                                     .slice(startIndex, endIndex + 1)
-                                    .map(item => item.Id);
+                                    .map(item => item.id);
 
                                 $("#txtColorIds").val(selectedColorIds.join(','));
 
@@ -496,10 +498,10 @@
                         });
 
                     // Set initial values
-                    $("#minColor").val(colorList[0].Name);
-                    $("#maxColor").val(colorList[colorList.length - 1].Name);
+                    $("#minColor").val(colorList[0].name);
+                    $("#maxColor").val(colorList[colorList.length - 1].name);
 
-                        const initialColorIds = colorList.map(item => item.Id);
+                        const initialColorIds = colorList.map(item => item.id);
                         $("#txtColorIds").val(initialColorIds.join(','));
                         diamondFilters.Colors = $("#txtColorIds").val();
 
@@ -512,7 +514,8 @@
             async function GetCutData() {
                 try {
                     const response = await $.ajax({
-                        url: '@(SD.BaseApiUrl)/api/diamondproperty/get-cut-list',
+                        //url: '@(SD.BaseApiUrl)/api/diamondproperty/get-cut-list',
+                        url:'@Url.Action("GetCutList", "Diamond")',
                         method: 'GET',
                         dataType: 'json'
                     });
@@ -538,12 +541,12 @@
                             const minCut = cutList[startIndex];
                             const maxCut = cutList[endIndex];
 
-                            $("#minCut").val(minCut.Name);
-                            $("#maxCut").val(maxCut.Name);
+                            $("#minCut").val(minCut.name);
+                            $("#maxCut").val(maxCut.name);
 
                             const selectedCutIds = cutList
                                 .slice(startIndex, endIndex + 1)
-                                .map(item => item.Id);
+                                .map(item => item.id);
 
                             $("#txtCutIds").val(selectedCutIds.join(','));
 
@@ -556,10 +559,10 @@
                         }
                     });
 
-                    $("#minCut").val(cutList[0].Name);
-                    $("#maxCut").val(cutList[cutList.length - 1].Name);
+                    $("#minCut").val(cutList[0].name);
+                    $("#maxCut").val(cutList[cutList.length - 1].name);
 
-                    const initialCutIds = cutList.map(item => item.Id);
+                    const initialCutIds = cutList.map(item => item.id);
                     $("#txtCutIds").val(initialCutIds.join(','));
 
                     diamondFilters.Cuts = $("#txtCutIds").val();
@@ -1002,7 +1005,7 @@
                               }
             }
 
-            async function getDiamondDataList(diamondFilters, pageNumber = 1, pageSize = 10) 
+            async function getDiamondDataList(diamondFilters, pageNumber = 1, pageSize = 10)
             {
                 showLoader();
                 return $.ajax({
@@ -1116,9 +1119,9 @@
 
             function resetSelectedCheckBox(id) {
                 $('#diamond-list-container').find("#diamondTable tbody input[type='checkbox']").each(function () {
-                    let diamondId = $(this).attr('diamondId'); 
+                    let diamondId = $(this).attr('diamondId');
                     if (id == diamondId) {
-                        $(this).prop('checked', false); 
+                        $(this).prop('checked', false);
                     }
                 });
             }
@@ -1128,7 +1131,7 @@
                 $("#wishlistCounter").text(wishlist.length);
             }
 
-            function updateWishlistUI() 
+            function updateWishlistUI()
             {
                 let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
 

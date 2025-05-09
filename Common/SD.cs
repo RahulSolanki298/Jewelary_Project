@@ -15,7 +15,7 @@
 
 
         public static string Requested = "Requested";
-        
+
         public static string StartActivationProcess = "Start Activation Process"; // Pending Process
 
         public static string ReadyToPdp = "READY TO PDP";
@@ -76,13 +76,31 @@
         public static string IGI = "IGI";
         public static string GIA = "GIA";
 
-        public static string ShapeImgUrl = "http://192.168.100.153:8083/JewelFacet/";
-        public static string ImgUrl = "http://192.168.100.153:8082/JewelFacet";
-        //public static string BaseApiUrl = "https://localhost:44302"; // https://jswebapi.com
-        public static string BaseApiUrl = "https://localhost:4050"; // https://jswebapi.com
-        // public static string BaseApiUrl = "http://192.168.29.11:8082"; // https://jswebapi.com
+
+        // public static string ShapeImgUrl = "https://localhost:44325";
+        // public static string ImgUrl = "https://localhost:4050";
+        // public static string BaseApiUrl = "https://localhost:4050"; // https://jswebapi.com
+
+        //  public static string BaseApiUrl = "http://192.168.29.11:8082"; // https://jswebapi.com
         //public static string BaseApiUrl = "http://192.168.100.153:8082"; // https://jswebapi.com
 
+
+        //public static string ShapeImgUrl = "https://192.168.100.153:8092";
+        //public static string ImgUrl = "http://192.168.100.153:8082";
+        //public static string BaseApiUrl = "https://192.168.100.153:8082";
+
+
+
+        //  local
+
+        public static string ShapeImgUrl = "http://180.211.116.206/jewelfacet";
+        public static string ImgUrl = "http://180.211.116.206/jewelfacet";
+        public static string BaseApiUrl = "http://180.211.116.206/jewelfacet";
+
+        // production
+        //public static string ShapeImgUrl = "http://192.168.100.153/jewelfacet";
+        //public static string ImgUrl = "http://192.168.100.153/api.jewelfacet";
+        //public static string BaseApiUrl = "http://192.168.100.153/api.jewelfacet";
 
 
     }

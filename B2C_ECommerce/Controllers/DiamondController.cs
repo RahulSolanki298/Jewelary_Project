@@ -36,6 +36,29 @@ namespace B2C_ECommerce.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetCaratList()
+        {
+            var response = await _diamondService.GetCaratListAsync();
+            return Json(response);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetColorList()
+        {
+            var response = await _diamondService.GetColorListAsync();
+            return Json(response);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCutList()
+        {
+            var response = await _diamondService.GetCutListAsync();
+            return Json(response);
+        }
+
+
+
+        [HttpGet]
         public IActionResult GetCertificate(string diamondCerti)
         {
             ViewBag.Certificate = diamondCerti;

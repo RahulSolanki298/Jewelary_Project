@@ -4,8 +4,12 @@ using B2C_ECommerce.Services;
 using Business.Repository;
 using Business.Repository.IRepository;
 using Common;
+using DataAccess.Data;
+using DataAccess.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,6 +28,16 @@ namespace B2C_ECommerce
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ApplicationDBContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                    sqlOptions => sqlOptions.CommandTimeout(300)) // Timeout in seconds (5 minutes)
+            );
+
+            // Add Identity services
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDBContext>()
+                .AddDefaultTokenProviders();
+
             services.AddHttpClient();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddHttpClient("API", client =>
