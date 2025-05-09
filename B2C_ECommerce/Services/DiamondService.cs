@@ -225,6 +225,37 @@ namespace B2C_ECommerce.Services
             }
         }
 
+        //GetClarityListAsync
+        public async Task<IEnumerable<DiamondPropertyDTO>> GetClarityListAsync()
+        {
+            try
+            {
+                //Get-Collection-List
+                var requestUrl = $"{SD.BaseApiUrl}/api/diamond-property/get-clarity-list";
+
+                using var response = await _httpClient.GetAsync(requestUrl);
+
+                response.EnsureSuccessStatusCode(); // Throws exception if status code is not successful.
+
+                if (response.Content is null)
+                {
+                    throw new Exception("API response content is null.");
+                }
+
+                var result = await response.Content.ReadFromJsonAsync<List<DiamondPropertyDTO>>();
+
+                return result ?? new List<DiamondPropertyDTO>();
+            }
+            catch (HttpRequestException httpEx)
+            {
+                throw new Exception($"HTTP request error: {httpEx.Message}", httpEx);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching sub categories: {ex.Message}", ex);
+            }
+        }
+
         public async Task<TableRangeDTO> GetTableRangesAsync()
         {
             try

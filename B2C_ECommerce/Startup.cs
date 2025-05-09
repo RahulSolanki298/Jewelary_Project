@@ -37,6 +37,7 @@ namespace B2C_ECommerce
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDBContext>()
                 .AddDefaultTokenProviders();
+            ConfigureRepositories(services);
 
             services.AddHttpClient();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
@@ -49,6 +50,23 @@ namespace B2C_ECommerce
             services.AddScoped<IDiamondService, DiamondService>();
             services.AddScoped<IProductService, ProductService>();
             //services.AddScoped<IB2COrdersRepository, B2COrdersRepository>();
+
+            services.AddControllers();
+        }
+
+        private void ConfigureRepositories(IServiceCollection services)
+        {
+            //services.AddScoped<IEmailSender, EmailSender>();
+            services.AddScoped<ILogEntryRepository, LogEntryRepository>();
+            //services.AddScoped<IVirtualAppointmentRepo, VirtualAppointmentRepo>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<ICategoryRepositry, CategoryRepository>();
+            services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
+            services.AddScoped<IProductPropertyRepository, ProductPropertyRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IDiamondPropertyRepository, DiamondPropertyRepository>();
+            services.AddScoped<IDiamondRepository, DiamondRepository>();
+            services.AddScoped<IB2COrdersRepository, B2COrdersRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -71,9 +89,12 @@ namespace B2C_ECommerce
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers(); 
+
+                // Configure route for MVC controllers
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}"); // Default MVC route
             });
         }
     }

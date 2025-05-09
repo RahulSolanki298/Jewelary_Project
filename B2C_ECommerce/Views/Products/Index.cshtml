@@ -243,7 +243,7 @@
 @section Scripts {
     @*<script src="assets/js/plugins/slick.min.js"></script>*@
 
-    <script>
+<script>
             var page = 1;
             var rangeVal = 10;
 
@@ -551,27 +551,28 @@
             }
 
         async function GetProducts(filters, pageNumber = 1, pageSize = 10) {
-                    showLoader();
-                    return $.ajax({
-                        url: '@Url.Action("GetProductList", "Products")', // Ensure this route matches your controller/action
-                        type: 'POST',
-                        data: {
-                            filters: filters,  // Ensure this matches your action parameter name if model binding
-                            pageNumber: pageNumber,
-                            pageSize: pageSize
-                        },
-                        success: function (data) {
-                            $('#MyProductsImg').html('');   // Clear existing content
-                            $('#MyProductsImg').html(data); // Use 'data' instead of 'response'
-                            $("#txtNoOfProducts").text("0");
-                            hideLoader();
-                        },
-                        error: function (error) {
-                            console.error('Error fetching data:', error);
-                            hideLoader();
-                        }
-                    });
+            showLoader();
+            return $.ajax({
+               url: '@Url.Action("GetProductList", "Products")',
+                type: 'POST',
+                data: {
+                    filters: filters,
+                    pageNumber: pageNumber,
+                    pageSize: pageSize
+                },
+                success: function (data) {
+                    $('#MyProductsImg').html('');
+                    $('#MyProductsImg').html(data);
+                    $("#txtNoOfProducts").text("0");
+                    hideLoader();
+                },
+                error: function (error) {
+                    console.error('Error fetching data:', error);
+                    hideLoader();
                 }
+            });
+        }
+
 
             async function loadAllFunctions() {
                 showLoader();
@@ -722,6 +723,6 @@
 
            return formatted;
         }
-    </script>
+</script>
 
 }

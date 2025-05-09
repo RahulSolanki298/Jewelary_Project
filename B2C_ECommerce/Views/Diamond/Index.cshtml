@@ -385,34 +385,27 @@
                 }
             });
 
-            async function GetShapeDesign() {
+           function GetShapeDesign() {
                 const $shapeListContainer = $('#filter-box #shape-list');
 
-                try {
-                    // Fetch data from the server (child partial view)
-                    const response = await fetch('@Url.Action("GetShapeList", "Diamond")');
-
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch shapes');
+                $.ajax({
+                    url: '@Url.Action("GetShapeList", "Diamond")',
+                    method: 'GET',
+                    success: function (htmlContent) {
+                        $shapeListContainer.html("");
+                        $shapeListContainer.html(htmlContent);
+                    },
+                    error: function () {
+                        console.error('Error fetching shape data');
+                        $shapeListContainer.html('<p>Failed to load shapes</p>');
                     }
-
-                    // Assuming the server returns an HTML partial
-                    const htmlContent = await response.text();
-
-                    // Inject the HTML content into the container
-                    $shapeListContainer.html(htmlContent);
-
-
-                } catch (error) {
-                    console.error('Error fetching shape data:', error);
-                    $shapeListContainer.html('<p>Failed to load shapes</p>');
-                }
+                });
             }
+
 
             async function GetCarat() {
                     try {
                         var response = await $.ajax({
-                            //url: '@(SD.BaseApiUrl)/api/diamondproperty/get-carat-ranges', // API endpoint
                             url: '@Url.Action("GetCaratList", "Diamond")', // API endpoint
                             method: 'GET',
                             dataType: 'json',
@@ -451,7 +444,6 @@
             async function GetColorData() {
                     try {
                         var response = await $.ajax({
-                            //url: '@(SD.BaseApiUrl)/api/diamondproperty/diamond-property/get-color-list',
                             url:'@Url.Action("GetColorList", "Diamond")',
                             method: 'GET',
                             dataType: 'json',
@@ -514,7 +506,6 @@
             async function GetCutData() {
                 try {
                     const response = await $.ajax({
-                        //url: '@(SD.BaseApiUrl)/api/diamondproperty/get-cut-list',
                         url:'@Url.Action("GetCutList", "Diamond")',
                         method: 'GET',
                         dataType: 'json'
@@ -576,7 +567,7 @@
             async function GetClarityData() {
                 try {
                     const response = await $.ajax({
-                        url: '@(SD.BaseApiUrl)/api/diamondproperty/diamond-property/get-clarity-list',
+                        url:'@Url.Action("GetClarityList", "Diamond")',
                         method: 'GET',
                         dataType: 'json'
                     });

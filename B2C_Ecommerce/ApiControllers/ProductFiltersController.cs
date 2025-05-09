@@ -1,8 +1,6 @@
-﻿using System.Threading.Tasks;
-using Business.Repository;
-using Business.Repository.IRepository;
-using DataAccess.Entities;
+﻿using Business.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace B2C_ECommerce.ApiControllers
 {

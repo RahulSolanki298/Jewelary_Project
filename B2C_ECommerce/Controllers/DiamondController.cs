@@ -56,7 +56,12 @@ namespace B2C_ECommerce.Controllers
             return Json(response);
         }
 
-
+        [HttpGet]
+        public async Task<IActionResult> GetClarityList()
+        {
+            var response = await _diamondService.GetClarityListAsync();
+            return Json(response);
+        }
 
         [HttpGet]
         public IActionResult GetCertificate(string diamondCerti)
