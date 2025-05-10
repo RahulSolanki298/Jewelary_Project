@@ -68,8 +68,6 @@ namespace B2C_ECommerce.Controllers
         {
             var jsonResult = await _productRepository.GetProductsByColorId(sku, colorId);
 
-            //var products = JsonConvert.DeserializeObject<ProductDTO>(jsonResult);
-
             return Json(jsonResult);
         }
 

@@ -95,21 +95,20 @@ namespace B2C_ECommerce.Services
             }
 
             // Pagination
-            var pagedResult = await query
+            var pagedResult = query
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
-                .ToListAsync();
+                .ToList();
 
             return pagedResult;
         }
+
 
         public async Task<ProductDTO> GetProductByProductId(string productId)
         {
             var result = await _productRepository.GetProductWithDetails(productId);
             return result;
         }
-
-
 
         public async Task<IEnumerable<ProductPropertyDTO>> GetProductColorList()
         {
