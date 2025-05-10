@@ -1242,18 +1242,20 @@ textarea {
 /*---------- header mini cart start ----------*/
 .header-configure-area {
     padding-right: 10px;
+    Padding-top: 8px;
 }
 
     .header-configure-area ul li {
         display: inline-block;
-        /*margin-left: 15px;*/
-        margin-left: 9px;
+        /*margin-left: 9px;*/
+        margin-left: 5px;
         line-height: 1;
     }
 
 @media only screen and (min-width: 1200px) and (max-width: 1499px) {
     .header-configure-area ul li {
         margin-left: 14px;
+
     }
 }
 
@@ -7442,6 +7444,9 @@ a {
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
     .main-menu-area {
         margin: 0px 0px;
+    }
+    .sticky.is-sticky .main-menu li a {
+        padding: 20px 10px;
     }
 }
 

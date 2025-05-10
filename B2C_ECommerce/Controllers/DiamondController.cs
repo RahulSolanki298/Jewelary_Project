@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Azure;
 using B2C_ECommerce.IServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Models;
 
 namespace B2C_ECommerce.Controllers
@@ -11,9 +13,13 @@ namespace B2C_ECommerce.Controllers
     public class DiamondController : Controller
     {
         private readonly IDiamondService _diamondService;
-        public DiamondController(IDiamondService diamondService)
+
+        private readonly ILogger<AccountController> _logger;
+
+        public DiamondController(IDiamondService diamondService, ILogger<AccountController> logger)
         {
             _diamondService = diamondService;
+            _logger = logger;
         }
 
         public IActionResult Index()
@@ -24,15 +30,31 @@ namespace B2C_ECommerce.Controllers
         [HttpPost]
         public async Task<IActionResult> GetDiamondList(DiamondFilters diamondFilters, int pageNumber = 1, int pageSize = 10)
         {
-            var response = await _diamondService.GetDiamondListByFilter(diamondFilters, pageNumber, pageSize);
-            return PartialView("~/Views/Diamond/_DiamondDataList.cshtml", response);
+            try
+            {
+                var response = await _diamondService.GetDiamondListByFilter(diamondFilters, pageNumber, pageSize);
+                return PartialView("~/Views/Diamond/_DiamondDataList.cshtml", response);
+
+            }
+            catch (Exception ex) {
+                _logger.LogError("Exception :",ex.Message);
+                throw;
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> GetShapeList()
         {
-            var response = await _diamondService.GetShapeListAsync();
-            return PartialView("_ShapeList", response);
+            try
+            {
+                var response = await _diamondService.GetShapeListAsync();
+                return PartialView("_ShapeList", response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Exception :", ex.Message);
+                throw;
+            }
         }
 
         [HttpGet]
@@ -47,7 +69,7 @@ namespace B2C_ECommerce.Controllers
         {
             var response = await _diamondService.GetCaratSizeRangeAsync();
             return Json(response);
-        }   
+        }
 
         [HttpGet]
         public async Task<IActionResult> GetColorList()
@@ -67,7 +89,7 @@ namespace B2C_ECommerce.Controllers
         public async Task<IActionResult> GetClarityList()
         {
             var response = await _diamondService.GetClarityListAsync();
-                return Json(response);
+            return Json(response);
         }
 
         [HttpGet]
