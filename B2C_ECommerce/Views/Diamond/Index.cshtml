@@ -286,7 +286,7 @@
                 });
 
                 $("#diamond-list-container").on("click", "#diamondTable .wishlist-toggle", function () {
-
+                    debugger;
                     let diamondId = $(this).data("diamondid");
                     let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
 
@@ -404,25 +404,30 @@
 
         async function GetCarat()
         {
-            debugger;
-            try {
-                const response = await $.ajax({
-                    url: '@Url.Action("GetCaratSizeRangeAsync", "Diamond")',
-                    method: 'GET',
-                    dataType: 'json',
-                });
+             try {
+                    const response = await $.ajax({
+                      url: '@Url.Action("GetCaratSizeRange", "Diamond")',
+                      method: 'GET', // GET request
+                      dataType: 'json', // Expecting JSON response
+                    });
 
-                if (!response || typeof response.MaxCaratSize !== 'number') {
-                    throw new Error('Invalid response structure');
-                }
+                    if (!response || typeof response.maxCaratSize !== 'number') {
+                      throw new Error('Invalid response structure');
+                    }
 
-                $("#carat-size-slider").slider({
-                    range: true,
-                    min: response.MinCaratSize,
-                    max: response.MaxCaratSize,
-                    step: 0.1,
-                    values: [response.MinCaratSize, response.MaxCaratSize],
-                    slide: function (event, ui) {
+                    const maxValue = response.maxCaratSize;
+
+                    const $slider = $("#carat-size-slider");
+                    if ($slider.data('initialized')) return; // Prevent re-initialization
+                    $slider.data('initialized', true); // Mark slider as initialized
+
+                    $slider.slider({
+                      range: true,
+                      min: 0,
+                      max: maxValue,
+                      step: 0.1,
+                      values: [0, maxValue],
+                      slide: function (event, ui) {
                         $("#minCarat").val(ui.values[0]);
                         $("#maxCarat").val(ui.values[1]);
 
@@ -430,18 +435,18 @@
                         diamondFilters.ToCarat = ui.values[1];
 
                         getDiamondDataList(diamondFilters, page, rangeVal);
-                    }
-                });
+                      }
+                    });
 
-                $("#minCarat").val(response.MinCaratSize);
-                $("#maxCarat").val(response.MaxCaratSize);
-                diamondFilters.FromCarat = response.MinCaratSize;
-                diamondFilters.ToCarat = response.MaxCaratSize;
+                    $("#minCarat").val(0);
+                    $("#maxCarat").val(maxValue);
+                    diamondFilters.FromCarat = $("#minCarat").val();
+                    diamondFilters.ToCarat = $("#maxCarat").val();
 
-            } catch (error) {
-                console.error('Error fetching data: ', error);
-                $('#filter-box #Carat-list').html('<p>Failed to load price ranges</p>');
-            }
+                  } catch (error) {
+                    console.error('Error fetching data:', error);
+                    $('#filter-box #carat-list').html('<p>Failed to load table ranges</p>');
+                  }
         }
 
         async function GetColorData() {
@@ -658,12 +663,12 @@
                             const fromPolish = polishList[fromIndex];
                             const toPolish = polishList[toIndex];
 
-                            $("#minPolish").val(fromPolish.Name);
-                            $("#maxPolish").val(toPolish.Name);
+                            $("#minPolish").val(fromPolish.name);
+                            $("#maxPolish").val(toPolish.name);
 
                             const selectedPolishIds = polishList
                                 .slice(fromIndex, toIndex + 1)
-                                .map(item => item.Id);
+                                .map(item => item.id);
 
                             $("#txtPolishIds").val(selectedPolishIds.join(','));
                             diamondFilters.Polish = $("#txtPolishIds").val();
@@ -673,10 +678,10 @@
                     });
 
                     // Set initial values
-                    $("#minPolish").val(polishList[0].Name);
-                    $("#maxPolish").val(polishList[polishList.length - 1].Name);
+                    $("#minPolish").val(polishList[0].name);
+                    $("#maxPolish").val(polishList[polishList.length - 1].name);
 
-                    const initialPolishIds = polishList.map(item => item.Id);
+                    const initialPolishIds = polishList.map(item => item.id);
                     $("#txtPolishIds").val(initialPolishIds.join(','));
                     diamondFilters.Polish = $("#txtPolishIds").val();
 
@@ -697,11 +702,11 @@
                       dataType: 'json', // Expecting JSON response
                     });
 
-                    if (!response || typeof response.MaxValue !== 'number') {
+                    if (!response || typeof response.maxValue !== 'number') {
                       throw new Error('Invalid response structure');
                     }
 
-                    const maxValue = response.MaxValue;
+                    const maxValue = response.maxValue;
 
                     const $slider = $("#TablePer-slider");
                     if ($slider.data('initialized')) return; // Prevent re-initialization
@@ -736,6 +741,7 @@
             }
 
         async function GetDepthData() {
+            debugger;
                     try {
                         // Fetching price data from the API
                         const response = await $.ajax({
@@ -745,11 +751,11 @@
                             });
 
                         // Ensure the response contains MaxPrice
-                        if (!response || typeof response.MaxValue !== 'number') {
+                        if (!response || typeof response.maxValue !== 'number') {
                           throw new Error('Invalid response structure');
                         }
 
-                            const maxValue = response.MaxValue;
+                            const maxValue = response.maxValue;
 
                         // Initialize the price slider
                             $("#DepthPer-slider").slider({
@@ -762,11 +768,16 @@
                             // Update the min and max price input fields dynamically
                                 $("#minDepthPer").val(ui.values[0]);
                                 $("#maxDepthPer").val(ui.values[1]);
+
+                        diamondFilters.FromDepth = ui.values[0];
+                        diamondFilters.ToDepth = ui.values[1];
+
+                        getDiamondDataList(diamondFilters, page, rangeVal);
                           }
                         });
 
                         // Set initial values for the price input fields
-                            $("#minDepthPer").val(0);
+                        $("#minDepthPer").val(0);
                         $("#maxDepthPer").val(maxValue);
                         diamondFilters.FromDepth = $("#minDepthPer").val();
                         diamondFilters.ToDepth = $("#maxDepthPer").val();
@@ -780,6 +791,7 @@
             }
 
         async function GetRatioData() {
+            debugger;
                 try {
                     const response = await $.ajax({
                         url: '@Url.Action("GetRatioRanges", "Diamond")',
@@ -788,25 +800,25 @@
                     });
 
                     // Validate response structure
-                    if (!response || typeof response.MaxValue !== 'number' || typeof response.MinValue !== 'number') {
+                    if (!response || typeof response.maxValue !== 'number' || typeof response.minValue !== 'number') {
                         throw new Error('Invalid response structure');
                     }
 
                     // Set default input values
-                    $("#minLWRatio").val(response.MinValue);
-                    $("#maxLWRatio").val(response.MaxValue);
+                    $("#minLWRatio").val(response.minValue);
+                    $("#maxLWRatio").val(response.maxValue);
 
                     // Set initial filter values
-                    diamondFilters.FromRatio = response.MinValue;
-                    diamondFilters.ToRatio = response.MaxValue;
+                    diamondFilters.FromRatio = response.minValue;
+                    diamondFilters.ToRatio = response.maxValue;
 
                     // Initialize jQuery UI Slider
                     $("#LWRatio-slider").slider({
                         range: true,
-                        min: response.MinValue,
-                        max: response.MaxValue,
+                        min: response.minValue,
+                        max: response.maxValue,
                         step: 0.1,
-                        values: [response.MinValue, response.MaxValue],
+                        values: [response.minValue, response.maxValue],
                         slide: function (event, ui) {
                             $("#minLWRatio").val(ui.values[0]);
                             $("#maxLWRatio").val(ui.values[1]);
@@ -859,12 +871,12 @@
                             const fromFluor = fluorList[fromIndex];
                             const toFluor = fluorList[toIndex];
 
-                            $("#minFluor").val(fromFluor.Name);
-                            $("#maxFluor").val(toFluor.Name);
+                            $("#minFluor").val(fromFluor.name);
+                            $("#maxFluor").val(toFluor.name);
 
                             const selectedFluorIds = fluorList
                                 .slice(fromIndex, toIndex + 1)
-                                .map(item => item.Id);
+                                .map(item => item.id);
 
                             $("#txtFluorIds").val(selectedFluorIds.join(','));
                             diamondFilters.Fluor= $("#txtFluorIds").val();
@@ -874,10 +886,10 @@
                     });
 
                     // Set initial values
-                    $("#minFluor").val(fluorList[0].Name);
-                    $("#maxFluor").val(fluorList[fluorList.length - 1].Name);
+                    $("#minFluor").val(fluorList[0].name);
+                    $("#maxFluor").val(fluorList[fluorList.length - 1].name);
 
-                    const initialFluorIds = fluorList.map(item => item.Id);
+                    const initialFluorIds = fluorList.map(item => item.id);
                     $("#txtFluorIds").val(initialFluorIds.join(','));
                     diamondFilters.Fluor = $("#txtFluorIds").val();
 
@@ -920,12 +932,12 @@
                             const fromSym = symmetryList[fromIndex];
                             const toSym = symmetryList[toIndex];
 
-                            $("#minSymmetry").val(fromSym.Name);
-                            $("#maxSymmetry").val(toSym.Name);
+                            $("#minSymmetry").val(fromSym.name);
+                            $("#maxSymmetry").val(toSym.name);
 
                             const selectedSymmetryIds = symmetryList
                                 .slice(fromIndex, toIndex + 1)
-                                .map(item => item.Id);
+                                .map(item => item.id);
 
                             $("#txtSymmetryIds").val(selectedSymmetryIds.join(','));
                             diamondFilters.Symmeties = selectedSymmetryIds.join(',');
@@ -934,10 +946,10 @@
                         }
                     });
 
-                    $("#minSymmetry").val(symmetryList[0].Name);
-                    $("#maxSymmetry").val(symmetryList[symmetryList.length - 1].Name);
+                    $("#minSymmetry").val(symmetryList[0].name);
+                    $("#maxSymmetry").val(symmetryList[symmetryList.length - 1].name);
 
-                    const initialSymmetryIds = symmetryList.map(item => item.Id);
+                    const initialSymmetryIds = symmetryList.map(item => item.id);
                     $("#txtSymmetryIds").val(initialSymmetryIds.join(','));
                     diamondFilters.Symmeties = initialSymmetryIds.join(',');
 
@@ -1001,6 +1013,7 @@
 
         async function getDiamondDataList(diamondFilters, pageNumber = 1, pageSize = 10)
             {
+                debugger;
                 showLoader();
                 return $.ajax({
                     url: '@Url.Action("GetDiamondList", "Diamond")', // Change this to your actual route
@@ -1127,6 +1140,7 @@
 
         function updateWishlistUI()
             {
+                debugger;
                 let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
 
                 $('#diamond-list-container').find("#diamondTable tbody .wishlist-toggle").each(function () {

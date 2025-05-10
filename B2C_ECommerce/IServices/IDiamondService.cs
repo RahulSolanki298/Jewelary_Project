@@ -22,6 +22,8 @@ namespace B2C_ECommerce.IServices
 
         Task<IEnumerable<DiamondPropertyDTO>> GetCaratListAsync();
 
+        Task<CaratSizeRanges> GetCaratSizeRangeAsync();
+
         Task<DepthDTO> GetDepthRangesAsync();
 
         Task<IEnumerable<DiamondPropertyDTO>> GetClarityListAsync();
@@ -36,6 +38,5 @@ namespace B2C_ECommerce.IServices
 
         Task<IEnumerable<DiamondPropertyDTO>> GetSymmetryListAsync();
 
-        Task<CaratSizeRanges> GetCaratSizeRangeAsync();
     }
 }

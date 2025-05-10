@@ -205,7 +205,7 @@ namespace Business.Repository
 
         public async Task<IEnumerable<ProductPropertyDTO>> GetProductShapeList()
         {
-
+            
             try
             {
                 var colors = await (from prd in _context.ProductProperty

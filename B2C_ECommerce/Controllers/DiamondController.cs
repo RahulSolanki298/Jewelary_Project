@@ -43,11 +43,11 @@ namespace B2C_ECommerce.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCaratSizeRangeAsync()
+        public async Task<IActionResult> GetCaratSizeRange()
         {
             var response = await _diamondService.GetCaratSizeRangeAsync();
             return Json(response);
-        }
+        }   
 
         [HttpGet]
         public async Task<IActionResult> GetColorList()
