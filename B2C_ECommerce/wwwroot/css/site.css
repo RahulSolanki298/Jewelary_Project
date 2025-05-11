@@ -1,5 +1,6 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
+@charset "UTF-8";
 
 a.navbar-brand {
     white-space: normal;
@@ -13,13 +14,13 @@ a {
 }
 
 .btn-primary {
-    color: #fff;
+    color: #FFFFFF;
     background-color: #1b6ec2;
     border-color: #1861ac;
 }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-    color: #fff;
+    color: #FFFFFF;
     background-color: #1b6ec2;
     border-color: #1861ac;
 }
@@ -194,7 +195,7 @@ body {
     left: 75%;
     transform: translate(-50%, -50%);
     text-align: center;
-    color: #fff;
+    color: #FFFFFF;
     z-index: 2;
     /*background: rgba(0, 0, 0, 0.3);*/
     padding: 20px;
@@ -277,9 +278,9 @@ body {
         border-top: 20px solid transparent;
         border-bottom: 20px solid transparent;
         border-left-color: #c29958; /* Orange */
-        border-right-color: #fff;
+        border-right-color: #FFFFFF;
         border-top-color: #c29958;
-        border-bottom-color: #fff;
+        border-bottom-color: #FFFFFF;
     }
 
 /* */
@@ -448,7 +449,7 @@ body {
 /* Styling for each carousel item */
 .carousel-item {
     padding: 20px;
-    background-color: #fff;
+    background-color: #FFFFFF;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
 }
@@ -628,7 +629,7 @@ body {
     color: black !important;
     padding: .375rem .75rem !important;
     border: 1px solid #151542 !important;
-    background-color: #fff !important
+    background-color: #FFFFFF !important
 }
     .btn-dark:hover {
         color: white !important;
@@ -774,15 +775,15 @@ body {
 }
 
 .btn-dark-style-2 {
-    color:white;
+    color: white;
     padding: .375rem .75rem !important;
-    border: 1px solid #fff !important;
+    border: 1px solid #FFFFFF !important;
     background-color: #151542
 }
 
     .btn-dark-style-2:hover {
         color: white;
-        border: 1px solid #fff;
+        border: 1px solid #FFFFFF;
     }
 
 .product-type-box {
@@ -793,7 +794,7 @@ body {
 
 
 .shopby-category-card {
-    background: #fff !important;
+    background: #FFFFFF !important;
     color: #151542 !important;
     border-radius: 50%;
 }
@@ -813,7 +814,7 @@ body {
 
 
 .shopby-category-img-shadow {
-    box-shadow: -16px 6px 20px 2px #ffffff8a;
+    box-shadow: -16px 6px 20px 2px #FFFFFF;
 }
 .border-radius-15 {
    /* border-radius: 15px;
@@ -830,7 +831,7 @@ body {
     }
 
 .delivery_date_shortcode {
-    background: #fff;
+    background: #FFFFFF;
     border: #fdfdfd solid 1px;
     padding: 12px 0;
     width: 70%
@@ -877,7 +878,7 @@ body {
     .order_step_box img {
         width: 30px;
         height: auto;
-        background: #fff;
+        background: #FFFFFF;
         opacity: 1;
         margin: 0 4px 3px;
         vertical-align: middle;
@@ -1071,7 +1072,7 @@ body {
     position: fixed;
     width: 100%;
     height: 100vh;
-    background: #fff url('../assets/loader/JF-WEB-LOADER.gif') no-repeat center;
+    background: #FFFFFF url('../assets/loader/JF-WEB-LOADER.gif') no-repeat center;
     z-index: 30001;
     opacity: 0.8;
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using B2C_ECommerce.IServices;
 using Common;
 using Models;
+using Newtonsoft.Json;
 
 namespace B2C_ECommerce.Services
 {
@@ -22,6 +23,9 @@ namespace B2C_ECommerce.Services
         {
             try
             {
+                if (diamondFilters == null)
+                    throw new ArgumentNullException(nameof(diamondFilters));
+
                 var requestUrl = $"{SD.BaseApiUrl}/api/diamond/GetDiamondList?pageNumber={pageNumber}&pageSize={pageSize}";
 
                 using var response = await _httpClient.PostAsJsonAsync(requestUrl, diamondFilters);

@@ -1,7 +1,6 @@
 (function ($) {
 	"use strict";
 
-	// Sticky menu
 	var $window = $(window);
 	$window.on('scroll', function () {
 		var scroll = $window.scrollTop();
@@ -13,14 +12,12 @@
 	});
 
 
-	// tooltip active js
 	var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
 	var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 		return new bootstrap.Tooltip(tooltipTriggerEl)
 	})
 
 
-	// Background Image JS start
 	var bgSelector = $(".bg-img");
 	bgSelector.each(function (index, elem) {
 		var element = $(elem),
@@ -29,7 +26,6 @@
 	});
 
 
-	// Off Canvas Open close
 	$(".mobile-menu-btn").on('click', function () {
 		$("body").addClass('fix');
 		$(".off-canvas-wrapper").addClass('open');
@@ -40,17 +36,13 @@
 		$(".off-canvas-wrapper").removeClass('open');
 	});
 
-	// offcanvas mobile menu
     var $offCanvasNav = $('.mobile-menu'),
         $offCanvasNavSubMenu = $offCanvasNav.find('.dropdown');
     
-    /*Add Toggle Button With Off Canvas Sub Menu*/
     $offCanvasNavSubMenu.parent().prepend('<span class="menu-expand"><i></i></span>');
     
-    /*Close Off Canvas Sub Menu*/
     $offCanvasNavSubMenu.slideUp();
     
-    /*Category Sub Menu Toggle*/
     $offCanvasNav.on('click', 'li a, li .menu-expand', function(e) {
         var $this = $(this);
         if ( ($this.parent().attr('class').match(/\b(menu-item-has-children|has-children|has-sub-menu)\b/)) && ($this.attr('href') === '#' || $this.hasClass('menu-expand')) ) {

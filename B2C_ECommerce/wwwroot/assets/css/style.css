@@ -1,32 +1,3 @@
-/*------------------------------------------------------------------
-Table of content
--------------------
-1. Start Header Area
-2. slider area start
-3. features area css start
-4. hot deals area css start
-5. product
-6. categories area
-7. testimonial
-8. blog
-9. shop grid view
-10. shop list view
-11. product details
-12. checkout
-13. cart
-14. wishlist
-15. my account
-16. compare
-17. login register
-18. about us
-19. contact us
-20. banner
-21. modal
-22. sidebar
-23. footer
--------------------------------------------------------------------*/
-/*------ Typography Style Start ------*/
-
 @charset "UTF-8";
 
 
@@ -5819,7 +5790,6 @@ blockquote {
 .product-review-info .tab-content .review-description .tab-des h3 {
     color: #151542;
     font-size: 20px;
-    font-weight: 22px;
     font-weight: 700;
     text-transform: capitalize;
     padding-bottom: 10px;

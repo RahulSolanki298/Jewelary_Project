@@ -14,7 +14,8 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        //"ASPNETCORE_ENVIRONMENT": "Production"
       }
     },
     "APIs": {
@@ -22,8 +23,10 @@
       "dotnetRunMessages": "true",
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "https://localhost:4050;http://localhost:4051",
+      //"applicationUrl": "https://localhost:4050;http://localhost:4051",
+      "applicationUrl": "http://localhost:4050",
       "environmentVariables": {
+        //"ASPNETCORE_ENVIRONMENT": "Production",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }

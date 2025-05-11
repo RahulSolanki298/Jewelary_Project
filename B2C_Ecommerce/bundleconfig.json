@@ -10,34 +10,13 @@
       "wwwroot/assets/css/plugins/nice-select.css",
       "wwwroot/assets/css/plugins/jqueryui.min.css",
       "wwwroot/assets/css/bootstrap-multiselect.css",
-      "wwwroot/assets/css/hover.css",
-      "wwwroot/assets/css/style.css",
-      "wwwroot/css/site.css"
-    ],
-    "minify": {
-      "enabled": true
-    }
-  },
-  {
-    "outputFileName": "wwwroot/assets/js/site.min.js",
-    "inputFiles": [
-      "wwwroot/assets/js/vendor/modernizr-3.6.0.min.js",
-      "wwwroot/assets/js/vendor/jquery-3.6.0.min.js",
-      "wwwroot/assets/js/vendor/bootstrap.bundle.min.js",
-      "wwwroot/assets/js/plugins/slick.min.js",
-      "wwwroot/assets/js/plugins/countdown.min.js",
-      "wwwroot/assets/js/plugins/nice-select.min.js",
-      "wwwroot/assets/js/plugins/jqueryui.min.js",
-      "wwwroot/assets/js/plugins/image-zoom.min.js",
-      "wwwroot/assets/js/plugins/imagesloaded.pkgd.min.js",
-      "wwwroot/assets/js/plugins/ajaxchimp.js",
-      "wwwroot/assets/js/plugins/ajax-mail.js",
-      "wwwroot/assets/js/plugins/google-map.js",
-      "wwwroot/assets/js/bootstrap-multiselect.js",
-      "wwwroot/assets/js/main.js"
+      "wwwroot/assets/css/hover.css"
+      //"wwwroot/assets/css/style.css",
+      //"wwwroot/css/site.css"
     ],
     "minify": {
       "enabled": true
     }
   }
+  
 ]

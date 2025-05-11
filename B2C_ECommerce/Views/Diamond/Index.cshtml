@@ -286,7 +286,7 @@
                 });
 
                 $("#diamond-list-container").on("click", "#diamondTable .wishlist-toggle", function () {
-                    
+
                     let diamondId = $(this).data("diamondid");
                     let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
 
@@ -335,7 +335,7 @@
 
 
                 });
-            
+
             $("#diamondComparisonContent").on("change", ".compare-diamond-id", function () {
                     let checkbox = $(this);
                     let diamondId = checkbox.val();
@@ -357,7 +357,7 @@
                     resetSelectedCheckBox(diamondId);
             });
 
-            $("#diamondComparisonContent").on("click", ".btnWishlist", function () 
+            $("#diamondComparisonContent").on("click", ".btnWishlist", function ()
             {
                     let diamondId = $(this).data('diamondid').toString(); // Convert to string
 
@@ -390,7 +390,7 @@
 
                 try {
                     // Fetch data from the server (child partial view)
-                    const response = await fetch('/Diamond/GetShapeList');
+                    const response = await fetch('@Url.Action("GetShapeList", "Diamond")');
 
                     if (!response.ok) {
                         throw new Error('Failed to fetch shapes');
@@ -739,48 +739,55 @@
             }
 
             async function GetDepthData() {
-                    try {
-                        // Fetching price data from the API
-                        const response = await $.ajax({
-                              url: '@(SD.BaseApiUrl)/api/diamondproperty/get-depth-ranges', // API endpoint
-                          method: 'GET', // GET request
-                          dataType: 'json', // Expecting JSON response
-                        });
+                        try {
+                            // Fetching depth data from the API
+                            const response = await $.ajax({
+                                url: '@(SD.BaseApiUrl)/api/diamondproperty/get-depth-ranges', // API endpoint
+                                method: 'GET', // GET request
+                                dataType: 'json' // Expecting JSON response
+                            });
 
-                        // Ensure the response contains MaxPrice
-                        if (!response || typeof response.MaxValue !== 'number') {
-                          throw new Error('Invalid response structure');
-                        }
+                            // Ensure the response contains MaxValue
+                            if (!response || typeof response.MaxValue !== 'number') {
+                                throw new Error('Invalid response structure');
+                            }
 
                             const maxValue = response.MaxValue;
 
-                        // Initialize the price slider
-                            $("#DepthPer-slider").slider({
-                          range: true,
-                          min: 0, // Minimum price is 0
-                              max: maxValue, // Set maximum from API response
-                          step: 0.1, // Step size for the slider
-                              values: [0, maxValue], // Default values
-                          slide: function (event, ui) {
-                            // Update the min and max price input fields dynamically
-                                $("#minDepthPer").val(ui.values[0]);
-                                $("#maxDepthPer").val(ui.values[1]);
-                          }
-                        });
-
-                        // Set initial values for the price input fields
+                            // Set default input values
                             $("#minDepthPer").val(0);
-                        $("#maxDepthPer").val(maxValue);
-                        diamondFilters.FromDepth = $("#minDepthPer").val();
-                        diamondFilters.ToDepth = $("#maxDepthPer").val();
-                        getDiamondDataList(diamondFilters, page, rangeVal);
+                            $("#maxDepthPer").val(response.MaxValue);
 
-                    } catch (error) {
-                        // Handle any errors during the API request or slider setup
-                        console.error('Error fetching data: ', error);
+                            // Set initial filter values
+                            diamondFilters.FromDepth = 0;
+                            diamondFilters.ToDepth = response.MaxValue;
+
+
+                            // Initialize the depth slider
+                            $("#DepthPer-slider").slider({
+                                range: true,
+                                min: 0,
+                                max: maxValue,
+                                step: 0.1,
+                                values: [0, maxValue],
+                                slide: function (event, ui) {
+                                    // Update input fields dynamically
+                                    $("#minDepthPer").val(ui.values[0]);
+                                    $("#maxDepthPer").val(ui.values[1]);
+
+                                    diamondFilters.FromDepth = $("#minDepthPer").val();
+                                    diamondFilters.ToDepth = $("#maxDepthPer").val();
+                                    getDiamondDataList(diamondFilters, page, rangeVal);
+                                }
+                            });
+
+                        } catch (error) {
+                            // Handle any errors
+                            console.error('Error fetching data:', error);
                             $('#filter-box #DepthPer-list').html('<p>Failed to load depth ranges</p>');
+                        }
                     }
-            }
+
 
             async function GetRatioData() {
                 try {
@@ -1002,7 +1009,7 @@
                               }
             }
 
-            async function getDiamondDataList(diamondFilters, pageNumber = 1, pageSize = 10) 
+            async function getDiamondDataList(diamondFilters, pageNumber = 1, pageSize = 10)
             {
                 showLoader();
                 return $.ajax({
@@ -1116,9 +1123,9 @@
 
             function resetSelectedCheckBox(id) {
                 $('#diamond-list-container').find("#diamondTable tbody input[type='checkbox']").each(function () {
-                    let diamondId = $(this).attr('diamondId'); 
+                    let diamondId = $(this).attr('diamondId');
                     if (id == diamondId) {
-                        $(this).prop('checked', false); 
+                        $(this).prop('checked', false);
                     }
                 });
             }
@@ -1128,7 +1135,7 @@
                 $("#wishlistCounter").text(wishlist.length);
             }
 
-            function updateWishlistUI() 
+            function updateWishlistUI()
             {
                 let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
 

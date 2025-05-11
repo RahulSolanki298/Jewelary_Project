@@ -4,7 +4,6 @@
     {
         public string[] Shapes { get; set; }
 
-        //public int?[] Colors { get; set; } 
         public string[] Colors { get; set; }
 
         public decimal? FromCarat { get; set; } 

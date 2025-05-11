@@ -195,11 +195,15 @@ namespace APIs
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "APIs v1");
+                string swaggerJsonPath = env.IsDevelopment()
+                    ? "/swagger/v1/swagger.json"
+                    : "/api.jewelfacet/swagger/v1/swagger.json";
+
+                c.SwaggerEndpoint(swaggerJsonPath, "APIs v1");
                 c.RoutePrefix = "swagger"; // visit /swagger to view UI
             });
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseCors("AllowAllOrigins");
 
             // Serve static files for Swagger UI and other content

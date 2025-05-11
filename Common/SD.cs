@@ -76,10 +76,19 @@
         public static string IGI = "IGI";
         public static string GIA = "GIA";
 
-        public static string ShapeImgUrl = "http://192.168.100.153:8083/JewelFacet/";
-        public static string ImgUrl = "http://192.168.100.153:8082/JewelFacet";
-        //public static string BaseApiUrl = "https://localhost:44302"; // https://jswebapi.com
-        public static string BaseApiUrl = "https://localhost:4050"; // https://jswebapi.com
+
+        //  public static string ShapeImgUrl = "http://localhost:4050";
+        //  public static string ImgUrl = "http://localhost:4050";
+        //  public static string BaseApiUrl = "http://localhost:4050"; // https://jswebapi.com
+
+       // public static string ShapeImgUrl = "http://192.168.29.11/jewelfacet";
+       // public static string ImgUrl = "http://192.168.29.11/api.jewelfacet";
+       // public static string BaseApiUrl = "http://192.168.29.11/api.jewelfacet"; // https://jswebapi.com
+
+        public static string ShapeImgUrl = "http://180.211.116.206/jewelfacet"; // https://jswebapi.com
+        public static string ImgUrl = "http://180.211.116.206/api.jewelfacet"; // https://jswebapi.com
+        public static string BaseApiUrl = "http://180.211.116.206/api.jewelfacet"; // https://jswebapi.com
+
         // public static string BaseApiUrl = "http://192.168.29.11:8082"; // https://jswebapi.com
         //public static string BaseApiUrl = "http://192.168.100.153:8082"; // https://jswebapi.com
 
