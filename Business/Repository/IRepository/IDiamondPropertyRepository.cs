@@ -14,7 +14,7 @@ namespace Business.Repository.IRepository
         //Task<IEnumerable<DiamondPropertyDTO>> GetShapeListAsync();
         Task<IEnumerable<DiamondPropertyDTO>> GetClarityListAsync();
         Task<IEnumerable<DiamondPropertyDTO>> GetCutListAsync();
-        Task<CaratSizeRanges> GetCaratSizeRangeAsync();
+        Task<PriceRanges> GetCaratSizeRangeAsync();
         Task<IEnumerable<DiamondPropertyDTO>> GetRatioListAsync();
         Task<PriceRanges> GetPriceRangeAsync();
         Task<DepthDTO> GetDepthRangeAsync();

@@ -23,16 +23,16 @@ namespace B2C_ECommerce.Controllers
         {
             return View();
         }
-            
+
         [HttpPost]
-        public async Task<IActionResult> GetProductList(ProductFilters filters, int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> GetProductListByFilter(ProductFilters filters, int pageNumber = 1, int pageSize = 10)
         {
-            var result = await _productRepository.GetProductListByFilter(filters,pageNumber,pageSize);
-            return PartialView("~/Views/Products/_NewImagesAndProducts.cshtml", result);
+            var result = await _productRepository.GetProductListByFilter(filters, pageNumber, pageSize);
+            return PartialView("_NewImagesAndProducts", result);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetProductFilters()
+        public async Task<IActionResult> GetProductDataFilters()
         {
             var productFilters = new ProductPropertyListDTO();
             productFilters.Colors = (await _productRepository.GetProductColorList());
@@ -42,16 +42,14 @@ namespace B2C_ECommerce.Controllers
             var priceDT = await _productRepository.GetProductPriceRangeData();
             productFilters.FromPrice = priceDT.MinPrice;
             productFilters.ToPrice = priceDT.MaxPrice;
-            
-            return PartialView("~/Views/Products/_ProductFilterBar.cshtml", productFilters);
+
+            return PartialView("_ProductFilterBar", productFilters);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetSelectedProductCompare(string diamondIds)
+        public IActionResult GetSelectedProductCompare(string diamondIds)
         {
-            
-
-            return PartialView("~/Views/Products/_ProductFilterBar.cshtml");
+            return PartialView("_ProductFilterBar", null);
         }
 
 
@@ -63,11 +61,10 @@ namespace B2C_ECommerce.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ProductDetailsByColorId(string sku, int? colorId=0)
+        public async Task<IActionResult> ProductDetailsByColorId(string sku, int? colorId = 0)
         {
             var jsonResult = await _productRepository.GetProductsByColorId(sku, colorId);
 
-            //var products = JsonConvert.DeserializeObject<ProductDTO>(jsonResult);
 
             return Json(jsonResult);
         }
@@ -75,7 +72,7 @@ namespace B2C_ECommerce.Controllers
         [HttpGet]
         public async Task<IActionResult> ProductDetailsByCaratId(string sku, int? caratId = 0)
         {
-            var jsonResult = await _productRepository.GetProductsByCaratId(sku, caratId);
+            var jsonResult = await _productRepository.GetProductsByColorId(sku, 0, caratId);
 
 
             return Json(jsonResult);

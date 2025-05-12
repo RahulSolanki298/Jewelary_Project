@@ -25,7 +25,7 @@ namespace B2C_ECommerce.Controllers
                                   .Select(id => int.Parse(id))
                                   .ToArray();
             var response = await _diamondService.GetSelectedDiamondByIds(diamondIdArray);
-            return PartialView("~/Views/Wishlist/_WishlistDiamonds.cshtml", response);
+            return PartialView("_WishlistDiamonds", response);
         }
     }
 }

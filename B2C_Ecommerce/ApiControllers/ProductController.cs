@@ -184,7 +184,7 @@ namespace B2C_ECommerce.ApiControllers
         }
 
 
-         [HttpPost("BulkProductCollectionImagesUpload")]
+        [HttpPost("BulkProductCollectionImagesUpload")]
         [RequestFormLimits(MultipartBodyLengthLimit = 5368709120)]
         [RequestSizeLimit(5368709120)]
         public async Task<IActionResult> UploadProductCollectionImages([FromForm] IFormFile zipFile)

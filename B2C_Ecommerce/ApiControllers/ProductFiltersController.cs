@@ -14,49 +14,49 @@ namespace B2C_ECommerce.ApiControllers
             _productPropertyRepository = productProperty;
         }
 
-        [HttpGet("get-color-list")]
+        [HttpGet("GetColorList")]
         public async Task<ActionResult> GetColorList()
         {
             var result = await _productPropertyRepository.GetProductColorList();
             return Ok(result);
         }
 
-        [HttpGet("Get-Style-List")]
+        [HttpGet("GetStylesList")]
         public async Task<IActionResult> GetStylesList()
         {
             var result = await _productPropertyRepository.GetSubCategoryList();
             return Ok(result);
         }
 
-        [HttpGet("Get-Collection-List")]
+        [HttpGet("GetCollectionList")]
         public async Task<IActionResult> GetCollectionList()
         {
             var result = await _productPropertyRepository.GetCategories();
             return Ok(result);
         }
 
-        [HttpGet("Get-Category-List")]
+        [HttpGet("GetCategoryList")]
         public async Task<IActionResult> GetCategoryList()
         {
             var result = await _productPropertyRepository.GetProductCategoryList();
             return Ok(result);
         }
 
-        [HttpGet("Get-SubCat-List")]
+        [HttpGet("GetSubCategoryList")]
         public async Task<IActionResult> GetSubCategoryList()
         {
             var result = await _productPropertyRepository.GetProductSubCategoryList();
             return Ok(result);
         }
 
-        [HttpGet("get-shape-list")]
+        [HttpGet("GetShapeList")]
         public async Task<ActionResult> GetShapeList()
         {
             var result = await _productPropertyRepository.GetProductShapeList();
             return Ok(result);
         }
 
-        [HttpGet("get-price-ranges")]
+        [HttpGet("GetPriceRangesAsync")]
         public async Task<ActionResult> GetPriceRangesAsync()
         {
             var result = await _productPropertyRepository.GetPriceRangeAsync();
@@ -64,7 +64,7 @@ namespace B2C_ECommerce.ApiControllers
         }
 
 
-        [HttpGet("get-carat-ranges")]
+        [HttpGet("GetCaratRangesAsync")]
         public async Task<ActionResult> GetCaratRangesAsync()
         {
             var result = await _productPropertyRepository.GetProductCaratSizeList();

@@ -114,25 +114,25 @@ namespace Business.Repository
                                     IconPath = par.IconPath,
                                     SymbolName = par.SymbolName
                                 }).OrderBy(x => x.DispOrder).ToListAsync();
-             return result;
+            return result;
         }
 
-        public async Task<CaratSizeRanges> GetCaratSizeRangeAsync()
-        {
-            var caratValues = await _context.Diamonds
-                .Where(d => d.Carat != null)
-                .Select(d => Convert.ToDecimal(d.Carat))
-                .ToListAsync();
+        //public async Task<CaratSizeRanges> GetCaratSizeRangeAsync()
+        //{
+        //    var caratValues = await _context.Diamonds
+        //        .Where(d => d.Carat != null)
+        //        .Select(d => Convert.ToDecimal(d.Carat))
+        //        .ToListAsync();
 
-            if (!caratValues.Any())
-                return new CaratSizeRanges(); // Return default or handle as needed
+        //    if (!caratValues.Any())
+        //        return new CaratSizeRanges(); // Return default or handle as needed
 
-            return new CaratSizeRanges
-            {
-                MinCaratSize = caratValues.Min(),
-                MaxCaratSize = caratValues.Max()
-            };
-        }
+        //    return new CaratSizeRanges
+        //    {
+        //        MinCaratSize = caratValues.Min(),
+        //        MaxCaratSize = caratValues.Max()
+        //    };
+        //}
 
         public async Task<IEnumerable<DiamondShapeData>> GetShapeListAsync()
         {
@@ -176,9 +176,9 @@ namespace Business.Repository
                     ParentId = par.ParentId,
                     DispOrder = par.DispOrder,
                     IconPath = par.IconPath,
-                    Description=par.Description,
-                    IsActivated=par.IsActivated,
-                    SymbolName=par.SymbolName
+                    Description = par.Description,
+                    IsActivated = par.IsActivated,
+                    SymbolName = par.SymbolName
                 })
                 .OrderBy(x => x.DispOrder)
                 .ToListAsync();
@@ -240,7 +240,7 @@ namespace Business.Repository
                 .ToListAsync();
 
             return result;
-            
+
         }
 
 
@@ -459,6 +459,11 @@ namespace Business.Repository
             priceRange.MinValue = data.Min(x => x.Ratio).Value;
 
             return priceRange;
+        }
+
+        public Task<PriceRanges> GetCaratSizeRangeAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

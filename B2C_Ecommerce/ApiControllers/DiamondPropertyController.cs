@@ -22,7 +22,7 @@ namespace B2C_ECommerce.ApiControllers
 
         #region GET Diamond Properties
 
-        [HttpGet("diamond-property-list")]
+        [HttpGet("GetDiamondProperies")]
         public async Task<ActionResult> GetDiamondProperies()
         {
             var result = await _diamondProperty.GetAllAsync();
@@ -36,63 +36,63 @@ namespace B2C_ECommerce.ApiControllers
             return Ok(result);
         }
 
-        [HttpGet("diamond-property/get-color-list")]
+        [HttpGet("diamond-property/GetDiamondMetal")]
         public async Task<ActionResult> GetDiamondMetal()
         {
             var result = await _diamondProperty.GetMetalListAsync();
             return Ok(result);
         }
 
-        [HttpGet("get-carat-list")]
+        [HttpGet("GetDiamondCarat")]
         public async Task<ActionResult> GetDiamondCarat()
         {
             var result = await _diamondProperty.GetCaratListAsync();
             return Ok(result);
         }
 
-        [HttpGet("get-carat-ranges")]
+        [HttpGet("GetDiamondCaratRanges")]
         public async Task<ActionResult> GetDiamondCaratRanges()
         {
             var result = await _diamondProperty.GetCaratSizeRangeAsync();
             return Ok(result);
         }
 
-        [HttpGet("diamond-property/get-clarity-list")]
+        [HttpGet("diamond-property/GetClarityListAsync")]
         public async Task<ActionResult> GetClarityListAsync()
         {
             var result = await _diamondProperty.GetClarityListAsync();
             return Ok(result);
         }
 
-        [HttpGet("get-shape-list")]
+        [HttpGet("GetShapeListAsync")]
         public async Task<ActionResult> GetShapeListAsync()
         {
             var result = await _diamondProperty.GetShapeListAsync();
             return Ok(result);
         }
 
-        [HttpGet("get-cut-list")]
+        [HttpGet("GetCutListAsync")]
         public async Task<ActionResult> GetCutListAsync()
         {
             var result = await _diamondProperty.GetCutListAsync();
             return Ok(result);
         }
 
-        [HttpGet("get-price-ranges")]
+        [HttpGet("GetPriceRangesAsync")]
         public async Task<ActionResult> GetPriceRangesAsync()
         {
             var result = await _diamondProperty.GetPriceRangeAsync();
             return Ok(result);
         }
 
-        [HttpGet("get-table-ranges")]
+        [HttpGet("GetTableRangesAsync")]
         public async Task<ActionResult> GetTableRangesAsync()
         {
             var result = await _diamondProperty.GetTableRangeAsync();
             return Ok(result);
         }
 
-        [HttpGet("get-depth-ranges")]
+        [HttpGet("GetDepthRangesAsync")]
         public async Task<ActionResult> GetDepthRangesAsync()
         {
             var result = await _diamondProperty.GetDepthRangeAsync();
@@ -100,35 +100,35 @@ namespace B2C_ECommerce.ApiControllers
         }
 
 
-        [HttpGet("get-ratio-list")]
+        [HttpGet("GetRatioListAsync")]
         public async Task<ActionResult> GetRatioListAsync()
         {
             var result = await _diamondProperty.GetRatioListAsync();
             return Ok(result);
         }
 
-        [HttpGet("get-ratio-ranges")]
+        [HttpGet("GetRatioRangeAsync")]
         public async Task<ActionResult> GetRatioRangeAsync()
         {
             var result = await _diamondProperty.GetRatioRangeAsync();
             return Ok(result);
         }
 
-        [HttpGet("get-fluor-list")]
+        [HttpGet("GetFluorListAsync")]
         public async Task<ActionResult> GetFluorListAsync()
         {
             var result = await _diamondProperty.GetFluorListAsync();
             return Ok(result);
         }
 
-        [HttpGet("get-polish-list")]
+        [HttpGet("GetPolishListAsync")]
         public async Task<ActionResult> GetPolishListAsync()
         {
             var result = await _diamondProperty.GetPolishListAsync();
             return Ok(result);
         }
 
-        [HttpGet("get-symmetry-list")]
+        [HttpGet("GetSymmetryListAsync")]
         public async Task<ActionResult> GetSymmetryListAsync()
         {
             var result = await _diamondProperty.GetSymmetryListAsync();

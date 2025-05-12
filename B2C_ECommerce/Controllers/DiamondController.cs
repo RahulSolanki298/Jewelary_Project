@@ -22,10 +22,10 @@ namespace B2C_ECommerce.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetDiamondList(DiamondFilters diamondFilters, int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> GetDiamondListByFilter(DiamondFilters diamondFilters, int pageNumber = 1, int pageSize = 10)
         {
             var response = await _diamondService.GetDiamondListByFilter(diamondFilters, pageNumber, pageSize);
-            return PartialView("~/Views/Diamond/_DiamondDataList.cshtml", response);
+            return PartialView("_DiamondDataList", response);
         }
 
         [HttpGet]
@@ -43,9 +43,9 @@ namespace B2C_ECommerce.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCaratSizeRangeAsync()
+        public async Task<IActionResult> GetCaratSizeDataRangeAsync1()
         {
-            var response = await _diamondService.GetCaratSizeRangeAsync();
+            var response = await _diamondService.GetCaratSizeDataRangeAsync1();
             return Json(response);
         }
 
@@ -74,7 +74,7 @@ namespace B2C_ECommerce.Controllers
         public IActionResult GetCertificate(string diamondCerti)
         {
             ViewBag.Certificate = diamondCerti;
-            return PartialView("~/Views/Diamond/_CertificateDisplay.cshtml");
+            return PartialView("_CertificateDisplay");
         }
 
         [HttpGet]
@@ -92,7 +92,7 @@ namespace B2C_ECommerce.Controllers
                                   .Select(id => int.Parse(id))
                                   .ToArray();
             var response = await _diamondService.GetSelectedDiamondByIds(diamondIdArray);
-            return PartialView("~/Views/Diamond/_CompareDiamonds.cshtml", response);
+            return PartialView("_CompareDiamonds", response);
         }
 
         [HttpGet]

@@ -36,6 +36,6 @@ namespace B2C_ECommerce.IServices
 
         Task<IEnumerable<DiamondPropertyDTO>> GetSymmetryListAsync();
 
-        Task<CaratSizeRanges> GetCaratSizeRangeAsync();
+        Task<CaratSizeRanges> GetCaratSizeDataRangeAsync1();
     }
 }
