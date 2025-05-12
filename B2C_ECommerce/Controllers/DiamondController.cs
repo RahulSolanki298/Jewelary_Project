@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Azure;
 using B2C_ECommerce.IServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Models;
 
 namespace B2C_ECommerce.Controllers
@@ -11,9 +13,13 @@ namespace B2C_ECommerce.Controllers
     public class DiamondController : Controller
     {
         private readonly IDiamondService _diamondService;
-        public DiamondController(IDiamondService diamondService)
+
+        private readonly ILogger<AccountController> _logger;
+
+        public DiamondController(IDiamondService diamondService, ILogger<AccountController> logger)
         {
             _diamondService = diamondService;
+            _logger = logger;
         }
 
         public IActionResult Index()
@@ -31,8 +37,16 @@ namespace B2C_ECommerce.Controllers
         [HttpGet]
         public async Task<IActionResult> GetShapeList()
         {
-            var response = await _diamondService.GetShapeListAsync();
-            return PartialView("_ShapeList", response);
+            try
+            {
+                var response = await _diamondService.GetShapeListAsync();
+                return PartialView("_ShapeList", response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Exception :", ex.Message);
+                throw;
+            }
         }
 
         [HttpGet]
@@ -67,7 +81,7 @@ namespace B2C_ECommerce.Controllers
         public async Task<IActionResult> GetClarityList()
         {
             var response = await _diamondService.GetClarityListAsync();
-                return Json(response);
+            return Json(response);
         }
 
         [HttpGet]

@@ -103,21 +103,21 @@ namespace B2C_ECommerce.ApiControllers
                 //everything is valid and we need to login the user
 
                 var signinCredentials = GetSigningCredentials();
-                var claims = await GetClaims(user);
+                //var claims = await GetClaims(user);
 
-                var tokenOptions = new JwtSecurityToken(
-                    issuer: _aPISettings.ValidIssuer,
-                    audience: _aPISettings.ValidAudience,
-                    claims: claims,
-                    expires: DateTime.Now.AddDays(30),
-                    signingCredentials: signinCredentials);
+                //var tokenOptions = new JwtSecurityToken(
+                //    issuer: _aPISettings.ValidIssuer,
+                //    audience: _aPISettings.ValidAudience,
+                //    claims: claims,
+                //    expires: DateTime.Now.AddDays(30),
+                //    signingCredentials: signinCredentials);
 
-                var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+                //var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
 
                 return Ok(new AuthenticationResponseDTO
                 {
                     IsAuthSuccessful = true,
-                    Token = token,
+                    //Token = token,
                     userDTO = new UserDTO
                     {
                         FirstName = user.FirstName,
@@ -242,28 +242,10 @@ namespace B2C_ECommerce.ApiControllers
                     });
                 }
 
-                // Build the list of claims, including the user's role(s)
-                var claims = await GetClaims(user);
-
-                // Add roles to the claims
-                claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
-
-                // Generate JWT Token with roles included
-                var signinCredentials = GetSigningCredentials();
-                var tokenOptions = new JwtSecurityToken(
-                    issuer: _aPISettings.ValidIssuer,
-                    audience: _aPISettings.ValidAudience,
-                    claims: claims,
-                    expires: DateTime.Now.AddDays(30),
-                    signingCredentials: signinCredentials);
-
-                var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
-
-                // Send the token and user info back to the client
+                // Send user info back to the client without JWT token
                 return Ok(new AuthenticationResponseDTO
                 {
                     IsAuthSuccessful = true,
-                    Token = token,
                     userDTO = new UserDTO
                     {
                         FirstName = user.FirstName,
@@ -284,6 +266,7 @@ namespace B2C_ECommerce.ApiControllers
                 });
             }
         }
+
 
         [HttpGet("get-user-profile/{userId}")]
         [AllowAnonymous]

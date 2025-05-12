@@ -7,6 +7,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.17" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
 
 	  <PackageReference Include="AutoMapper" Version="12.0.1" />
@@ -19,48 +21,13 @@
 	  <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.17" />
 	  <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.17" />
 	  <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.17" />
+	  <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Business\Business.csproj" />
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDB-115\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDB-116\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDB-117\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDB-119\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDB-120\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDB-121\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDB-122\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDB-123\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDB-124\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDB-125\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDE-689\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDE-873\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDE-874\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDE-875\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDP-597\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDP-598\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDP-599\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDP-600\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDP-609\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDP-611\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDP-613\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDP-615\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDP-619\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDP-622\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDP-623\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDP-624\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDP-626\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDP-627\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDR-5090\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDR-5091\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDR-5093\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDR-5099\" />
-    <Folder Include="wwwroot\UploadedFiles\Collections\PLDR-5119\" />
   </ItemGroup>
 
 </Project>

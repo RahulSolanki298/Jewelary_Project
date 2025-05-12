@@ -35,10 +35,11 @@ namespace B2C_ECommerce.Controllers
         public async Task<IActionResult> GetProductDataFilters()
         {
             var productFilters = new ProductPropertyListDTO();
-            productFilters.Colors = (await _productRepository.GetProductColorList());
+            var data = await _productRepository.GetProductColorList();
+            productFilters.Colors=data.ToList();
             //productFilters.CollectionList = (await _productRepository.GetSubcategoryList());
-            productFilters.Shapes = (await _productRepository.GetShapeList());
-            //productFilters.StylesList = await _productRepository.GetCategoriesList();
+            var shapes = (await _productRepository.GetShapeList());
+            productFilters.Shapes=shapes.ToList();
             var priceDT = await _productRepository.GetProductPriceRangeData();
             productFilters.FromPrice = priceDT.MinPrice;
             productFilters.ToPrice = priceDT.MaxPrice;

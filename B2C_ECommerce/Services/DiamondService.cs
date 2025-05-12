@@ -169,22 +169,26 @@ namespace B2C_ECommerce.Services
 
         public async Task<CaratSizeRanges> GetCaratSizeDataRangeAsync1()
         {
-            var caratValues = await _context.Diamonds
+            var minCarat = await _context.Diamonds
                 .Where(d => d.Carat != null)
-                .Select(d => Convert.ToDecimal(d.Carat))
-                .ToListAsync();
+                .MinAsync(d => (decimal?)d.Carat);
 
-            if (!caratValues.Any())
-                return new CaratSizeRanges(); // Return default or handle as needed
+            var maxCarat = await _context.Diamonds
+                .Where(d => d.Carat != null)
+                .MaxAsync(d => (decimal?)d.Carat);
+
+            if (minCarat == null || maxCarat == null)
+                return new CaratSizeRanges(); // Handle empty result
 
             var data= new CaratSizeRanges
             {
-                MinCaratSize = caratValues.Min(),
-                MaxCaratSize = caratValues.Max()
+                MinCaratSize = minCarat.Value,
+                MaxCaratSize = maxCarat.Value
             };
 
             return data;
         }
+
 
         public async Task<IEnumerable<DiamondPropertyDTO>> GetCutListAsync()
         {

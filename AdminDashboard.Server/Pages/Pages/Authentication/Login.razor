@@ -93,10 +93,8 @@
 
             if (response.IsAuthSuccessful)
             {
-                // Store token in localStorage
-                await jSRuntime.InvokeVoidAsync("localStorage.setItem", "token", response.Token);
+                //await jSRuntime.InvokeVoidAsync("localStorage.setItem", "token", response.Token);
 
-                // Assuming these values are part of the response or accessible through a separate method
                 var userId = response.userDTO.Id ?? string.Empty;
                 var email = response.userDTO.Email ?? string.Empty;
                 var role = response.userDTO.Roles;
@@ -115,7 +113,6 @@
         }
         catch (Exception ex)
         {
-            // Optional: Log exception
             Console.Error.WriteLine($"Login failed: {ex.Message}");
             Message = "Something went wrong. Please try again later.";
         }
