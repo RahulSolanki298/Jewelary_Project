@@ -8,10 +8,7 @@
 
     <style>
 
-    .demo {
-        width: 780px;
-        margin: 20px auto;
-    }
+    
 
     #lightSliderVertical li 
     {
@@ -69,7 +66,7 @@
                 <!-- product details inner end -->
                 <div class="product-details-inner">
                     <div class="row">
-                        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6">
+                        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12">
                             <div class="demo">
                                 <div class="vertical-slider-wrapper d-flex">
                                     <ul id="lightSliderVertical" class="img-with-bg">
@@ -91,7 +88,7 @@
                                                 }
                                                 else if (!string.IsNullOrEmpty(item.VideoUrl) && item.VideoUrl != "-")
                                                 {
-                                                    <li data-thumb="/assets/img/video/video-icon.svg">
+                                                    <li data-thumb="@SD.ImgUrl/assets/img/video/video-icon.svg">
                                                         <a href="@($"{SD.ImgUrl}/{item.VideoUrl}")" data-fancybox="gallery" data-caption="Product Video">
                                                             <video muted loop playsinline autoplay style="max-width: 100%;">
                                                                 <source src="@($"{SD.ImgUrl}/{item.VideoUrl}")" type="video/mp4" />
@@ -106,7 +103,7 @@
                             </div>
                         </div>
 
-                        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6">
+                        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6  col-sm-12">
                             <div class="product-details-des">
                                 @*<h3 class="product-name">@Model.ShapeName @Model.BandWidth @Model.Length @Model.Sku</h3>*@
                                 <h3 class="product-name">@(Model.Title != null ? Model.Title : Model.EventName) </h3>
@@ -749,7 +746,7 @@
                     const altText = response.colorName + " - Image " + (index + 1);
 
                     sliderHtml += `
-                        <li data-thumb="/assets/img/video/video-icon.svg">
+                        <li data-thumb="@SD.ImgUrl/assets/img/video/video-icon.svg">
                             <a href="${vdoUrl}" data-fancybox="gallery" data-caption="${altText}">
                                 <video muted="" loop="" playsinline="" autoplay="" style="max-width: 100%;">
                                                                 <source src="${vdoUrl}" type="video/mp4">

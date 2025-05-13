@@ -1,4 +1,6 @@
-﻿namespace Models
+﻿using System.Collections.Generic;
+
+namespace Models
 {
     public class AuthenticationResponseDTO
     {
@@ -6,5 +8,7 @@
         public string ErrorMessage { get; set; }
         public string Token { get; set; }
         public UserDTO userDTO { get; set; }
+
+        public List<string> Roles { get; set; }
     }
 }

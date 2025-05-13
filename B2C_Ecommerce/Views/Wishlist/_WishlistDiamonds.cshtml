@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<Models.DiamondData>
-
+@using Common;
 
     <div class="custom-container">
         <div class="row">
@@ -26,7 +26,7 @@
                             {
                             <tr>
                                 <td class="pro-thumbnail">@(index++)</td>
-                                <td class="pro-title"><a href="#"><img class="img-fluid" style="max-width:45px;height:auto;" src="@item.IconPath" alt="Product"></a></td>
+                                <td class="pro-title"><a href="#"><img class="img-fluid" style="max-width:45px;height:auto;" src="@SD.ImgUrl@item.IconPath" alt="Product"></a></td>
                                 <td class="pro-price">@item.Carat @item.ColorName @item.ShapeName @item.ClarityName @item.LabName</td>
                                 <td class="pro-quantity">@item.Quantity</td>
                                 <td class="pro-price">@item.Price</td>

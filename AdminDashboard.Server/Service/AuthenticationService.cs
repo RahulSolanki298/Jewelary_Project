@@ -1,11 +1,15 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AdminDashboard.Server.Service.IService;
 using Blazored.LocalStorage;
 using Common;
+using DataAccess.Entities;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Models;
 
 namespace AdminDashboard.Server.Service
@@ -15,28 +19,43 @@ namespace AdminDashboard.Server.Service
         private readonly HttpClient _httpClient;
         private readonly AuthenticationStateProvider _authenticationStateProvider;
         private readonly ILocalStorageService _localStorage;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AuthenticationService(HttpClient httpClient, AuthenticationStateProvider authenticationStateProvider, ILocalStorageService localStorage)
+        public AuthenticationService(HttpClient httpClient,
+            AuthenticationStateProvider authenticationStateProvider,
+            ILocalStorageService localStorage, SignInManager<ApplicationUser> signInManager, 
+            UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager
+            )
         {
             _httpClient = httpClient;
             _authenticationStateProvider = authenticationStateProvider;
             _localStorage = localStorage;
+            _signInManager = signInManager;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public async Task<AuthenticationResponseDTO> AdminSignInAsync(AdminLoginModel loginDTO)
         {
             try
             {
-                var jsonContent = new StringContent(JsonSerializer.Serialize(loginDTO), Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync($"{SD.BaseApiUrl}/api/account/admin-sign-in", jsonContent);
-
-                if (response.IsSuccessStatusCode)
+                // Step 1: Find the user
+                var user = await _userManager.FindByNameAsync(loginDTO.UserName);
+                if (user == null)
                 {
-                    var authResponse = await JsonSerializer.DeserializeAsync<AuthenticationResponseDTO>(await response.Content.ReadAsStreamAsync());
-
-                    return authResponse;
+                    return new AuthenticationResponseDTO
+                    {
+                        IsAuthSuccessful = false,
+                        ErrorMessage = "User not found."
+                    };
                 }
-                else
+
+                // Step 2: Verify the password
+                var isPasswordValid = await _userManager.CheckPasswordAsync(user, loginDTO.Password);
+                if (!isPasswordValid)
                 {
                     return new AuthenticationResponseDTO
                     {
@@ -45,13 +64,44 @@ namespace AdminDashboard.Server.Service
                     };
                 }
 
-            }
-            catch (System.Exception)
-            {
+                // Step 3: Get roles
+                var roles = await _userManager.GetRolesAsync(user);
+                if (roles == null || !roles.Any())
+                {
+                    return new AuthenticationResponseDTO
+                    {
+                        IsAuthSuccessful = false,
+                        ErrorMessage = "User does not have assigned roles."
+                    };
+                }
 
-                throw;
+                // Step 4: Return successful login response
+                return new AuthenticationResponseDTO
+                {
+                    IsAuthSuccessful = true,
+                    Token = null, // Add JWT here if needed
+                    Roles = roles.ToList(),
+                    userDTO = new UserDTO
+                    {
+                        Id = user.Id,
+                        Email = user.Email,
+                        Roles = roles.ToList()
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                // Optional: Log exception
+                return new AuthenticationResponseDTO
+                {
+                    IsAuthSuccessful = false,
+                    ErrorMessage = "An error occurred during sign-in."
+                };
             }
         }
+
+
+
 
         public async Task LogoutAsync()
         {

@@ -24,6 +24,9 @@ using Common;
 using OfficeOpenXml;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Diagnostics;
 
 namespace AdminDashboard.Server
 {
@@ -38,30 +41,32 @@ namespace AdminDashboard.Server
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // Configure Database
+            // ---------- Database ----------
             services.AddDbContext<ApplicationDBContext>(options =>
                 options.UseSqlServer(_config.GetConnectionString("DefaultConnection"))
             );
 
-            services.Configure<KestrelServerOptions>(serverOptions =>
+            // ---------- Server Limits ----------
+            services.Configure<KestrelServerOptions>(options =>
             {
-                serverOptions.Limits.MaxRequestBodySize = long.MaxValue;// 50 MB
+                options.Limits.MaxRequestBodySize = long.MaxValue;
             });
-            services.Configure<IISServerOptions>(serverOptions =>
+            services.Configure<IISServerOptions>(options =>
             {
-                serverOptions.MaxRequestBodySize = long.MaxValue;// 50 MB
+                options.MaxRequestBodySize = long.MaxValue;
+            });
+            services.Configure<FormOptions>(options =>
+            {
+                options.MultipartBodyLengthLimit = 5_368_709_120; // 5 GB
             });
 
-            // Configure Identity
+            // ---------- Identity ----------
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDBContext>()
                 .AddDefaultTokenProviders()
                 .AddDefaultUI();
 
-            // Register AutoMapper
-            services.AddAutoMapper(typeof(MappingProfile));
-
-            // Register Repositories
+            // ---------- Services ----------
             services.AddScoped<JwtTokenService>();
             services.AddScoped<ILogEntryRepository, LogEntryRepository>();
             services.AddScoped<IVirtualAppointmentRepo, VirtualAppointmentRepo>();
@@ -73,48 +78,53 @@ namespace AdminDashboard.Server
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IB2BOrdersRepository, B2BOrdersRepository>();
             services.AddScoped<IB2COrdersRepository, B2COrdersRepository>();
-            services.AddBlazoredLocalStorage();
-            services.AddScoped<ILocalStorageService,LocalStorageService>();
+            services.AddScoped<IDiamondRepository, DiamondRepository>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
-            services.AddScoped<IDiamondRepository, DiamondRepository>();
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            services.AddScoped<ILocalStorageService, LocalStorageService>();
 
+            // ---------- External Libraries ----------
+            services.AddBlazoredLocalStorage();
+            services.AddMudServices();
+            services.AddAutoMapper(typeof(MappingProfile));
+
+            // ---------- Blazor + Razor ----------
+            services.AddRazorPages().AddRazorRuntimeCompilation();
+            services.AddServerSideBlazor();
             services.AddAuthorizationCore();
             services.AddHttpContextAccessor();
-            services.AddServerSideBlazor();
-            services.AddMudServices();
-            services.Configure<FormOptions>(options =>
-            {
-                options.MultipartBodyLengthLimit = 5_368_709_120; // 5 GB
-            });
 
+            // ---------- HttpClient ----------
             services.AddHttpClient("MyApiClient", client =>
             {
-                client.BaseAddress = new Uri($"{SD.BaseApiUrl}");
-                client.Timeout = TimeSpan.FromMinutes(30); // Increase timeout for large uploads
+                client.BaseAddress = new Uri(SD.BaseApiUrl);
+                client.Timeout = TimeSpan.FromMinutes(30);
             });
 
-            services.AddRazorPages().AddRazorRuntimeCompilation();
-
-            // Configure HttpClient
             services.AddScoped<HttpClient>(sp => new HttpClient
             {
-                BaseAddress = new Uri($"{SD.BaseApiUrl}") // Your API base address
+                BaseAddress = new Uri(SD.BaseApiUrl)
             });
+
+            // ---------- Excel ----------
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDbInitializer dbInitializer)
         {
-            // Add centralized exception logging
+            // ---------- Exception Handling ----------
             app.UseExceptionHandler(errorApp =>
             {
                 errorApp.Run(async context =>
                 {
-                    var exceptionHandlerPathFeature = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerPathFeature>();
-                    if (exceptionHandlerPathFeature?.Error != null)
+                    context.Response.StatusCode = 500;
+                    context.Response.ContentType = "text/plain";
+
+                    var exceptionHandlerFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+                    if (exceptionHandlerFeature?.Error != null)
                     {
-                        Log.Error(exceptionHandlerPathFeature.Error, "Unhandled Exception occurred.");
+                        Log.Error(exceptionHandlerFeature.Error, "Unhandled Exception occurred.");
+                        await context.Response.WriteAsync("An unexpected error occurred.");
                     }
                 });
             });
@@ -130,21 +140,27 @@ namespace AdminDashboard.Server
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseRouting();
 
+            // ---------- Routing & Middleware ----------
+            app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
 
-            // Database Seeding
-            Seeding(app.ApplicationServices, dbInitializer);
-
+            // ---------- Max Request Body Size Per Request ----------
             app.Use(async (context, next) =>
             {
-                context.Features.Get<IHttpMaxRequestBodySizeFeature>().MaxRequestBodySize = 5368709120; // 5 GB
-                await next.Invoke();
+                var maxRequestFeature = context.Features.Get<IHttpMaxRequestBodySizeFeature>();
+                if (maxRequestFeature != null && maxRequestFeature.IsReadOnly == false)
+                {
+                    maxRequestFeature.MaxRequestBodySize = 5_368_709_120; // 5 GB
+                }
+                await next();
             });
 
+            // ---------- Seeding ----------
+            SeedDatabase(app.ApplicationServices, dbInitializer).GetAwaiter().GetResult();
 
+            // ---------- Endpoints ----------
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -153,11 +169,12 @@ namespace AdminDashboard.Server
             });
         }
 
-        private async void Seeding(IServiceProvider serviceProvider, IDbInitializer dbInitializer)
+        private async Task SeedDatabase(IServiceProvider serviceProvider, IDbInitializer dbInitializer)
         {
             using var scope = serviceProvider.CreateScope();
             var scopedDbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
             await scopedDbInitializer.Initalize();
         }
     }
+
 }

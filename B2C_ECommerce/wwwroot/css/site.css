@@ -917,8 +917,9 @@ body {
     .range_slider{
         width:85px !important;
     }
-    .shape-btn{
-        width:19%;
+    .shape-btn {
+        /*width:19%;*/
+        width: 23%;
     }
 
     .diamond-grid {

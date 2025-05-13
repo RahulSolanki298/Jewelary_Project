@@ -148,34 +148,36 @@
 
 
 @code {
-        [Inject]
-        public HttpClient Http { get; set; } = default!;
+    [Inject]
+    public HttpClient Http { get; set; } = default!;
 
-        private IEnumerable<CustomerOrders> RequestOrders { get; set; } = Enumerable.Empty<CustomerOrders>();
+    private readonly IB2COrdersRepository _ordersRepository;
 
-        protected override async Task OnInitializedAsync()
+    private IEnumerable<CustomerOrders> RequestOrders { get; set; } = Enumerable.Empty<CustomerOrders>();
+    //private IEnumerable<CustomerOrders> ProcessOrders { get; set; } = Enumerable.Empty<CustomerOrders>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
         {
-            try
-            {
-                var url = $"{SD.BaseApiUrl}/api/B2C/Order-Processing-List";
-                var result = await Http.GetFromJsonAsync<IEnumerable<CustomerOrders>>(url);
-                RequestOrders = result ?? Enumerable.Empty<CustomerOrders>();
-            }
-            catch (Exception ex)
-            {
-                // Log the error or handle it accordingly
-                Console.Error.WriteLine($"Error fetching order list: {ex.Message}");
-                RequestOrders = Enumerable.Empty<CustomerOrders>();
-            }
+            //RequestOrders = await _ordersRepository.GetB2COrderRequestList();
+            //ProcessOrders = await _ordersRepository.GetB2COrderProcessingList();
         }
-
-
-        EarningReport[] earningReports = new EarningReport[]
+        catch (Exception ex)
         {
+            // Log the error or handle it accordingly
+            Console.Error.WriteLine($"Error fetching order list: {ex.Message}");
+            RequestOrders = Enumerable.Empty<CustomerOrders>();
+        }
+    }
+
+
+    EarningReport[] earningReports = new EarningReport[]
+    {
                 new EarningReport { Name = "Lunees", Title = "Reactor Engineer", Avatar = "https://avatars2.githubusercontent.com/u/71094850?s=460&u=66c16f5bb7d27dc751f6759a82a3a070c8c7fe4b&v=4", Salary = "$0.99", Severity = Color.Success, SeverityTitle = "Low"},
                 new EarningReport { Name = "Mikes-gh", Title = "Developer", Avatar = "https://avatars.githubusercontent.com/u/16208742?s=120&v=4", Salary = "$19.12K", Severity = Color.Secondary, SeverityTitle = "Medium"},
                 new EarningReport { Name = "Garderoben", Title = "CSS Magician", Avatar = "https://avatars2.githubusercontent.com/u/10367109?s=460&amp;u=2abf95f9e01132e8e2915def42895ffe99c5d2c6&amp;v=4", Salary = "$1337", Severity = Color.Primary, SeverityTitle = "High"},
-        };
+    };
 
     class EarningReport
     {
