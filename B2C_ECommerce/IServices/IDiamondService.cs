@@ -8,6 +8,7 @@ namespace B2C_ECommerce.IServices
     public interface IDiamondService
     {
         Task<DiamondAllDataDto> GetDiamondListByFilter(DiamondFilters diamondFilters, int pageNumber = 1, int pageSize = 10);
+        
         Task<DiamondData> GetDiamondById(int diamondId);
 
         Task<IEnumerable<DiamondShapeData>> GetShapeListAsync();
@@ -21,8 +22,6 @@ namespace B2C_ECommerce.IServices
         Task<PriceRanges> GetProductPriceRangeData();
 
         Task<IEnumerable<DiamondPropertyDTO>> GetCaratListAsync();
-
-        Task<CaratSizeRanges> GetCaratSizeRangeAsync();
 
         Task<DepthDTO> GetDepthRangesAsync();
 
@@ -39,5 +38,6 @@ namespace B2C_ECommerce.IServices
         Task<IEnumerable<DiamondPropertyDTO>> GetSymmetryListAsync();
 
         Task<CaratSizeRanges> GetCaratSizeDataRangeAsync1();
+
     }
 }

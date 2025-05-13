@@ -9,8 +9,6 @@ namespace B2C_ECommerce.IServices
     {
         Task<List<ProductDTO>> GetProductListByFilter(ProductFilters productFilters, int pageNumber = 1, int pageSize = 10);
 
-        Task<IEnumerable<ProductPropertyDTO>> GetProductColorList();
-
         Task<List<SubCategoryDTO>> GetSubcategoryList();
 
         Task<List<CategoryDTO>> GetCategoriesList();
@@ -21,7 +19,8 @@ namespace B2C_ECommerce.IServices
 
         Task<ProductDTO> GetProductsByColorId(string sku, int? colorId = 0, int? caratId = 0);
 
-        Task<IEnumerable<ProductPropertyDTO>> GetShapeList();
+        Task<List<ProductPropertyDTO>> GetProductColorList();
 
+        Task<List<ProductPropertyDTO>> GetShapeList();
     }
 }
