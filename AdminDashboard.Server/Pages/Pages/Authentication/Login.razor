@@ -93,8 +93,6 @@
 
             if (response.IsAuthSuccessful)
             {
-                //await jSRuntime.InvokeVoidAsync("localStorage.setItem", "token", response.Token);
-
                 var userId = response.userDTO.Id ?? string.Empty;
                 var email = response.userDTO.Email ?? string.Empty;
                 var role = response.userDTO.Roles;

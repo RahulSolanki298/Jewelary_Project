@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using DataAccess.Entities;
+using Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -15,5 +16,9 @@ namespace Business.Repository.IRepository
         DiamondData GetDiamondById(int diamondId);
 
         Task<IEnumerable<DiamondData>> GetShapeWiseDiamondList();
+
+        Task<IEnumerable<DiamondFileUploadHistory>> GetDiamondFileUploadedHistories();
+
+        Task<int> AddDiamondFileUploadedHistory(DiamondFileUploadHistory diamondFileUpload);
     }
 }

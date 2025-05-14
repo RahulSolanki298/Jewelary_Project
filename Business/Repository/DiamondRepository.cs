@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Business.Repository.IRepository;
 using DataAccess.Data;
+using DataAccess.Entities;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Models;
@@ -140,6 +140,35 @@ namespace Business.Repository
             {
                 // Optionally log the exception or handle it
                 throw new Exception("An error occurred while fetching the diamond data.", ex);
+            }
+        }
+
+        public async Task<IEnumerable<DiamondFileUploadHistory>> GetDiamondFileUploadedHistories()
+        {
+            try
+            {
+                var result = await _context.DiamondFileUploadHistory.ToListAsync();
+                return result;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<int> AddDiamondFileUploadedHistory(DiamondFileUploadHistory diamondFileUpload)
+        {
+            try
+            {
+                var history = new DiamondFileUploadHistory();
+                await _context.DiamondFileUploadHistory.AddAsync(diamondFileUpload);
+                await _context.SaveChangesAsync();
+
+                return diamondFileUpload.Id;
+            }
+            catch (Exception)
+            {
+                return 0;
             }
         }
     }

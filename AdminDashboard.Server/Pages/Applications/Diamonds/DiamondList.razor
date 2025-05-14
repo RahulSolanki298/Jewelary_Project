@@ -17,58 +17,43 @@
                 Diamond List
             </MudText>
             <MudButton Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.ArrowForward" OnClick="AddDiamond" Class="transition-all duration-300 ease-in-out transform hover:scale-105">
-                Go to Add Product
+                Go to Add Diamond
             </MudButton>
             <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.UploadFile" OnClick="OpenUploadDialog" Class="transition-all duration-300 ease-in-out transform hover:scale-105">
                 Upload File
             </MudButton>
         </MudItem>
-
-        <!-- Search Bar Section -->
-        <MudItem xs="12">
-            <MudTextField @bind-Value="searchString" Placeholder="🔍 Search diamonds..." Adornment="Adornment.Start"
-                          AdornmentIcon="@Icons.Material.Filled.Search" Class="mb-4" Immediate="true"
-                          Style="border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);" />
-        </MudItem>
-
-        <!-- Diamond Table -->
-        <MudItem xs="12">
-            <MudTable Elevation="6" Items="@diamondList" Filter="Search" Hover="@hover" Dense="@dense" Bordered="true" Striped="true">
-                <HeaderContent>
-                    @foreach (var column in tableColumns)
-                    {
-                        <MudTh Style="color: #00796b; font-weight: bold;">
-                            <MudTableSortLabel SortBy="@column.SortExpression">@column.Label</MudTableSortLabel>
-                        </MudTh>
-                    }
-                    <MudTh>Actions</MudTh>
-                </HeaderContent>
-                <RowTemplate>
-                    @foreach (var column in tableColumns)
-                    {
-                        <MudTd DataLabel="@column.Label" Style="font-size: 1rem; font-weight: 500; color: #333;">
-                            @context.GetType().GetProperty(column.Property)?.GetValue(context)
-                        </MudTd>
-                    }
-                    <MudTd>
-                        <MudIconButton OnClick="() => Edit(context.Id)" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit"
-                                       Class="transition-all duration-200 hover:scale-110" />
-                        <MudIconButton OnClick="() => ConfirmDelete(context.Id)" Color="Color.Error" Icon="@Icons.Material.Filled.Delete"
-                                       Class="transition-all duration-200 hover:scale-110" />
-                    </MudTd>
-                </RowTemplate>
-                <PagerContent>
-                    <MudTablePager PageSizeOptions="new int[] {5, 10, 20, 50}" />
-                </PagerContent>
-            </MudTable>
-        </MudItem>
-
-        <!-- Table Settings Section -->
-        <MudItem xs="12" class="d-flex gap-4 mt-4">
-            <MudSwitch @bind-Checked="@hover" Color="Color.Primary" Label="Row Hover" Class="transition-all duration-300" />
-            <MudSwitch @bind-Checked="@dense" Color="Color.Secondary" Label="Dense Table" Class="transition-all duration-300" />
-        </MudItem>
     </MudGrid>
+    <MudItem xs="12">
+        <MudTable Elevation="6" Items="@diamondList" Filter="Search" Hover="@hover" Dense="@dense" Bordered="true" Striped="true">
+            <HeaderContent>
+                @foreach (var column in tableColumns)
+                    {
+                <MudTh Style="color: #00796b; font-weight: bold;">
+                    <MudTableSortLabel SortBy="@column.SortExpression">@column.Label</MudTableSortLabel>
+                </MudTh>
+                    }
+                <MudTh>Actions</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                @foreach (var column in tableColumns)
+                    {
+                <MudTd DataLabel="@column.Label" Style="font-size: 1rem; font-weight: 500; color: #333;">
+                    @context.GetType().GetProperty(column.Property)?.GetValue(context)
+                </MudTd>
+                    }
+                <MudTd>
+                    <MudIconButton OnClick="() => Edit(context.Id)" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit"
+                                   Class="transition-all duration-200 hover:scale-110" />
+                    <MudIconButton OnClick="() => ConfirmDelete(context.Id)" Color="Color.Error" Icon="@Icons.Material.Filled.Delete"
+                                   Class="transition-all duration-200 hover:scale-110" />
+                </MudTd>
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager PageSizeOptions="new int[] {5, 10, 20, 50}" />
+            </PagerContent>
+        </MudTable>
+    </MudItem>
 </MudPaper>
 
 
@@ -130,33 +115,7 @@
 
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
-        selectedFile = e.File ?? throw new Exception("No file selected.");
-
-        try
-        {
-            using var stream = selectedFile.OpenReadStream(maxAllowedSize: 10_000_000);
-            using var fileContent = new MultipartFormDataContent
-        {
-                { new StreamContent(stream), "file", selectedFile.Name }
-            };
-
-            using var httpClient = new HttpClient();
-            var response = await httpClient.PostAsync($"{SD.BaseApiUrl}/api/diamond/BulkDiamondUpload", fileContent);
-
-            if (response.IsSuccessStatusCode)
-            {
-                Snackbar.Add("Diamond uploaded successfully!", Severity.Success);
-                await LoadDiamondList();
-            }
-            else
-            {
-                Snackbar.Add("Failed to upload diamonds. Please try again.", Severity.Error);
-            }
-        }
-        catch (Exception ex)
-        {
-            Snackbar.Add($"Upload failed: {ex.Message}", Severity.Error);
-        }
+       
     }
 
     private void Edit(int diamondId) => Snackbar.Add($"Edit action triggered for ID: {diamondId}", Severity.Info);
@@ -171,5 +130,11 @@
     private void AddDiamond()
     {
         NavigationManager.NavigateTo("/applications/diamond/add-diamond");
+    }
+
+
+    private void UploadedData()
+    {
+
     }
 }

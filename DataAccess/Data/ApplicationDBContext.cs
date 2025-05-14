@@ -77,6 +77,8 @@ namespace DataAccess.Data
 
         public DbSet<CompanyData> CompanyData { get; set; }
 
+        public DbSet<DiamondFileUploadHistory> DiamondFileUploadHistory { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

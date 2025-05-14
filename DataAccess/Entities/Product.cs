@@ -61,5 +61,13 @@ namespace DataAccess.Entities
         public string VenderStyle { get; set; }
         public decimal? WholesaleCost { get; set; }
         public string Diameter { get; set; }
+        public bool? IsSuccess { get; set; } = false;
+        public string CreatedBy { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public string UploadStatus { get; set; }  //  Requested, Accepted, Rejected
+        public bool? IsDelete { get; set; }
+
     }
 }

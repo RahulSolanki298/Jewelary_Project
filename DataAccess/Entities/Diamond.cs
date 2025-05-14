@@ -5,23 +5,14 @@ namespace DataAccess.Entities
     public class Diamond
     {
         public int Id { get; set; }
-
         public string StoneId { get; set; }
-
         public string DNA { get; set; }
-
         public string Step { get; set; }
-
         public int? TypeId { get; set; }
-
         public string Measurement { get; set; }
-
         public string LabShape { get; set; }
-
         public decimal? RAP { get; set; }
-
         public decimal? RapAmount { get; set; }
-
         public string ReportType { get; set; }
         public string LotNo { get; set; }
         public DateTime? LabDate { get; set; }
@@ -107,13 +98,16 @@ namespace DataAccess.Entities
         public string OpenCrown { get; set; }
         public string OpenPavallion { get; set; }
         public string OpenGirdle { get; set; }
-
         public string NT_OR_INT { get; set; }
-
         public string Pav_Ex_Fac { get; set; }
-
         public string GirdleDesc { get; set; }
-
         public bool? IsActivated { get; set; } = false;
+        public string UploadStatus { get; set; }  //  Requested, Accepted, Rejected
+        public bool? IsSuccess { get; set; } 
+        public bool? IsDelete { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime? UpdatedDate { get; set; } 
     }
 }
