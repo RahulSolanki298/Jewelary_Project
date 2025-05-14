@@ -26,7 +26,7 @@ namespace B2C_ECommerce.Services
 
         public async Task<List<ProductDTO>> GetProductListByFilter(ProductFilters filters, int pageNumber = 1, int pageSize = 10)
         {
-            var products = await GetProductStyleList();
+                var products = await GetProductStyleList();
 
             var query = products.AsQueryable();
 
@@ -338,13 +338,19 @@ namespace B2C_ECommerce.Services
 
         public async Task<PriceRanges> GetProductPriceRangeData()
         {
-            var data = await _context.Product.ToListAsync();
-            var priceRange = new PriceRanges();
-            priceRange.MaxPrice = data.Max(x => x.Price);
-            priceRange.MinPrice = data.Min(x => x.Price);
+            var priceRange = await _context.Product
+                .Where(p => p.Price != null) // Optional: exclude null prices
+                .GroupBy(_ => 1)
+                .Select(g => new PriceRanges
+                {
+                    MinPrice = g.Min(x => x.Price),
+                    MaxPrice = g.Max(x => x.Price)
+                })
+                .FirstOrDefaultAsync();
 
-            return priceRange;
+            return priceRange ?? new PriceRanges(); // Fallback to empty object if no products
         }
+
 
         public async Task<ProductDTO> GetProductsByColorId(string sku, int? colorId = 0, int? caratId = 0)
         {

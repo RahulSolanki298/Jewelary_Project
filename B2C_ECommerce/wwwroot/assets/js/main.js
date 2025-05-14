@@ -439,7 +439,7 @@
 
 
 	// Image zoom effect
-	$('.img-zoom').zoom();
+	//$('.img-zoom').zoom();
 
 
 	// offcanvas minicart button js
