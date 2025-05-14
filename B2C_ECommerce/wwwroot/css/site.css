@@ -743,7 +743,8 @@ body {
 
 .jewelry-mega-menu-display {
     display: grid !important;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    /*grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));*/
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
 }
 
 .font-size14{
@@ -917,8 +918,9 @@ body {
     .range_slider{
         width:85px !important;
     }
-    .shape-btn{
-        width:19%;
+    .shape-btn {
+        /*width:19%;*/
+        width: 23%;
     }
 
     .diamond-grid {
@@ -927,7 +929,8 @@ body {
 
     .jewelry-mega-menu-display {
         display: grid !important;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        /*grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));*/
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     }
 
     .product-type-padding-section {

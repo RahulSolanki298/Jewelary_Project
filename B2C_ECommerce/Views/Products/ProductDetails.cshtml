@@ -3,15 +3,9 @@
 @{
     ViewData["Title"] = "Product Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    <link href="https://cdn.jsdelivr.net/npm/lightslider@1.1.6/dist/css/lightslider.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/fancyapps/ui@4.0/dist/fancybox.css" rel="stylesheet" />
-
+    <link href="~/assets/css/lightslider/lightslider.css" rel="stylesheet" rel="stylesheet" />
+    
     <style>
-
-    .demo {
-        width: 780px;
-        margin: 20px auto;
-    }
 
     #lightSliderVertical li 
     {
@@ -21,7 +15,7 @@
             height: 400px; /* adjust as needed */
             width: 100%;
             overflow: hidden;
-            background-color: #f9f9f9; /* optional, helps visualize spacing */
+            background-color: #f8f8f8; /* optional, helps visualize spacing */
     }
 
      #lightSliderVertical li img,
@@ -31,16 +25,6 @@
          object-fit: contain;
          display: block;
      }
-
-        .img-zoom {
-            transition: transform 0.3s ease;
-            cursor: zoom-in;
-        }
-
-            .img-zoom:hover {
-                transform: scale(1.1);
-            }
-
 
     .metalHide {
             color: black;
@@ -61,7 +45,7 @@
 }
 
 <!-- page main wrapper start -->
-<div class="shop-main-wrapper section-padding pb-0">
+<div class="shop-main-wrapper padding-top-50 padding-bottom-50 pb-0">
     <div class="container-fluid">
         <div class="row">
             <!-- product details wrapper start -->
@@ -69,7 +53,7 @@
                 <!-- product details inner end -->
                 <div class="product-details-inner">
                     <div class="row">
-                        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6">
+                        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12">
                             <div class="demo">
                                 <div class="vertical-slider-wrapper d-flex">
                                     <ul id="lightSliderVertical" class="img-with-bg">
@@ -80,20 +64,31 @@
                                                 if (!string.IsNullOrEmpty(item.ImageUrl) && item.ImageUrl != "-")
                                                 {
                                                     <li data-thumb="@($"{SD.ImgUrl}/{item.ImageUrl}")">
-                                                        <a href="@($"{SD.ImgUrl}/{item.ImageUrl}")"
+                                                       
+                                                        @* <a href="@($"{SD.ImgUrl}/{item.ImageUrl}")"
                                                            data-fancybox="gallery"
                                                            data-caption="Product Image"
                                                            data-thumb="@($"{SD.ImgUrl}/{item.ImageUrl}")"
                                                            data-zoomable="true">
-                                                            <img src="@($"{SD.ImgUrl}/{item.ImageUrl}")" class="img-zoom" />
+                                                            <img  src="@($"{SD.ImgUrl}/{item.ImageUrl}")" class="img-zoom" />
+                                                        </a> *@
+                                                       
+                                                        <a>
+                                                            <img src="@($"{SD.ImgUrl}/{item.ImageUrl}")" class="zoom-images" />
                                                         </a>
+                                                       
                                                     </li>
                                                 }
                                                 else if (!string.IsNullOrEmpty(item.VideoUrl) && item.VideoUrl != "-")
                                                 {
-                                                    <li data-thumb="/assets/img/video/video-icon.svg">
-                                                        <a href="@($"{SD.ImgUrl}/{item.VideoUrl}")" data-fancybox="gallery" data-caption="Product Video">
-                                                            <video muted loop playsinline autoplay style="max-width: 100%;">
+                                                    <li data-thumb="@SD.ImgUrl/assets/img/video/video-icon.svg">
+                                                        @* <a href="@($"{SD.ImgUrl}/{item.VideoUrl}")" data-fancybox="gallery" data-caption="Product Video">
+                                                            <video autoplay="autoplay" loop="loop" muted="muted" playsinline preload="auto" style="max-width: 100%;">
+                                                                <source src="@($"{SD.ImgUrl}/{item.VideoUrl}")" type="video/mp4" />
+                                                            </video>
+                                                        </a> *@
+                                                        <a>
+                                                            <video autoplay="autoplay" loop="loop" muted="muted" playsinline preload="auto" style="max-width: 100%;">
                                                                 <source src="@($"{SD.ImgUrl}/{item.VideoUrl}")" type="video/mp4" />
                                                             </video>
                                                         </a>
@@ -106,7 +101,7 @@
                             </div>
                         </div>
 
-                        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6">
+                        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6  col-sm-12">
                             <div class="product-details-des">
                                 @*<h3 class="product-name">@Model.ShapeName @Model.BandWidth @Model.Length @Model.Sku</h3>*@
                                 <h3 class="product-name">@(Model.Title != null ? Model.Title : Model.EventName) </h3>
@@ -655,17 +650,18 @@
     </div>
 </section>
 
-@section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/lightslider@1.1.6/dist/js/lightslider.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
-    <script src="@Url.Content("~/assets/js/plugins/jqueryui.min.js")" asp-append-version="true"></script>
-    <script src="@Url.Content("~/assets/js/plugins/image-zoom.min.js")"></script>
-    <script src="@Url.Content("~/assets/js/plugins/imagesloaded.pkgd.min.js")"></script>
+@section Scripts {        
+    <script src="~/assets/js/plugins/lightslider.js"></script>
+    
     <script>
+        
         let vSlider;
-
+        let resizeTimeout;
         function initializeSlider() {
             if (vSlider) vSlider.destroy();
+
+            const isMobileOrTablet = window.innerWidth <= 768; // You can adjust the breakpoint
+
 
             vSlider = $("#lightSliderVertical").lightSlider({
                 gallery: true,
@@ -675,21 +671,11 @@
                 thumbItem: 5,
                 galleryMargin: 10,
                 thumbMargin: 10,
-                vertical: true,
+                //vertical: true,
+                vertical: !isMobileOrTablet,
                 onSliderLoad: function () {
-                    Fancybox.bind("#lightSliderVertical a", {
-                        groupAll: true,
-                        backFocus: false,
-                        buttons: [
-                            'slideShow',
-                            'share',
-                            'zoom',
-                            'fullScreen',
-                            'thumbs',
-                            'download',
-                            'close'
-                        ]
-                    });
+                   
+
                 }
             });
         }
@@ -704,7 +690,13 @@
             });
 
             $(window).on('resize', function () {
-                initializeSlider(); // Re-init on resize
+                //initializeSlider(); // Re-init on resize
+
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(function () {
+                    initializeSlider(); // Re-initialize after resizing stops
+                }, 300);
+
             });
         });
 
@@ -735,9 +727,11 @@
 
                     sliderHtml += `
                         <li data-thumb="${imgUrl}">
-                            <a href="${imgUrl}" data-fancybox="gallery" data-caption="${altText}">
-                                <img src="${imgUrl}" alt="${altText}" />
+                           
+                            <a>
+                                <img src="${imgUrl}" alt="${altText}" class="zoom-images" />
                             </a>
+                          
                         </li>`;
                 });
 
@@ -749,9 +743,9 @@
                     const altText = response.colorName + " - Image " + (index + 1);
 
                     sliderHtml += `
-                        <li data-thumb="/assets/img/video/video-icon.svg">
-                            <a href="${vdoUrl}" data-fancybox="gallery" data-caption="${altText}">
-                                <video muted="" loop="" playsinline="" autoplay="" style="max-width: 100%;">
+                        <li data-thumb="@SD.ImgUrl/assets/img/video/video-icon.svg">                           
+                            <a>
+                                <video autoplay="autoplay" loop="loop" muted="muted" playsinline preload="auto" style="max-width: 100%;">
                                                                 <source src="${vdoUrl}" type="video/mp4">
                                                             </video>
                             </a>
@@ -765,4 +759,130 @@
             });
         }
     </script>
+
+
+
+   @*  <script>
+        $(function () {
+          var zoomed = false;
+          var isDragging = false;
+          var lastX, lastY;
+          var posX = 0, posY = 0;
+
+          var $img = $('.zoom-images');
+
+          $img.on('click', function (e) {
+              debugger;
+            if (!zoomed) {
+              zoomed = true;
+              $(this).css('cursor', 'grab');
+              $(this).css('transform', 'scale(2)');
+            } else {
+              zoomed = false;
+              $(this).css('cursor', 'zoom-in');
+              $(this).css({
+                transform: 'scale(1)',
+                top: 0,
+                left: 0
+              });
+              posX = posY = 0;
+            }
+          });
+
+          $img.on('mousedown', function (e) {
+            if (!zoomed) return;
+            isDragging = true;
+            lastX = e.pageX;
+            lastY = e.pageY;
+            $(this).css('cursor', 'grabbing');
+          });
+
+          $(document).on('mousemove', function (e) {
+            if (isDragging && zoomed) {
+              var dx = e.pageX - lastX;
+              var dy = e.pageY - lastY;
+
+              posX += dx;
+              posY += dy;
+
+              $img.css({
+                top: posY + 'px',
+                left: posX + 'px'
+              });
+
+              lastX = e.pageX;
+              lastY = e.pageY;
+            }
+          });
+
+          $(document).on('mouseup', function () {
+            if (zoomed) {
+              isDragging = false;
+              $img.css('cursor', 'grab');
+            }
+          });
+        });
+    </script> *@
+
+    <script>
+        $(function () {
+          var zoomed = false;
+          var isDragging = false;
+          var lastX, lastY;
+          var posX = 0, posY = 0;
+
+          // Use event delegation
+          $(document).on('click', '.zoom-images', function (e) {
+            if (!zoomed) {
+              zoomed = true;
+              $(this).css('cursor', 'grab');
+              $(this).css('transform', 'scale(2)');
+            } else {
+              zoomed = false;
+              $(this).css('cursor', 'zoom-in');
+              $(this).css({
+                transform: 'scale(1)',
+                top: 0,
+                left: 0
+              });
+              posX = posY = 0;
+            }
+          });
+
+          $(document).on('mousedown', '.zoom-images', function (e) {
+            if (!zoomed) return;
+            isDragging = true;
+            lastX = e.pageX;
+            lastY = e.pageY;
+            $(this).css('cursor', 'grabbing');
+          });
+
+          $(document).on('mousemove', function (e) {
+            if (isDragging && zoomed) {
+              var dx = e.pageX - lastX;
+              var dy = e.pageY - lastY;
+
+              posX += dx;
+              posY += dy;
+
+              $('.zoom-images').css({
+                top: posY + 'px',
+                left: posX + 'px'
+              });
+
+              lastX = e.pageX;
+              lastY = e.pageY;
+            }
+          });
+
+          $(document).on('mouseup', function () {
+            if (zoomed) {
+              isDragging = false;
+              $('.zoom-images').css('cursor', 'grab');
+            }
+          });
+        });
+    </script>
+
+
 }

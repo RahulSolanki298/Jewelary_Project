@@ -4,11 +4,17 @@ using B2C_ECommerce.Services;
 using Business.Repository;
 using Business.Repository.IRepository;
 using Common;
+using DataAccess.Data;
+using DataAccess.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace B2C_ECommerce
 {
@@ -21,20 +27,60 @@ namespace B2C_ECommerce
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+
         public void ConfigureServices(IServiceCollection services)
         {
+            var configuration = new ConfigurationBuilder()
+                    .AddJsonFile("appsettings.json")
+                    .Build();
+
+            Log.Logger = new LoggerConfiguration()
+                 .Enrich.FromLogContext()
+                 .WriteTo.Console()
+                 .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
+                 .CreateLogger();
+            Log.Information("Starting up the service...");
+
+
+            services.AddDbContext<ApplicationDBContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                    sqlOptions => sqlOptions.CommandTimeout(300))
+            );
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDBContext>()
+                .AddDefaultTokenProviders();
+
+            ConfigureRepositories(services);
+
             services.AddHttpClient();
+
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
             services.AddHttpClient("API", client =>
             {
-                client.BaseAddress = new Uri(SD.BaseApiUrl); 
+                client.BaseAddress = new Uri(SD.BaseApiUrl);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
             });
+
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IDiamondService, DiamondService>();
             services.AddScoped<IProductService, ProductService>();
-            //services.AddScoped<IB2COrdersRepository, B2COrdersRepository>();
+
+            services.AddControllers();
+        }
+
+        private void ConfigureRepositories(IServiceCollection services)
+        {
+            services.AddScoped<ILogEntryRepository, LogEntryRepository>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<ICategoryRepositry, CategoryRepository>();
+            services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
+            services.AddScoped<IProductPropertyRepository, ProductPropertyRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IDiamondPropertyRepository, DiamondPropertyRepository>();
+            services.AddScoped<IDiamondRepository, DiamondRepository>();
+            services.AddScoped<IB2COrdersRepository, B2COrdersRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -48,7 +94,7 @@ namespace B2C_ECommerce
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
@@ -57,10 +103,13 @@ namespace B2C_ECommerce
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
+
 }

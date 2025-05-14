@@ -39,12 +39,12 @@
                 <tr class="text-center">
                     <td>
                         <a href="@item.DiamondVideoPath" target="_blank">
-                            <img src="@item.IconPath" class="rounded shadow-sm" style="height:60px;width:60px;" />
+                            <img src="@SD.ImgUrl@item.IconPath" class="rounded shadow-sm" style="height:60px;width:60px;" />
                         </a>
                         <a href="@item.DiamondVideoPath" target="_blank">
-                            <img src="~/assets/img/360-degrees.png" class="rounded" style="height:35px;width:35px;" />
+                            <img src="@SD.ImgUrl/assets/img/360-degrees.png" class="rounded" style="height:35px;width:35px;" />
                         </a>
-                        <img src="~/assets/img/icon/fast-shipping-icon.png" class="rounded" style="height:45px;width:45px;float:right" />
+                        <img src="@SD.ImgUrl/assets/img/icon/fast-shipping-icon.png" class="rounded" style="height:45px;width:45px;float:right" />
                     </td>
                     <td>
                         <a href="#" data-certi="@item.Certificate" class="text-decoration-none text-dark clsCertificate">
@@ -75,7 +75,7 @@
                         </a>
                     </td>
                     <td>
-                        <a class="btn btn-sm btn-dark rounded-pill" href="/Diamond/GetSingleDiamond?diamondId=@item.Id">
+                        <a class="btn btn-sm btn-dark rounded-pill" href="@Url.Action("GetSingleDiamond","Diamond",new { diamondId= item.Id})">
                             Details
                         </a>
                     </td>

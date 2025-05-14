@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Http;
 using System;
 using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
 
 
 namespace B2C_ECommerce.Controllers
@@ -16,15 +17,28 @@ namespace B2C_ECommerce.Controllers
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
-        public AccountController(IAccountService accountService)
+        private readonly ILogger<AccountController> _logger;
+
+        public AccountController(IAccountService accountService,ILogger<AccountController> logger)
         {
             _accountService = accountService;
+            _logger = logger;
         }
 
         public IActionResult Index()
         {
-            var customer = new CustomerLoginRegistrationDto();
-            return View(customer);
+            try
+            {
+                var customer = new CustomerLoginRegistrationDto();
+                return View(customer);
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError("Exception : ",ex.Message);
+                return View("Error");
+            }
+            
         }
 
 
