@@ -1470,8 +1470,8 @@ textarea {
             transform: translateY(20px);
             border: 1px solid #efefef;
             font-family: PlayfairDisplay-Regular;
-           /* box-shadow:;
-            border-top:1px solid ;*/
+            box-shadow: 0 5px 5px rgba(1, 11, 19, .1);
+            border-top: 1.5px solid #FFDE4D;
         }
 
             .main-menu ul li ul.dropdown li {
@@ -5644,7 +5644,8 @@ blockquote {
 /*------ countdown style end ------*/
 @media only screen and (min-width: 768px) and (max-width: 991px) {
     .product-details-des {
-        margin-top: 76px;
+        /*margin-top: 76px;*/
+        margin-top: 20px;
     }
 }
 
@@ -7418,8 +7419,10 @@ a {
     }
 
         .color-categories-details li a {
-            width: 90px;
-            height: 40px;
+            /*width: 90px;*/
+            /*height: 40px;*/
+            width: 80px;
+            height: 30px;
             display: block;
         }
 
@@ -7753,10 +7756,45 @@ a {
     margin: 20px auto;
 }
 
+ .zoom-wrapper {
+            width: 500px;
+            height: 350px;
+            overflow: hidden;
+            position: relative;            
+            cursor: zoom-in;
+            /*margin: 40px auto;*/
+        }
+
+            .zoom-wrapper img {
+                width: 100%;
+                height: 100%;
+                transition: transform 0.3s ease;
+                transform-origin: center center;
+                position: absolute;
+                top: 0;
+                left: 0;
+                user-select: none;
+                -webkit-user-drag: none;
+            }
+
+/*.zoom-images {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.3s ease;
+    transform-origin: center center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    user-select: none;
+    -webkit-user-drag: none;
+    cursor: zoom-in;
+}
+*/
+
 
 @media only screen and (max-width: 600px) {
     .demo {
-        width: 780px;
+        width: 350px;
         margin: 20px auto;
     }
 }
@@ -7764,7 +7802,7 @@ a {
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (min-width: 600px) {
     .demo {
-        width: 560px;
+        width: 360px;
     }
 }
 
@@ -7808,3 +7846,4 @@ a {
         width: 780px;
     }
 }
+
