@@ -1459,8 +1459,8 @@ textarea {
             -webkit-transition: 0.4s;
             -o-transition: 0.4s;
             transition: 0.4s;
-            background-color: #fff;
-            background-image: url('../img/menu_bg__pattern.png');
+            background-color: #fafaf8;
+            /*background-image: url('../img/menu_bg__pattern.png');*/
             opacity: 0;
             visibility: hidden;
             z-index: 99999;
@@ -1470,6 +1470,8 @@ textarea {
             transform: translateY(20px);
             border: 1px solid #efefef;
             font-family: PlayfairDisplay-Regular;
+           /* box-shadow:;
+            border-top:1px solid ;*/
         }
 
             .main-menu ul li ul.dropdown li {
@@ -7460,7 +7462,8 @@ a {
         }
 
         .sticky.is-sticky .main-menu li a {
-            padding: 20px 10px;
+            /* padding: 20px 10px;*/
+            padding: 20px 8px;
         }
 
         .main-menu ul li a {
