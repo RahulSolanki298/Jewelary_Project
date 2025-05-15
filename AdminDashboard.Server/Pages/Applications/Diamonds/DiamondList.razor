@@ -5,7 +5,6 @@
 @using global::Models
 
 @inject IDialogService Dialog
-@inject IDiamondRepository _diamondRepo
 @inject NavigationManager NavigationManager
 @inject ISnackbar Snackbar
 
@@ -28,25 +27,25 @@
         <MudTable Elevation="6" Items="@diamondList" Filter="Search" Hover="@hover" Dense="@dense" Bordered="true" Striped="true">
             <HeaderContent>
                 @foreach (var column in tableColumns)
-                    {
-                <MudTh Style="color: #00796b; font-weight: bold;">
-                    <MudTableSortLabel SortBy="@column.SortExpression">@column.Label</MudTableSortLabel>
-                </MudTh>
-                    }
+                {
+                    <MudTh Style="color: #00796b; font-weight: bold;">
+                        <MudTableSortLabel SortBy="@column.SortExpression">@column.Label</MudTableSortLabel>
+                    </MudTh>
+                }
                 <MudTh>Actions</MudTh>
             </HeaderContent>
             <RowTemplate>
                 @foreach (var column in tableColumns)
-                    {
-                <MudTd DataLabel="@column.Label" Style="font-size: 1rem; font-weight: 500; color: #333;">
-                    @context.GetType().GetProperty(column.Property)?.GetValue(context)
-                </MudTd>
-                    }
+                {
+                    <MudTd DataLabel="@column.Label" Style="font-size: 1rem; font-weight: 500; color: #333;">
+                        @context.GetType().GetProperty(column.Property)?.GetValue(context)
+                    </MudTd>
+                }
                 <MudTd>
                     <MudIconButton OnClick="() => Edit(context.Id)" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit"
-                                   Class="transition-all duration-200 hover:scale-110" />
+                    Class="transition-all duration-200 hover:scale-110" />
                     <MudIconButton OnClick="() => ConfirmDelete(context.Id)" Color="Color.Error" Icon="@Icons.Material.Filled.Delete"
-                                   Class="transition-all duration-200 hover:scale-110" />
+                    Class="transition-all duration-200 hover:scale-110" />
                 </MudTd>
             </RowTemplate>
             <PagerContent>
@@ -70,6 +69,12 @@
     private bool dense = true;
     private string searchString = "";
     private IEnumerable<DiamondData> diamondList = new List<DiamondData>();
+    [Inject]
+    private IDiamondPropertyRepository _diamondPPTY { get; set; }
+
+    [Inject]
+    private IDiamondRepository _diamondRepo { get; set; }
+
     private MudMessageBox mudMessageBox;
     private IBrowserFile selectedFile;
     private MudDialog BulkAddDialog;

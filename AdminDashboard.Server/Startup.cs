@@ -82,6 +82,7 @@ namespace AdminDashboard.Server
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             services.AddScoped<ILocalStorageService, LocalStorageService>();
+            services.AddScoped<IDiamondPropertyRepository, DiamondPropertyRepository>();
 
             // ---------- External Libraries ----------
             services.AddBlazoredLocalStorage();
