@@ -10,33 +10,58 @@
 @inject ISnackbar Snackbar
 @inject IDiamondRepository _diamondRepository;
 @inject IDiamondPropertyRepository _diamondPPTY;
+@inject IJSRuntime JSRuntime
 
 <MudDialog>
-	<TitleContent>
-		Add Products
-	</TitleContent>
-	<DialogContent>
-		<InputFile OnChange="HandleFileSelected" />
-		@if (isUploading == true)
-		{
-			<MudProgressCircular Color="Color.Default" Indeterminate="true" />
-		}
-		<MudToolBarSpacer />
-		<p><span style="font-weight:bold">Note :</span></p>
-		<p>Please upload diamond file.</p>
-		<p>Download Excel Format : <MudButton Color="Color.Primary">Download</MudButton></p>
-	</DialogContent>
-	<DialogActions>
-		<MudButton Color="Color.Error">Cancel</MudButton>
-	</DialogActions>
+    <TitleContent>
+        Add Products
+    </TitleContent>
+    <DialogContent>
+        <InputFile OnChange="HandleFileSelected" />
+        @*@if (isUploading == true)
+        {
+            <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+        }*@
+        <MudToolBarSpacer />
+        <p><span style="font-weight:bold">Note :</span></p>
+        <p>Please upload diamond file.</p>
+        <p>Download Excel Format : <MudButton Color="Color.Primary">Download</MudButton></p>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Error">Cancel</MudButton>
+    </DialogActions>
 </MudDialog>
+
+@if (showProgressBar)
+{
+<MudProgressLinear Color="Color.Info"
+                   Size="Size.Large"
+                   Value="@uploadProgress"
+                   Class="my-7"
+                   Rounded="true"
+                   Striping="true"
+                   BufferValue="100">
+    <@ChildContent>
+        <MudText Typo="Typo.subtitle2" Align="Align.Center">
+            <b>@($"{uploadProgress:0}%")</b>
+        </MudText>
+    </@ChildContent>
+</MudProgressLinear>
+
+}
+
+
 
 
 
 @code {
-	private IBrowserFile selectedFile;
-	private bool isUploading = false;
+    private IBrowserFile selectedFile;
+    private bool isUploading = false;
     List<Diamond> diamondsDTList = new();
+
+    private double uploadProgress = 0;
+    private bool showProgressBar = false;
+
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
         if (e.File == null)
@@ -47,16 +72,24 @@
 
         selectedFile = e.File;
         isUploading = true;
-        diamondsDTList.Clear(); // Clear old data
+        showProgressBar = true;
+        uploadProgress = 0;
+        diamondsDTList.Clear();
 
         try
         {
             var format = Path.GetExtension(selectedFile.Name).ToLower();
             await using var stream = selectedFile.OpenReadStream(maxAllowedSize: 20 * 1024 * 1024); // 20MB max
 
+            DiamondFileUploadHistory Data = new DiamondFileUploadHistory();
+            Data.Title = $"Diamond Upload - {DateTime.Now}";
+            Data.UploadedBy = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "userId");
+            Data.UploadedDate = DateTime.Now;
+
+            var diamondId = await _diamondRepository.AddDiamondFileUploadedHistory(Data);
+
             if (format == ".xlsx" || format == ".xls")
             {
-                // ✅ Copy to memory stream to avoid sync read errors
                 var memoryStream = new MemoryStream();
                 await stream.CopyToAsync(memoryStream);
                 memoryStream.Position = 0;
@@ -72,6 +105,7 @@
                 }
 
                 int rowCount = worksheet.Dimension.Rows;
+                int processed = 0;
 
                 for (int row = 6; row <= rowCount; row++)
                 {
@@ -84,18 +118,25 @@
                     {
                         Snackbar.Add($"Row {row} skipped: {exRow.Message}", Severity.Warning);
                     }
+
+                    processed++;
+                    uploadProgress = ((double)processed / (rowCount - 5)) * 100;
+                    StateHasChanged(); // Update UI with new progress
                 }
+
                 string jsonData = JsonConvert.SerializeObject(diamondsDTList);
-                var result = await _diamondRepository.BulkInsertDiamondsAsync(jsonData);
+                var result = await _diamondRepository.BulkInsertDiamondsAsync(jsonData, diamondId);
             }
             else if (format == ".csv")
             {
                 using var reader = new StreamReader(stream);
                 using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-
                 var records = csv.GetRecords<dynamic>().ToList();
 
                 int startRow = 6;
+                int totalRows = records.Count - (startRow - 1);
+                int processed = 0;
+
                 for (int i = startRow - 1; i < records.Count; i++)
                 {
                     try
@@ -108,9 +149,14 @@
                     {
                         Snackbar.Add($"CSV Row {i + 1} skipped: {exRow.Message}", Severity.Warning);
                     }
+
+                    processed++;
+                    uploadProgress = ((double)processed / totalRows) * 100;
+                    StateHasChanged();
                 }
+
                 string jsonData = JsonConvert.SerializeObject(diamondsDTList);
-                var result = await _diamondRepository.BulkInsertDiamondsAsync(jsonData);
+                var result = await _diamondRepository.BulkInsertDiamondsAsync(jsonData, diamondId);
             }
             else
             {
@@ -126,9 +172,10 @@
         finally
         {
             isUploading = false;
+            showProgressBar = false;
+            StateHasChanged();
         }
     }
-
 
 
     private async Task<Diamond> ParseExcelDiamondRowAsync(ExcelWorksheet worksheet, int row)
@@ -149,38 +196,37 @@
         int fluorId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 14].Text, SD.Fluor);
 
         return new Diamond
-            {
-                StoneId = worksheet.Cells[row, 2].Text,
-                DNA = DNA_NewVal,
-                Step = worksheet.Cells[row, 4].Text,
-                TypeId = typeId > 0 ? typeId : null,
-                LabId = labId > 0 ? labId : null,
-                ShapeId = shapeId > 0 ? shapeId : null,
-                Carat = Convert.ToDecimal(worksheet.Cells[row, 8].Text),
-                ClarityId = clarityId > 0 ? clarityId : null,
-                ColorId = colorId > 0 ? colorId : null,
-                CutId = cutId > 0 ? cutId : null,
-                PolishId = polishId > 0 ? polishId : null,
-                SymmetryId = symmId > 0 ? symmId : null,
-                FluorId = fluorId > 0 ? fluorId : null,
-                RAP = Convert.ToDecimal(worksheet.Cells[row, 15].Text),
-                Discount = Convert.ToDecimal(worksheet.Cells[row, 16].Text),
-                Price = Convert.ToDecimal(worksheet.Cells[row, 17].Text),
-                Amount = Convert.ToDecimal(worksheet.Cells[row, 18].Text),
-                Measurement = worksheet.Cells[row, 19].Text,
-                Ratio = Convert.ToDecimal(worksheet.Cells[row, 20].Text),
-                Depth = Convert.ToDecimal(worksheet.Cells[row, 21].Text),
-                Table = Convert.ToDecimal(worksheet.Cells[row, 22].Text),
-                Shade = worksheet.Cells[row, 23].Text,
-                LabShape = worksheet.Cells[row, 24].Text,
-                RapAmount = Convert.ToDecimal(worksheet.Cells[row, 25].Text),
-                DiamondImagePath = "-",
-                DiamondVideoPath = Video_NewVal,
-                Certificate = Certi_NewVal,
-                IsActivated = true
-            };
+        {
+            StoneId = worksheet.Cells[row, 2].Text,
+            DNA = DNA_NewVal,
+            Step = worksheet.Cells[row, 4].Text,
+            TypeId = typeId > 0 ? typeId : null,
+            LabId = labId > 0 ? labId : null,
+            ShapeId = shapeId > 0 ? shapeId : null,
+            Carat = Convert.ToDecimal(worksheet.Cells[row, 8].Text),
+            ClarityId = clarityId > 0 ? clarityId : null,
+            ColorId = colorId > 0 ? colorId : null,
+            CutId = cutId > 0 ? cutId : null,
+            PolishId = polishId > 0 ? polishId : null,
+            SymmetryId = symmId > 0 ? symmId : null,
+            FluorId = fluorId > 0 ? fluorId : null,
+            RAP = Convert.ToDecimal(worksheet.Cells[row, 15].Text),
+            Discount = Convert.ToDecimal(worksheet.Cells[row, 16].Text),
+            Price = Convert.ToDecimal(worksheet.Cells[row, 17].Text),
+            Amount = Convert.ToDecimal(worksheet.Cells[row, 18].Text),
+            Measurement = worksheet.Cells[row, 19].Text,
+            Ratio = Convert.ToDecimal(worksheet.Cells[row, 20].Text),
+            Depth = Convert.ToDecimal(worksheet.Cells[row, 21].Text),
+            Table = Convert.ToDecimal(worksheet.Cells[row, 22].Text),
+            Shade = worksheet.Cells[row, 23].Text,
+            LabShape = worksheet.Cells[row, 24].Text,
+            RapAmount = Convert.ToDecimal(worksheet.Cells[row, 25].Text),
+            DiamondImagePath = "-",
+            DiamondVideoPath = Video_NewVal,
+            Certificate = Certi_NewVal,
+            IsActivated = true
+        };
     }
-
 
     private async Task<Diamond> ParseCSVDiamondRowAsync(IDictionary<string, object> row)
     {
@@ -197,36 +243,36 @@
         int fluorId = await _diamondPPTY.GetDiamondPropertyId(GetVal("Fluorescence"), SD.Fluor);
 
         return new Diamond
-            {
-                StoneId = GetVal("StoneId"),
-                DNA = GetVal("DNA"),
-                Step = GetVal("Step"),
-                TypeId = typeId > 0 ? typeId : null,
-                LabId = labId > 0 ? labId : null,
-                ShapeId = shapeId > 0 ? shapeId : null,
-                Carat = Convert.ToDecimal(GetVal("Carat")),
-                ClarityId = clarityId > 0 ? clarityId : null,
-                ColorId = colorId > 0 ? colorId : null,
-                CutId = cutId > 0 ? cutId : null,
-                PolishId = polishId > 0 ? polishId : null,
-                SymmetryId = symmId > 0 ? symmId : null,
-                FluorId = fluorId > 0 ? fluorId : null,
-                RAP = Convert.ToDecimal(GetVal("RAP")),
-                Discount = Convert.ToDecimal(GetVal("Discount")),
-                Price = Convert.ToDecimal(GetVal("Price")),
-                Amount = Convert.ToDecimal(GetVal("Amount")),
-                Measurement = GetVal("Measurement"),
-                Ratio = Convert.ToDecimal(GetVal("Ratio")),
-                Depth = Convert.ToDecimal(GetVal("Depth")),
-                Table = Convert.ToDecimal(GetVal("Table")),
-                Shade = GetVal("Shade"),
-                LabShape = GetVal("LabShape"),
-                RapAmount = Convert.ToDecimal(GetVal("RapAmount")),
-                DiamondImagePath = "-",
-                DiamondVideoPath = GetVal("Video"),
-                Certificate = GetVal("Certificate"),
-                IsActivated = true
-            };
+        {
+            StoneId = GetVal("StoneId"),
+            DNA = GetVal("DNA"),
+            Step = GetVal("Step"),
+            TypeId = typeId > 0 ? typeId : null,
+            LabId = labId > 0 ? labId : null,
+            ShapeId = shapeId > 0 ? shapeId : null,
+            Carat = Convert.ToDecimal(GetVal("Carat")),
+            ClarityId = clarityId > 0 ? clarityId : null,
+            ColorId = colorId > 0 ? colorId : null,
+            CutId = cutId > 0 ? cutId : null,
+            PolishId = polishId > 0 ? polishId : null,
+            SymmetryId = symmId > 0 ? symmId : null,
+            FluorId = fluorId > 0 ? fluorId : null,
+            RAP = Convert.ToDecimal(GetVal("RAP")),
+            Discount = Convert.ToDecimal(GetVal("Discount")),
+            Price = Convert.ToDecimal(GetVal("Price")),
+            Amount = Convert.ToDecimal(GetVal("Amount")),
+            Measurement = GetVal("Measurement"),
+            Ratio = Convert.ToDecimal(GetVal("Ratio")),
+            Depth = Convert.ToDecimal(GetVal("Depth")),
+            Table = Convert.ToDecimal(GetVal("Table")),
+            Shade = GetVal("Shade"),
+            LabShape = GetVal("LabShape"),
+            RapAmount = Convert.ToDecimal(GetVal("RapAmount")),
+            DiamondImagePath = "-",
+            DiamondVideoPath = GetVal("Video"),
+            Certificate = GetVal("Certificate"),
+            IsActivated = true
+        };
     }
 
 

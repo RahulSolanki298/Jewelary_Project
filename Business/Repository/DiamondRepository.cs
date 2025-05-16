@@ -106,21 +106,24 @@ namespace Business.Repository
             }
         }
 
-        public async Task<bool> BulkInsertDiamondsAsync(string jsonData)
+        public async Task<bool> BulkInsertDiamondsAsync(string jsonData, int historyId)
         {
             try
             {
-                if (jsonData == null || !jsonData.Any()) return false;
+                if (string.IsNullOrWhiteSpace(jsonData)) return false;
 
-                // Create a SQL parameter
                 var jsonParam = new SqlParameter("@JsonData", jsonData);
+                var historyIdParam = new SqlParameter("@HistoryId", historyId);
 
-                // Call the stored procedure
-                await _context.Database.ExecuteSqlRawAsync("EXEC InsertDiamondsFromJson @JsonData", jsonParam);
+                await _context.Database.ExecuteSqlRawAsync(
+                    "EXEC InsertDiamondsFromJson @JsonData, @HistoryId",
+                    jsonParam, historyIdParam);
+
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                // Optionally log ex.Message
                 return false;
             }
         }
@@ -143,11 +146,24 @@ namespace Business.Repository
             }
         }
 
-        public async Task<IEnumerable<DiamondFileUploadHistory>> GetDiamondFileUploadedHistories()
+        public async Task<IEnumerable<DiamondFileUploadHistoryDTO>> GetDiamondFileUploadedHistories()
         {
             try
             {
-                var result = await _context.DiamondFileUploadHistory.ToListAsync();
+                var result = await (from histroty in _context.DiamondFileUploadHistory
+                              join usr in _context.ApplicationUser on histroty.UploadedBy equals usr.Id
+                              select new DiamondFileUploadHistoryDTO
+                              {
+                                  Id=histroty.Id,
+                                  Title=histroty.Title,
+                                  UploadedPersonName=usr.FirstName+" "+usr.LastName,
+                                  UploadedBy=histroty.UploadedBy,
+                                  NoOfFailed=histroty.NoOfFailed,
+                                  NoOfSuccess=histroty.NoOfSuccess,
+                                  IsSuccess=histroty.IsSuccess,
+                                  UploadedDate=histroty.UploadedDate
+                              }).ToListAsync();
+                             
                 return result;
             }
             catch (Exception)

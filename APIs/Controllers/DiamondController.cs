@@ -133,7 +133,7 @@ namespace APIs.Controllers
                 }
 
                 string jsonData = JsonConvert.SerializeObject(diamondsDTList);
-                var result = await _diamondRepository.BulkInsertDiamondsAsync(jsonData);
+                var result = await _diamondRepository.BulkInsertDiamondsAsync(jsonData,0);
                 return Ok(result);
             }
             catch (Exception ex)

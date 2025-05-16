@@ -9,7 +9,7 @@ namespace Business.Repository.IRepository
     {
         Task<DiamondAllDataDto> GetDiamondsAsync(DiamondFilters filters, int pageNumber, int pageSize);
 
-        Task<bool> BulkInsertDiamondsAsync(string jsonData);
+        //Task<bool> BulkInsertDiamondsAsync(string jsonData);
 
         Task<IEnumerable<DiamondData>> GetDiamondList();
 
@@ -17,8 +17,10 @@ namespace Business.Repository.IRepository
 
         Task<IEnumerable<DiamondData>> GetShapeWiseDiamondList();
 
-        Task<IEnumerable<DiamondFileUploadHistory>> GetDiamondFileUploadedHistories();
-
         Task<int> AddDiamondFileUploadedHistory(DiamondFileUploadHistory diamondFileUpload);
+
+        Task<bool> BulkInsertDiamondsAsync(string jsonData, int historyId);
+
+        Task<IEnumerable<DiamondFileUploadHistoryDTO>> GetDiamondFileUploadedHistories();
     }
 }

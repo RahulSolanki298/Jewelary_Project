@@ -35,7 +35,6 @@ namespace AdminDashboard.Server
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    
                     webBuilder.UseStartup<Startup>();
                 })
                 .UseSerilog(); // Use Serilog for logging

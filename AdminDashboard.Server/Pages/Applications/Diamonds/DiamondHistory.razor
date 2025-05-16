@@ -1,0 +1,54 @@
+﻿@page "/applications/Diamonds/diamond-history-list"
+@using Business.Repository.IRepository
+@using Common
+@using DataAccess.Entities
+@using global::Models
+
+@inject IDialogService Dialog
+@inject NavigationManager NavigationManager
+@inject ISnackbar Snackbar
+
+<h3>Diamond History</h3>
+<MudTable Elevation="10" Items="diamondHistoryList">
+    <HeaderContent>
+        <MudTh style="font-weight:bold;">Title</MudTh>
+        <MudTh style="font-weight:bold;">Uploaded By</MudTh>
+        <MudTh style="font-weight:bold;">Uploaded Date</MudTh>
+        <MudTh style="font-weight:bold;">No Of Success</MudTh>
+        <MudTh style="font-weight:bold;">No Of Failed</MudTh>
+        <MudTh style="font-weight:bold;">Is Success</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Title">@context.Title</MudTd>
+        <MudTd DataLabel="UploadedPersonName">@context.UploadedPersonName</MudTd>
+        <MudTd DataLabel="UploadedDate">@context.UploadedDate</MudTd>
+        <MudTd DataLabel="NoOfSuccess">@context.NoOfSuccess</MudTd>
+        <MudTd DataLabel="NoOfFailed">@context.NoOfFailed</MudTd>
+        <MudTd DataLabel="IsSuccess">@context.IsSuccess</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="new int[]{5,10,20,50,100}" />
+    </PagerContent>
+</MudTable>
+
+@code {
+
+    [Inject]
+    private IDiamondRepository _diamondRepo { get; set; }
+
+    private IEnumerable<DiamondFileUploadHistoryDTO> diamondHistoryList = new List<DiamondFileUploadHistoryDTO>();
+
+    protected override async Task OnInitializedAsync() => await LoadDiamondHistoryList();
+
+    private async Task LoadDiamondHistoryList()
+    {
+        try
+        {
+            diamondHistoryList = await _diamondRepo.GetDiamondFileUploadedHistories();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error loading diamond list: {ex.Message}", Severity.Error);
+        }
+    }
+}

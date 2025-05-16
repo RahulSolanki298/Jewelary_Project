@@ -15,12 +15,10 @@ using Business.Mapping;
 using MudBlazor.Services;
 using DataAccess.Entities;
 using Microsoft.Extensions.Configuration;
-using System.Net.Http;
 using AdminDashboard.Server.Service;
 using AdminDashboard.Server.Service.IService;
 using Microsoft.AspNetCore.Components.Authorization;
 using Blazored.LocalStorage;
-using Common;
 using OfficeOpenXml;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -54,10 +52,12 @@ namespace AdminDashboard.Server
             services.Configure<IISServerOptions>(options =>
             {
                 options.MaxRequestBodySize = long.MaxValue;
+                options.AutomaticAuthentication = false;
             });
+
             services.Configure<FormOptions>(options =>
             {
-                options.MultipartBodyLengthLimit = 5_368_709_120; // 5 GB
+                options.MultipartBodyLengthLimit = 5368709120; // 5 GB
             });
 
             // ---------- Identity ----------
@@ -67,6 +67,7 @@ namespace AdminDashboard.Server
                 .AddDefaultUI();
 
             // ---------- Services ----------
+            services.AddHttpClient();
             services.AddScoped<JwtTokenService>();
             services.AddScoped<ILogEntryRepository, LogEntryRepository>();
             services.AddScoped<IVirtualAppointmentRepo, VirtualAppointmentRepo>();
@@ -96,16 +97,16 @@ namespace AdminDashboard.Server
             services.AddHttpContextAccessor();
 
             // ---------- HttpClient ----------
-            services.AddHttpClient("MyApiClient", client =>
-            {
-                client.BaseAddress = new Uri(SD.BaseApiUrl);
-                client.Timeout = TimeSpan.FromMinutes(30);
-            });
+            //services.AddHttpClient("MyApiClient", client =>
+            //{
+            //    client.BaseAddress = new Uri(SD.BaseApiUrl);
+            //    client.Timeout = TimeSpan.FromMinutes(30);
+            //});
 
-            services.AddScoped<HttpClient>(sp => new HttpClient
-            {
-                BaseAddress = new Uri(SD.BaseApiUrl)
-            });
+            //services.AddScoped<HttpClient>(sp => new HttpClient
+            //{
+            //    BaseAddress = new Uri(SD.BaseApiUrl)
+            //});
 
             // ---------- Excel ----------
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -153,7 +154,7 @@ namespace AdminDashboard.Server
                 var maxRequestFeature = context.Features.Get<IHttpMaxRequestBodySizeFeature>();
                 if (maxRequestFeature != null && maxRequestFeature.IsReadOnly == false)
                 {
-                    maxRequestFeature.MaxRequestBodySize = 5_368_709_120; // 5 GB
+                    maxRequestFeature.MaxRequestBodySize = 5368709120; // 5 GB
                 }
                 await next();
             });

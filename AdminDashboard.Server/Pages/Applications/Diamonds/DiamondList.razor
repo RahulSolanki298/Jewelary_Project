@@ -10,17 +10,27 @@
 
 <MudPaper Class="p-6 mx-auto mt-4" Elevation="12">
     <MudGrid>
-        <!-- Header Section -->
-        <MudItem xs="12" class="d-flex justify-between align-center mb-4">
-            <MudText Typo="Typo.h4" Color="Color.Inherit" Class="font-weight-bold" Style="font-size: 1.5rem; letter-spacing: 1px;">
-                Diamond List
-            </MudText>
-            <MudButton Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.ArrowForward" OnClick="AddDiamond" Class="transition-all duration-300 ease-in-out transform hover:scale-105">
-                Go to Add Diamond
-            </MudButton>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.UploadFile" OnClick="OpenUploadDialog" Class="transition-all duration-300 ease-in-out transform hover:scale-105">
-                Upload File
-            </MudButton>
+        <MudItem xs="12">
+            <MudPaper Class="d-flex justify-left align-start mud-width-full px-4 py-2">
+                <MudText Typo="Typo.h4" Color="Color.Inherit" Class="font-weight-bold" Style="font-size: 1.5rem; letter-spacing: 1px;">
+                    Diamond List
+                </MudText>
+            </MudPaper>
+            <MudPaper Class="d-flex justify-end align-start mud-width-full px-4 py-2">
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Secondary"
+                           StartIcon="@Icons.Material.Filled.ArrowForward"
+                           OnClick="AddDiamond"
+                           Class="me-2">
+                    Go to Add Diamond
+                </MudButton>
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.UploadFile"
+                           OnClick="OpenUploadDialog">
+                    Upload File
+                </MudButton>
+            </MudPaper>
         </MudItem>
     </MudGrid>
     <MudItem xs="12">
@@ -28,24 +38,24 @@
             <HeaderContent>
                 @foreach (var column in tableColumns)
                 {
-                    <MudTh Style="color: #00796b; font-weight: bold;">
-                        <MudTableSortLabel SortBy="@column.SortExpression">@column.Label</MudTableSortLabel>
-                    </MudTh>
+                <MudTh Style="color: #00796b; font-weight: bold;">
+                    <MudTableSortLabel SortBy="@column.SortExpression">@column.Label</MudTableSortLabel>
+                </MudTh>
                 }
                 <MudTh>Actions</MudTh>
             </HeaderContent>
             <RowTemplate>
                 @foreach (var column in tableColumns)
                 {
-                    <MudTd DataLabel="@column.Label" Style="font-size: 1rem; font-weight: 500; color: #333;">
-                        @context.GetType().GetProperty(column.Property)?.GetValue(context)
-                    </MudTd>
+                <MudTd DataLabel="@column.Label" Style="font-size: 1rem; font-weight: 500; color: #333;">
+                    @context.GetType().GetProperty(column.Property)?.GetValue(context)
+                </MudTd>
                 }
                 <MudTd>
                     <MudIconButton OnClick="() => Edit(context.Id)" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit"
-                    Class="transition-all duration-200 hover:scale-110" />
+                                   Class="transition-all duration-200 hover:scale-110" />
                     <MudIconButton OnClick="() => ConfirmDelete(context.Id)" Color="Color.Error" Icon="@Icons.Material.Filled.Delete"
-                    Class="transition-all duration-200 hover:scale-110" />
+                                   Class="transition-all duration-200 hover:scale-110" />
                 </MudTd>
             </RowTemplate>
             <PagerContent>
@@ -81,12 +91,12 @@
 
     private readonly List<(string Label, string Property, Func<DiamondData, object> SortExpression)> tableColumns = new()
     {
-            ("Name", "ShapeName", x => x.ShapeName),
+            ("StoneId", "StoneId", x => x.StoneId),
+            ("ShapeName", "ShapeName", x => x.ShapeName),
             ("Carat", "Carat", x => x.Carat),
             ("Color", "ColorName", x => x.ColorName),
             ("Clarity", "ClarityName", x => x.ClarityName),
             ("Cut", "CutName", x => x.CutName),
-            ("Certificate", "Certificate", x => x.Certificate),
             ("Polish", "PolishName", x => x.PolishName),
             ("Symmetry", "SymmetryName", x => x.SymmetyName),
             ("Depth", "Depth", x => x.Depth),
