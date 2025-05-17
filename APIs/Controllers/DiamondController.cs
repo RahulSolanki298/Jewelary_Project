@@ -96,6 +96,11 @@ namespace APIs.Controllers
                 using var stream = new MemoryStream();
                 await file.CopyToAsync(stream);
                 stream.Position = 0;
+                var history = new DiamondFileUploadHistory();
+                history.Title = "Add File Upload";
+                history.UploadedDate = DateTime.Now;
+                history.IsSuccess = 1;
+                int dId=await _diamondRepository.AddDiamondFileUploadedHistory(history);
 
                 if (extension.Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
                 {
@@ -133,7 +138,7 @@ namespace APIs.Controllers
                 }
 
                 string jsonData = JsonConvert.SerializeObject(diamondsDTList);
-                var result = await _diamondRepository.BulkInsertDiamondsAsync(jsonData,0);
+                var result = await _diamondRepository.BulkInsertDiamondsAsync(jsonData, dId);
                 return Ok(result);
             }
             catch (Exception ex)

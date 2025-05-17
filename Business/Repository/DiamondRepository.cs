@@ -71,9 +71,13 @@ namespace Business.Repository
         {
             try
             {
+                int pageNumber = 1;
+                int pageSize = 10;
                 var diamonds = await _context.DiamondData
                     .FromSqlRaw("EXEC SP_SelectAllDiamonds")
                     .ToListAsync();
+
+                diamonds = diamonds.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
                 return diamonds;
             }

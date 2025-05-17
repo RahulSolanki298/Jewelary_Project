@@ -1,5 +1,6 @@
 ﻿using Business.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
+using Models;
 using System.Threading.Tasks;
 
 namespace ControlPanel.Controllers
@@ -24,5 +25,19 @@ namespace ControlPanel.Controllers
             var data= await _diamondRepository.GetDiamondList();
             return PartialView("_DiamondList", data);
         }
+
+
+        [HttpGet]
+        public IActionResult DiamondProperty()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult UpsertProperty(DiamondData diamondData)
+        {
+            return View();
+        }
+        
     }
 }

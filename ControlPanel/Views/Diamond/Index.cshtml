@@ -3,14 +3,45 @@
 <section class="section">
     <div class="row">
         <div class="col-lg-6">
+            <h4>Diamond List</h4>
+        </div>
+        <div class="col-lg-6">
+            <button class="btn btn-primary float-end" id="ExcelUpload">Upload Excel</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
             <div class="card">
                 <div class="card-body" id="diamondList">
+
                 </div>
             </div>
         </div>
     </div>
 </section>
 
+<div class="modal fade" id="showFileUpload" tabindex="-1" data-bs-backdrop="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="uploadForm" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload Excel</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="excelFile" class="form-label">Select Excel File</label>
+                        <input type="file" class="form-control" id="excelFile" name="excelFile" accept=".xls,.xlsx" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 
 @section Scripts
@@ -18,10 +49,13 @@
     <script>
         $(document).ready(function(){
             getDiamondList();
+
+            $("#ExcelUpload").on("click",function(){
+                $("#showFileUpload").modal("show");
+            });
         });
 
         function getDiamondList(){
-            debugger;
          $.ajax({
             url: '@Url.Action("DiamondList", "Diamond")', // Replace 'ControllerName' with your actual controller name
             type: 'GET',
@@ -36,5 +70,7 @@
         });
 
         }
+
+
     </script>
 }

@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<Models.DiamondData>
-<table class="table">
+<table class="table" id="diamondTable">
     <thead>
         <tr>
             <th scope="col">#</th>
@@ -64,59 +64,71 @@
         @foreach (var item in Model)
         {
             <tr>
-                <th scope="col">#</th>
-                <th scope="col">
+                <td scope="col">
+                    <div class="dropdown">
+                        <a class="btn btn-default dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Actions
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">View</a></li>
+                            <li><a class="dropdown-item" href="#">Edit</a></li>
+                            <li><a class="dropdown-item" href="#">Delete</a></li>
+                        </ul>
+                    </div>
+
+                </td>
+                <td scope="col">
                     @item.StoneId
-                </th>
-                <th scope="col">
+                </td>
+                <td scope="col">
                     @item.DiamondVideoPath
-                </th>
-                <th>
+                </td>
+                <td>
                     @item.Certificate
-                </th>
-                <th scope="col">@item.DNA</th>
-                <th scope="col">@item.Step</th>
-                <th scope="col">@item.TypeName</th>
-                <th scope="col">@item.LabName</th>
-                <th scope="col">@item.ShapeName</th>
-                <th scope="col">@item.Carat</th>
-                <th scope="col">@item.ColorName</th>
-                <th scope="col">@item.ClarityName</th>
-                <th scope="col">@item.CutName</th>
-                <th scope="col">@item.PolishName</th>
-                <th scope="col">@item.SymmetyName </th>
-                <th scope="col">@item.FluorName</th>
-                <th scope="col">@item.RapAmount.($)</th>
-                <th scope="col">@item.Discount (%)</th>
-                <th scope="col">@item.Price</th>
-                <th scope="col">@item.Amount</th>
-                <th scope="col">
+                </td>
+                <td scope="col">@item.DNA</td>
+                <td scope="col">@item.Step</td>
+                <td scope="col">@item.TypeName</td>
+                <td scope="col">@item.LabName</td>
+                <td scope="col">@item.ShapeName</td>
+                <td scope="col">@item.Carat</td>
+                <td scope="col">@item.ColorName</td>
+                <td scope="col">@item.ClarityName</td>
+                <td scope="col">@item.CutName</td>
+                <td scope="col">@item.PolishName</td>
+                <td scope="col">@item.SymmetyName </td>
+                <td scope="col">@item.FluorName</td>
+                <td scope="col">@item.RapAmount.($)</td>
+                <td scope="col">@item.Discount (%)</td>
+                <td scope="col">@item.Price</td>
+                <td scope="col">@item.Amount</td>
+                <td scope="col">
                     @item.Measurement
-                </th>
-                <th scope="col">
+                </td>
+                <td scope="col">
                     @item.Ratio
-                </th>
-                <th scope="col">
+                </td>
+                <td scope="col">
                     @item.Depth 
-                </th>
+                </td>
 
-                <th scope="col">
+                <td scope="col">
                     @item.Table 
-                </th>
+                </td>
 
-                <th scope="col">
+                <td scope="col">
                     @item.Shade
 
-                </th>
+                </td>
 
-                <th scope="col">
+                <td scope="col">
                     @item.LabShape
 
-                </th>
+                </td>
 
-                <th scope="col">
+                <td scope="col">
                     @item.RapAmount
-                </th>
+                </td>
             </tr>
         }
 
