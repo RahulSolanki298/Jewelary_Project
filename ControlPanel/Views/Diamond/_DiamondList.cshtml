@@ -1,0 +1,124 @@
+﻿@model IEnumerable<Models.DiamondData>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">
+                Stone ID
+            </th>
+            <th scope="col">
+                Video
+            </th>
+            <th>
+                Certi
+            </th>
+            <th scope="col">DNA</th>
+            <th scope="col">Step</th>
+            <th scope="col">Type</th>
+            <th scope="col">Lab</th>
+            <th scope="col">Shape</th>
+            <th scope="col">Carat</th>
+            <th scope="col">Color</th>
+            <th scope="col">Clarity</th>
+            <th scope="col">Cut</th>
+            <th scope="col">Polish</th>
+            <th scope="col">Sym</th>
+            <th scope="col">Flo</th>
+            <th scope="col">Rap.($)</th>
+            <th scope="col">Disc(%)</th>
+            <th scope="col">Price</th>
+            <th scope="col">Amount</th>
+            <th scope="col">
+                Measurement
+            </th>
+            <th scope="col">
+                Ratio
+            </th>
+            <th scope="col">
+                Depth%
+
+            </th>
+
+            <th scope="col">
+                Table%
+
+            </th>
+
+            <th scope="col">
+                Shade
+
+            </th>
+
+            <th scope="col">
+                Lab Shape
+
+            </th>
+
+            <th scope="col">
+                Rap Amount
+
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">
+                    @item.StoneId
+                </th>
+                <th scope="col">
+                    @item.DiamondVideoPath
+                </th>
+                <th>
+                    @item.Certificate
+                </th>
+                <th scope="col">@item.DNA</th>
+                <th scope="col">@item.Step</th>
+                <th scope="col">@item.TypeName</th>
+                <th scope="col">@item.LabName</th>
+                <th scope="col">@item.ShapeName</th>
+                <th scope="col">@item.Carat</th>
+                <th scope="col">@item.ColorName</th>
+                <th scope="col">@item.ClarityName</th>
+                <th scope="col">@item.CutName</th>
+                <th scope="col">@item.PolishName</th>
+                <th scope="col">@item.SymmetyName </th>
+                <th scope="col">@item.FluorName</th>
+                <th scope="col">@item.RapAmount.($)</th>
+                <th scope="col">@item.Discount (%)</th>
+                <th scope="col">@item.Price</th>
+                <th scope="col">@item.Amount</th>
+                <th scope="col">
+                    @item.Measurement
+                </th>
+                <th scope="col">
+                    @item.Ratio
+                </th>
+                <th scope="col">
+                    @item.Depth 
+                </th>
+
+                <th scope="col">
+                    @item.Table 
+                </th>
+
+                <th scope="col">
+                    @item.Shade
+
+                </th>
+
+                <th scope="col">
+                    @item.LabShape
+
+                </th>
+
+                <th scope="col">
+                    @item.RapAmount
+                </th>
+            </tr>
+        }
+
+    </tbody>
+</table>
