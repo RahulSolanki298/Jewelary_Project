@@ -79,9 +79,9 @@
         public static string AdminPath = "http://180.211.116.206/jewelfacetadmin";
 
 
-        // public static string ShapeImgUrl = "https://localhost:44325";
-        // public static string ImgUrl = "https://localhost:44325";
-        // public static string BaseApiUrl = "https://localhost:44325"; // https://jswebapi.com
+         public static string ShapeImgUrl = "https://localhost:44325";
+         public static string ImgUrl = "https://localhost:44325";
+         public static string BaseApiUrl = "https://localhost:44325"; // https://jswebapi.com
 
         //  public static string BaseApiUrl = "http://192.168.29.11:8082"; // https://jswebapi.com
         //  public static string BaseApiUrl = "http://192.168.100.153:8082"; // https://jswebapi.com
@@ -91,9 +91,9 @@
         // public static string BaseApiUrl = "http://192.168.29.106/jewelfacet";
 
         //  local
-        public static string ShapeImgUrl = "http://180.211.116.206/jewelfacet";
-         public static string ImgUrl = "http://180.211.116.206/jewelfacet";
-         public static string BaseApiUrl = "http://180.211.116.206/jewelfacet";
+        // public static string ShapeImgUrl = "http://180.211.116.206/jewelfacet";
+        // public static string ImgUrl = "http://180.211.116.206/jewelfacet";
+        // public static string BaseApiUrl = "http://180.211.116.206/jewelfacet";
 
         // production
         // public static string ShapeImgUrl = "http://192.168.100.153/jewelfacet";

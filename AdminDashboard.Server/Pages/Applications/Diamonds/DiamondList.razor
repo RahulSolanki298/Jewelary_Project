@@ -101,7 +101,7 @@
             ("Symmetry", "SymmetryName", x => x.SymmetyName),
             ("Depth", "Depth", x => x.Depth),
             ("Price", "Price", x => x.Price)
-        };
+    };
 
     protected override async Task OnInitializedAsync() => await LoadDiamondList();
 
@@ -128,11 +128,6 @@
         Dialog.Show<UploadDiamond>("Upload Diamond File", options);
     }
 
-    private async Task HandleFileSelected(InputFileChangeEventArgs e)
-    {
-       
-    }
-
     private void Edit(int diamondId) => Snackbar.Add($"Edit action triggered for ID: {diamondId}", Severity.Info);
 
     private void ConfirmDelete(int diamondId) => Snackbar.Add($"Delete action triggered for ID: {diamondId}", Severity.Warning);
@@ -147,9 +142,4 @@
         NavigationManager.NavigateTo("/applications/diamond/add-diamond");
     }
 
-
-    private void UploadedData()
-    {
-
-    }
 }

@@ -100,7 +100,23 @@
             var fileContent = new MultipartFormDataContent();
             var stream = selectedFile.OpenReadStream(maxAllowedSize: 10_000_000); // Set max size limit (10MB in this case)
             var fileStreamContent = new StreamContent(stream);
-            
+            fileStreamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+
+            fileContent.Add(fileStreamContent, "file", selectedFile.Name);
+
+            var httpClient = new HttpClient();
+            var response = await httpClient.PostAsync($"{SD.BaseApiUrl}/api/product/ExcelUploadForProduct", fileContent);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Snackbar.Add("Product collection uploaded successfully!", Severity.Success);
+                var json = await response.Content.ReadAsStringAsync();
+                productList = JsonConvert.DeserializeObject<List<ProductDTO>>(json);
+            }
+            else
+            {
+                Snackbar.Add("Failed to upload products. Please try again.", Severity.Error);
+            }
             isUploading = false;
         }
         catch (Exception ex)
@@ -145,5 +161,4 @@
             isUploading = false;
         }
     }
-
 }
