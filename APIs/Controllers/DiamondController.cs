@@ -76,6 +76,16 @@ namespace APIs.Controllers
         }
 
 
+        
+
+
+        [HttpGet("GetDiamond/diamondId/{diamondId}")]
+        public ActionResult GetDiamondById(int diamondId)
+        {
+            var response = _diamondRepository.GetDiamondById(diamondId);
+            return Ok(response);
+        }
+
         [HttpPost("BulkDiamondUpload")]
         public async Task<IActionResult> UploadDiamondWithExcelOrCsv(IFormFile file)
         {
@@ -100,7 +110,7 @@ namespace APIs.Controllers
                 history.Title = "Add File Upload";
                 history.UploadedDate = DateTime.Now;
                 history.IsSuccess = 1;
-                int dId=await _diamondRepository.AddDiamondFileUploadedHistory(history);
+                int dId = await _diamondRepository.AddDiamondFileUploadedHistory(history);
 
                 if (extension.Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
                 {
@@ -146,15 +156,6 @@ namespace APIs.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-
-
-        [HttpGet("GetDiamond/diamondId/{diamondId}")]
-        public ActionResult GetDiamondById(int diamondId)
-        {
-            var response = _diamondRepository.GetDiamondById(diamondId);
-            return Ok(response);
-        }
-
 
         private async Task<Diamond> ParseExcelDiamondRowAsync(ExcelWorksheet worksheet, int row)
         {

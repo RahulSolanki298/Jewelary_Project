@@ -11,7 +11,7 @@ namespace ControlPanel.Controllers
 
         public DiamondController(IDiamondRepository diamondRepository)
         {
-                _diamondRepository= diamondRepository;
+            _diamondRepository= diamondRepository;
         }
 
         public IActionResult Index()
@@ -26,7 +26,6 @@ namespace ControlPanel.Controllers
             return PartialView("_DiamondList", data);
         }
 
-
         [HttpGet]
         public IActionResult DiamondProperty()
         {
@@ -38,6 +37,6 @@ namespace ControlPanel.Controllers
         {
             return View();
         }
-        
+
     }
 }

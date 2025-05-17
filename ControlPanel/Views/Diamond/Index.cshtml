@@ -31,12 +31,20 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="excelFile" class="form-label">Select Excel File</label>
-                        <input type="file" class="form-control" id="excelFile" name="excelFile" accept=".xls,.xlsx" required>
+                        <input type="file"
+                            class="form-control"
+                            id="excelFile"
+                            name="excelFile"
+                            accept=".xls,.xlsx" required>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Upload</button>
+                    <button type="button" 
+                        class="btn btn-secondary" 
+                        data-bs-dismiss="modal">Close</button>
+                    
+                    <button type="submit" 
+                        class="btn btn-primary">Upload</button>
                 </div>
             </form>
         </div>
@@ -55,20 +63,21 @@
             });
         });
 
-        function getDiamondList(){
-         $.ajax({
-            url: '@Url.Action("DiamondList", "Diamond")', // Replace 'ControllerName' with your actual controller name
-            type: 'GET',
-            success: function (result) {
-                debugger;
-                 $('#diamondList').html("");
-                $('#diamondList').html(result); // Inject the partial view into this element
-            },
-            error: function (xhr, status, error) {
-                console.error('Error loading diamond list:', error);
-            }
-        });
-
+        function getDiamondList()
+        {
+             $.ajax({
+                url: '@Url.Action("DiamondList", "Diamond")',
+                type: 'GET',
+                success: function (result) 
+                {
+                    $('#diamondList').html("");
+                    $('#diamondList').html(result);
+                },
+                error: function (xhr, status, error) 
+                {
+                    console.error('Error loading diamond list:', error);
+                }
+            });
         }
 
 

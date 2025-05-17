@@ -61,7 +61,6 @@ namespace Business.Repository
             }
             catch (Exception ex)
             {
-                // Log the error and rethrow
                 throw new Exception("An error occurred while fetching diamonds.", ex);
             }
         }
@@ -71,17 +70,13 @@ namespace Business.Repository
         {
             try
             {
-                int pageNumber = 1;
-                int pageSize = 10;
                 var diamonds = await _context.DiamondData
                     .FromSqlRaw("EXEC SP_SelectAllDiamonds")
                     .ToListAsync();
 
-                diamonds = diamonds.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-
                 return diamonds;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }

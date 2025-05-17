@@ -20,7 +20,16 @@ namespace ControlPanel
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    try
+                    {
+                        webBuilder.UseStartup<Startup>();
+
+                    }
+                    catch (Exception ex) 
+                    {
+
+                        throw;
+                    }
                 });
     }
 }
