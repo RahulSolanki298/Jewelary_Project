@@ -1,5 +1,5 @@
 ﻿@model Models.AdminLoginModel
-
+@using Common
 @{
     ViewData["Title"] = "Login";
     Layout = null;
@@ -12,12 +12,12 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Admin Login</title>
 
-    <link href="/assets/img/favicon.png" rel="icon">
-    <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="@SD.AdminPath/assets/img/favicon.png" rel="icon">
+    <link href="@SD.AdminPath/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans|Nunito|Poppins&display=swap" rel="stylesheet">
-    <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-    <link href="/assets/css/style.css" rel="stylesheet" />
+    <link href="@SD.AdminPath/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="@SD.AdminPath/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="@SD.AdminPath/assets/css/style.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -78,8 +78,8 @@
         <i class="bi bi-arrow-up-short"></i>
     </a>
 
-    <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="/assets/js/main.js"></script>
+    <script src="@SD.AdminPath/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="@SD.AdminPath/assets/js/main.js"></script>
 
     <!-- Required for client-side validation -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
