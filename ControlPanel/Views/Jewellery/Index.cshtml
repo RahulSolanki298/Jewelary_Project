@@ -3,7 +3,7 @@
 <section class="section">
     <div class="row">
         <div class="col-lg-6">
-            <h4>Diamond List</h4>
+            <h4>Jewelry List</h4>
         </div>
         <div class="col-lg-6">
             <button class="btn btn-primary float-end" id="ExcelUpload">Upload Excel</button>
@@ -13,7 +13,6 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-body" id="diamondList">
-
                 </div>
             </div>
         </div>
@@ -102,12 +101,12 @@
              $.ajax({
                 url: '@Url.Action("DiamondList", "Diamond")',
                 type: 'GET',
-                success: function (result) 
+                success: function (result)
                 {
                     $('#diamondList').html("");
                     $('#diamondList').html(result);
                 },
-                error: function (xhr, status, error) 
+                error: function (xhr, status, error)
                 {
                     console.error('Error loading diamond list:', error);
                 }

@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "VerifyOtp";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>VerifyOtp</h1>
+
+@model Models.VerifyOtpModel
+@{
+    ViewData["Title"] = "Verify OTP";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verify OTP</title>
+    <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/assets/css/style.css" rel="stylesheet" />
+</head>
+<body>
+    <main>
+        <div class="container">
+            <section class="section register min-vh-100 d-flex align-items-center justify-content-center py-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Enter OTP</h5>
+                            <form asp-controller="Account" asp-action="VerifyOtp" method="post" novalidate>
+                                <div class="mb-3">
+                                    <label asp-for="OtpCode" class="form-label"></label>
+                                    <input asp-for="OtpCode" class="form-control" />
+                                    <span asp-validation-for="OtpCode" class="text-danger"></span>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary w-100">Verify</button>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.12/dist/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>

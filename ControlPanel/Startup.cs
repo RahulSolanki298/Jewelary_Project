@@ -34,7 +34,16 @@ namespace ControlPanel
             services.AddDbContext<ApplicationDBContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
+
             // Dependency injection for repositories
+            services.AddScoped<IOTPService, OTPService>();
             services.AddScoped<ILogEntryRepository, LogEntryRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IDbInitializer, DbInitializer>();
@@ -84,6 +93,7 @@ namespace ControlPanel
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseSession();
 
             app.UseAuthentication(); // Must come before UseAuthorization
             app.UseAuthorization();
@@ -93,10 +103,17 @@ namespace ControlPanel
 
             app.UseEndpoints(endpoints =>
             {
+                // Area routing (must come before default route)
+                endpoints.MapControllerRoute(
+                    name: "areas",
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+                // Default routing
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Account}/{action=Index}/{id?}");
             });
+
         }
 
         private async Task InitializeDatabase(IDbInitializer dbInitializer)
