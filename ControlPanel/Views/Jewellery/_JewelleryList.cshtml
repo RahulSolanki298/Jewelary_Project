@@ -1,136 +1,320 @@
-﻿@model IEnumerable<Models.Product>
-<table class="table" id="diamondTable">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">
-                Stone ID
-            </th>
-            <th scope="col">
-                Video
-            </th>
-            <th>
-                Certi
-            </th>
-            <th scope="col">DNA</th>
-            <th scope="col">Step</th>
-            <th scope="col">Type</th>
-            <th scope="col">Lab</th>
-            <th scope="col">Shape</th>
-            <th scope="col">Carat</th>
-            <th scope="col">Color</th>
-            <th scope="col">Clarity</th>
-            <th scope="col">Cut</th>
-            <th scope="col">Polish</th>
-            <th scope="col">Sym</th>
-            <th scope="col">Flo</th>
-            <th scope="col">Rap.($)</th>
-            <th scope="col">Disc(%)</th>
-            <th scope="col">Price</th>
-            <th scope="col">Amount</th>
-            <th scope="col">
-                Measurement
-            </th>
-            <th scope="col">
-                Ratio
-            </th>
-            <th scope="col">
-                Depth%
+﻿@model IEnumerable<Models.ProductDTO>
+@using Common
 
-            </th>
 
-            <th scope="col">
-                Table%
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active" id="rings-tab" data-bs-toggle="tab" href="#ringList" role="tab" aria-controls="ringList" aria-selected="true">Rings</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="bands-tab" data-bs-toggle="tab" href="#bandList" role="tab" aria-controls="bandList" aria-selected="false">Bands</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="earrings-tab" data-bs-toggle="tab" href="#earringList" role="tab" aria-controls="earringList" aria-selected="false">Earrings</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="pendant-tab" data-bs-toggle="tab" tabindex="-1" href="#pendantList" role="tab" aria-controls="pandantList" aria-disabled="false">Pendant List</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="bracelets-tab" data-bs-toggle="tab" tabindex="-1" href="#braceletsList" role="tab" aria-controls="braceletList" aria-disabled="false">bracelet List</a>
+    </li>
+</ul>
 
-            </th>
+<div class="tab-content" id="myTabContent">
+    @*<div class="container" style="display:none;">
+        <button class="btn btn-sm btn-danger text-end">Delete</button>
+        <button class="btn btn-sm btn-success">Hold</button>
+    </div>*@
 
-            <th scope="col">
-                Shade
+    <div class="tab-pane fade show active" id="ringList" role="tabpanel" aria-labelledby="rings-tab">
 
-            </th>
+        <table class="table" id="ringTable">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">
+                        Image
+                    </th>
+                    <th scope="col">
+                        Title
+                    </th>
+                    <th scope="col">Vendor</th>
+                    <th scope="col">Style</th>
+                    <th scope="col">Length</th>
+                    <th scope="col">Band Width</th>
+                    <th scope="col">Weight</th>
+                    <th scope="col">Price (14k)</th>
+                    <th scope="col">Price (18k)</th>
+                    <th scope="col">Price (20k)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
 
-            <th scope="col">
-                Lab Shape
+                    @foreach (var item in Model.Where(x => x.CategoryName == SD.Rings))
+                    {
+                        <tr>
+                            <td scope="col"><input type="checkbox" class="chkId" /></td>
+                            <td scope="col">
+                                <img src="@item.DefaultImage" style="width:25px;" />
+                            </td>
+                            <td scope="col">
+                                <h5>@item.Title</h5>
+                                <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
+                            </td>
+                            <td scope="col">@item.VenderName</td>
+                            <td scope="col">@item.StyleName</td>
+                            <td scope="col">@item.Length</td>
+                            <td scope="col">@item.BandWidth</td>
+                            <td scope="col">@item.GoldWeight</td>
+                            <td scope="col">@item.Price</td>
+                            <td scope="col">@item.Price</td>
+                            <td scope="col">@item.Price</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="12"> No data found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="bandList" role="tabpanel" aria-labelledby="bands-tab">
+        <table class="table" id="bandTable">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">
+                        Image
+                    </th>
+                    <th scope="col">
+                        Title
+                    </th>
+                    <th scope="col">Vendor</th>
+                    <th scope="col">Style</th>
+                    <th scope="col">Length</th>
+                    <th scope="col">Band Width</th>
+                    <th scope="col">Weight</th>
+                    <th scope="col">Price (14k)</th>
+                    <th scope="col">Price (18k)</th>
+                    <th scope="col">Price (20k)</th>
 
-            </th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
 
-            <th scope="col">
-                Rap Amount
+                    @foreach (var item in Model.Where(x => x.CategoryName == SD.Bands))
+                    {
+                        <tr>
+                            <td scope="col"><input type="checkbox" class="chkId" /></td>
+                            <td scope="col">
+                                <img src="@item.DefaultImage" style="width:25px;" />
+                            </td>
+                            <td scope="col">
+                                <h5>@item.Title</h5>
+                                <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
+                            </td>
+                            <td scope="col">@item.VenderName</td>
+                            <td scope="col">@item.StyleName</td>
+                            <td scope="col">@item.Length</td>
+                            <td scope="col">@item.BandWidth</td>
+                            <td scope="col">@item.GoldWeight</td>
+                            <td scope="col">@item.Price</td>
+                            <td scope="col">@item.Price</td>
+                            <td scope="col">@item.Price</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="12"> No data found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="earringList" role="tabpanel" aria-labelledby="earrings-tab">
+        <table class="table" id="EarringTable">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">
+                        Image
+                    </th>
+                    <th scope="col">
+                        Title
+                    </th>
+                    <th scope="col">Vendor</th>
+                    <th scope="col">Style</th>
+                    <th scope="col">Length</th>
+                    <th scope="col">Band Width</th>
+                    <th scope="col">Weight</th>
+                    <th scope="col">Price (14k)</th>
+                    <th scope="col">Price (18k)</th>
+                    <th scope="col">Price (20k)</th>
 
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td scope="col">
-                    <div class="dropdown">
-                        <a class="btn btn-default dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Actions
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="@Url.Action("GetDiamond","Diamond",new { diamondId = item.Id})">View</a></li>
-                            <li><a class="dropdown-item" href="#">Edit</a></li>
-                            <li><a class="dropdown-item" href="#">Delete</a></li>
-                        </ul>
-                    </div>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
 
-                </td>
-                <td scope="col">
-                    @item.StoneId
-                </td>
-                <td scope="col">
-                    @item.DiamondVideoPath
-                </td>
-                <td>
-                    @item.Certificate
-                </td>
-                <td scope="col">@item.DNA</td>
-                <td scope="col">@item.Step</td>
-                <td scope="col">@item.TypeName</td>
-                <td scope="col">@item.LabName</td>
-                <td scope="col">@item.ShapeName</td>
-                <td scope="col">@item.Carat</td>
-                <td scope="col">@item.ColorName</td>
-                <td scope="col">@item.ClarityName</td>
-                <td scope="col">@item.CutName</td>
-                <td scope="col">@item.PolishName</td>
-                <td scope="col">@item.SymmetyName </td>
-                <td scope="col">@item.FluorName</td>
-                <td scope="col">@item.RapAmount.($)</td>
-                <td scope="col">@item.Discount (%)</td>
-                <td scope="col">@item.Price</td>
-                <td scope="col">@item.Amount</td>
-                <td scope="col">
-                    @item.Measurement
-                </td>
-                <td scope="col">
-                    @item.Ratio
-                </td>
-                <td scope="col">
-                    @item.Depth
-                </td>
+                    @foreach (var item in Model.Where(x => x.CategoryName == SD.Earrings))
+                    {
+                        <tr>
+                            <td scope="col"><input type="checkbox" class="chkId" /></td>
+                            <td scope="col">
+                                <img src="@item.DefaultImage" style="width:25px;" />
+                            </td>
+                            <td scope="col">
+                                <h5>@item.Title</h5>
+                                <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
+                            </td>
+                            <td scope="col">@item.VenderName</td>
+                            <td scope="col">@item.StyleName</td>
+                            <td scope="col">@item.Length</td>
+                            <td scope="col">@item.BandWidth</td>
+                            <td scope="col">@item.GoldWeight</td>
+                            <td scope="col">@item.Price</td>
+                            <td scope="col">@item.Price</td>
+                            <td scope="col">@item.Price</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="12"> No data found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 
-                <td scope="col">
-                    @item.Table
-                </td>
+    <div class="tab-pane fade" id="pendantList" role="tabpanel" aria-labelledby="pandant-tab">
+        <table class="table" id="PendantTable">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">
+                        Image
+                    </th>
+                    <th scope="col">
+                        Title
+                    </th>
+                    <th scope="col">Vendor</th>
+                    <th scope="col">Style</th>
+                    <th scope="col">Length</th>
+                    <th scope="col">Band Width</th>
+                    <th scope="col">Weight</th>
+                    <th scope="col">Price (14k)</th>
+                    <th scope="col">Price (18k)</th>
+                    <th scope="col">Price (20k)</th>
 
-                <td scope="col">
-                    @item.Shade
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
 
-                </td>
+                    @foreach (var item in Model.Where(x => x.CategoryName == SD.Pendants))
+                    {
+                        <tr>
+                            <td scope="col"><input type="checkbox" class="chkId" /></td>
+                            <td scope="col">
+                                <img src="@item.DefaultImage" style="width:25px;" />
+                            </td>
+                            <td scope="col">
+                                <h5>@item.Title</h5>
+                                <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
+                            </td>
+                            <td scope="col">@item.VenderName</td>
+                            <td scope="col">@item.StyleName</td>
+                            <td scope="col">@item.Length</td>
+                            <td scope="col">@item.BandWidth</td>
+                            <td scope="col">@item.GoldWeight</td>
+                            <td scope="col">@item.Price</td>
+                            <td scope="col">@item.Price</td>
+                            <td scope="col">@item.Price</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="12"> No data found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 
-                <td scope="col">
-                    @item.LabShape
+    <div class="tab-pane fade" id="BraceletsList" role="tabpanel" aria-labelledby="bracelets-tab">
+        <table class="table" id="BraceletsTable">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">
+                        Image
+                    </th>
+                    <th scope="col">
+                        Title
+                    </th>
+                    <th scope="col">Vendor</th>
+                    <th scope="col">Style</th>
+                    <th scope="col">Length</th>
+                    <th scope="col">Band Width</th>
+                    <th scope="col">Weight</th>
+                    <th scope="col">Price (14k)</th>
+                    <th scope="col">Price (18k)</th>
+                    <th scope="col">Price (20k)</th>
 
-                </td>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
 
-                <td scope="col">
-                    @item.RapAmount
-                </td>
-            </tr>
-        }
-
-    </tbody>
-</table>
+                    @foreach (var item in Model.Where(x => x.CategoryName == SD.Bracelets))
+                    {
+                        <tr>
+                            <td scope="col"><input type="checkbox" class="chkId" /></td>
+                            <td scope="col">
+                                <img src="@item.DefaultImage" style="width:25px;" />
+                            </td>
+                            <td scope="col">
+                                <h5>@item.Title</h5>
+                                <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
+                            </td>
+                            <td scope="col">@item.VenderName</td>
+                            <td scope="col">@item.StyleName</td>
+                            <td scope="col">@item.Length</td>
+                            <td scope="col">@item.BandWidth</td>
+                            <td scope="col">@item.GoldWeight</td>
+                            <td scope="col">@item.Price</td>
+                            <td scope="col">@item.Price</td>
+                            <td scope="col">@item.Price</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="12"> No data found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="container">
+    <button class="btn btn-sm btn-danger text-end">Back</button>
+    <button class="btn btn-sm btn-success" id="btnVarify">Varify</button>
+</div>

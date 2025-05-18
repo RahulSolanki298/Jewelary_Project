@@ -990,7 +990,7 @@ namespace APIs.Controllers
             {
                 product = new ProductDTO
                 {
-                    CategoryName = "Rings",
+                    CategoryName = SD.Rings,
                     EventName = worksheet.Cells[row, 5].Text,
                     Title = worksheet.Cells[row, 5].Text,
                     VenderName = worksheet.Cells[row, 6].Text,
@@ -1026,7 +1026,7 @@ namespace APIs.Controllers
                 }
                 else
                 {
-                    product.CategoryName = "Rings";
+                    product.CategoryName = SD.Rings;
                     product.EventName = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
                     product.Title = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
                     product.VenderName = string.IsNullOrWhiteSpace(product.VenderName) ? tempProducts.VenderName : product.VenderName;
@@ -1072,7 +1072,7 @@ namespace APIs.Controllers
             {
                 product = new ProductDTO
                 {
-                    CategoryName = "Bands",
+                    CategoryName = SD.Bands,
                     Title = worksheet.Cells[row, 5].Text,
                     EventName = worksheet.Cells[row, 5].Text,
                     VenderName = worksheet.Cells[row, 6].Text,
@@ -1106,7 +1106,7 @@ namespace APIs.Controllers
                 }
                 else
                 {
-                    product.CategoryName = "Bands";
+                    product.CategoryName = SD.Bands;
                     product.EventName = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
                     product.Title = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
                     product.VenderName = string.IsNullOrWhiteSpace(product.VenderName) ? tempProducts.VenderName : product.VenderName;
@@ -1149,7 +1149,7 @@ namespace APIs.Controllers
             {
                 product = new ProductDTO
                 {
-                    CategoryName = "Earrings",
+                    CategoryName = SD.Earrings,
                     Title = worksheet.Cells[row, 5].Text,
                     EventName = worksheet.Cells[row, 5].Text,
                     VenderName = worksheet.Cells[row, 6].Text,
@@ -1181,7 +1181,7 @@ namespace APIs.Controllers
                 }
                 else
                 {
-                    product.CategoryName = "Earrings";
+                    product.CategoryName = SD.Earrings;
                     product.Diameter = string.IsNullOrWhiteSpace(product.Diameter) ? tempProducts.Diameter : product.Diameter;
                     product.EventName = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
                     product.Title = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
@@ -1225,7 +1225,7 @@ namespace APIs.Controllers
             {
                 product = new ProductDTO
                 {
-                    CategoryName = "Pendants",
+                    CategoryName = SD.Pendants,
                     Title = worksheet.Cells[row, 5].Text,
                     EventName = worksheet.Cells[row, 5].Text,
                     VenderName = worksheet.Cells[row, 6].Text,
@@ -1257,7 +1257,7 @@ namespace APIs.Controllers
                 }
                 else
                 {
-                    product.CategoryName = "Pendants";
+                    product.CategoryName = SD.Pendants;
                     product.EventName = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
                     product.Title = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
                     product.VenderName = string.IsNullOrWhiteSpace(product.VenderName) ? tempProducts.VenderName : product.VenderName;
@@ -1287,8 +1287,7 @@ namespace APIs.Controllers
 
             return products;
         }
-
-
+        
         private List<ProductDTO> ProcessBraceletsData(ExcelWorksheet worksheet)
         {
             var newProductList = new List<ProductDTO>();
@@ -1301,7 +1300,7 @@ namespace APIs.Controllers
             {
                 product = new ProductDTO
                 {
-                    CategoryName = "Bracelets",
+                    CategoryName = SD.Bracelets,
                     Title = worksheet.Cells[row, 5].Text,
                     EventName = worksheet.Cells[row, 5].Text,
                     VenderName = worksheet.Cells[row, 6].Text,
@@ -1333,7 +1332,7 @@ namespace APIs.Controllers
                 }
                 else
                 {
-                    product.CategoryName = "Bracelets";
+                    product.CategoryName = SD.Bracelets;
                     product.EventName = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
                     product.Title = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
                     product.VenderName = string.IsNullOrWhiteSpace(product.VenderName) ? tempProducts.VenderName : product.VenderName;

@@ -81,6 +81,8 @@ namespace DataAccess.Data
 
         public DbSet<ProductCollectionItems> ProductCollectionItems { get; set; }
 
+        public DbSet<ProductFileUploadHistory> ProductFileUploadHistory { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

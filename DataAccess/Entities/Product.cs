@@ -67,6 +67,7 @@ namespace DataAccess.Entities
         public string UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public string UploadStatus { get; set; }  //  Requested, Accepted, Rejected
+        public int? IsHistoryId { get; set; }
         public bool? IsDelete { get; set; }
 
     }

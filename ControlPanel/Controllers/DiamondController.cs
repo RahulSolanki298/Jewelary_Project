@@ -27,6 +27,7 @@ namespace ControlPanel.Controllers
             _diamondPPTY = diamondPPTY;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
@@ -52,7 +53,7 @@ namespace ControlPanel.Controllers
             if (extension != ".xlsx" && extension != ".csv")
             {
                 TempData["UploadError"] = "Invalid file format. Only .xlsx or .csv files are supported.";
-                return RedirectToAction("UploadView");
+                return RedirectToAction("Index");
             }
 
             try
@@ -79,7 +80,7 @@ namespace ControlPanel.Controllers
                 if (diamondsList == null || diamondsList.Count == 0)
                 {
                     TempData["UploadError"] = "No valid diamond records found in the file.";
-                    return RedirectToAction("UploadView");
+                    return RedirectToAction("Index");
                 }
 
                 // Step 4: Bulk insert
@@ -87,12 +88,12 @@ namespace ControlPanel.Controllers
                 var result = await _diamondRepository.BulkInsertDiamondsAsync(jsonData, uploadHistoryId);
 
                 TempData["UploadSuccess"] = $"File uploaded successfully. {diamondsList.Count} records inserted.";
-                return RedirectToAction("UploadView");
+                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
                 TempData["UploadError"] = $"Internal server error: {ex.Message}";
-                return RedirectToAction("UploadView");
+                return RedirectToAction("Index");
             }
         }
 

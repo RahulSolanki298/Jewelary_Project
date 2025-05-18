@@ -1702,5 +1702,20 @@ namespace Business.Repository
         }
 
 
+        public async Task<int> AddProductFileUploadedHistory(ProductFileUploadHistory productFileUpload)
+        {
+            try
+            {
+                await _context.ProductFileUploadHistory.AddAsync(productFileUpload);
+                await _context.SaveChangesAsync();
+
+                return productFileUpload.Id;
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
+        }
+
     }
 }

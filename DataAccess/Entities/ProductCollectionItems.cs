@@ -12,7 +12,7 @@
 
         public bool IsHomePage { get; set; }
 
-        public int OrderNo { get; set; }
+        public int Index { get; set; }
 
     }
 }

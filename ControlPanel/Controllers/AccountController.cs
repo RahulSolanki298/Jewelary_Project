@@ -52,19 +52,30 @@ namespace ControlPanel.Controllers
                 var roles = await _userManager.GetRolesAsync(user);
 
                 // Generate OTP
-                var otp = new Random().Next(100000, 999999).ToString();
-                HttpContext.Session.SetString("OTP", otp);
-                HttpContext.Session.SetString("UserId", user.Id);
+                //var otp = new Random().Next(100000, 999999).ToString();
+                //HttpContext.Session.SetString("OTP", otp);
+                //HttpContext.Session.SetString("UserId", user.Id);
 
-                // Send OTP to email and mobile (service below)
-                await _otpService.SendOtpEmailAsync(user.Email, otp);
-                await _otpService.SendOtpSmsAsync(user.PhoneNumber, otp);
+                //// Send OTP to email and mobile (service below)
+                //await _otpService.SendOtpEmailAsync(user.Email, otp);
+                //await _otpService.SendOtpSmsAsync(user.PhoneNumber, otp);
 
-                return RedirectToAction("VerifyOtp");
+                //return RedirectToAction("VerifyOtp");
+
+                if (roles.Contains("Admin"))
+                    return RedirectToAction("Index", "Home");
+
+                if (roles.Contains("Supplier"))
+                    return RedirectToAction("Index", "SupplierDashboard");
+
+                if (roles.Contains("Employee"))
+                    return RedirectToAction("Index", "EmployeeDashboard");
+
+                return RedirectToAction("Index", "Home");
             }
 
             ModelState.AddModelError("", "Invalid login attempt.");
-            return View(model);
+            return RedirectToAction("Index");
         }
 
 

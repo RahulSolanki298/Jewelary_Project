@@ -1,18 +1,19 @@
 ﻿@model List<Models.DiamondData>
 
 <section class="section">
-    <div class="row">
+    <div class="row mb-2">
         <div class="col-lg-6">
             <h4>Jewelry List</h4>
         </div>
         <div class="col-lg-6">
-            <button class="btn btn-primary float-end" id="ExcelUpload">Upload Excel</button>
+            @*<button class="btn btn-primary float-end" id="ExcelUpload">Upload Excel</button>*@
+            <a href="@Url.Action("UploadJewellery","Jewellery")" class="btn btn-theme float-end">Excel Upload</a>
         </div>
     </div>
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
-                <div class="card-body" id="diamondList">
+                <div class="card-body" id="jewelleryList">
                 </div>
             </div>
         </div>
@@ -22,7 +23,7 @@
 <div class="modal fade" id="showFileUpload" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="uploadForm" asp-controller="Diamond" asp-action="UpsertDiamonds" method="post" enctype="multipart/form-data">
+            <form id="uploadForm" asp-controller="Jewellery" asp-action="ExcelUpload" method="post" enctype="multipart/form-data">
                 <div class="modal-header">
                     <h5 class="modal-title">Upload Excel</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -54,6 +55,10 @@
     </div>
 </div>
 
+<div class="modal fade" id="showUploadedData" tabindex="-1" data-bs-backdrop="false">
+
+
+</div>
 
 @section Scripts
 {
@@ -61,50 +66,55 @@
         $(document).ready(function(){
             getDiamondList();
 
-            $("#ExcelUpload").on("click",function(){
-                $("#showFileUpload").modal("show");
+            //$("#ExcelUpload").on("click",function(){
+            //    $("#showFileUpload").modal("show");
+            //});
+
+            $('#uploadForm').on('submit', function (e) {
+                e.preventDefault();
+
+                const form = this;
+                const formData = new FormData(form);
+
+                $('#uploadBtn').prop('disabled', true).text('Uploading...');
+                $('#loader').show();
+
+                $.ajax({
+                    url: form.action,
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        $("#showUploadedData").html(response);
+                        // Show the new modal
+                        $('#showUploadedData').modal('show');
+                        $('#loader').hide();
+                        $('#uploadBtn').prop('disabled', false).text('Upload');
+
+                        // Inject response data into the modal
+                      
+                    },
+                    error: function (xhr) {
+                        $('#loader').hide();
+                        $('#uploadBtn').prop('disabled', false).text('Upload');
+                        alert('Upload failed: ' + xhr.responseText);
+                    }
+                });
             });
 
-        $('#uploadForm').on('submit', function (e) {
-            e.preventDefault();
-
-            let form = $(this)[0];
-            let formData = new FormData(form);
-
-            $('#uploadBtn').prop('disabled', true).text('Uploading...');
-            $('#loader').show();
-
-            $.ajax({
-                url: form.action,
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    $('#loader').hide();
-                    $('#uploadBtn').prop('disabled', false).text('Upload');
-                    alert(response.message || 'Upload completed!');
-                    // Optionally close modal or refresh a list
-                },
-                error: function (xhr, status, error) {
-                    $('#loader').hide();
-                    $('#uploadBtn').prop('disabled', false).text('Upload');
-                    alert('Upload failed: ' + xhr.responseText);
-                }
-            });
-        });
 
         });
 
         function getDiamondList()
         {
              $.ajax({
-                url: '@Url.Action("DiamondList", "Diamond")',
+                url: '@Url.Action("GetJewellries", "Jewellery")',
                 type: 'GET',
                 success: function (result)
                 {
-                    $('#diamondList').html("");
-                    $('#diamondList').html(result);
+                    $('#jewelleryList').html("");
+                    $('#jewelleryList').html(result);
                 },
                 error: function (xhr, status, error)
                 {
@@ -113,6 +123,21 @@
             });
         }
 
-
+        function checkAll()
+        {
+            $.ajax({
+                url: '@Url.Action("GetJewellries", "Jewellery")',
+                type: 'GET',
+                success: function (result)
+                {
+                    $('#jewelleryList').html("");
+                    $('#jewelleryList').html(result);
+                },
+                error: function (xhr, status, error)
+                {
+                    console.error('Error loading diamond list:', error);
+                }
+            });
+        }
     </script>
 }

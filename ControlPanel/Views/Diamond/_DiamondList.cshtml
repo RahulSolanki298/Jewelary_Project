@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<Models.DiamondData>
+
+
 <table class="table" id="diamondTable">
     <thead>
         <tr>
@@ -61,74 +63,83 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+
+        @if (Model.Count() > 0)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td scope="col">
+                        <div class="dropdown">
+                            <a class="btn btn-default dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Actions
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="@Url.Action("GetDiamond","Diamond",new { diamondId = item.Id})">View</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("GetDiamond","Diamond",new { diamondId = item.Id})">Edit</a></li>
+                                <li><a class="dropdown-item" href="#">Delete</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td scope="col">
+                        @item.StoneId
+                    </td>
+                    <td scope="col">
+                        @item.DiamondVideoPath
+                    </td>
+                    <td>
+                        @item.Certificate
+                    </td>
+                    <td scope="col">@item.DNA</td>
+                    <td scope="col">@item.Step</td>
+                    <td scope="col">@item.TypeName</td>
+                    <td scope="col">@item.LabName</td>
+                    <td scope="col">@item.ShapeName</td>
+                    <td scope="col">@item.Carat</td>
+                    <td scope="col">@item.ColorName</td>
+                    <td scope="col">@item.ClarityName</td>
+                    <td scope="col">@item.CutName</td>
+                    <td scope="col">@item.PolishName</td>
+                    <td scope="col">@item.SymmetyName </td>
+                    <td scope="col">@item.FluorName</td>
+                    <td scope="col">@item.RapAmount.($)</td>
+                    <td scope="col">@item.Discount (%)</td>
+                    <td scope="col">@item.Price</td>
+                    <td scope="col">@item.Amount</td>
+                    <td scope="col">
+                        @item.Measurement
+                    </td>
+                    <td scope="col">
+                        @item.Ratio
+                    </td>
+                    <td scope="col">
+                        @item.Depth
+                    </td>
+
+                    <td scope="col">
+                        @item.Table
+                    </td>
+
+                    <td scope="col">
+                        @item.Shade
+
+                    </td>
+
+                    <td scope="col">
+                        @item.LabShape
+
+                    </td>
+
+                    <td scope="col">
+                        @item.RapAmount
+                    </td>
+                </tr>
+            }
+        }
+        else
         {
             <tr>
-                <td scope="col">
-                    <div class="dropdown">
-                        <a class="btn btn-default dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Actions
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="@Url.Action("GetDiamond","Diamond",new { diamondId = item.Id})">View</a></li>
-                            <li><a class="dropdown-item" href="#">Edit</a></li>
-                            <li><a class="dropdown-item" href="#">Delete</a></li>
-                        </ul>
-                    </div>
-
-                </td>
-                <td scope="col">
-                    @item.StoneId
-                </td>
-                <td scope="col">
-                    @item.DiamondVideoPath
-                </td>
-                <td>
-                    @item.Certificate
-                </td>
-                <td scope="col">@item.DNA</td>
-                <td scope="col">@item.Step</td>
-                <td scope="col">@item.TypeName</td>
-                <td scope="col">@item.LabName</td>
-                <td scope="col">@item.ShapeName</td>
-                <td scope="col">@item.Carat</td>
-                <td scope="col">@item.ColorName</td>
-                <td scope="col">@item.ClarityName</td>
-                <td scope="col">@item.CutName</td>
-                <td scope="col">@item.PolishName</td>
-                <td scope="col">@item.SymmetyName </td>
-                <td scope="col">@item.FluorName</td>
-                <td scope="col">@item.RapAmount.($)</td>
-                <td scope="col">@item.Discount (%)</td>
-                <td scope="col">@item.Price</td>
-                <td scope="col">@item.Amount</td>
-                <td scope="col">
-                    @item.Measurement
-                </td>
-                <td scope="col">
-                    @item.Ratio
-                </td>
-                <td scope="col">
-                    @item.Depth 
-                </td>
-
-                <td scope="col">
-                    @item.Table 
-                </td>
-
-                <td scope="col">
-                    @item.Shade
-
-                </td>
-
-                <td scope="col">
-                    @item.LabShape
-
-                </td>
-
-                <td scope="col">
-                    @item.RapAmount
-                </td>
+                <td colspan="27"> No data found</td>
             </tr>
         }
 

@@ -1,19 +1,28 @@
 ﻿@model List<Models.DiamondData>
 
 <section class="section">
-    <div class="row">
+    <div class="row mb-2">
         <div class="col-lg-6">
             <h4>Diamond List</h4>
         </div>
         <div class="col-lg-6">
-            <button class="btn btn-primary float-end" id="ExcelUpload">Upload Excel</button>
+            <button class="btn btn-theme float-end" id="ExcelUpload">Upload Excel</button>
         </div>
     </div>
-    <div class="row">
+    @*<div class="row">
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-body" id="diamondList">
 
+                </div>
+            </div>
+        </div>
+    </div>*@
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="table-responsive" id="diamondList"></div>
                 </div>
             </div>
         </div>
@@ -66,7 +75,7 @@
                 $("#showFileUpload").modal("show");
             });
 
-        $('#uploadForm').on('submit', function (e) {
+            $('#uploadForm').on('submit', function (e) {
             e.preventDefault();
 
             let form = $(this)[0];
@@ -85,7 +94,8 @@
                     $('#loader').hide();
                     $('#uploadBtn').prop('disabled', false).text('Upload');
                     alert(response.message || 'Upload completed!');
-                    // Optionally close modal or refresh a list
+                    location.reload();
+
                 },
                 error: function (xhr, status, error) {
                     $('#loader').hide();
@@ -95,6 +105,7 @@
             });
         });
 
+            
         });
 
         function getDiamondList()

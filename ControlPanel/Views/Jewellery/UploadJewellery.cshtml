@@ -1,0 +1,68 @@
+﻿<form id="uploadForm" asp-controller="Jewellery" asp-action="ExcelUpload" method="post" enctype="multipart/form-data">
+    @if (TempData["UploadSuccess"] != null)
+    {
+        <div class="alert alert-success">@TempData["UploadSuccess"]</div>
+    }
+    @if (TempData["UploadError"] != null)
+    {
+        <div class="alert alert-danger">@TempData["UploadError"]</div>
+    }
+    <div class="mb-3">
+        <label for="excelFile" class="form-label">Select Excel or CSV File</label>
+        <input type="file" class="form-control" id="excelFile" name="file" accept=".xls,.xlsx,.csv" required>
+    </div>
+    <div id="loader" style="display:none;">
+        <span class="spinner-border text-primary" role="status"></span> Uploading...
+    </div>
+    <button id="uploadBtn" type="submit" class="btn btn-theme">Upload</button>
+</form>
+
+<div  id="ImportProductList">
+
+
+</div>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#uploadForm').on('submit', function (e) {
+                e.preventDefault();
+
+                let form = $(this)[0];
+                let formData = new FormData(form);
+
+                $('#uploadBtn').prop('disabled', true).text('Uploading...');
+                $('#loader').show();
+
+                $.ajax({
+                    url: form.action,
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        $('#loader').hide();
+                        $('#uploadBtn').prop('disabled', false).text('Upload');
+                        alert(response.message || 'Upload completed!');
+                        $("#ImportProductList").html("");
+                        $("#ImportProductList").html(response);
+
+                    },
+                    error: function (xhr, status, error) {
+                        $('#loader').hide();
+                        $('#uploadBtn').prop('disabled', false).text('Upload');
+                        alert('Upload failed: ' + xhr.responseText);
+                    }
+                });
+            });
+
+
+            $("#ImportProductList").on("click","#btnVarify", function () {
+                alert("test");
+            });
+
+
+        });
+    </script>
+}
