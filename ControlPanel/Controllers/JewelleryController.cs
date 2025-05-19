@@ -457,14 +457,14 @@ namespace ControlPanel.Controllers
             var tempProducts = new ProductDTO();
             int rowCount = worksheet.Dimension.Rows;
             ProductDTO product = null;
-
+            var titValue = worksheet.Cells[4, 3].Text;
             for (int row = 5; row <= rowCount; row++)
             {
                 product = new ProductDTO
                 {
                     CategoryName = SD.Bracelets,
-                    Title = worksheet.Cells[row, 5].Text,
-                    EventName = worksheet.Cells[row, 5].Text,
+                    Title = titValue,
+                    EventName = titValue,
                     VenderName = worksheet.Cells[row, 6].Text,
                     VenderStyle = worksheet.Cells[row, 7].Text,
                     Sku = worksheet.Cells[row, 7].Text,
