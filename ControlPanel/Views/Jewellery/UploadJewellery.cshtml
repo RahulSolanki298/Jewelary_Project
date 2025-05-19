@@ -58,9 +58,45 @@
             });
 
 
-            $("#ImportProductList").on("click","#btnVarify", function () {
-                alert("test");
+            // $("#ImportProductList").on("click","#btnVarify", function () {
+            //     alert("test");
+            // });
+
+            // $('#saveBtn').on('click', function () {
+        ("#ImportProductList").on("click","#btnVarify", function () {
+            debugger;
+                e.preventDefault(); // Prevent form submission
+
+        let data = [];
+
+        $('#ringTable tbody tr').each(function () {
+            let row = $(this);
+            let item = {};
+
+            // loop through all inputs/textareas with data-field
+            row.find('[data-field]').each(function () {
+                let key = $(this).data('field');
+                let value = $(this).val();
+                item[key] = value;
             });
+
+            data.push(item);
+        });
+
+        $.ajax({
+            url: '@Url.Action("SaveAllProduct", "Jewellery")',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function (response) {
+                alert('Saved successfully!');
+            },
+            error: function (err) {
+                console.error(err);
+                alert('Error saving data');
+            }
+        });
+        });
 
 
         });
