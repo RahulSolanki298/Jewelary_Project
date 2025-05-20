@@ -7,6 +7,7 @@ using DataAccess.Entities;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -69,11 +70,23 @@ namespace ControlPanel
                     options.SlidingExpiration = true;
                 });
 
+            ConfigureFormOptions(services);
+
             // Authorization support
             services.AddAuthorization();
 
             // MVC & Razor
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
+        }
+
+        private void ConfigureFormOptions(IServiceCollection services)
+        {
+            services.Configure<FormOptions>(options =>
+            {
+                options.ValueLengthLimit = int.MaxValue;
+                options.MultipartBodyLengthLimit = 5368709120; // 5 GB
+                options.MemoryBufferThreshold = int.MaxValue;
+            });
         }
 
         // Configure HTTP request pipeline

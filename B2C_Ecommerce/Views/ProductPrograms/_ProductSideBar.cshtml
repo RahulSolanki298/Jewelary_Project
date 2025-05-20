@@ -1,0 +1,142 @@
+﻿@model Models.ProductPropertyListDTO
+
+
+<div class="row">
+	<div class="col-lg-12 order-2 order-lg-1">
+		<aside class="sidebar-wrapper">
+			<!-- single sidebar start -->
+			<div class="sidebar-single">
+				<h5 class="sidebar-title">categories</h5>
+				<div class="sidebar-body">
+					<ul class="shop-categories">
+						@*@if (Model.StylesList != null)
+						{
+							@foreach (var item in Model.StylesList)
+							{
+								<li><a href="#">@item.Name</a></li>
+							}
+						}*@
+					</ul>
+				</div>
+			</div>
+			<!-- single sidebar end -->
+			<!-- single sidebar start -->
+			@* <div class="sidebar-single">
+				<h5 class="sidebar-title">price</h5>
+				<div class="sidebar-body">
+					
+						<div class="price-range-wrap">
+							<div class="price-range" data-min="1" data-max="1000000"></div>
+							<div class="range-slider">
+								<form action="#" class="d-flex align-items-center justify-content-between">
+									<div class="price-input">
+										<label for="amount">Price: </label>
+										<input type="text" id="amount">
+									</div>
+									<button class="filter-btn">filter</button>
+								</form>
+							</div>
+						</div>
+
+				</div>
+			</div> *@
+
+			<div class="sidebar-single">
+				<h5 class="sidebar-title">price</h5>
+                <div class="sidebar-body">
+                    <div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6">
+                        <div class="d-flex mb-2">
+                            <div class="filter-label">
+                                <label for="minPrice" class="form-label" style="padding-right: 2px;">Price <span>$</span></label>
+                            </div>
+                            <div class="d-flex">
+                                <input type="text" class="form-control txt-bolder me-2 range_slider" placeholder="Min Price" id="minPrice" />
+                                - &nbsp;<input type="text" class="form-control txt-bolder range_slider margin-left-2" placeholder="Max Price" id="maxPrice" />
+                            </div>
+                        </div>
+                        <div id="price-slider" class="slider filter-scroll-bg"></div>
+                    </div>
+                </div>
+			</div>
+			<!-- single sidebar end -->
+			<!-- single sidebar start -->
+			<div class="sidebar-single">
+				<h5 class="sidebar-title">Brand</h5>
+				<div class="sidebar-body">
+					<ul class="checkbox-container categories-list">
+						@*@if (Model.StylesList != null)
+						{
+							@foreach (var item in Model.StylesList)
+							{
+								<li>
+									<div class="custom-control custom-checkbox">
+										<input type="checkbox" class="custom-control-input" id="customCheck2">
+										<label class="custom-control-label" for="customCheck2">@item.Name</label>
+									</div>
+								</li>
+							}
+
+						}*@
+					</ul>
+				</div>
+			</div>
+			<!-- single sidebar end -->
+			<!-- single sidebar start -->
+			<div class="sidebar-single">
+				<h5 class="sidebar-title">color</h5>
+				<div class="sidebar-body">
+					<ul class="checkbox-container categories-list">
+						@*@if (Model.Colors != null)
+						{
+							foreach (var item in Model.Colors)
+							{
+
+								<li>
+									<div class="custom-control custom-checkbox">
+										<input type="hidden" id="txtMetalIds" value="@string.Join(",",item)"/>
+										<input type="checkbox" class="custom-control-input" id="customCheck12">
+										<label class="custom-control-label" for="customCheck12">@item.Name</label>
+									</div>
+								</li>
+							}
+						}*@
+					</ul>
+				</div>
+			</div>
+			<!-- single sidebar end -->
+			<!-- single sidebar start -->
+			<div class="sidebar-single">
+				<h5 class="sidebar-title">size</h5>
+				<div class="sidebar-body">
+					<ul class="checkbox-container categories-list">
+						@*@if (Model.CaratSizes != null)
+						{
+							<input type="hidden" id="caratSizeIds" />
+							foreach (var item in Model.CaratSizes)
+							{
+
+								<li>
+									<div class="custom-control custom-checkbox">
+										<input type="checkbox" class="custom-control-input .caratSizeId">
+										<label class="custom-control-label" for="customCheck12">@item.Name</label>
+									</div>
+								</li>
+							}
+						}*@
+					</ul>
+				</div>
+			</div>
+			<!-- single sidebar end -->
+			<!-- single sidebar start -->
+			<div class="sidebar-banner">
+				<div class="img-container">
+					<a href="#">
+						<img src="assets/img/banner/sidebar-banner.jpg" alt="">
+					</a>
+				</div>
+			</div>
+			<!-- single sidebar end -->
+		</aside>
+	</div>
+
+</div>

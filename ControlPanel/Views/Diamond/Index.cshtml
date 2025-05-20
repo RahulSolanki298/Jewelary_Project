@@ -1,4 +1,5 @@
-﻿@model List<Models.DiamondData>
+﻿@using Common
+@model IEnumerable<Models.DiamondData>
 
 <section class="section">
     <div class="row mb-2">
@@ -9,20 +10,163 @@
             <button class="btn btn-theme float-end" id="ExcelUpload">Upload Excel</button>
         </div>
     </div>
-    @*<div class="row">
+    <div class="row">
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-body" id="diamondList">
 
-                </div>
-            </div>
-        </div>
-    </div>*@
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="table-responsive" id="diamondList"></div>
+                    <table class="table datatable" id="diamondTable">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">
+                                    Stone ID
+                                </th>
+                                <th scope="col">
+                                    Video
+                                </th>
+                                <th>
+                                    Certi
+                                </th>
+                                <th scope="col">Step</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Lab</th>
+                                <th scope="col">Shape</th>
+                                <th scope="col">Carat</th>
+                                <th scope="col">Color</th>
+                                <th scope="col">Clarity</th>
+                                <th scope="col">Cut</th>
+                                <th scope="col">Polish</th>
+                                <th scope="col">Sym</th>
+                                <th scope="col">Flo</th>
+                                <th scope="col">Rap.($)</th>
+                                <th scope="col">Disc(%)</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">
+                                    Measurement
+                                </th>
+                                <th scope="col">
+                                    Ratio
+                                </th>
+                                <th scope="col">
+                                    Depth%
+
+                                </th>
+
+                                <th scope="col">
+                                    Table%
+
+                                </th>
+
+                                <th scope="col">
+                                    Shade
+
+                                </th>
+
+                                <th scope="col">
+                                    Lab Shape
+
+                                </th>
+
+                                <th scope="col">
+                                    Rap Amount
+
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Count() > 0)
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td scope="col">
+                                            <div class="dropdown">
+                                                <a class="btn btn-default dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Actions
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="@Url.Action("GetDiamond","Diamond",new { diamondId = item.Id})" target="_blank">View</a></li>
+                                                    <li><a class="dropdown-item" href="@Url.Action("GetDiamond","Diamond",new { diamondId = item.Id})" target="_blank">Edit</a></li>
+                                                    <li><a class="dropdown-item" href="#">Delete</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td scope="col">
+                                            @item.StoneId
+                                        </td>
+                                        <td scope="col">
+                                            <a href="@item.DiamondVideoPath">
+                                                <img src="@(SD.ImgUrl)/assets/img/360-degrees.png" style="width:24px;" />
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="@item.Certificate">
+                                                @if (item.LabName == "IGI")
+                                                {
+                                                    <img src="@SD.ImgUrl/assets/img/logo/IGI.png" style="width:200px;" />
+                                                }
+                                                else if (item.LabName == "GIA")
+                                                {
+                                                    <img src="@SD.ImgUrl/assets/img/logo/GIA.png" style="width:200px;" />
+                                                }
+                                            </a>
+                                        </td>
+                                        <td scope="col">@item.Step</td>
+                                        <td scope="col">@item.TypeName</td>
+                                        <td scope="col">@item.LabName</td>
+                                        <td scope="col">@item.ShapeName</td>
+                                        <td scope="col">@item.Carat</td>
+                                        <td scope="col">@item.ColorName</td>
+                                        <td scope="col">@item.ClarityName</td>
+                                        <td scope="col">@item.CutName</td>
+                                        <td scope="col">@item.PolishName</td>
+                                        <td scope="col">@item.SymmetyName </td>
+                                        <td scope="col">@item.FluorName</td>
+                                        <td scope="col">@item.RapAmount.($)</td>
+                                        <td scope="col">@item.Discount (%)</td>
+                                        <td scope="col">@item.Price</td>
+                                        <td scope="col">@item.Amount</td>
+                                        <td scope="col">
+                                            @item.Measurement
+                                        </td>
+                                        <td scope="col">
+                                            @item.Ratio
+                                        </td>
+                                        <td scope="col">
+                                            @item.Depth
+                                        </td>
+
+                                        <td scope="col">
+                                            @item.Table
+                                        </td>
+
+                                        <td scope="col">
+                                            @item.Shade
+
+                                        </td>
+
+                                        <td scope="col">
+                                            @item.LabShape
+
+                                        </td>
+
+                                        <td scope="col">
+                                            @item.RapAmount
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="27"> No data found</td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -59,7 +203,6 @@
                     <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
                 </div>
             </form>
-
         </div>
     </div>
 </div>
@@ -67,9 +210,15 @@
 
 @section Scripts
 {
+
+
     <script>
-        $(document).ready(function(){
-            getDiamondList();
+        var pg=$("#pgSize").val();
+        var pageNo=$("a").attr("pageNo");
+
+        $(document).ready(function()
+        {
+           // getDiamondList(1,pg);
 
             $("#ExcelUpload").on("click",function(){
                 $("#showFileUpload").modal("show");
@@ -104,27 +253,7 @@
                 }
             });
         });
-
-            
         });
-
-        function getDiamondList()
-        {
-             $.ajax({
-                url: '@Url.Action("DiamondList", "Diamond")',
-                type: 'GET',
-                success: function (result) 
-                {
-                    $('#diamondList').html("");
-                    $('#diamondList').html(result);
-                },
-                error: function (xhr, status, error) 
-                {
-                    console.error('Error loading diamond list:', error);
-                }
-            });
-        }
-
 
     </script>
 }

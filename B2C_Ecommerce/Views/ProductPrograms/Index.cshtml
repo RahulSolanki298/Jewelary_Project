@@ -1,0 +1,723 @@
+﻿
+@using Common
+@{
+    <link rel="stylesheet" asp-href-include="~/assets/css/products.css">
+
+    <style>
+        .media-container {
+            position: relative;
+        }
+
+        .product-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+            z-index: 2;
+        }
+
+        .metalHide {
+            color: black;
+            font-size: 16px;
+            font-weight: normal;
+            border: none;
+        }
+
+        .metalShow {
+            color: black;
+            font-size: 16px;
+            font-weight: bold;
+            border: 1px solid black;
+            display: block;
+        }
+    </style>
+}
+
+<section>
+    <div class="listingpage">
+        <div class="home-giftbanner-main position-relative left-text-banner">
+            <a href="#" aria-label="" class="d-block">
+                <div class="ole-image-banner thumb text-center ">
+                    <img src="~/assets/img/banner/filter-cover-image.jpg" class="filter-top-image" alt="" title="" />
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- breadcrumb area start -->
+<div class="breadcrumb-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumb-wrap">
+                    <nav aria-label="breadcrumb">
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#"><i class="fa fa-home"></i></a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Fine Jewelry</li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- breadcrumb area end -->
+<!-- page main wrapper start -->
+<div class="shop-main-wrapper filter-padding">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 text-center">
+                <h2>
+                    Engagement Rings
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="custom-container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="shop-top-bar">
+                    <div class="row align-items">
+                        <div class="col-lg-12 col-md-12 order-1 order-md-2">
+                            <div class="top-bar-left">
+                                <div class="product-short">
+                                    <p>Sort By : </p>
+                                    <select class="nice-select" name="sortby" id="selectSort">
+                                        @*<option value="asc">Name (A - Z)</option>
+                                            <option value="desc">Name (Z - A)</option>*@
+                                        <option value="newest">Newest </option>
+                                        <option value="price">Price: Low To High</option>
+                                        <option value="priceMax">Price: High To Low</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <span style="float:right;font-size:20px;margin-bottom:5px;" id="filterOpen" class="pointer"><i class="fa fa-filter"></i> Filter</span>
+            </div>
+        </div>
+
+        <div id="FilterSection" style="display:none;" class="product-shadow">
+            <div class="top-bar">
+                <div class="reset btn btn-dark text-capitalize" id="btnRestFilter" title="RESET">RESET</div>
+                <div class="filterclose btn btn-danger text-capitalize" id="filterclose" title="CLOSE">✕</div>
+            </div>
+            <div class="Main-Header" id="ProductFilters">
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="shop-product-wrapper">
+                    <!-- shop product top wrap start -->
+
+                    <hr />
+                    <!-- shop product top wrap start -->
+                    @* <div class="container">
+                        <div class="row">
+                            <div class="col-6 col-sm-6 col-md-2 col-lg-2 mb-4 animate-card clsCategory" data-categoryName="Rings">
+                                <a href="#" class="text-decoration-none text-dark">
+                                    <div class="product-main-box shadow-sm rounded p-2 bg-white h-100 hover-scale">
+                                        <div class="product-item">
+                                            <figure class="product-thumb media-container mb-2">
+                                                <div class="img-with-bg position-relative">
+                                                    <img src="~/assets/img/product-filter-img/Rings.png" alt="Rings" class="img-fluid">
+                                                </div>
+                                            </figure>
+                                            <div class="product-details-des text-center">
+                                                <h5 class="fw-semibold">Rings</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="col-6 col-sm-6 col-md-2 col-lg-2 mb-4 animate-card clsCategory" data-categoryName="Bands">
+                                <a href="#" class="text-decoration-none text-dark">
+                                    <div class="product-main-box shadow-sm rounded p-2 bg-white h-100 hover-scale">
+                                        <div class="product-item">
+                                            <figure class="product-thumb media-container mb-2">
+                                                <div class="img-with-bg position-relative">
+                                                    <img src="~/assets/img/product-filter-img/Band.png" alt="Bands" class="img-fluid">
+                                                </div>
+                                            </figure>
+                                            <div class="product-details-des text-center">
+                                                <h5 class="fw-semibold">Bands</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="col-6 col-sm-6 col-md-2 col-lg-2 mb-4 animate-card clsCategory" data-categoryName="Earrings">
+                                <a href="#" class="text-decoration-none text-dark">
+                                    <div class="product-main-box shadow-sm rounded p-2 bg-white h-100 hover-scale">
+                                        <div class="product-item">
+                                            <figure class="product-thumb media-container mb-2">
+                                                <div class="img-with-bg position-relative">
+                                                    <img src="~/assets/img/product-filter-img/Earrings.png" alt="Earrings" class="img-fluid">
+                                                </div>
+                                            </figure>
+                                            <div class="product-details-des text-center">
+                                                <h5 class="fw-semibold">Earrings</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="col-6 col-sm-6 col-md-2 col-lg-2 mb-4 animate-card clsCategory" data-categoryName="Pendal">
+                                <a href="#" class="text-decoration-none text-dark">
+                                    <div class="product-main-box shadow-sm rounded p-2 bg-white h-100 hover-scale">
+                                        <div class="product-item">
+                                            <figure class="product-thumb media-container mb-2">
+                                                <div class="img-with-bg position-relative">
+                                                    <img src="~/assets/img/product-filter-img/Pendal.png" alt="Pendal" class="img-fluid">
+                                                </div>
+                                            </figure>
+                                            <div class="product-details-des text-center">
+                                                <h5 class="fw-semibold">Pendals</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="col-6 col-sm-6 col-md-2 col-lg-2 mb-4 animate-card clsCategory" data-categoryName="Bangle">
+                                <a href="#" class="text-decoration-none text-dark">
+                                    <div class="product-main-box shadow-sm rounded p-2 bg-white h-100 hover-scale">
+                                        <div class="product-item">
+                                            <figure class="product-thumb media-container mb-2">
+                                                <div class="img-with-bg position-relative">
+                                                    <img src="~/assets/img/product-filter-img/Bangle.png" alt="Bangle" class="img-fluid">
+                                                </div>
+                                            </figure>
+                                            <div class="product-details-des text-center">
+                                                <h5 class="fw-semibold">Bangles</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div> *@
+
+                    <!-- product item list wrapper start -->
+                    <div id="loader-overlay">
+                        <div class="text-center" id="txtLoader">
+                            <img src="~/assets/loader/JF-WEB-LOADER.gif" style="width:100px;">
+                        </div>
+                    </div>
+                    <div class="shop-product-wrap grid-view row mbn-30" id="MyProductsImg">
+                    </div>
+                    <!-- product item list wrapper end -->
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="row p-5">
+                <div class="col-xl-12 text-center">
+                    <button id="showMoreBtn" class="btn btn-dark shop-now-btn f-15 txt-align-center text-upper">View More</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @*<script src="assets/js/plugins/slick.min.js"></script>*@
+
+<script>
+            var page = 1;
+            var rangeVal = 10;
+
+            const getValue = id => $(id).val() || '';
+            const getArrayValue = id => $(id).val() || [];
+
+            var filters =
+            {
+                Metals: getArrayValue('.metal-grp'),
+                Shapes: getArrayValue('.shape-item'),
+                FromPrice: getValue('#minPrice1'),
+                ToPrice: getValue('#maxPrice1'),
+                FromCarat: getValue('#minCarat'),
+                ToCarat: getValue('#maxCarat'),
+                Categories: getValue('.clsCategory'),
+                OrderBy: getValue('#selectSort'),
+            };
+
+            function showLoader() {
+                $('#txtLoader').show();
+            }
+
+            function hideLoader() {
+                $('#txtLoader').hide();
+            }
+
+            function initSlider(selector, options) {
+                    $(selector).slider({
+                        range: true,
+                        ...options
+                    });
+                }
+
+            $(document).ready(function(){
+                    loadAllFunctions();
+
+                     //GetAmount$("DiamondCount").val();
+
+                    //$("#minPrice").val("$" + $("#price-slider").slider("values", 0));
+                    //$("#maxPrice").val("$" + $("#price-slider").slider("values", 1));
+
+                    $("#filterclose").click(function () {
+                        $("#FilterSection").hide();
+                    });
+
+                    $("#filterOpen").click(function () {
+                        $("#FilterSection").show();
+                    });
+
+                    $("#btnViewDesign").click(function ()
+                    {
+                        $("#FilterSection").hide();
+                    });
+
+                    // Shape button click
+                    $("#ProductFilters").on("click", ".shape-item", function () {
+                        const shapeId = $(this).attr('shapeId');
+                        $(this).toggleClass('shapeselected');
+
+                        if ($(this).hasClass('shapeselected')) {
+                            if (!filters.Shapes.includes(shapeId)) {
+                                filters.Shapes.push(shapeId);
+                            }
+                        } else {
+                            const index = filters.Shapes.indexOf(shapeId);
+                            if (index !== -1) filters.Shapes.splice(index, 1);
+                        }
+
+                        GetProducts(filters, page, rangeVal);
+                    });
+
+                    $("#ProductFilters").on("change", ".metal-grp", function () {
+                        const metalId = $(this).attr('metalId');
+
+                        if ($(".metalcheckbox").is(":checked")) {
+                            if (!filters.Metals.includes(metalId)) {
+                                filters.Metals.push(metalId);
+                            }
+                        } else {
+                            const index = filters.Metals.indexOf(metalId);
+                            if (index !== -1) {
+                                filters.Metals.splice(index, 1);
+                            }
+                        }
+
+                        console.log(filters);
+
+                        GetProducts(filters, page, rangeVal);
+                    });
+
+                    $('#ProductFilters .hover-media-wrapper').mouseenter(function () {
+                        const video = $(this).find('video.sec-img');
+                        const image = $(this).find('.pri-img');
+
+                        if (video.length > 0) {
+                            image.hide();
+                            video.show();
+                            video[0].play();
+                        }
+                    });
+
+                    $("#btnRestFilter").click(function(){
+                        ResetAllData();
+                    });
+
+                    $('#ProductFilters .hover-media-wrapper').mouseleave(function () {
+                        const video = $(this).find('video');
+                        const image = $(this).find('.pri-img');
+
+                        // Check if video exists
+                        if (video.length > 0) {
+                            video[0].pause(); // Pause the video
+                            video.hide(); // Hide video
+                            image.show(); // Show the image again
+                        }
+                    });
+
+                    // Set initial values
+                    $("#MyProductsImg").on("click", ".metalColor", function (event) {
+                        event.preventDefault();
+
+                        var productId = $(this).attr('productId');
+                        var metalId = $(this).attr('metalid');
+                        $(".metalColor").removeClass("metalShow");
+                        $(".metalColor").addClass("metalHide");
+
+                        $(this).addClass("metalShow");
+                        GetProductByColorId(productId, metalId);
+                    });
+
+                    $("#MyProductsImg").on("mouseenter", ".metalColor", function (event) {
+                        event.preventDefault();
+
+                        var productId = $(this).attr('productId');
+                        var metalId = $(this).attr('metalid');
+
+                        $(this).closest('.productCard').find('.metalColor').removeClass("metalHide");
+
+                        $(this).addClass("metalHide");
+
+                        GetProductByColorId(productId, metalId);
+                    });
+
+
+                    $("#MyProductsImg").on("click", ".caratName", function (event) {
+                        event.preventDefault();
+
+                        var productId = $(this).attr('productId');
+                        var caratId = $(this).attr('caratId');
+
+                        $(this).addClass("metalHide");
+                        GetProductByCaratId(productId, caratId);
+                    });
+
+                    $("#MyProductsImg").on("mouseenter", ".caratName", function (event) {
+                        event.preventDefault();
+
+                        var productId = $(this).attr('productId');
+                        var caratId = $(this).attr('caratId');
+
+                        $(this).addClass("metalHide");
+                        GetProductByCaratId(productId, caratId);
+                    });
+
+                    ActivePriceSlider();
+
+                    $('#MyProductsImg').on('mouseenter', '.media-container', function () {
+                        const $video = $(this).find('.product-video');
+                        if ($video.length) {
+                            $video.show();
+                            $video[0].currentTime = 0;
+                            $video[0].play();
+                        }
+                    });
+
+                    $('#MyProductsImg').on('mouseleave', '.media-container', function () {
+                        const $video = $(this).find('.product-video');
+                        if ($video.length) {
+                            $video[0].pause();
+                            $video.hide();
+                        }
+                    });
+
+                    $('#showMoreBtn').click(() => {
+                        rangeVal += 10;
+                        GetProducts(filters, page, rangeVal); // Reload the table with new page size
+                    });
+
+                    $(".clsCategory").on("click", function()
+                    {
+                        const categoryName = $(this).attr('data-categoryName');
+
+                        const isActive =  $(this).find("img").toggleClass("product-active");
+
+                        if (!Array.isArray(filters.Categories)) {
+                                filters.Categories = [];
+                        }
+
+                        if (isActive) {
+                            if (!filters.Categories.includes(categoryName)) {
+                                filters.Categories.push(categoryName);
+                            } else {
+                                filters.Categories =filters.Categories.filter(item=>item != categoryName);
+                            }
+                        }
+                        else {
+                               filters.Categories = filters.Categories.filter(function(item) {
+                                return item !== categoryName;
+                            });
+                        }
+
+                        GetProducts(filters, page, rangeVal);
+                    });
+
+
+                   $("#selectSort").on("change", function () {
+                       const selectedValue = $(this).val();
+                       filters.OrderBy = selectedValue;
+                       GetProducts(filters, page, rangeVal);
+                   });
+
+
+                    $("#minPrice1").val("$ " + $("#price-slider1").slider("values", 0));
+                    $("#maxPrice1").val("$ " + $("#price-slider1").slider("values", 1));
+
+                    $("#minCaratSize").val($("#carat-size-slider").slider("values", 0));
+                    $("#maxCaratSize").val($("#carat-size-slider").slider("values", 1));
+
+                });
+
+            function GetProductFilters()
+            {
+               $.ajax({
+                       url: '@Url.Action("GetProductDataFilters", "ProductPrograms")',
+                   type: 'GET',
+                   dataType: 'html'
+               })
+               .done(function(response) {
+                   $("#ProductFilters").html('');
+                   $('#ProductFilters').html(response);
+                   ActivePriceSlider();
+
+               })
+               .fail(function(xhr, status, error) {
+                   console.error('AJAX error:', status, error);
+               });
+            }
+
+            function ActivePriceSlider()
+            {
+                var minPrice = parseFloat($("#minPrice1").val()) || 0;
+                var maxPrice = parseFloat($("#maxPrice1").val()) || 10000;
+
+                if (minPrice > maxPrice) {
+                    [minPrice, maxPrice] = [minPrice, maxPrice];
+                }
+
+                $("#price-slider1").slider({
+                    range: true,
+                    min: minPrice,
+                    max: maxPrice,
+                    step: 1,
+                    values: [minPrice, maxPrice],
+                    slide: function (event, ui) {
+                        $("#minPrice1").val("$ " + ui.values[0]);
+                        $("#maxPrice1").val("$ " + ui.values[1]);
+
+                        filters.FromPrice=ui.values[0];
+                        filters.ToPrice=ui.values[1];
+
+                        GetProducts(filters);
+                    }
+                });
+
+                $("#minPrice1").val("$ " + minPrice);
+                $("#maxPrice1").val("$ " + maxPrice);
+
+                var minCarat = parseFloat($("#minCarat").val()) || 0;
+                var maxCarat = parseFloat($("#maxCarat").val()) || 5;
+
+                if (minCarat > maxCarat)
+                {
+                    [minCarat, maxCarat] = [minCarat, maxCarat];
+                }
+
+                $("#carat-size-slider").slider({
+                    range: true,
+                    min: minCarat,
+                    max: maxCarat,
+                    step: 0.1,
+                    values: [minCarat, maxCarat],
+                    slide: function (event, ui) {
+                        $("#minCarat").val(ui.values[0]);
+                        $("#maxCarat").val(ui.values[1]);
+
+                        filters.FromCarat=ui.values[0];
+                        filters.ToCarat=ui.values[1];
+
+                        GetProducts(filters);
+                    }
+                });
+
+                $("#minCarat").val(minCarat);
+                $("#maxCarat").val(maxCarat);
+            }
+
+    async function GetProducts(filters, pageNumber = 1, pageSize = 10) {
+            showLoader();
+            return $.ajax({
+                   url: '@Url.Action("GetProductListByFilter", "ProductPrograms")',
+                type: 'POST',
+                data: {
+                    filters: filters,
+                    pageNumber: pageNumber,
+                    pageSize: pageSize
+                },
+                success: function (data) {
+                    $('#MyProductsImg').html('');
+                    $('#MyProductsImg').html(data);
+                    $("#txtNoOfProducts").text("0");
+                    hideLoader();
+                },
+                error: function (error) {
+                    console.error('Error fetching data:', error);
+                    hideLoader();
+                }
+            });
+        }
+
+
+    async function loadAllFunctions() {
+        debugger;
+                showLoader();
+                try
+                {
+                    await Promise.all([
+                       GetProductFilters()
+                    ]);
+                       GetProducts(filters, page, rangeVal);
+                } catch (error) {
+                    console.error("An error occurred while loading data:", error);
+                }
+                hideLoader();
+            }
+
+            function GetProductByColorId(productId, colorId) {
+                $.ajax({
+                    url: '@Url.Action("ProductDetailsByColorId", "Products")',
+                    data: {
+                        sku: productId,
+                        colorId: parseInt(colorId),
+                        caratId:0
+                    },
+                    type: 'GET',
+                    dataType: 'json'
+                })
+                    .done(function (response) {
+                        const $productContainer = $(".product-item").has("[data-sku='" + productId + "']");
+                        const baseUrl = '@SD.BaseApiUrl'.replace(/\\/g, '/');
+
+                        console.log($(".activemetalname[data-sku='" + productId + "']"));
+                        console.log($(".price-regular[data-sku='" + response.Price + "']"));
+                        console.log($(".price-old[data-sku='" + response.Price + "']"));
+
+                        $(".activemetalname[data-sku='" + productId + "']").text(response.colorName);
+
+                        //$(".price-regular[data-sku='" + productId + "']").text(" $ " + response.Price);
+                        //$(".price-old[data-sku='" + productId + "']").html('<del>' + response.unitPrice + '</del>');
+
+                        const images = (response.productImageVideos || []).filter(x => x.imageUrl && x.imageUrl !== "-");
+                        if (images.length > 0) {
+                            const priImg = baseUrl + '/' + images[0].imageUrl.replace(/\\/g, '/');
+                            $productContainer.find('.pri-img').attr('src', priImg).attr('alt', response.colorName + ' - Primary Image');
+                        }
+                        if (images.length > 1) {
+                            const secImg = baseUrl + '/' + images[1].imageUrl.replace(/\\/g, '/');
+                            $productContainer.find('.sec-img').attr('src', secImg).attr('alt', response.colorName + ' - Secondary Image');
+                        }
+
+                        const videos = (response.productImageVideos || []).filter(x => x.videoUrl && x.videoUrl !== "-");
+                        if (videos.length > 0) {
+                            const videoPT = baseUrl + '/' + videos[0].videoUrl.replace(/\\/g, '/');
+
+                            const $videoContainer = $productContainer.find('.product-video');
+
+                            // Ensure <source> exists or create one
+                            let $videoSource = $videoContainer.find('source');
+                            if ($videoSource.length === 0) {
+                                $videoSource = $('<source>', { type: 'video/mp4' });
+                                $videoContainer.append($videoSource);
+                            }
+
+                            // Update the source and reload
+                            $videoSource.attr('src', videoPT);
+                            $videoContainer.attr('poster', ''); // Optional: clear old poster
+
+                            const videoElement = $videoContainer[0];
+                            if (videoElement) {
+                                videoElement.load(); // Reload video
+                            }
+                        }
+
+
+                    })
+                    .fail(function (xhr, status, error) {
+                        console.error('AJAX error:', status, error);
+                    });
+            }
+
+            function GetProductByCaratId(productId, caratId) {
+                $.ajax({
+                    url: '@Url.Action("ProductDetailsByCaratId", "Products")',
+                    data: {
+                        sku: productId,
+                        caratId: parseInt(caratId)
+                    },
+                    type: 'GET',
+                    dataType: 'json'
+                })
+                    .done(function (response) {
+                        const $productContainer = $(".product-item").has("[data-sku='" + productId + "']");
+                        const baseUrl = '@SD.BaseApiUrl'.replace(/\\/g, '/');
+
+                        console.log($(".activemetalname[data-sku='" + productId + "']"));
+                        console.log($(".price-regular[data-sku='" + productId + "']"));
+                        console.log($(".price-old[data-sku='" + productId + "']"));
+
+                        $(".activemetalname[data-sku='" + productId + "']").text(response.colorName);
+
+                        //$(".price-regular[data-sku='" + productId + "']").text(response.Price);
+                        //$(".price-old[data-sku='" + productId + "']").html('<del>' + response.unitPrice + '</del>');
+
+                        const images = (response.productImageVideos || []).filter(x => x.imageUrl && x.imageUrl !== "-");
+                        if (images.length > 0) {
+                            const priImg = baseUrl + '/' + images[0].imageUrl.replace(/\\/g, '/');
+                            $productContainer.find('.pri-img').attr('src', priImg).attr('alt', response.colorName + ' - Primary Image');
+                        }
+
+                        if (images.length > 1) {
+                            const secImg = baseUrl + '/' + images[1].imageUrl.replace(/\\/g, '/');
+                            $productContainer.find('.sec-img').attr('src', secImg).attr('alt', response.colorName + ' - Secondary Image');
+                        }
+                    })
+                    .fail(function (xhr, status, error) {
+                        console.error('AJAX error:', status, error);
+                    });
+            }
+
+            function ResetAllData()
+            {
+                var page = 1;
+                var rangeVal = 10;
+
+                const getValue = id => $(id).val() || '';
+                const getArrayValue = id => $(id).val() || [];
+
+                var filters = {
+                    Metals: getArrayValue('.metal-grp'),
+                    Shapes: getArrayValue('.shape-item'),
+                    FromPrice: getValue('#minPrice1'),
+                    ToPrice: getValue('#maxPrice1'),
+                    FromCarat: getValue('#minCarat'),
+                    ToCarat: getValue('#maxCarat'),
+                };
+
+
+               GetProductFilters();
+               GetProducts(filters, page, rangeVal);
+            }
+
+
+        function GetAmount(amount) {
+           const formatted = amount.toLocaleString('en-US', {
+               style: 'currency',
+               currency: 'USD',
+               minimumFractionDigits: 2
+           });
+
+           return formatted;
+        }
+</script>
+
+}
