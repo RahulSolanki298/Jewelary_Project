@@ -127,11 +127,11 @@ namespace Business.Repository
                         existingProduct.Title = $"{product.Title}";
                         existingProduct.Sku = product.Sku;
                         existingProduct.CTW = product.CTW;
-                        existingProduct.Price = product.Price;
-                        existingProduct.UnitPrice = product.UnitPrice;
-                        existingProduct.Quantity = product.Quantity;
+                        //existingProduct.Price = product.Price;
+                        //existingProduct.UnitPrice = product.UnitPrice;
+                        //existingProduct.Quantity = product.Quantity;
                         existingProduct.StyleId = styleId;
-                        existingProduct.IsActivated = product.IsActivated;
+                        //existingProduct.IsActivated = product.IsActivated;
                         updateList.Add(existingProduct);
                     }
                     else
@@ -150,13 +150,13 @@ namespace Business.Repository
                             Length = product.Length,
                             ColorId = colorId,
                             Description = product.Description,
-                            IsActivated = product.IsActivated,
+                           // IsActivated = product.IsActivated,
                             StyleId = styleId,
                             GoldWeight = product.GoldWeight,
                             GoldPurityId = goldPurityId,
-                            Price = product.Price,
-                            UnitPrice = product.UnitPrice,
-                            Quantity = product.Quantity,
+                            //Price = product.Price,
+                            //UnitPrice = product.UnitPrice,
+                            //Quantity = product.Quantity,
                             ProductType = product.ProductType,
                             ShapeId = shapeId,
                             Id = Guid.NewGuid()
@@ -269,10 +269,10 @@ namespace Business.Repository
                         // Update existing product
                         existingProduct.Title = $"{product.CategoryName} {product.ColorName} {product.CaratName} {product.ProductType} {product.CollectionName} {product.Sku}";
                         existingProduct.Sku = product.Sku;
-                        existingProduct.Price = product.Price;
-                        existingProduct.UnitPrice = product.UnitPrice;
-                        existingProduct.Quantity = product.Quantity;
-                        existingProduct.IsActivated = product.IsActivated;
+                        //existingProduct.Price = product.Price;
+                        //existingProduct.UnitPrice = product.UnitPrice;
+                        //existingProduct.Quantity = product.Quantity;
+                        //existingProduct.IsActivated = product.IsActivated;
                         existingProduct.CollectionsId = collectionId;
                         updateList.Add(existingProduct);
                     }
@@ -290,12 +290,12 @@ namespace Business.Repository
                             ClarityId = clarityId,
                             ColorId = colorId,
                             Description = product.Description,
-                            IsActivated = product.IsActivated,
+                            //IsActivated = product.IsActivated,
                             //GoldWeight = product.GoldWeight,
                             //GoldPurity = product.GoldPurity,
-                            Price = product.Price,
-                            UnitPrice = product.UnitPrice,
-                            Quantity = product.Quantity,
+                            //Price = product.Price,
+                            //UnitPrice = product.UnitPrice,
+                            //Quantity = product.Quantity,
                             ProductType = product.ProductType,
                             ShapeId = shapeId,
                             CollectionsId = collectionId,
@@ -420,7 +420,7 @@ namespace Business.Repository
                         // Update existing product
                         existingProduct.DesignNo = product.DesignNo;
                         existingProduct.Title = product.Title;
-                        existingProduct.ProductDate = product.ProductDate;
+                       // existingProduct.ProductDate = product.ProductDate;
                         existingProduct.Designer = product.Designer;
                         existingProduct.CadDesigner = product.CadDesigner;
                         existingProduct.Remarks = product.Remarks;
@@ -430,7 +430,7 @@ namespace Business.Repository
                         existingProduct.Package = product.Package;
                         existingProduct.Occasion = product.Occasion;
                         existingProduct.ParentDesign = product.ParentDesign;
-                        existingProduct.IsActivated = product.IsActivated;
+                      //  existingProduct.IsActivated = product.IsActivated;
                         existingProduct.CollectionsId = product.CollectionsId;
                         existingProduct.ProductType = product.ProductType;
                         updateList.Add(existingProduct);
@@ -443,7 +443,7 @@ namespace Business.Repository
                             Id = product.Id,
                             DesignNo = product.DesignNo,
                             Title = product.Title,
-                            ProductDate = product.ProductDate,
+                           // ProductDate = product.ProductDate,
                             Designer = product.Designer,
                             CadDesigner = product.CadDesigner,
                             Remarks = product.Remarks,
@@ -451,7 +451,7 @@ namespace Business.Repository
                             Gender = product.Gender,
                             Package = product.Package,
                             Occasion = product.Occasion,
-                            IsActivated = product.IsActivated,
+                          //  IsActivated = product.IsActivated,
                             CollectionsId = product.CollectionsId,
                             ParentDesign = product.ParentDesign,
                             ProductType = product.ProductType,
@@ -520,7 +520,7 @@ namespace Business.Repository
                         existingProduct.Carat = product.Carat;
                         existingProduct.ColorId = product.ColorId;
                         existingProduct.ClarityId = product.ClarityId;
-                        existingProduct.Quantity = product.Quantity;
+                       // existingProduct.Quantity = product.Quantity;
                         existingProduct.Setting = product.Setting;
                         existingProduct.KaratId = product.KaratId;
                         updateList.Add(existingProduct);
@@ -600,9 +600,10 @@ namespace Business.Repository
                                       Quantity = product.Quantity,
                                       KaratId = krt != null ? krt.Id : (int?)null,
                                       Karat = krt.Name
-                                  }).Where(x => x.IsActivated).ToListAsync();
+                                  //}).Where(x => x.IsActivated).ToListAsync();
+                                  }).ToListAsync();
 
-            var groupedProducts = products.GroupBy(p => p.Sku);
+        var groupedProducts = products.GroupBy(p => p.Sku);
 
             var productDTOList = new List<ProductDTO>();
 
@@ -938,7 +939,7 @@ namespace Business.Repository
                 var colors = await GetColorList();
                 var categories = await _context.Category.ToListAsync();
                 var subCategories = await _context.SubCategory.ToListAsync();
-                var clarities = await GetClarityList();
+                //var clarities = await GetClarityList();
                 var carats = await GetCaratList();
                 var karats = await GetKaratList();
                 var shapes = await GetShapeList();
@@ -946,7 +947,7 @@ namespace Business.Repository
                 // Step 1: Create dictionaries for fast lookup
                 var colorDict = colors.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
                 var categoryDict = categories.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
-                var clarityDict = clarities.ToDictionary(x => x.Name, x => x.Id);
+                //var clarityDict = clarities.ToDictionary(x => x.Name, x => x.Id);
                 var caratDict = carats.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
                 var KaratDict = karats.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
                 var shapeDict = shapes.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
@@ -977,14 +978,13 @@ namespace Business.Repository
                     var AshapeId = shapeDict.GetValueOrDefault(product.AccentStoneShapeName);
                     var karatId = KaratDict.GetValueOrDefault(product.Karat);
 
-                    var events = await GetEventSitesByName(product.EventName);
+                    var events = await GetEventSitesByName(product.Title);
 
                     var existingProduct = existingProducts
                         .FirstOrDefault(x => x.ColorId == colorId
                                              && x.KaratId == karatId
                                              && x.Sku == product.Sku
-                                             && x.CategoryId.Value == categoryId
-                                             && x.ProductType == product.ProductType);
+                                             && x.CategoryId.Value == categoryId);
 
 
                     if (existingProduct != null)
@@ -992,10 +992,10 @@ namespace Business.Repository
                         // Update existing product
                         existingProduct.Title = $"{product.EventName}";
                         existingProduct.Sku = product.Sku;
-                        existingProduct.Price = product.Price;
-                        existingProduct.UnitPrice = product.UnitPrice;
-                        existingProduct.Quantity = product.Quantity;
-                        existingProduct.IsActivated = product.IsActivated;
+                        //existingProduct.Price = product.Price;
+                        //existingProduct.UnitPrice = product.UnitPrice;
+                        //existingProduct.Quantity = product.Quantity;
+                        //existingProduct.IsActivated = product.IsActivated;
                         existingProduct.KaratId = karatId;
                         existingProduct.CenterCaratId = caratId;
                         existingProduct.BandWidth = product.BandWidth;
@@ -1016,7 +1016,7 @@ namespace Business.Repository
                         // Insert new product
                         var newProduct = new Product
                         {
-                            Title = $"{product.EventName}",
+                            Title = $"{product.Title}",
                             WholesaleCost = product.WholesaleCost,
                             Sku = product.Sku ?? throw new ArgumentNullException(nameof(product.Sku)),
                             CategoryId = categoryId,
@@ -1025,16 +1025,16 @@ namespace Business.Repository
                             Length = product.Length,
                             ColorId = colorId,
                             Description = product.Description,
-                            IsActivated = product.IsActivated,
-                            BandWidth = product.BandWidth,
-                            Price = product.Price > 0 ? product.Price : 0m,
-                            UnitPrice = product.UnitPrice,
-                            Quantity = product.Quantity,
+                           //IsActivated = product.IsActivated,
+                           BandWidth = product.BandWidth,
+                           //Price = product.Price > 0 ? product.Price : 0m,
+                           //UnitPrice = product.UnitPrice,
+                           //Quantity = product.Quantity,
                             ProductType = product.ProductType,
                             GoldWeight = product.GoldWeight,
                             Grades = product.Grades,
                             MMSize = product.MMSize,
-                            NoOfStones = product.NoOfStones,
+                           // NoOfStones = product.NoOfStones,
                             DiaWT = product.DiaWT,
                             CenterShapeId = shapeId,
                             Certificate = product.Certificate,
@@ -1158,10 +1158,10 @@ namespace Business.Repository
                         // Update existing product
                         existingProduct.Title = product.EventName;
                         existingProduct.Sku = product.Sku;
-                        existingProduct.Price = product.Price;
-                        existingProduct.UnitPrice = product.UnitPrice;
-                        existingProduct.Quantity = product.Quantity;
-                        existingProduct.IsActivated = product.IsActivated;
+                        //existingProduct.Price = product.Price;
+                        //existingProduct.UnitPrice = product.UnitPrice;
+                        //existingProduct.Quantity = product.Quantity;
+                        //existingProduct.IsActivated = product.IsActivated;
                         existingProduct.KaratId = karatId;
                         //existingProduct.ShapeId = shapeId;
                         existingProduct.BandWidth = product.BandWidth;
@@ -1190,15 +1190,15 @@ namespace Business.Repository
                             KaratId = karatId,
                             ColorId = colorId,
                             Description = product.Description,
-                            IsActivated = product.IsActivated,
-                            Price = product.Price > 0 ? product.Price : 0m,
-                            UnitPrice = product.UnitPrice,
-                            Quantity = product.Quantity,
+                           //IsActivated = product.IsActivated,
+                           //Price = product.Price > 0 ? product.Price : 0m,
+                           //UnitPrice = product.UnitPrice,
+                           //Quantity = product.Quantity,
                             ProductType = product.ProductType,
                             GoldWeight = product.GoldWeight,
                             Grades = product.Grades,
                             MMSize = product.MMSize,
-                            NoOfStones = product.NoOfStones,
+                            //NoOfStones = product.NoOfStones,
                             DiaWT = product.DiaWT,
                             Certificate = product.Certificate,
                             AccentStoneShapeId = shapeId,

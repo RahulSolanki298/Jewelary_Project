@@ -39,15 +39,15 @@ namespace ControlPanel.Controllers
         {
             var data= await _diamondRepository.GetDiamondList();
 
-            //var totalItems = data.Count();
+            var totalItems = data.Count();
 
-            //var diamonds = data
-            //    .Skip((page - 1) * pageSize)
-            //    .Take(pageSize)
-            //    .ToList();
+            var diamonds = data
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
 
-            //ViewBag.TotalPages = (int)Math.Ceiling((double)totalItems / pageSize);
-            //ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+            ViewBag.CurrentPage = page;
 
             return PartialView("_DiamondList", data);
         }

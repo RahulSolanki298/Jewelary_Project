@@ -7,7 +7,7 @@ namespace Models
     {
         public Guid Id { get; set; }
 
-        public DateTime ProductDate { get; set; }
+        public DateTime? ProductDate { get; set; }
 
         public string VenderId { get; set; }
 
@@ -28,11 +28,11 @@ namespace Models
 
         public string Description { get; set; }
 
-        public decimal UnitPrice { get; set; }
+        public decimal? UnitPrice { get; set; }
 
-        public decimal Price { get; set; }
+        public decimal? Price { get; set; }
 
-        public int Quantity { get; set; } = 0;
+        public int? Quantity { get; set; } = 0;
 
         public string ProductType { get; set; } // Diamond, Gold
 
@@ -100,7 +100,7 @@ namespace Models
 
         public string DefaultImage { get; set; }
 
-        public int NoOfStones { get; set; }
+        public int? NoOfStones { get; set; }
 
         public decimal? DiaWT { get; set; }
 
@@ -137,7 +137,9 @@ namespace Models
         public int? AccentStoneShapeId { get; set; }
 
         public decimal? WholesaleCost { get; set; }
+
         public string AccentStoneShapeName { get; set; }
+
         public string Diameter { get; set; }
 
         public List<ProductImageAndVideoDTO> ProductImageVideos { get; set; }

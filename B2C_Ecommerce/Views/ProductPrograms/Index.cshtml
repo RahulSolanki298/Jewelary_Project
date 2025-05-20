@@ -57,7 +57,7 @@
                     <nav aria-label="breadcrumb">
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="#"><i class="fa fa-home"></i></a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Fine Jewelry</li>
+                            <li class="breadcrumb-item active" aria-current="page">@ViewBag.Type @ViewBag.ProgramName</li>
                         </ul>
                     </nav>
                 </div>
@@ -72,7 +72,7 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 text-center">
                 <h2>
-                    Engagement Rings
+                    @ViewBag.Type @ViewBag.ProgramName
                 </h2>
             </div>
         </div>
@@ -241,20 +241,46 @@
             var page = 1;
             var rangeVal = 10;
 
-            const getValue = id => $(id).val() || '';
-            const getArrayValue = id => $(id).val() || [];
+            //const getValue = id => $(id).val() || '';
+            //const getArrayValue = id => $(id).val() || [];
 
-            var filters =
-            {
-                Metals: getArrayValue('.metal-grp'),
-                Shapes: getArrayValue('.shape-item'),
-                FromPrice: getValue('#minPrice1'),
-                ToPrice: getValue('#maxPrice1'),
-                FromCarat: getValue('#minCarat'),
-                ToCarat: getValue('#maxCarat'),
-                Categories: getValue('.clsCategory'),
-                OrderBy: getValue('#selectSort'),
-            };
+            //var filters =
+            //{
+            //    Metals: getArrayValue('.metal-grp'),
+            //    Shapes: getArrayValue('.shape-item'),
+            //    FromPrice: getValue('#minPrice1'),
+            //    ToPrice: getValue('#maxPrice1'),
+            //    FromCarat: getValue('#minCarat'),
+            //    ToCarat: getValue('#maxCarat'),
+            //    Categories: getValue('.clsCategory'),
+            //    OrderBy: getValue('#selectSort'),
+            //};
+
+    function getArrayValue(selector) {
+        var values = [];
+        $(selector).each(function () {
+            if ($(this).is(':checked')) {
+                values.push($(this).val());
+            }
+        });
+        return values; // Ensure it's always an array
+    }
+
+    function getValue(selector) {
+        var value = $(selector).val();
+        return value ? value : ''; // Handle empty values
+    }
+
+    var filters = {
+        Metals: getArrayValue('.metal-grp'),
+        Shapes: getArrayValue('.shape-item'),
+        FromPrice: getValue('#minPrice1'),
+        ToPrice: getValue('#maxPrice1'),
+        FromCarat: getValue('#minCarat'),
+        ToCarat: getValue('#maxCarat'),
+        Categories: getArrayValue('.clsCategory'), // Categories should be an array
+        OrderBy: getValue('#selectSort'),
+    };
 
             function showLoader() {
                 $('#txtLoader').show();
@@ -545,6 +571,9 @@
             }
 
     async function GetProducts(filters, pageNumber = 1, pageSize = 10) {
+        if (filters.Categories.indexOf('Rings') === -1) {
+            filters.Categories.push('Rings');
+        }
             showLoader();
             return $.ajax({
                    url: '@Url.Action("GetProductListByFilter", "ProductPrograms")',
@@ -576,6 +605,7 @@
                     await Promise.all([
                        GetProductFilters()
                     ]);
+                    
                        GetProducts(filters, page, rangeVal);
                 } catch (error) {
                     console.error("An error occurred while loading data:", error);

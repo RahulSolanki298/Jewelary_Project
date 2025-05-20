@@ -97,8 +97,15 @@ namespace ControlPanel.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> SaveAllProduct(List<ProductDTO> products)
+        public async Task<IActionResult> SaveAllProduct(string productsJson)
         {
+            if (string.IsNullOrEmpty(productsJson))
+            {
+                return Json("Product Doesn't Found");
+            }
+
+            var products = JsonConvert.DeserializeObject<List<ProductDTO>>(productsJson);
+
             var categoryList = products.GroupBy(p => p.CategoryName)
                                             .Select(g => g.First())
                                             .ToList();
@@ -111,7 +118,7 @@ namespace ControlPanel.Controllers
                     var ringProducts = products.Where(x => x.CategoryName == "Rings").ToList();
                     await _productRepository.SaveNewProductList(ringProducts, "Rings");
                 }
-                else if (wkSheet.CategoryName.Trim().ToLower() == "wedding bands")
+                else if (wkSheet.CategoryName.Trim().ToLower() == "bands")
                 {
                     var weddings = products.Where(x => x.CategoryName == "Bands").ToList();
                     await _productRepository.SaveNewProductList(weddings, "Bands");
@@ -463,8 +470,8 @@ namespace ControlPanel.Controllers
                 product = new ProductDTO
                 {
                     CategoryName = SD.Bracelets,
-                    Title = titValue,
-                    EventName = titValue,
+                    Title = worksheet.Cells[row, 5].Text,
+                    EventName = worksheet.Cells[row, 5].Text,
                     VenderName = worksheet.Cells[row, 6].Text,
                     VenderStyle = worksheet.Cells[row, 7].Text,
                     Sku = worksheet.Cells[row, 7].Text,

@@ -10,9 +10,9 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Admin Login</title>
+    <title>Jewel-Facet</title>
 
-    <link href="~/assets/img/favicon.png" rel="icon">
+    <link href="~/assets/img/logo_QKP_icon.ico" rel="icon">
     <link href="~/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans|Nunito|Poppins&display=swap" rel="stylesheet">
     <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -27,16 +27,18 @@
                 <div class="container">
                     <div class="row justify-content-center">
                         <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
-                            <div class="d-flex justify-content-center py-4">
-                                <a href="@Url.Action("Index","Home")" class="logo d-flex align-items-center w-auto">
-                                    <img src="~/assets/img/Jewelfacets_Logos_Blue.png" alt="Logo">
-                                </a>
-                            </div>
+                            
 
                             <div class="card mb-3">
                                 <div class="card-body">
-                                    <div class="pt-4 pb-2">
-                                        <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
+                                    <div class="d-flex justify-content-center mt-4">
+                                        <a href="@Url.Action("Index","Home")" class="login-logo d-flex align-items-center w-auto">
+                                            <img src="~/assets/img/Jewelfacets_Logos_Blue.png" alt="Logo">
+                                        </a>
+                                    </div>
+
+                                    <div class="pt-2 pb-2">
+                                        <p class="card-title text-center pb-0">Login to Your Account</p>
                                     </div>
 
                                     <form asp-controller="Account" asp-action="Login" method="post" class="row g-3">

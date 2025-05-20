@@ -16,8 +16,10 @@ namespace B2C_ECommerce.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(string type)
+        public IActionResult Index(string programName,string type)
         {
+            ViewBag.ProgramName = programName;
+            ViewBag.Type = type;
             return View();
         }
 

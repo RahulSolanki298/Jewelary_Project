@@ -17,7 +17,7 @@
     <button id="uploadBtn" type="submit" class="btn btn-theme">Upload</button>
 </form>
 
-<div  id="ImportProductList">
+<div id="ImportProductList">
 
 
 </div>
@@ -25,6 +25,7 @@
 @section Scripts
 {
     <script>
+
         $(document).ready(function () {
             $('#uploadForm').on('submit', function (e) {
                 e.preventDefault();
@@ -58,47 +59,237 @@
             });
 
 
-            // $("#ImportProductList").on("click","#btnVarify", function () {
-            //     alert("test");
-            // });
 
-            // $('#saveBtn').on('click', function () {
-        ("#ImportProductList").on("click","#btnVarify", function () {
-            debugger;
-                e.preventDefault(); // Prevent form submission
+            $("#ImportProductList").on("click", "#ringList #btnSaveRings", function () {
+                var productDTO = [];
 
-        let data = [];
+                $('#ringTable tbody tr').each(function () {
+                    let row = $(this);
 
-        $('#ringTable tbody tr').each(function () {
-            let row = $(this);
-            let item = {};
+                    // Skip empty row (like "No data found")
+                    if (row.find('input, textarea').length === 0) return;
 
-            // loop through all inputs/textareas with data-field
-            row.find('[data-field]').each(function () {
-                let key = $(this).data('field');
-                let value = $(this).val();
-                item[key] = value;
+                    let product = {
+                        Title: row.find('input[name="Title"]').val(),
+                        Sku: row.find('input[name="Sku"]').val(),
+                        CategoryName: row.find('input[name="CategoryName"]').val(),
+                        VenderName: row.find('input[name="VenderName"]').val(),
+                        VenderStyle: row.find('input[name="VenderStyle"]').val(),
+                        Length: row.find('input[name="Length"]').val(),
+                        BandWidth: row.find('input[name="BandWidth"]').val(),
+                        GoldWeight: row.find('input[name="GoldWeight"]').val(),
+                        CTW: row.find('input[name="CTW"]').val(),
+                        CenterShapeName: row.find('input[name="CenterShapeName"]').val(),
+                        CenterCaratName: row.find('input[name="CenterCaratName"]').val(),
+                        Certificate: row.find('input[name="Certificate"]').val(),
+                        ColorName: row.find('input[name="ColorName"]').val(),
+                        AccentStoneShapeName: row.find('input[name="AccentStoneShapeName"]').val(),
+                        MMSize: row.find('input[name="MMSize"]').val(),
+                        DiaWT: row.find('input[name="DiaWT"]').val(),
+                        NoOfStones: row.find('input[name="NoOfStones"]').val(),
+                        Grades: row.find('input[name="Grades"]').val(),
+                        ProductType: row.find('input[name="ProductType"]').val(),
+                        Price: row.find('input[name="Price"]').val(),
+                        WholesaleCost: row.find('input[name="WholesaleCost"]').val(),
+                        Karat: row.find('input[name="Karat"]').val(),
+                        Description: row.find('textarea[name="Description"]').val()
+                    };
+
+                    productDTO.push(product);
+                });
+                var formData = new FormData();
+                formData.append("productsJson", JSON.stringify(productDTO));
+
+                // Send AJAX request
+                $.ajax({
+                    url: '@Url.Action("SaveAllProduct", "Jewellery")',
+                    type: 'POST',
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    success: function (response) {
+                        alert('Saved successfully!');
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error:", error);
+                        alert('Error saving data. See console for details.');
+                    }
+                });
             });
 
-            data.push(item);
-        });
 
-        $.ajax({
-            url: '@Url.Action("SaveAllProduct", "Jewellery")',
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(data),
-            success: function (response) {
-                alert('Saved successfully!');
-            },
-            error: function (err) {
-                console.error(err);
-                alert('Error saving data');
-            }
-        });
-        });
+            $("#ImportProductList").on("click", "#bandList #btnSaveBands", function () {
+                var productDTO = [];
+
+                $('#bandTable tbody tr').each(function () {
+                    let row = $(this);
+
+                    // Skip empty row (like "No data found")
+                    if (row.find('input, textarea').length === 0) return;
+
+                    let product = {
+                        Title: row.find('input[name="Title"]').val(),
+                        Sku: row.find('input[name="Sku"]').val(),
+                        CategoryName: row.find('input[name="CategoryName"]').val(),
+                        VenderName: row.find('input[name="VenderName"]').val(),
+                        VenderStyle: row.find('input[name="VenderStyle"]').val(),
+                        Length: row.find('input[name="Length"]').val(),
+                        BandWidth: row.find('input[name="BandWidth"]').val(),
+                        GoldWeight: row.find('input[name="GoldWeight"]').val(),
+                        CTW: row.find('input[name="CTW"]').val(),
+                        CenterShapeName: row.find('input[name="CenterShapeName"]').val(),
+                        CenterCaratName: row.find('input[name="CenterCaratName"]').val(),
+                        Certificate: row.find('input[name="Certificate"]').val(),
+                        ColorName: row.find('input[name="ColorName"]').val(),
+                        AccentStoneShapeName: row.find('input[name="AccentStoneShapeName"]').val(),
+                        MMSize: row.find('input[name="MMSize"]').val(),
+                        DiaWT: row.find('input[name="DiaWT"]').val(),
+                        NoOfStones: row.find('input[name="NoOfStones"]').val(),
+                        Grades: row.find('input[name="Grades"]').val(),
+                        ProductType: row.find('input[name="ProductType"]').val(),
+                        Price: row.find('input[name="Price"]').val(),
+                        WholesaleCost: row.find('input[name="WholesaleCost"]').val(),
+                        Karat: row.find('input[name="Karat"]').val(),
+                        Description: row.find('textarea[name="Description"]').val()
+                    };
+
+                    productDTO.push(product);
+                });
+                var formData = new FormData();
+                formData.append("productsJson", JSON.stringify(productDTO));
+
+                // Send AJAX request
+                $.ajax({
+                    url: '@Url.Action("SaveAllProduct", "Jewellery")',
+                    type: 'POST',
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    success: function (response) {
+                        alert('Saved successfully!');
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error:", error);
+                        alert('Error saving data. See console for details.');
+                    }
+                });
+            });
 
 
+            $("#ImportProductList").on("click", "#earringList #btnSaveEarring", function () {
+                var productDTO = [];
+
+                $('#EarringTable tbody tr').each(function () {
+                    let row = $(this);
+
+                    // Skip empty row (like "No data found")
+                    if (row.find('input, textarea').length === 0) return;
+
+                    let product = {
+                        Title: row.find('input[name="Title"]').val(),
+                        Sku: row.find('input[name="Sku"]').val(),
+                        CategoryName: row.find('input[name="CategoryName"]').val(),
+                        VenderName: row.find('input[name="VenderName"]').val(),
+                        VenderStyle: row.find('input[name="VenderStyle"]').val(),
+                        Length: row.find('input[name="Length"]').val(),
+                        BandWidth: row.find('input[name="BandWidth"]').val(),
+                        GoldWeight: row.find('input[name="GoldWeight"]').val(),
+                        CTW: row.find('input[name="CTW"]').val(),
+                        CenterShapeName: row.find('input[name="CenterShapeName"]').val(),
+                        CenterCaratName: row.find('input[name="CenterCaratName"]').val(),
+                        Certificate: row.find('input[name="Certificate"]').val(),
+                        ColorName: row.find('input[name="ColorName"]').val(),
+                        AccentStoneShapeName: row.find('input[name="AccentStoneShapeName"]').val(),
+                        MMSize: row.find('input[name="MMSize"]').val(),
+                        DiaWT: row.find('input[name="DiaWT"]').val(),
+                        NoOfStones: row.find('input[name="NoOfStones"]').val(),
+                        Grades: row.find('input[name="Grades"]').val(),
+                        ProductType: row.find('input[name="ProductType"]').val(),
+                        Price: row.find('input[name="Price"]').val(),
+                        WholesaleCost: row.find('input[name="WholesaleCost"]').val(),
+                        Karat: row.find('input[name="Karat"]').val(),
+                        Description: row.find('textarea[name="Description"]').val()
+                    };
+
+                    productDTO.push(product);
+                });
+                var formData = new FormData();
+                formData.append("productsJson", JSON.stringify(productDTO));
+
+                // Send AJAX request
+                $.ajax({
+                    url: '@Url.Action("SaveAllProduct", "Jewellery")',
+                    type: 'POST',
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    success: function (response) {
+                        alert('Saved successfully!');
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error:", error);
+                        alert('Error saving data. See console for details.');
+                    }
+                });
+            });
+
+
+            $("#ImportProductList").on("click", "#pendantList #btnSavePendant", function () {
+                var productDTO = [];
+
+                $('#PendantTable tbody tr').each(function () {
+                    let row = $(this);
+
+                    // Skip empty row (like "No data found")
+                    if (row.find('input, textarea').length === 0) return;
+
+                    let product = {
+                        Title: row.find('input[name="Title"]').val(),
+                        Sku: row.find('input[name="Sku"]').val(),
+                        CategoryName: row.find('input[name="CategoryName"]').val(),
+                        VenderName: row.find('input[name="VenderName"]').val(),
+                        VenderStyle: row.find('input[name="VenderStyle"]').val(),
+                        Length: row.find('input[name="Length"]').val(),
+                        BandWidth: row.find('input[name="BandWidth"]').val(),
+                        GoldWeight: row.find('input[name="GoldWeight"]').val(),
+                        CTW: row.find('input[name="CTW"]').val(),
+                        CenterShapeName: row.find('input[name="CenterShapeName"]').val(),
+                        CenterCaratName: row.find('input[name="CenterCaratName"]').val(),
+                        Certificate: row.find('input[name="Certificate"]').val(),
+                        ColorName: row.find('input[name="ColorName"]').val(),
+                        AccentStoneShapeName: row.find('input[name="AccentStoneShapeName"]').val(),
+                        MMSize: row.find('input[name="MMSize"]').val(),
+                        DiaWT: row.find('input[name="DiaWT"]').val(),
+                        NoOfStones: row.find('input[name="NoOfStones"]').val(),
+                        Grades: row.find('input[name="Grades"]').val(),
+                        ProductType: row.find('input[name="ProductType"]').val(),
+                        Price: row.find('input[name="Price"]').val(),
+                        WholesaleCost: row.find('input[name="WholesaleCost"]').val(),
+                        Karat: row.find('input[name="Karat"]').val(),
+                        Description: row.find('textarea[name="Description"]').val()
+                    };
+
+                    productDTO.push(product);
+                });
+                var formData = new FormData();
+                formData.append("productsJson", JSON.stringify(productDTO));
+
+                // Send AJAX request
+                $.ajax({
+                    url: '@Url.Action("SaveAllProduct", "Jewellery")',
+                    type: 'POST',
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    success: function (response) {
+                        alert('Saved successfully!');
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error:", error);
+                        alert('Error saving data. See console for details.');
+                    }
+                });
+            });
         });
     </script>
 }
