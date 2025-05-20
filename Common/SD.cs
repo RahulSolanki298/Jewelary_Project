@@ -86,7 +86,7 @@
         public static string Bangle = "Bangle";
         public static string Bands = "Bands";
 
-        public static string AdminPath = "http://180.211.116.206/jewelfacetadmin";
+       // public static string AdminPath = "http://180.211.116.206/jewelfacetadmin";
        // public static string AdminPath = "http://192.168.29.106/jewelfacetadmin";
 
         // local
@@ -95,9 +95,9 @@
       // public static string BaseApiUrl = "http://localhost:44325"; // https://jswebapi.com
 
         // local iis
-       //public static string ShapeImgUrl = "http://192.168.29.106/jewelfacet";
-       // public static string ImgUrl = "http://192.168.29.106/jewelfacet";
-       // public static string BaseApiUrl = "http://192.168.29.106/jewelfacet";
+       //  public static string ShapeImgUrl = "http://192.168.29.106/jewelfacet";
+       //  public static string ImgUrl = "http://192.168.29.106/jewelfacet";
+       //  public static string BaseApiUrl = "http://192.168.29.106/jewelfacet";
 
         //  production
         public static string ShapeImgUrl = "http://180.211.116.206/jewelfacet";

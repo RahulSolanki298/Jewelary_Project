@@ -1,0 +1,109 @@
+﻿@model List<Models.ProductDTO>
+@using Common;
+@{
+    var secImg = string.Empty;
+    var priImg = string.Empty;
+    var vdoUrl = string.Empty;
+}
+@if (Model != null)
+{
+    @foreach (var item in Model)
+    {
+        //vdoUrl = item.ProductImageVideos.Where(x => x.VideoUrl != null && x.VideoUrl != "-").FirstOrDefault()?.VideoUrl;
+        //if (vdoUrl != null && vdoUrl == "-")
+        //{
+        //    vdoUrl = null;
+        //}
+
+        secImg = item.ProductImageVideos.Where(x => x.ImageUrl != null && x.ImageUrl != "-").LastOrDefault()?.ImageUrl;
+        if (secImg != null && secImg == "-")
+        {
+            secImg = item.ProductImageVideos.Where(x => x.ImageUrl != null).FirstOrDefault()?.ImageUrl;
+        }
+
+        priImg = item.ProductImageVideos.Where(x => x.ImageUrl != null && x.ImageUrl != "-").FirstOrDefault()?.ImageUrl;
+        if (priImg != null && priImg == "-")
+        {
+            priImg = item.ProductImageVideos.Where(x => x.ImageUrl != null).LastOrDefault()?.ImageUrl;
+        }
+
+        @*<div class="col-6 col-sm-6 col-md-3 col-lg-3">*@
+        <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6">
+            <div class="product-main-box">
+                <input type="hidden" class="product-id" value="@item.Id" />
+                <div class="product-item">
+                    <figure class="product-thumb product-box-with-border media-container">
+                        <a class="img-with-bg" href="@Url.Action("ProductDetails", "Products", new { id = item.Id })">
+                            <img class="pri-img media-item" src="@($"{SD.ImgUrl}/{priImg}")" />
+                            <img class="sec-img media-item" src="@($"{SD.ImgUrl}/{secImg}")" />
+
+                            @*<video class="product-video" muted loop preload="none" playsinline>
+                                    <source src="@($"{SD.BaseApiUrl}/{vdoUrl}")" type="video/mp4" />
+                                </video>*@
+                        </a>
+                    </figure>
+
+                    <div class="product-caption text-left product-box-desc">
+                        <div class="product-identity">
+                            <p class="manufacturer-name"><a href="#" class="pro-title" data-title="@item.Title">@item.Title</a></p>
+                        </div>
+                        <div class="price-box">
+                            <span class="price-regular f-16" data-sku="@item.Sku">$ @item.Price USD</span>
+                            @*<span class="price-old" data-sku="@item.Sku"><del>@item.UnitPrice</del></span>*@
+                        </div>
+
+                        <div class="d-flex">
+                            <p class="title-bold mb-0">Metal : </p>&nbsp;&nbsp;@* <span class="activemetalname title-regular mb-0" data-sku="@item.Sku">@item.ColorName</span> *@
+                            <ul class="color-categories" style="padding-left:10px;">
+                                @foreach (var color in item.Metals)
+                                {
+                                    <li>
+                                        <a class="@color.SymbolName metalColor" @(color.Name == item.ColorName ? "selected" : null) metalId="@color.Id" href="javascript:void(0)" title="@color.Name" productId="@item.Sku" data-colorName="@color.Name"><p class="product-metal-desc">@item.Karat</p></a>
+                                    </li>
+                                }
+                            </ul>
+
+
+                        </div>
+
+                        <div class="d-flex">
+                            <p class="title-bold mb-0">Carat : </p>&nbsp;&nbsp;
+                            @* </div>
+                                <div class="d-flex"> *@
+                            <ul class="size-categories" style="padding-left:10px;">
+                                @foreach (var carat in item.CaratSizes)
+                                {
+                                    <li>
+                                        <a class="@carat.Name caratName f-14" @(carat.Name == item.CenterCaratName ? "selected" : null) caratId="@carat.Id" title="@carat.Name" href="javascript:void(0)" productId="@item.Sku">@carat.Name</a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+
+                        <div class="d-flex">
+                            <p class="title-bold mb-0">Shape : </p>
+                            <ul class="" style="padding-left:10px;">
+                                @foreach (var shape in item.Shapes)
+                                {
+                                    <li>
+                                        <a href="#" title="@shape.Name">
+                                            <img src="@SD.ShapeImgUrl@shape.IconPath" />
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+
+}
+else
+{
+    <div></div>
+}

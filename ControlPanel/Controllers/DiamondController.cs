@@ -28,15 +28,27 @@ namespace ControlPanel.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var data = await _diamondRepository.GetDiamondList();
+            return View(data);
         }
 
         [HttpGet]
-        public async Task<IActionResult> DiamondList()
+        public async Task<IActionResult> DiamondList(int page = 1, int pageSize = 10)
         {
             var data= await _diamondRepository.GetDiamondList();
+
+            //var totalItems = data.Count();
+
+            //var diamonds = data
+            //    .Skip((page - 1) * pageSize)
+            //    .Take(pageSize)
+            //    .ToList();
+
+            //ViewBag.TotalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+            //ViewBag.CurrentPage = page;
+
             return PartialView("_DiamondList", data);
         }
 
