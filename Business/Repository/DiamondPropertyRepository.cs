@@ -465,5 +465,32 @@ namespace Business.Repository
         {
             throw new NotImplementedException();
         }
+
+
+        //public async Task<int> GetDiamondPropertyList()
+        //{
+        //    var diamondPrt = new DiamondProperty();
+        //    if (!string.IsNullOrEmpty(diamondPropertyName))
+        //    {
+        //        var parentId = await GetParentIdByName(properyName);
+        //        diamondPrt = await _context.DiamondProperties.Where(x => x.Name == diamondPropertyName && x.ParentId == parentId).FirstOrDefaultAsync();
+
+        //        if (diamondPrt == null)
+        //        {
+        //            diamondPrt = new DiamondProperty()
+        //            {
+        //                Name = diamondPropertyName,
+        //                ParentId = parentId,
+        //                IsActivated = true
+        //            };
+        //            await _context.DiamondProperties.AddAsync(diamondPrt);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        return diamondPrt.Id;
+        //    }
+
+        //    return 0;
+
+        //}
     }
 }

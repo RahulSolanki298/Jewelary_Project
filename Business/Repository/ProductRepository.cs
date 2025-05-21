@@ -150,7 +150,7 @@ namespace Business.Repository
                             Length = product.Length,
                             ColorId = colorId,
                             Description = product.Description,
-                           // IsActivated = product.IsActivated,
+                            // IsActivated = product.IsActivated,
                             StyleId = styleId,
                             GoldWeight = product.GoldWeight,
                             GoldPurityId = goldPurityId,
@@ -420,7 +420,7 @@ namespace Business.Repository
                         // Update existing product
                         existingProduct.DesignNo = product.DesignNo;
                         existingProduct.Title = product.Title;
-                       // existingProduct.ProductDate = product.ProductDate;
+                        // existingProduct.ProductDate = product.ProductDate;
                         existingProduct.Designer = product.Designer;
                         existingProduct.CadDesigner = product.CadDesigner;
                         existingProduct.Remarks = product.Remarks;
@@ -430,7 +430,7 @@ namespace Business.Repository
                         existingProduct.Package = product.Package;
                         existingProduct.Occasion = product.Occasion;
                         existingProduct.ParentDesign = product.ParentDesign;
-                      //  existingProduct.IsActivated = product.IsActivated;
+                        //  existingProduct.IsActivated = product.IsActivated;
                         existingProduct.CollectionsId = product.CollectionsId;
                         existingProduct.ProductType = product.ProductType;
                         updateList.Add(existingProduct);
@@ -443,7 +443,7 @@ namespace Business.Repository
                             Id = product.Id,
                             DesignNo = product.DesignNo,
                             Title = product.Title,
-                           // ProductDate = product.ProductDate,
+                            // ProductDate = product.ProductDate,
                             Designer = product.Designer,
                             CadDesigner = product.CadDesigner,
                             Remarks = product.Remarks,
@@ -451,7 +451,7 @@ namespace Business.Repository
                             Gender = product.Gender,
                             Package = product.Package,
                             Occasion = product.Occasion,
-                          //  IsActivated = product.IsActivated,
+                            //  IsActivated = product.IsActivated,
                             CollectionsId = product.CollectionsId,
                             ParentDesign = product.ParentDesign,
                             ProductType = product.ProductType,
@@ -520,7 +520,7 @@ namespace Business.Repository
                         existingProduct.Carat = product.Carat;
                         existingProduct.ColorId = product.ColorId;
                         existingProduct.ClarityId = product.ClarityId;
-                       // existingProduct.Quantity = product.Quantity;
+                        // existingProduct.Quantity = product.Quantity;
                         existingProduct.Setting = product.Setting;
                         existingProduct.KaratId = product.KaratId;
                         updateList.Add(existingProduct);
@@ -600,10 +600,10 @@ namespace Business.Repository
                                       Quantity = product.Quantity,
                                       KaratId = krt != null ? krt.Id : (int?)null,
                                       Karat = krt.Name
-                                  //}).Where(x => x.IsActivated).ToListAsync();
+                                      //}).Where(x => x.IsActivated).ToListAsync();
                                   }).ToListAsync();
 
-        var groupedProducts = products.GroupBy(p => p.Sku);
+            var groupedProducts = products.GroupBy(p => p.Sku);
 
             var productDTOList = new List<ProductDTO>();
 
@@ -728,7 +728,6 @@ namespace Business.Repository
             // Return products where there are product images/videos
             return productDTOList;
         }
-
 
 
         public async Task<IEnumerable<ProductDTO>> GetProductCollectionList()
@@ -1025,16 +1024,16 @@ namespace Business.Repository
                             Length = product.Length,
                             ColorId = colorId,
                             Description = product.Description,
-                           //IsActivated = product.IsActivated,
-                           BandWidth = product.BandWidth,
-                           //Price = product.Price > 0 ? product.Price : 0m,
-                           //UnitPrice = product.UnitPrice,
-                           //Quantity = product.Quantity,
+                            //IsActivated = product.IsActivated,
+                            BandWidth = product.BandWidth,
+                            //Price = product.Price > 0 ? product.Price : 0m,
+                            //UnitPrice = product.UnitPrice,
+                            //Quantity = product.Quantity,
                             ProductType = product.ProductType,
                             GoldWeight = product.GoldWeight,
                             Grades = product.Grades,
                             MMSize = product.MMSize,
-                           // NoOfStones = product.NoOfStones,
+                            // NoOfStones = product.NoOfStones,
                             DiaWT = product.DiaWT,
                             CenterShapeId = shapeId,
                             Certificate = product.Certificate,
@@ -1045,7 +1044,10 @@ namespace Business.Repository
                             Vendor = product.VenderName,
                             VenderStyle = product.VenderStyle,
                             Diameter = product.Diameter,
-                            Id = Guid.NewGuid()
+                            Id = Guid.NewGuid(),
+                            UploadStatus = SD.Requested,
+                            IsActivated = false,
+                            IsSuccess = false
                         };
 
                         productList.Add(newProduct);
@@ -1190,10 +1192,10 @@ namespace Business.Repository
                             KaratId = karatId,
                             ColorId = colorId,
                             Description = product.Description,
-                           //IsActivated = product.IsActivated,
-                           //Price = product.Price > 0 ? product.Price : 0m,
-                           //UnitPrice = product.UnitPrice,
-                           //Quantity = product.Quantity,
+                            //IsActivated = product.IsActivated,
+                            //Price = product.Price > 0 ? product.Price : 0m,
+                            //UnitPrice = product.UnitPrice,
+                            //Quantity = product.Quantity,
                             ProductType = product.ProductType,
                             GoldWeight = product.GoldWeight,
                             Grades = product.Grades,
@@ -1208,7 +1210,10 @@ namespace Business.Repository
                             Vendor = product.VenderName,
                             VenderStyle = product.VenderStyle,
                             Diameter = product.Diameter,
-                            Id = Guid.NewGuid()
+                            Id = Guid.NewGuid(),
+                            IsActivated = false,
+                            IsDelete = false,
+                            UploadStatus = SD.Requested
                         };
 
                         //productList.Add(newProduct);
@@ -1701,7 +1706,6 @@ namespace Business.Repository
             return 0;
         }
 
-
         public async Task<int> AddProductFileUploadedHistory(ProductFileUploadHistory productFileUpload)
         {
             try
@@ -1715,6 +1719,64 @@ namespace Business.Repository
             {
                 return 0;
             }
+        }
+
+        public async Task<IEnumerable<ProductDTO>> GetProductUploadRequestList()
+        {
+            var products = await (from product in _context.Product
+                                  //join evt in _context.EventSites on product.EventId equals evt.Id
+                                  join krt in _context.ProductProperty on product.KaratId equals krt.Id
+                                  join cat in _context.Category on product.CategoryId equals cat.Id
+                                  join color in _context.ProductProperty on product.ColorId equals color.Id into colorGroup
+                                  from color in colorGroup.DefaultIfEmpty()
+                                  join shape in _context.ProductProperty on product.CenterShapeId equals shape.Id into shapeGroup
+                                  from shape in shapeGroup.DefaultIfEmpty()
+                                  join clarity in _context.ProductProperty on product.ClarityId equals clarity.Id into clarityGroup
+                                  from clarity in clarityGroup.DefaultIfEmpty()
+                                  join size in _context.ProductProperty on product.CenterCaratId equals size.Id into sizeGroup
+                                  from size in sizeGroup.DefaultIfEmpty()
+                                  where product.UploadStatus == SD.Requested
+                                  select new ProductDTO
+                                  {
+                                      Id = product.Id,
+                                      Title = product.Title,
+                                      EventId = product.EventId,
+                                      BandWidth = product.BandWidth,
+                                      Length = product.Length,
+                                      CaratName = product.Carat,
+                                      CategoryId = cat != null ? cat.Id : (int?)null,
+                                      CategoryName = cat.Name,
+                                      ColorId = color != null ? color.Id : (int?)null,
+                                      ColorName = color.Name,
+                                      ClarityId = clarity != null ? clarity.Id : (int?)null,
+                                      ClarityName = clarity.Name,
+                                      ShapeName = shape.Name,
+                                      //ShapeId = shape != null ? shape.Id : (int?)null,
+                                      CenterShapeName = shape.Name,
+                                      UnitPrice = product.UnitPrice,
+                                      Price = product.Price,
+                                      IsActivated = product.IsActivated,
+                                      CaratSizeId = product.CaratSizeId,
+                                      Description = product.Description,
+                                      Sku = product.Sku,
+                                      ProductType = cat.ProductType,
+                                      VenderName = product.Vendor,
+                                      Grades = product.Grades,
+                                      GoldWeight = product.GoldWeight,
+                                      IsReadyforShip = product.IsReadyforShip,
+                                      VenderStyle = product.VenderStyle,
+                                      CenterCaratId = size.Id,
+                                      CenterShapeId = shape != null ? shape.Id : (int?)null,
+                                      CenterCaratName = size.Name,
+                                      Quantity = product.Quantity,
+                                      KaratId = krt != null ? krt.Id : (int?)null,
+                                      Karat = krt.Name
+                                  //}).Where(x => x.UploadStatus == SD.Requested).ToListAsync();
+                                  }).ToListAsync();
+
+
+            // Return products where there are product images/videos
+            return products;
         }
 
     }

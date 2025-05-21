@@ -159,8 +159,9 @@ namespace ControlPanel.Controllers
         }
 
         [HttpGet]
-        public IActionResult DiamondProperty()
+        public async Task<IActionResult> DiamondProperty()
         {
+            //var diamondList = _diamondPPTY.GetDiamondPropertyId();
             return View();
         }
 

@@ -1,4 +1,6 @@
-﻿<form id="uploadForm" asp-controller="Jewellery" asp-action="ExcelUpload" method="post" enctype="multipart/form-data">
+﻿@using Common
+
+<form id="uploadForm" asp-controller="Jewellery" asp-action="ExcelUpload" method="post" enctype="multipart/form-data">
     @if (TempData["UploadSuccess"] != null)
     {
         <div class="alert alert-success">@TempData["UploadSuccess"]</div>
@@ -290,6 +292,152 @@
                     }
                 });
             });
+
+            $("#ImportProductList").on("click", "#braceletsList #btnSaveBracelets", function () {
+                var productDTO = [];
+
+                $('#BraceletsTable tbody tr').each(function () {
+                    let row = $(this);
+
+                    // Skip empty row (like "No data found")
+                    if (row.find('input, textarea').length === 0) return;
+
+                    let product = {
+                        Title: row.find('input[name="Title"]').val(),
+                        Sku: row.find('input[name="Sku"]').val(),
+                        CategoryName: row.find('input[name="CategoryName"]').val(),
+                        VenderName: row.find('input[name="VenderName"]').val(),
+                        VenderStyle: row.find('input[name="VenderStyle"]').val(),
+                        Length: row.find('input[name="Length"]').val(),
+                        BandWidth: row.find('input[name="BandWidth"]').val(),
+                        GoldWeight: row.find('input[name="GoldWeight"]').val(),
+                        CTW: row.find('input[name="CTW"]').val(),
+                        CenterShapeName: row.find('input[name="CenterShapeName"]').val(),
+                        CenterCaratName: row.find('input[name="CenterCaratName"]').val(),
+                        Certificate: row.find('input[name="Certificate"]').val(),
+                        ColorName: row.find('input[name="ColorName"]').val(),
+                        AccentStoneShapeName: row.find('input[name="AccentStoneShapeName"]').val(),
+                        MMSize: row.find('input[name="MMSize"]').val(),
+                        DiaWT: row.find('input[name="DiaWT"]').val(),
+                        NoOfStones: row.find('input[name="NoOfStones"]').val(),
+                        Grades: row.find('input[name="Grades"]').val(),
+                        ProductType: row.find('input[name="ProductType"]').val(),
+                        Price: row.find('input[name="Price"]').val(),
+                        WholesaleCost: row.find('input[name="WholesaleCost"]').val(),
+                        Karat: row.find('input[name="Karat"]').val(),
+                        Description: row.find('textarea[name="Description"]').val()
+                    };
+
+                    productDTO.push(product);
+                });
+                var formData = new FormData();
+                formData.append("productsJson", JSON.stringify(productDTO));
+
+                // Send AJAX request
+                $.ajax({
+                    url: '@Url.Action("SaveAllProduct", "Jewellery")',
+                    type: 'POST',
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    success: function (response) {
+                        alert('Saved successfully!');
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error:", error);
+                        alert('Error saving data. See console for details.');
+                    }
+                });
+            });
+
+
+            $('#ImportProductList').on('change',"#chkFile", function () {
+                $('#divZipDT').toggle(this.checked);
+                if (this.checked) {
+                    $('#chkFolder').prop('checked', false);
+                    $('#divFolderDT').hide();
+                }
+            });
+
+            $('#ImportProductList').on('change',"#chkFolder", function () {
+                $('#divFolderDT').toggle(this.checked);
+                if (this.checked) {
+                    $('#chkFile').prop('checked', false);
+                    $('#divZipDT').hide();
+                }
+            });
+
+            // Optional: respond to #FileOption change if needed
+            $('#ImportProductList').on('change', '#FileOption', function () {
+                $('#chkFile, #chkFolder').prop('checked', false);
+                $('#divZipDT, #divFolderDT').hide();
+            });
+
+
+            $(document).on("click", "#btnFileImgSave", function (e) {
+                e.preventDefault();
+
+                var fileInput = $("#fileUpload")[0];
+                if (!fileInput || fileInput.files.length === 0) {
+                    alert("Please upload a valid .zip file.");
+                    return;
+                }
+
+                var file = fileInput.files[0];
+
+                if (file.type !== "application/zip" && !file.name.endsWith(".zip")) {
+                    alert("Only .zip files are allowed.");
+                    return;
+                }
+
+                var formData = new FormData();
+                formData.append("zipFile", file);
+
+                $.ajax({
+                    url: "@SD.BaseApiUrl/api/product/BulkProductCollectionImagesUpload", // Make sure this URL is correct
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        $("#response").html("Upload successful: " + response);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Upload error:", xhr.responseText);
+                        $("#response").html("Upload failed: " + xhr.responseText);
+                    }
+                });
+            });
+
+
+            $(document).on("click", "#btnFolderImgSave", function (e) {
+                debugger;
+                e.preventDefault();
+
+                var folderPath = $("#folderPath").val().trim();
+                if (!folderPath) {
+                    alert("Please enter a valid folder path.");
+                    return;
+                }
+
+                $.ajax({
+                    url: "@SD.BaseApiUrl/api/product/BulkProductImagesUploadFromFolder",
+                    type: "POST",
+                    data: { folderPath: folderPath },
+                    success: function (response) {
+                        $("#response").html("Upload successful: " + response);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Upload error:", xhr.responseText);
+                        $("#response").html("Upload failed: " + xhr.responseText);
+                    }
+                });
+            });
+
+
+
+
+
         });
     </script>
 }

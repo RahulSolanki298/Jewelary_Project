@@ -142,6 +142,8 @@ namespace Models
 
         public string Diameter { get; set; }
 
+        public string UploadStatus { get; set; }
+
         public List<ProductImageAndVideoDTO> ProductImageVideos { get; set; }
         public List<ProductPropertyDTO> Metals { get; set; }
         public List<ProductPropertyDTO> CaratSizes { get; set; }
