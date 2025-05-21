@@ -31,7 +31,7 @@ namespace ControlPanel.Controllers
 
         public async Task<IActionResult> GetJewellries()
         {
-            var productList= await _productRepository.GetProductStyleList();
+            var productList = await _productRepository.GetProductStyleList();
             return PartialView("_JewelleryList", productList);
         }
 
@@ -464,7 +464,6 @@ namespace ControlPanel.Controllers
             var tempProducts = new ProductDTO();
             int rowCount = worksheet.Dimension.Rows;
             ProductDTO product = null;
-            var titValue = worksheet.Cells[4, 3].Text;
             for (int row = 5; row <= rowCount; row++)
             {
                 product = new ProductDTO
@@ -534,6 +533,13 @@ namespace ControlPanel.Controllers
 
         #endregion
 
+        [HttpGet]
+        public async Task<IActionResult> RequestedProductList()
+        {
+            var productList = await _productRepository.GetProductUploadRequestList();
+            return View(productList);
+        }
+
         private decimal ConvertStringToDecimal(string CellValue)
         {
             // Remove $ sign and commas
@@ -570,7 +576,7 @@ namespace ControlPanel.Controllers
                 result.Add(new ProductDTO
                 {
                     Id = baseProduct.Id,
-                    Title=baseProduct.Title,
+                    Title = baseProduct.Title,
                     CategoryName = baseProduct.CategoryName,
                     VenderName = baseProduct.VenderName,
                     VenderStyle = baseProduct.VenderStyle,

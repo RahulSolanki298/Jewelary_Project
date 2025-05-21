@@ -30,6 +30,18 @@ namespace B2C_ECommerce
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", builder =>
+                {
+                    builder.WithOrigins("https://localhost:5001")
+                           .AllowAnyHeader()
+                           .AllowAnyMethod()
+                           .AllowCredentials(); // Only needed if using cookies or auth headers
+                });
+            });
+
+
             var configuration = new ConfigurationBuilder()
                     .AddJsonFile("appsettings.json")
                     .Build();
@@ -68,6 +80,7 @@ namespace B2C_ECommerce
             services.AddScoped<IProductService, ProductService>();
 
             services.AddControllers();
+
         }
 
         private void ConfigureRepositories(IServiceCollection services)
@@ -94,8 +107,10 @@ namespace B2C_ECommerce
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseCors("AllowAll");
 
             app.UseRouting();
 

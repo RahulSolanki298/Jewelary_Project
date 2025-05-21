@@ -6,13 +6,9 @@
 
   <ItemGroup>
     <Compile Remove="UploadedFiles\**" />
-    <Compile Remove="wwwroot\UploadedFiles\Collections\**" />
     <Content Remove="UploadedFiles\**" />
-    <Content Remove="wwwroot\UploadedFiles\Collections\**" />
     <EmbeddedResource Remove="UploadedFiles\**" />
-    <EmbeddedResource Remove="wwwroot\UploadedFiles\Collections\**" />
     <None Remove="UploadedFiles\**" />
-    <None Remove="wwwroot\UploadedFiles\Collections\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,12 +34,6 @@
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\UploadedFiles\Styles\Band\Band_Rings_Diamond_Silver_0.5_GJSKU-001123_1.jpg" />
-    <None Include="wwwroot\UploadedFiles\Styles\Band\Band_Rings_Diamond_Silver_0.5_GJSKU-001123_2.jpg" />
-    <None Include="wwwroot\UploadedFiles\Styles\Band\Band_Rings_Diamond_Silver_0.5_GJSKU-001123_3.jpg" />
   </ItemGroup>
 
 </Project>

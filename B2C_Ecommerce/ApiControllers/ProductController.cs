@@ -1,9 +1,13 @@
-﻿using Business.Repository.IRepository;
+﻿using B2C_ECommerce.Helper;
+using Business.Repository.IRepository;
 using Common;
 using DataAccess.Entities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Net.Http.Headers;
 using Models;
 using Newtonsoft.Json;
 using OfficeOpenXml;
@@ -184,108 +188,153 @@ namespace B2C_ECommerce.ApiControllers
         }
 
 
+        //[HttpPost("BulkProductCollectionImagesUpload")]
+        //[RequestFormLimits(MultipartBodyLengthLimit = 10737418240)]
+        //[RequestSizeLimit(10737418240)]
+        //public async Task<IActionResult> UploadProductCollectionImages([FromForm] IFormFile zipFile)
+        //{
+        //    try
+        //    {
+        //        List<DataAccess.Entities.Product> prdDesignDT = new List<DataAccess.Entities.Product>();
+        //        var prdDT = new ProductImages();
+        //        if (zipFile == null || zipFile.Length == 0)
+        //        {
+        //            return BadRequest("No file uploaded.");
+        //        }
+
+        //        string extractedFolder = Path.Combine(_env.WebRootPath, "UploadedFiles", "Collections");
+        //        Directory.CreateDirectory(extractedFolder);
+
+        //        string zipPath = Path.Combine(extractedFolder, zipFile.FileName);
+        //        using (var fileStream = new FileStream(zipPath, FileMode.Create))
+        //        {
+        //            await zipFile.CopyToAsync(fileStream);
+        //        }
+
+        //        var productImages = new List<ProductImages>();
+
+        //        using (ZipArchive archive = ZipFile.OpenRead(zipPath))
+        //        {
+        //            foreach (ZipArchiveEntry entry in archive.Entries)
+        //            {
+        //                if (entry.Name.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+        //                    entry.Name.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
+        //                    entry.Name.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
+        //                    entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+        //                {
+        //                    var styleName = _productRepository.ExtractStyleName(entry.Name);
+        //                    if (styleName == null) continue;  
+
+        //                    var metalId = await _productRepository.GetMetalId(styleName.ColorName);
+        //                    if (metalId == 0) continue;
+
+        //                    prdDesignDT = await _productRepository.GetProductDataByDesignNo(styleName.DesignNo, metalId);
+        //                    if (prdDesignDT.Count == 0) continue;
+
+        //                    foreach (var pro in prdDesignDT)
+        //                    {
+        //                        prdDT = new ProductImages
+        //                        {
+        //                            ProductId = pro.Id.ToString(),
+        //                            MetalId = metalId,
+        //                            Sku = styleName.DesignNo,
+        //                            ShapeId = pro.ShapeId
+        //                        };
+
+        //                        string folderPath = Path.Combine(extractedFolder, styleName.DesignNo);
+        //                        if (!Directory.Exists(folderPath))
+        //                        {
+        //                            Directory.CreateDirectory(folderPath);
+        //                        }
+
+        //                        string destinationPath = Path.Combine(folderPath, entry.Name);
+        //                        entry.ExtractToFile(destinationPath, overwrite: true);
+        //                        string relativePath = Path.Combine("UploadedFiles", "Collections", styleName.DesignNo, entry.Name).Replace("\\", "/");
+
+        //                        int pId = await _productRepository.SaveImageVideoPath(relativePath);
+
+        //                        if (entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+        //                        {
+        //                            prdDT.VideoId = pId;
+        //                        }
+        //                        else
+        //                        {
+        //                            if (styleName.Index == 1)
+        //                            {
+        //                                prdDT.ImageLgId = pId;
+        //                                prdDT.IsDefault = true;
+        //                            }
+        //                            else
+        //                            {
+        //                                prdDT.ImageLgId = pId;
+        //                            }
+        //                            prdDT.ImageIndexNumber = styleName.Index;
+        //                        }
+
+        //                        await _productRepository.SaveImageVideoAsync(prdDT);
+        //                    }
+        //                }
+        //            }
+        //        }
+
+        //        if (System.IO.File.Exists(zipPath))
+        //        {
+        //            System.IO.File.Delete(zipPath);
+        //        }
+
+        //        return Ok("File Uploaded Successfully.");
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        throw;
+        //    }
+        //}
+
+
         [HttpPost("BulkProductCollectionImagesUpload")]
-        [RequestFormLimits(MultipartBodyLengthLimit = 5368709120)]
-        [RequestSizeLimit(5368709120)]
-        public async Task<IActionResult> UploadProductCollectionImages([FromForm] IFormFile zipFile)
+        [DisableFormValueModelBinding] // Optional helper attribute, explained below
+        [RequestSizeLimit(10737418240)] // 10 GB
+        public async Task<IActionResult> UploadProductCollectionImages()
         {
             try
             {
-                List<DataAccess.Entities.Product> prdDesignDT = new List<DataAccess.Entities.Product>();
-                var prdDT = new ProductImages();
-                if (zipFile == null || zipFile.Length == 0)
-                {
-                    return BadRequest("No file uploaded.");
-                }
+                var boundary = MultipartRequestHelper.GetBoundary(
+                    MediaTypeHeaderValue.Parse(Request.ContentType),
+                    new FormOptions().MultipartBoundaryLengthLimit);
 
+                var reader = new MultipartReader(boundary, Request.Body);
+                MultipartSection section;
                 string extractedFolder = Path.Combine(_env.WebRootPath, "UploadedFiles", "Collections");
                 Directory.CreateDirectory(extractedFolder);
 
-                string zipPath = Path.Combine(extractedFolder, zipFile.FileName);
-                using (var fileStream = new FileStream(zipPath, FileMode.Create))
+                while ((section = await reader.ReadNextSectionAsync()) != null)
                 {
-                    await zipFile.CopyToAsync(fileStream);
-                }
-
-                var productImages = new List<ProductImages>();
-
-                using (ZipArchive archive = ZipFile.OpenRead(zipPath))
-                {
-                    foreach (ZipArchiveEntry entry in archive.Entries)
+                    var contentDisposition = section.GetContentDispositionHeader();
+                    if (contentDisposition != null && contentDisposition.IsFileDisposition())
                     {
-                        if (entry.Name.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
-                            entry.Name.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
-                            entry.Name.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
-                            entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+                        var fileName = contentDisposition.FileName.Value.Trim('"');
+                        string zipPath = Path.Combine(extractedFolder, fileName);
+
+                        using (var targetStream = System.IO.File.Create(zipPath))
                         {
-                            var styleName = _productRepository.ExtractStyleName(entry.Name);
-                            if (styleName == null) continue;  
-
-                            var metalId = await _productRepository.GetMetalId(styleName.ColorName);
-                            if (metalId == 0) continue;
-
-                            prdDesignDT = await _productRepository.GetProductDataByDesignNo(styleName.DesignNo, metalId);
-                            if (prdDesignDT.Count == 0) continue;
-
-                            foreach (var pro in prdDesignDT)
-                            {
-                                prdDT = new ProductImages
-                                {
-                                    ProductId = pro.Id.ToString(),
-                                    MetalId = metalId,
-                                    Sku = styleName.DesignNo,
-                                    ShapeId = pro.ShapeId
-                                };
-
-                                string folderPath = Path.Combine(extractedFolder, styleName.DesignNo);
-                                if (!Directory.Exists(folderPath))
-                                {
-                                    Directory.CreateDirectory(folderPath);
-                                }
-
-                                string destinationPath = Path.Combine(folderPath, entry.Name);
-                                entry.ExtractToFile(destinationPath, overwrite: true);
-                                string relativePath = Path.Combine("UploadedFiles", "Collections", styleName.DesignNo, entry.Name).Replace("\\", "/");
-
-                                int pId = await _productRepository.SaveImageVideoPath(relativePath);
-
-                                if (entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    prdDT.VideoId = pId;
-                                }
-                                else
-                                {
-                                    if (styleName.Index == 1)
-                                    {
-                                        prdDT.ImageLgId = pId;
-                                        prdDT.IsDefault = true;
-                                    }
-                                    else
-                                    {
-                                        prdDT.ImageLgId = pId;
-                                    }
-                                    prdDT.ImageIndexNumber = styleName.Index;
-                                }
-
-                                await _productRepository.SaveImageVideoAsync(prdDT);
-                            }
+                            await section.Body.CopyToAsync(targetStream);
                         }
+
+                        // Process the zip file same as your original logic
+                        await ProcessZipFile(zipPath, extractedFolder);
+                        System.IO.File.Delete(zipPath);
                     }
                 }
 
-                if (System.IO.File.Exists(zipPath))
-                {
-                    System.IO.File.Delete(zipPath);
-                }
-
-                return Ok("File Uploaded Successfully.");
+                return Ok("File uploaded and processed successfully.");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                return StatusCode(500, $"Error: {ex.Message}");
             }
         }
+
 
         [HttpPost("BulkProductImagesUploadFromFolder")]
         public async Task<IActionResult> UploadProductImagesFromFolder([FromForm] string folderPath)
@@ -1468,5 +1517,69 @@ namespace B2C_ECommerce.ApiControllers
             }
             return result;
         }
+
+        private async Task ProcessZipFile(string zipPath, string extractedFolder)
+        {
+            using (ZipArchive archive = ZipFile.OpenRead(zipPath))
+            {
+                foreach (ZipArchiveEntry entry in archive.Entries)
+                {
+                    if (!IsSupportedFile(entry.Name)) continue;
+
+                    var styleName = _productRepository.ExtractStyleName(entry.Name);
+                    if (styleName == null) continue;
+
+                    var metalId = await _productRepository.GetMetalId(styleName.ColorName);
+                    if (metalId == 0) continue;
+
+                    var prdDesignDT = await _productRepository.GetProductDataByDesignNo(styleName.DesignNo, metalId);
+                    if (prdDesignDT.Count == 0) continue;
+
+                    foreach (var product in prdDesignDT)
+                    {
+                        var prdDT = new ProductImages
+                        {
+                            ProductId = product.Id.ToString(),
+                            MetalId = metalId,
+                            Sku = styleName.DesignNo,
+                            ShapeId = product.ShapeId
+                        };
+
+                        string folderPath = Path.Combine(extractedFolder, styleName.DesignNo);
+                        Directory.CreateDirectory(folderPath);
+
+                        string destinationPath = Path.Combine(folderPath, entry.Name);
+                        entry.ExtractToFile(destinationPath, overwrite: true);
+
+                        string relativePath = Path.Combine("UploadedFiles", "Collections", styleName.DesignNo, entry.Name)
+                                                .Replace("\\", "/");
+
+                        int fileId = await _productRepository.SaveImageVideoPath(relativePath);
+
+                        if (entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+                        {
+                            prdDT.VideoId = fileId;
+                        }
+                        else
+                        {
+                            prdDT.ImageLgId = fileId;
+                            prdDT.IsDefault = (styleName.Index == 1);
+                            prdDT.ImageIndexNumber = styleName.Index;
+                        }
+
+                        await _productRepository.SaveImageVideoAsync(prdDT);
+                    }
+                }
+            }
+        }
+
+        private bool IsSupportedFile(string fileName)
+        {
+            return fileName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                   fileName.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
+                   fileName.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
+                   fileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase);
+        }
+
     }
 }

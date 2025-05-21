@@ -90,9 +90,9 @@
        // public static string AdminPath = "http://192.168.29.106/jewelfacetadmin";
 
         // local
-       public static string ShapeImgUrl = "http://localhost:44325";
-       public static string ImgUrl = "http://localhost:44325";
-       public static string BaseApiUrl = "http://localhost:44325"; // https://jswebapi.com
+            public static string ShapeImgUrl = "https://localhost:44325";
+            public static string ImgUrl = "https://localhost:44325";
+            public static string BaseApiUrl = "https://localhost:44325"; // https://jswebapi.com
 
         // local iis
        //  public static string ShapeImgUrl = "http://192.168.29.106/jewelfacet";

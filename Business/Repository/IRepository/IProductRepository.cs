@@ -52,5 +52,7 @@ namespace Business.Repository.IRepository
         Task<bool> SaveEarringsList(List<ProductDTO> products, string categoryName);
 
         Task<int> AddProductFileUploadedHistory(ProductFileUploadHistory productFileUpload);
+
+        Task<IEnumerable<ProductDTO>> GetProductUploadRequestList();
     }
 }
