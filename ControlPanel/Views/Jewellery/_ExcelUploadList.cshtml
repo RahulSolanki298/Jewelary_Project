@@ -24,6 +24,9 @@
             <li class="nav-item" role="presentation">
                 <a class="nav-link" id="bracelets-tab" data-bs-toggle="tab" tabindex="-1" href="#braceletsList" role="tab" aria-controls="braceletList" aria-disabled="false">Bracelet List <span class="badge badge-light bg-dark ml-2 braceletcount">@Model.Where(x => x.CategoryName == @SD.Bracelets).GroupBy(x => x.VenderStyle).Count()</span></a>
             </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="images-tab" data-bs-toggle="tab" tabindex="-1" href="#images" role="tab" aria-controls="images" aria-disabled="false">Images & Video <span class="badge badge-light bg-dark ml-2 braceletcount">@Model.Where(x => x.CategoryName == @SD.Bracelets).GroupBy(x => x.VenderStyle).Count()</span></a>
+            </li>
         </ul>
     </div>
 </div>
@@ -532,6 +535,35 @@
 
             </div>
 
+            <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="imgVideo-tab">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="">
+                            <div class="container mt-2">
+                                <div class="row">
+                                    <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 offset-xxl-5 offset-xl-5 offset-lg-4 offset-md-4">
+                                        <!-- File Upload -->
+                                        <div class="mb-3">
+                                            <label for="fileUpload" class="form-label">Upload File</label>
+                                            <input type="file" class="form-control" id="fileUpload">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 offset-xxl-5 offset-xl-5 offset-lg-4 offset-md-4">
+                                        <!-- Save Button -->
+                                        <button class="btn btn-theme" id="btnSavePendant">Save</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
         </div>
     </div>
 </div>
