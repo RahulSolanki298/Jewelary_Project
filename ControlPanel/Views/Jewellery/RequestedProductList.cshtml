@@ -11,10 +11,11 @@
         <div class="col-lg-6">
             <div class="btn-group dropup float-end">
                 <select class="btn btn-theme float-end">
-                    <option>Activated</option>
-                    <option>Deactivated</option>
-                    <option>Hold</option>
-                    <option>Pending</option>
+                    <option>Select Action</option>
+                    <option><a id="btnActivated" href="#"> Activated</a></option>
+                    <option><a id="btnDeactivated" href="#">Deactivated</a></option>
+                    <option><a id="btnHold" href="#">Hold</a></option>
+                    <option><a id="btnPending" href="#">Pending</a></option>
                 </select>
             </div>
         </div>
@@ -33,7 +34,7 @@
             <table class="table" id="BraceletsTable">
                 <thead>
                     <tr>
-                        <th scope="col">Select</th>
+                        <th scope="col"><input type="checkbox" class="chkId" id="chkAllIds"/></th>
                         <th scope="col">Image</th>
                         <th scope="col">Title</th>
                         <th scope="col">Vendor</th>

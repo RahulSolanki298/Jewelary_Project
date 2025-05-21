@@ -30,18 +30,6 @@ namespace B2C_ECommerce
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAll", builder =>
-                {
-                    builder.WithOrigins("https://localhost:5001")
-                           .AllowAnyHeader()
-                           .AllowAnyMethod()
-                           .AllowCredentials(); // Only needed if using cookies or auth headers
-                });
-            });
-
-
             var configuration = new ConfigurationBuilder()
                     .AddJsonFile("appsettings.json")
                     .Build();
@@ -71,7 +59,8 @@ namespace B2C_ECommerce
 
             services.AddHttpClient("API", client =>
             {
-                client.BaseAddress = new Uri(SD.BaseApiUrl);
+                client.BaseAddress = new Uri(SD.AdminPath);
+                //client.BaseAddress = new Uri(SD.BaseApiUrl);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
             });
 
@@ -80,6 +69,17 @@ namespace B2C_ECommerce
             services.AddScoped<IProductService, ProductService>();
 
             services.AddControllers();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", builder =>
+                {
+                    builder.WithOrigins("https://localhost:5001")
+                           .AllowAnyHeader()
+                           .AllowAnyMethod()
+                           .AllowCredentials(); // Only needed if using cookies or auth headers
+                });
+            });
 
         }
 

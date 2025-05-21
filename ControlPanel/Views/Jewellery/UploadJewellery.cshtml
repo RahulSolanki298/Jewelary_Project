@@ -374,7 +374,7 @@
             });
 
 
-            $(document).on("click", "#btnFileImgSave", function (e) {
+            $('#ImportProductList').on("click", "#btnFileImgSave", function (e) {
                 e.preventDefault();
 
                 var fileInput = $("#fileUpload")[0];
@@ -410,11 +410,11 @@
             });
 
 
-            $(document).on("click", "#btnFolderImgSave", function (e) {
+            $('#ImportProductList').on("click", "#btnFolderImgSave", function (e) {
                 debugger;
                 e.preventDefault();
 
-                var folderPath = $("#folderPath").val().trim();
+                var folderPath = $("#folderPath").val();
                 if (!folderPath) {
                     alert("Please enter a valid folder path.");
                     return;
