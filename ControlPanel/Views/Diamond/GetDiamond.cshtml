@@ -4,125 +4,193 @@
     ViewData["Title"] = "GetDiamond";
 }
 
-<h2 class="mt-4 mb-3">Diamond Entry Form</h2>
-<form asp-action="GetDiamond" class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <h4 class="text-primary">Basic Information</h4>
-            <div class="form-group">
-                <label asp-for="StoneId"></label>
-                <input asp-for="StoneId" class="form-control" placeholder="Enter Stone ID" />
-                <span asp-validation-for="StoneId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DNA"></label>
-                <input asp-for="DNA" class="form-control" />
-                <span asp-validation-for="DNA" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Step"></label>
-                <input asp-for="Step" class="form-control" />
-                <span asp-validation-for="Step" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TypeName"></label>
-                <input asp-for="TypeName" class="form-control" />
-                <span asp-validation-for="TypeName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Measurement"></label>
-                <input asp-for="Measurement" class="form-control" />
-                <span asp-validation-for="Measurement" class="text-danger"></span>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <h4 class="text-primary">Lab & Shape Info</h4>
-            <div class="form-group">
-                <label asp-for="LabId"></label>
-                <input asp-for="LabId" class="form-control" />
-                <span asp-validation-for="LabId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LabName"></label>
-                <input asp-for="LabName" class="form-control" />
-                <span asp-validation-for="LabName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ShapeId"></label>
-                <input asp-for="ShapeId" class="form-control" />
-                <span asp-validation-for="ShapeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ShapeName"></label>
-                <input asp-for="ShapeName" class="form-control" />
-                <span asp-validation-for="ShapeName" class="text-danger"></span>
-            </div>
+<div class="container-fluid">
+    <div class="row mb-0">
+        <div class="col-xxl-10 col-xl-10 col-lg-9 col-md-9 col-sm-8">
+            <h4 class="text-uppercase">Diamond Details</h4>
         </div>
     </div>
 
-    <hr />
+    <div class="row mb-0">
+        <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12">
 
-    <div class="row">
-        <div class="col-md-6">
-            <h4 class="text-primary">Grading Details</h4>
-            @* Repeat the grouping for Clarity, Color, Cut, Polish, Symmetry, Fluorescence *@
-            <div class="form-group">
-                <label asp-for="ClarityName"></label>
-                <input asp-for="ClarityName" class="form-control" />
-                <span asp-validation-for="ClarityName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ColorName"></label>
-                <input asp-for="ColorName" class="form-control" />
-                <span asp-validation-for="ColorName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CutName"></label>
-                <input asp-for="CutName" class="form-control" />
-                <span asp-validation-for="CutName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PolishName"></label>
-                <input asp-for="PolishName" class="form-control" />
-                <span asp-validation-for="PolishName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SymmetyName"></label>
-                <input asp-for="SymmetyName" class="form-control" />
-                <span asp-validation-for="SymmetyName" class="text-danger"></span>
-            </div>
-        </div>
+            <div class="card mt-2">
+                <div class="card-body">
+                    <form asp-action="GetDiamond">
 
-        <div class="col-md-6">
-            <h4 class="text-primary">Pricing Info</h4>
-            <div class="form-group">
-                <label asp-for="Price"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RAP"></label>
-                <input asp-for="RAP" class="form-control" />
-                <span asp-validation-for="RAP" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RapAmount"></label>
-                <input asp-for="RapAmount" class="form-control" />
-                <span asp-validation-for="RapAmount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Discount"></label>
-                <input asp-for="Discount" class="form-control" />
-                <span asp-validation-for="Discount" class="text-danger"></span>
+                        <div class="row mt-2 mb-0">
+                            <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 p-1">
+                                <label class="form-label text-left mb-0">StoneId</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-sm b-dark" asp-for="StoneId" disabled />
+                                </div>
+                            </div>
+                            <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 p-1">
+                                <label class="form-label text-left mb-0">Step</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-sm b-dark" asp-for="Step" disabled />
+                                </div>
+                            </div>
+                            <div class="col-xxl-1 col-xl-1 col-lg-2 col-md-3 p-1">
+                                <label class="form-label text-left mb-0">Type</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-sm b-dark" asp-for="TypeName" disabled />
+                                </div>
+                            </div>
+                            <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 p-1">
+                                <label class="form-label text-left mb-0">Measurement</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-sm b-dark" asp-for="Measurement" disabled />
+                                </div>
+                            </div>
+                            <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 p-1">
+                                <label class="form-label text-left mb-0">Lab</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-sm b-dark" asp-for="LabName" disabled />
+                                </div>
+                            </div>
+                            <div class="col-xxl-3 col-xl-3 col-lg-2 col-md-3 p-1">
+                                <label class="form-label text-left mb-0">Shape</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-sm b-dark" asp-for="ShapeName" disabled />
+                                </div>
+                            </div>
+                            <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 p-1">
+                                <label class="form-label text-left mb-0">Carat</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-sm b-dark" asp-for="Carat" disabled />
+                                </div>
+                            </div>
+                            <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 p-1">
+                                <label class="form-label text-left mb-0">RAP</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-sm b-dark" asp-for="RAP" disabled />
+                                </div>
+                            </div>
+                            <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 p-1">
+                                <label class="form-label text-left mb-0">Discount</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-sm b-dark" asp-for="Discount" disabled />
+                                </div>
+                            </div>
+                            <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 p-1">
+                                <label class="form-label text-left mb-0">Price</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-sm b-dark" asp-for="Price" disabled />
+                                </div>
+                            </div>
+                            <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 p-1">
+                                <label class="form-label text-left mb-0">Amount</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-sm b-dark" asp-for="Amount" disabled />
+                                </div>
+                            </div>
+                            <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 p-1">
+                                <label class="form-label text-left mb-0">RapAmount</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-sm b-dark" asp-for="RapAmount" disabled />
+                                </div>
+                            </div>
+                            <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 p-1">
+                                <label class="form-label text-left mb-0">Clarity</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-sm b-dark" asp-for="ClarityName" disabled />
+                                </div>
+                            </div>
+                            <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 p-1">
+                                <label class="form-label text-left mb-0">Color</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-sm b-dark" asp-for="ColorName" disabled />
+                                </div>
+                            </div>
+                            <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 p-1">
+                                <label class="form-label text-left mb-0">Cut</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-sm b-dark" asp-for="CutName" disabled />
+                                </div>
+                            </div>
+                            <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 p-1">
+                                <label class="form-label text-left mb-0">Polish</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-sm b-dark" asp-for="PolishName" disabled />
+                                </div>
+                            </div>
+                            <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 p-1">
+                                <label class="form-label text-left mb-0">Sym</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-sm b-dark" asp-for="SymmetyName" disabled />
+                                </div>
+                            </div>
+                            <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 p-1">
+                                <label class="form-label text-left mb-0">Flor</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-sm b-dark" asp-for="FluorName" disabled />
+                                </div>
+                            </div>
+                            <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 p-1">
+                                <label class="form-label text-left mb-0">Shade</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-sm b-dark" asp-for="Shade" disabled />
+                                </div>
+                            </div>
+                            <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 p-1">
+                                <label class="form-label text-left mb-0">Table</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-sm b-dark" asp-for="Table" disabled />
+                                </div>
+                            </div>
+                            <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 p-1">
+                                <label class="form-label text-left mb-0">Depth</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-sm b-dark" asp-for="Depth" disabled />
+                                </div>
+                            </div>
+                            <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 p-1">
+                                <label class="form-label text-left mb-0">Ratio</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-sm b-dark" asp-for="Ratio" disabled />
+                                </div>
+                            </div>
+                            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 p-1">
+                                <label class="form-label text-left mb-0">LabShape</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-sm b-dark" asp-for="LabShape" disabled />
+                                </div>
+                            </div>
+
+                            <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 p-1">
+                                <label class="form-label text-left mb-0">DNA</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-sm b-dark" asp-for="DNA" disabled />
+                                </div>
+                            </div>
+
+                            <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 p-1">
+                                <label class="form-label text-left mb-0">Certificate</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-sm b-dark" asp-for="Certificate" disabled />
+                                </div>
+                            </div>
+
+                            <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 p-1">
+                                <label class="form-label text-left mb-0">DiamondVideoPath</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-sm b-dark" asp-for="DiamondVideoPath" disabled />
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row mt-2 mb-0">
+                            <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 offset-xxl-5 offset-xl-5  offset-lg-4 offset-md-2">
+                                <button class="btn btn-theme">Save</button>
+                                <a asp-action="Index" class="btn btn-dark ml-2">Back to List</a>
+                            </div>
+                            <input type="hidden" class="form-control form-control-sm b-dark" asp-for="Id" disabled />
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-
-    <hr />
-
-    <div class="form-group mt-3">
-        <input type="submit" value="Save" class="btn btn-theme" />
-        <a asp-action="Index" class="btn btn-secondary ml-2">Back to List</a>
-    </div>
-</form>
+</div>

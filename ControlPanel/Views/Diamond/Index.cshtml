@@ -1,212 +1,69 @@
-﻿@using Common
-@model IEnumerable<Models.DiamondData>
+﻿
+<link href="~/jqxcontent/jqwidgets/styles/jqx.base.css" rel="stylesheet" />
+<link href="~/jqxcontent/jqwidgets/styles/jqx.fluent.css" rel="stylesheet" />
 
-<section class="section">
-    <div class="row mb-2">
-        <div class="col-lg-6">
-            <h4>Diamond List</h4>
+<style>
+    span[id^="jqxWidget"] {
+        color: transparent !important;
+    }
+</style>
+
+
+<div class="container-fluid">
+    <div class="row mb-0">
+        <div class="col-xxl-10 col-xl-10 col-lg-9 col-md-9 col-sm-8">
+            <h4 class="text-uppercase">Diamond Details</h4>
         </div>
-        <div class="col-lg-6">
+        <div class="col-xxl-2 col-xl-2 col-lg-3 col-md-3 col-sm-4">
             <button class="btn btn-theme float-end" id="ExcelUpload">Upload Excel</button>
         </div>
     </div>
 
+
     <div class="card mt-2">
-        <div class="card-body" id="diamondList">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="table-responsive">
-                        <table class="table datatable" id="diamondTable">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">
-                                        Stone ID
-                                    </th>
-                                    <th scope="col">
-                                        Video
-                                    </th>
-                                    <th>
-                                        Certi
-                                    </th>
-                                    <th scope="col">Step</th>
-                                    <th scope="col">Type</th>
-                                    <th scope="col">Lab</th>
-                                    <th scope="col">Shape</th>
-                                    <th scope="col">Carat</th>
-                                    <th scope="col">Color</th>
-                                    <th scope="col">Clarity</th>
-                                    <th scope="col">Cut</th>
-                                    <th scope="col">Polish</th>
-                                    <th scope="col">Sym</th>
-                                    <th scope="col">Flo</th>
-                                    <th scope="col">Rap.($)</th>
-                                    <th scope="col">Disc(%)</th>
-                                    <th scope="col">Price</th>
-                                    <th scope="col">Amount</th>
-                                    <th scope="col">
-                                        Measurement
-                                    </th>
-                                    <th scope="col">
-                                        Ratio
-                                    </th>
-                                    <th scope="col">
-                                        Depth%
-
-                                    </th>
-
-                                    <th scope="col">
-                                        Table%
-
-                                    </th>
-
-                                    <th scope="col">
-                                        Shade
-
-                                    </th>
-
-                                    <th scope="col">
-                                        Lab Shape
-
-                                    </th>
-
-                                    <th scope="col">
-                                        Rap Amount
-
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (Model.Count() > 0)
-                                {
-                                    foreach (var item in Model)
-                                    {
-                                        <tr>
-                                            <td scope="col">
-                                                <div class="dropdown">
-                                                    <a class="btn btn-default dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                        Actions
-                                                    </a>
-                                                    <ul class="dropdown-menu">
-                                                        <li><a class="dropdown-item" href="@Url.Action("GetDiamond","Diamond",new { diamondId = item.Id})" target="_blank">View</a></li>
-                                                        <li><a class="dropdown-item" href="@Url.Action("GetDiamond","Diamond",new { diamondId = item.Id})" target="_blank">Edit</a></li>
-                                                        <li><a class="dropdown-item" href="#">Delete</a></li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                            <td scope="col">
-                                                @item.StoneId
-                                            </td>
-                                            <td scope="col">
-                                                <a href="@item.DiamondVideoPath" target="_blank">
-                                                    <img src="@(SD.ImgUrl)/assets/img/360-degrees.png" style="width:24px;" />
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a href="@item.Certificate" target="_blank">
-                                                    @if (item.LabName == "IGI")
-                                                    {
-                                                        <img src="@SD.ImgUrl/assets/img/logo/IGI.png" style="width:200px;" />
-                                                    }
-                                                    else if (item.LabName == "GIA")
-                                                    {
-                                                        <img src="@SD.ImgUrl/assets/img/logo/GIA.png" style="width:200px;" />
-                                                    }
-                                                </a>
-                                            </td>
-                                            <td scope="col">@item.Step</td>
-                                            <td scope="col">@item.TypeName</td>
-                                            <td scope="col">@item.LabName</td>
-                                            <td scope="col">@item.ShapeName</td>
-                                            <td scope="col">@item.Carat</td>
-                                            <td scope="col">@item.ColorName</td>
-                                            <td scope="col">@item.ClarityName</td>
-                                            <td scope="col">@item.CutName</td>
-                                            <td scope="col">@item.PolishName</td>
-                                            <td scope="col">@item.SymmetyName </td>
-                                            <td scope="col">@item.FluorName</td>
-                                            <td scope="col">@item.RapAmount.($)</td>
-                                            <td scope="col">@item.Discount (%)</td>
-                                            <td scope="col">@item.Price</td>
-                                            <td scope="col">@item.Amount</td>
-                                            <td scope="col">
-                                                @item.Measurement
-                                            </td>
-                                            <td scope="col">
-                                                @item.Ratio
-                                            </td>
-                                            <td scope="col">
-                                                @item.Depth
-                                            </td>
-
-                                            <td scope="col">
-                                                @item.Table
-                                            </td>
-
-                                            <td scope="col">
-                                                @item.Shade
-
-                                            </td>
-
-                                            <td scope="col">
-                                                @item.LabShape
-
-                                            </td>
-
-                                            <td scope="col">
-                                                @item.RapAmount
-                                            </td>
-                                        </tr>
-                                    }
-                                }
-                                else
-                                {
-                                    <tr>
-                                        <td colspan="27"> No data found</td>
-                                    </tr>
-                                }
-
-                            </tbody>
-                        </table>
+        <div class="card-body">
+            <div class="row mt-2">
+                <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <div id="divDetails">
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
-</section>
 
-<div class="modal fade" id="showFileUpload" tabindex="-1" data-bs-backdrop="false">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form id="uploadForm" asp-controller="Diamond" asp-action="UpsertDiamonds" method="post" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h5 class="modal-title">Upload Excel</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    @if (TempData["UploadSuccess"] != null)
-                    {
-                        <div class="alert alert-success">@TempData["UploadSuccess"]</div>
-                    }
-                    @if (TempData["UploadError"] != null)
-                    {
-                        <div class="alert alert-danger">@TempData["UploadError"]</div>
-                    }
-                    <div class="mb-3">
-                        <label for="excelFile" class="form-label">Select Excel or CSV File</label>
-                        <input type="file" class="form-control" id="excelFile" name="file" accept=".xls,.xlsx,.csv" required>
+
+    <div class="modal fade" id="showFileUpload" tabindex="-1" data-bs-backdrop="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="uploadForm" asp-controller="Diamond" asp-action="UpsertDiamonds" method="post" enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Upload Excel</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div id="loader" style="display:none;">
-                        <span class="spinner-border text-primary" role="status"></span> Uploading...
+                    <div class="modal-body">
+                        @if (TempData["UploadSuccess"] != null)
+                        {
+                            <div class="alert alert-success">@TempData["UploadSuccess"]</div>
+                        }
+                        @if (TempData["UploadError"] != null)
+                        {
+                            <div class="alert alert-danger">@TempData["UploadError"]</div>
+                        }
+                        <div class="mb-3">
+                            <label for="excelFile" class="form-label">Select Excel or CSV File</label>
+                            <input type="file" class="form-control" id="excelFile" name="file" accept=".xls,.xlsx,.csv" required>
+                        </div>
+                        <div id="loader" style="display:none;">
+                            <span class="spinner-border text-primary" role="status"></span> Uploading...
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
-                </div>
-            </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
@@ -215,13 +72,36 @@
 @section Scripts
 {
 
+    <script src="~/jqxcontent/jqwidgets/jqxcore.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxdata.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxcore.elements.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxdata.export.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxbuttons.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxscrollbar.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxmenu.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxcheckbox.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxlistbox.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxdropdownlist.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.sort.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.pager.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.selection.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.edit.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.filter.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.columnsresize.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.aggregates.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxpanel.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.columnsreorder.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxtextarea.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxinput.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.grouping.js"></script>
 
     <script>
-        var pg = $("#pgSize").val();
-        var pageNo = $("a").attr("pageNo");
-
+        var resultData = [];
+        var source;
         $(document).ready(function () {
-           // getDiamondList(1, pg);
+
+            loadData();
 
             $("#ExcelUpload").on("click", function () {
                 $("#showFileUpload").modal("show");
@@ -257,7 +137,176 @@
                     }
                 });
             });
+
+             $('#divDetails').on('filter', function (event) {
+                var filteredData = $('#divDetails').jqxGrid('getrows');
+                updateFilterItems(filteredData);
+            });
+
+
+            $("#divDetails").on("cellclick", function (event) {
+
+                // event arguments.
+                var args = event.args;
+                // row's bound index.
+                var rowBoundIndex = args.rowindex;
+                // row's visible index.
+                var rowVisibleIndex = args.visibleindex;
+
+                var dataField = args.datafield;
+                var clsname = args.column.classname;
+
+                var targetclass = args.originalEvent.target.classList[1];
+
+                if (dataField == 'action') {
+                    let data = $("#divDetails").jqxGrid('getrowdata', rowBoundIndex);
+                    window.location.href = `@Url.Action("GetDiamond", "Diamond")?diamondId=${data.Id}`;
+                }
+
+            });
+
+
         });
+
+        function loadData() {
+            resultData = [];
+            $('#divDetails').jqxGrid('clear');
+
+            $.ajax({
+                type: "get",
+                url: "@Url.Action("getDiamondList", "Diamond")",
+                dataType: "json",
+                success: function (d) {
+                    debugger;
+                    if (d.data.result.length > 0) {
+                        resultData = JSON.parse(d.data.result);
+                        source =
+                        {
+                            localdata: resultData,
+                            datatype: "array"
+                        };
+                        var dataAdapter = new $.jqx.dataAdapter(source, {
+                            loadComplete: function (data) { },
+                            loadError: function (xhr, status, error) { }
+                        });
+                        var blackstyle = {
+                            headerBackgroundColor: '#151542',
+                            headerColor: '#fff',
+                        };
+
+                        var videolink = function (row, column, value) {
+                            return '<div style="margin:4px;"><a href="' + value + '" target="_blank"><i class="bi bi-gem" style="font-size:20px;margin:2px 5px;"></i>View 360</a></div>';
+                        };
+
+                        var Certilink = function (row, column, value) {
+                            return '<div style="margin:4px;"><a href="' + value + '" target="_blank"><i class="bi bi-file-earmark" style="font-size:20px;margin:2px 15px;"></i></a></div>';
+                        };
+
+                        var Dnalink = function (row, column, value) {
+                            return '<div style="margin:4px;"><a href="' + value + '" target="_blank">Click Here</a></div>';
+                        };
+
+                        var action = function (row, columnfield, value, defaulthtml, columnproperties, rowdata) {
+                            return '<button title="" class="btn btn-dark btn-sm" style="margin:1px 15px;"><i class="bi bi-layout-text-window-reverse"></i></button>';
+                        };
+
+                        $("#divDetails").jqxGrid(
+                        {
+                            width: "100%",
+                            source: dataAdapter,
+                            height: '700px',
+                            selectionmode: 'singlerow',
+                            columnsresize: true,
+                            columnsreorder: true,
+                            sortable: true,
+                            altrows: true,
+                            enabletooltips: true,
+                            enablebrowserselection: true,
+                            filterable: true,
+                            editable: false,
+                            showstatusbar: true,
+                            statusbarheight: 25,
+                            showaggregates: false,
+                            rowsheight: 30,
+                            columns: [
+                                {
+                                    text: '#', sortable: false, filterable: false, editable: false,
+                                    groupable: false, draggable: false, resizable: false,
+                                    datafield: '', columntype: 'number', pinned: true, style: blackstyle,
+                                    align: 'center', cellsalign: 'center', width: 40,
+                                    cellsrenderer: function (row, column, value) {
+                                        return "<div style='margin:4px;'>" + (value + 1) + "</div>";
+                                    }
+                                },
+                                {
+                                        text: 'Action',
+                                        datafield: 'action',
+                                        sortable: false, filterable: false, editable: false,
+                                        groupable: false, draggable: false, resizable: false,
+                                        columntype: 'number',pinned: true,
+                                        style: blackstyle,
+                                        align: 'center', cellsalign: 'center',
+                                        cellsrenderer: action,
+                                        width: 60
+                                },
+                                { text: 'Stone ID', pinned: true, datafield: 'StoneId', style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+                                { text: 'Video', pinned: true, datafield: 'DiamondVideoPath', cellsrenderer: videolink, style: blackstyle, width: 90, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+                                { text: 'Certi', pinned: true, datafield: 'Certificate',cellsrenderer: Certilink, style: blackstyle, width: 60, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+                                { text: 'DNA', datafield: 'DNA',cellsrenderer: Dnalink, style: blackstyle, width: 90, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+                                { text: 'Step',datafield: 'Step', style: blackstyle, width: 100, align: 'center', cellsalign: 'left' },
+                                { text: 'Type',datafield: 'TypeName', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
+                                { text: 'Lab',datafield: 'LabName', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
+                                { text: 'Shape',datafield: 'ShapeName', style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+                                { text: 'Carat',datafield: 'Carat', style: blackstyle, width: 100, align: 'center', cellsalign: 'center' },
+                                { text: 'Color',datafield: 'ColorName', style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+                                { text: 'Clarity',datafield: 'ClarityName', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
+                                { text: 'Cut',datafield: 'CutName', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
+                                { text: 'Polish',datafield: 'PolishName', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
+                                { text: 'Sym',datafield: 'SymmetyName', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
+                                { text: 'Flo',datafield: 'FluorName', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
+                                {
+                                    text: 'Rap.($)',datafield: 'RAP', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', cellsformat: 'f2'
+
+                                },
+                                { text: 'Disc(%)',datafield: 'Discount', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', cellsformat: 'f2' },
+                                { text: 'Price',datafield: 'Price', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', cellsformat: 'f2' },
+                                { text: 'Amount',datafield: 'Amount', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', cellsformat: 'f2' },
+                                { text: 'Measurement',datafield: 'Measurement', style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+                                { text: 'Ratio',datafield: 'Ratio', style: blackstyle, width: 100, align: 'center', cellsalign: 'center' },
+                                { text: 'Depth%',datafield: 'Depth', style: blackstyle, width: 100, align: 'center', cellsalign: 'center' },
+                                { text: 'Table%',datafield: 'Table', style: blackstyle, width: 100, align: 'center', cellsalign: 'center' },
+                                { text: 'Shade',datafield: 'Shade', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
+                                { text: 'Lab Shape',datafield: 'LabShape', style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+                                { text: 'Rap Amount',datafield: 'RapAmount', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', cellsformat: 'f2' },
+
+
+                                { text: 'Id',datafield: 'Id',hidden:true, style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+                                { text: 'IsActivated',datafield: 'IsActivated',hidden:true, style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+
+                            ],
+                        });
+                    }
+                }
+            });
+        }
+
+        function updateFilterItems(filteredData) {
+            var columns = $('#divDetails').jqxGrid('columns').records;
+
+            columns.forEach(column => {
+                var columnName = column.datafield;
+
+                var uniqueValues = [...new Set(filteredData.map(row => row[columnName] === null ? "" : row[columnName]))].filter(value => value !== undefined);
+
+                var updatedFilterItems = uniqueValues.map(value => value.toString());
+
+                if (updatedFilterItems.length > 0) {
+                    $('#divDetails').jqxGrid('setcolumnproperty', columnName, 'filteritems', updatedFilterItems);
+                } else {
+                    $('#divDetails').jqxGrid('setcolumnproperty', columnName, 'filteritems', []);
+                }
+            });
+        }
 
     </script>
 }

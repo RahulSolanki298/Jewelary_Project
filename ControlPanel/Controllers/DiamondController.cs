@@ -13,6 +13,8 @@ using System;
 using System.Threading.Tasks;
 using System.Linq;
 using Common;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Kiota.Abstractions;
 
 namespace ControlPanel.Controllers
 {
@@ -28,10 +30,10 @@ namespace ControlPanel.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var data = await _diamondRepository.GetDiamondList();
-            return View(data);
+           // var data = await _diamondRepository.GetDiamondList();
+            return View();
         }
 
         [HttpGet]
@@ -302,5 +304,37 @@ namespace ControlPanel.Controllers
             return null; // No hyperlink found
         }
 
+        //Raj 
+        public IActionResult JqxDemo()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult getDiamondList()
+        {
+            bool status = false;
+            string strResult = "";
+            string strMessage = "Data Not Found";
+                        
+            var data = _diamondRepository.GetDiamondList().Result;
+            if (data != null)
+            {
+                status = true;
+                strMessage = "";
+                strResult = JsonConvert.SerializeObject(data);
+            }
+            return Json(new
+            {
+                Data = new
+                {
+                    status = status,
+                    result = strResult,
+                    message = strMessage
+                }
+            });
+
+
+        }
     }
 }
