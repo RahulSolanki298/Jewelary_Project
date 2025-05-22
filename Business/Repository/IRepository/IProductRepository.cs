@@ -54,5 +54,6 @@ namespace Business.Repository.IRepository
         Task<int> AddProductFileUploadedHistory(ProductFileUploadHistory productFileUpload);
 
         Task<IEnumerable<ProductDTO>> GetProductUploadRequestList();
+
     }
 }

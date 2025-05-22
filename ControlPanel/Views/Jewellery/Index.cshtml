@@ -108,22 +108,21 @@
 
         });
 
-        function getDiamondList()
-        {
-             $.ajax({
+        function getDiamondList() {
+            debugger;
+            $.ajax({
                 url: '@Url.Action("GetJewellries", "Jewellery")',
                 type: 'GET',
-                success: function (result)
-                {
-                    $('#jewelleryList').html("");
-                    $('#jewelleryList').html(result);
+                success: function (result) {
+                        $('#jewelleryList').html("");
+                        $('#jewelleryList').html(result);
                 },
-                error: function (xhr, status, error)
-                {
-                    console.error('Error loading diamond list:', error);
+                error: function (xhr, status, error) {
+                    console.error('Error loading diamond list:', xhr.responseText, status, error);
                 }
             });
         }
+
 
         function checkAll()
         {

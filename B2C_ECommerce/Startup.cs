@@ -72,12 +72,11 @@ namespace B2C_ECommerce
 
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAll", builder =>
+                options.AddPolicy("AllowAll", policy =>
                 {
-                    builder.WithOrigins("https://localhost:5001")
-                           .AllowAnyHeader()
-                           .AllowAnyMethod()
-                           .AllowCredentials(); // Only needed if using cookies or auth headers
+                    policy.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader();
                 });
             });
 
@@ -111,7 +110,7 @@ namespace B2C_ECommerce
             app.UseStaticFiles();
 
             app.UseCors("AllowAll");
-
+            
             app.UseRouting();
 
             app.UseAuthorization();

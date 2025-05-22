@@ -29,6 +29,7 @@ namespace ControlPanel.Controllers
             return View();
         }
 
+        [HttpGet]
         public async Task<IActionResult> GetJewellries()
         {
             var productList = await _productRepository.GetProductStyleList();

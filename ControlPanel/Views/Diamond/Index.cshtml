@@ -1,4 +1,11 @@
-﻿<div class="container-fluid">
+﻿@{
+    <style>
+        span[id^="jqxWidget"] {
+            color: transparent !important;
+        }
+    </style>
+}
+<div class="container-fluid">
     <div class="row mb-0">
         <div class="col-xxl-10 col-xl-10 col-lg-9 col-md-9 col-sm-8">
             <h4 class="text-uppercase">Diamond Details</h4>
@@ -60,7 +67,32 @@
 
 @section Scripts
 {
+    @* JQX Widgets *@
+    <script src="~/jqxcontent/jqwidgets/jqxcore.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxdata.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxcore.elements.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxdata.export.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxbuttons.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxscrollbar.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxmenu.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxcheckbox.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxlistbox.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxdropdownlist.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.sort.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.pager.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.selection.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.edit.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.filter.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.columnsresize.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.aggregates.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxpanel.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.columnsreorder.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxtextarea.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxinput.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.grouping.js"></script>
 
+    @* JQX Widgets *@
     <script>
         var resultData = [];
         var source;
