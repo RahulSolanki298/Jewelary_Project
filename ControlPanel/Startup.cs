@@ -32,6 +32,11 @@ namespace ControlPanel
         // Add services to the container
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<FormOptions>(options =>
+            {
+                options.MultipartBodyLengthLimit = 10737418240; // 10 GB
+            });
+
             // Database context
             services.AddDbContext<ApplicationDBContext>(options =>
             options.UseSqlServer(
@@ -81,6 +86,13 @@ namespace ControlPanel
 
             // MVC & Razor
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.AllowedForNewUsers = true;
+            });
         }
 
         private void ConfigureFormOptions(IServiceCollection services)
@@ -111,6 +123,14 @@ namespace ControlPanel
 
             app.UseRouting();
             app.UseSession();
+
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+                context.Response.Headers["Pragma"] = "no-cache";
+                context.Response.Headers["Expires"] = "0";
+                await next();
+            });
 
             app.UseAuthentication(); // Must come before UseAuthorization
             app.UseAuthorization();

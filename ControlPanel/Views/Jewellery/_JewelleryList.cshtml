@@ -22,9 +22,9 @@
 
 <div class="tab-content" id="myTabContent">
     @*<div class="container" style="display:none;">
-        <button class="btn btn-sm btn-danger text-end">Delete</button>
-        <button class="btn btn-sm btn-success">Hold</button>
-    </div>*@
+            <button class="btn btn-sm btn-danger text-end">Delete</button>
+            <button class="btn btn-sm btn-success">Hold</button>
+        </div>*@
 
     <div class="tab-pane fade show active" id="ringList" role="tabpanel" aria-labelledby="rings-tab">
 
@@ -95,10 +95,10 @@
                     <th scope="col">Length</th>
                     <th scope="col">Band Width</th>
                     <th scope="col">Weight</th>
-                    <th scope="col">Price (14k)</th>
-                    <th scope="col">Price (18k)</th>
-                    <th scope="col">Price (20k)</th>
-
+                    @foreach (var item in ViewBag.KaratList)
+                    {
+                        <th scope="col">Prices (@item.Name)</th>
+                    }
                 </tr>
             </thead>
             <tbody>
@@ -107,24 +107,26 @@
 
                     @foreach (var item in Model.Where(x => x.CategoryName == SD.Bands))
                     {
-                        <tr>
-                            <td scope="col"><input type="checkbox" class="chkId" /></td>
-                            <td scope="col">
-                                <img src="@item.DefaultImage" style="width:25px;" />
-                            </td>
-                            <td scope="col">
-                                <h5>@item.Title</h5>
-                                <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
-                            </td>
-                            <td scope="col">@item.VenderName</td>
-                            <td scope="col">@item.StyleName</td>
-                            <td scope="col">@item.Length</td>
-                            <td scope="col">@item.BandWidth</td>
-                            <td scope="col">@item.GoldWeight</td>
-                            <td scope="col">@item.Price</td>
-                            <td scope="col">@item.Price</td>
-                            <td scope="col">@item.Price</td>
-                        </tr>
+                <tr>
+                    <td scope="col"><input type="checkbox" class="chkId" /></td>
+                    <td scope="col">
+                        <img src="@item.DefaultImage" style="width:25px;" />
+                    </td>
+                    <td scope="col">
+                        <h5>@item.Title</h5>
+                        <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
+                    </td>
+                    <td scope="col">@item.VenderName</td>
+                    <td scope="col">@item.Sku</td>
+                    <td scope="col">@item.Length</td>
+                    <td scope="col">@item.BandWidth</td>
+                    <td scope="col">@item.GoldWeight</td>
+                    @foreach (var pp in item.Prices.Where(x=>x.ProductId==item.Id.ToString()))
+                    {
+                        <th scope="col">Prices (@pp.ProductPrice)</th>
+                    }
+
+                </tr>
                     }
                 }
                 else
@@ -159,41 +161,49 @@
                 </tr>
             </thead>
             <tbody>
+            <tbody>
                 @if (Model != null)
                 {
+                    var karatList = ViewBag.KaratList as List<Models.ProductPropertyDTO>; // replace with your actual type
+                    var priceList = ViewBag.PriceList as List<Models.ProductPriceDTO>; // replace with your actual type
 
-                    @foreach (var item in Model.Where(x => x.CategoryName == SD.Earrings))
+                    foreach (var item in Model.Where(x => x.CategoryName == SD.Bands))
                     {
                         <tr>
-                            <td scope="col"><input type="checkbox" class="chkId" /></td>
-                            <td scope="col">
-                                <img src="@item.DefaultImage" style="width:25px;" />
-                            </td>
-                            <td scope="col">
+                            <td><input type="checkbox" class="chkId" /></td>
+                            <td><img src="@item.DefaultImage" style="width:25px;" /></td>
+                            <td>
                                 <h5>@item.Title</h5>
                                 <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
                             </td>
-                            <td scope="col">@item.VenderName</td>
-                            <td scope="col">@item.StyleName</td>
-                            <td scope="col">@item.Length</td>
-                            <td scope="col">@item.BandWidth</td>
-                            <td scope="col">@item.GoldWeight</td>
-                            <td scope="col">@item.Price</td>
-                            <td scope="col">@item.Price</td>
-                            <td scope="col">@item.Price</td>
+                            <td>@item.VenderName</td>
+                            <td>@item.Sku</td>
+                            <td>@item.Length</td>
+                            <td>@item.BandWidth</td>
+                            <td>@item.GoldWeight</td>
+
+                            @foreach (var karat in karatList)
+                            {
+                                var price = priceList
+                                    .FirstOrDefault(p => p.ProductId == item.Id.ToString() && p.KaratId == karat.Id);
+
+                                <td>@(price != null ? price.ProductPrice : "-")</td>
+}
                         </tr>
-                    }
+ }
                 }
                 else
                 {
                     <tr>
-                        <td colspan="12"> No data found</td>
+
+                        <td colspan="12">No data found</td>
+
                     </tr>
                 }
             </tbody>
+
         </table>
     </div>
-
     <div class="tab-pane fade" id="pendantList" role="tabpanel" aria-labelledby="pandant-tab">
         <table class="table" id="PendantTable">
             <thead>
@@ -232,7 +242,7 @@
                                 <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
                             </td>
                             <td scope="col">@item.VenderName</td>
-                            <td scope="col">@item.StyleName</td>
+                            <td scope="col">@item.Sku</td>
                             <td scope="col">@item.Length</td>
                             <td scope="col">@item.BandWidth</td>
                             <td scope="col">@item.GoldWeight</td>
@@ -251,7 +261,6 @@
             </tbody>
         </table>
     </div>
-
     <div class="tab-pane fade" id="BraceletsList" role="tabpanel" aria-labelledby="bracelets-tab">
         <table class="table" id="BraceletsTable">
             <thead>
@@ -290,7 +299,7 @@
                                 <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
                             </td>
                             <td scope="col">@item.VenderName</td>
-                            <td scope="col">@item.StyleName</td>
+                            <td scope="col">@item.Sku</td>
                             <td scope="col">@item.Length</td>
                             <td scope="col">@item.BandWidth</td>
                             <td scope="col">@item.GoldWeight</td>

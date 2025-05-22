@@ -353,6 +353,30 @@ namespace Business.Repository
             return result;
         }
 
+        public async Task<DiamondProperty> GetDiamondPropertyByIdAsync(int id)
+        {
+            var result = await _context.DiamondProperties
+                 .GroupJoin(
+                     _context.DiamondProperties,
+                     dimPro => dimPro.ParentId,
+                     propG => propG.Id,
+                     (dimPro, dimGroup) => new { dimPro, dimGroup })
+                 .SelectMany(
+                     x => x.dimGroup.DefaultIfEmpty(),
+                     (x, propG) => new DiamondProperty
+                     {
+                         Id = x.dimPro.Id,
+                         Name = x.dimPro.Name,
+                         Description = x.dimPro.Description,
+                         SymbolName = x.dimPro.SymbolName,
+                         IconPath = x.dimPro.IconPath,
+                         ParentId = x.dimPro.ParentId,
+                         IsActivated = x.dimPro.IsActivated
+                     }).FirstOrDefaultAsync(x => x.Id == id);
+
+            return result;
+        }
+
         public async Task<bool> UpdateAsync(DiamondProperty entity)
         {
             try
@@ -368,6 +392,30 @@ namespace Business.Repository
                 return false;
             }
         }
+
+        public async Task<bool> DeleteDiamondProperty(int propertyId)
+        {
+            try
+            {
+                var property = await _context.DiamondProperties.FirstOrDefaultAsync(x => x.Id == propertyId);
+
+                if (property == null)
+                {
+                    return false; // Not found
+                }
+
+                _context.DiamondProperties.Remove(property);
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Optionally log the exception: _logger.LogError(ex, "Delete failed");
+                return false;
+            }
+        }
+
 
         public async Task<int> GetDiamondPropertyId(string diamondPropertyName, string properyName)
         {
@@ -416,6 +464,37 @@ namespace Business.Repository
                 return parentDT.Id;
             }
             return 0;
+        }
+
+        public async Task<List<DiamondPropertyDTO>> GetPropertyItemsByName(string propertyName)
+        {
+            List<DiamondPropertyDTO> diamondProperties = new List<DiamondPropertyDTO>();
+            if (!string.IsNullOrEmpty(propertyName))
+            {
+                var parentDT = new DiamondProperty();
+
+                parentDT = await _context.DiamondProperties.Where(x => x.Name == propertyName && string.IsNullOrEmpty(x.ParentId.ToString())).FirstOrDefaultAsync();
+
+                diamondProperties = await (from dp in _context.DiamondProperties
+                                                              join main in _context.DiamondProperties.Where(x => x.ParentId == null) on dp.ParentId equals main.Id
+                                                              where dp.ParentId == parentDT.Id
+                                                              select new DiamondPropertyDTO
+                                                              {
+                                                                  Id=dp.Id,
+                                                                  Name=dp.Name,
+                                                                  Description=dp.Description,
+                                                                  ParentId=dp.ParentId,
+                                                                  IconPath=dp.IconPath,
+                                                                  ParentProperty=main.Name,
+                                                                  SymbolName=dp.SymbolName,
+                                                                  DispOrder=dp.DispOrder,
+                                                                  IsActivated=dp.IsActivated
+                                                              }).ToListAsync();
+
+                return diamondProperties;
+
+            }
+            return diamondProperties;
         }
 
         public async Task<PriceRanges> GetPriceRangeAsync()

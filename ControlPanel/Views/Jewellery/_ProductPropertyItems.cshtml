@@ -1,0 +1,67 @@
+﻿@model List<Models.ProductPropertyDTO>
+
+<table class="table" id="diamondPropertyItems">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Symbol</th>
+            <th scope="col">Activated</th>
+            <th scope="col">Icon Path</th>
+            <th scope="col">Index</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td scope="col"></td>
+                    <td scope="col">
+                        @item.Name
+                    </td>
+                    <td scope="col">@item.SymbolName</td>
+                    <td scope="col">
+                        @if (item.IsActive)
+                        {
+                            <span class="badge bg-success">Yes</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">No</span>
+                        }
+                    </td>
+                    <td scope="col">@item.IconPath</td>
+                    <td scope="col">@item.DispOrder</td>
+                    <td scope="col">
+                        <div class="dropdown">
+                            <a class="" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("UpsertProductProperty", "Jewellery", new { pId = item.Id })">
+                                        <i class="bi bi-pencil-square me-1"></i>Edit
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="@Url.Action("DeleteProductProperty", "Jewellery" , new { pId=item.Id })">
+                                        <i class="bi bi-trash me-1"></i>Delete
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="12"> No data found</td>
+            </tr>
+        }
+    </tbody>
+</table>

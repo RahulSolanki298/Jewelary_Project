@@ -113,7 +113,14 @@ namespace ControlPanel.Controllers
             return View(data);
         }
 
-
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            HttpContext.Session.Clear(); // Clear all session data
+            return RedirectToAction("Index", "Account");
+        }
 
     }
 }

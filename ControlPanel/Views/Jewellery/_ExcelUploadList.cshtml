@@ -95,10 +95,10 @@
                                                         <td scope="col">
                                                             <input type="text" class="product-input form-control" asp-for="@item.Title" readonly name="Title" value="@item.Title" style="width:200px;" />
                                                         </td>
-                                                        <td scope="col"><input type="text" readonly class="product-input form-control" name="Sku" asp-for="@item.Sku" style="width:90px;" /></td>
+                                                        <td scope="col"><input type="text" readonly class="product-input form-control" name="Sku" asp-for="@item.Sku" style="width: 120px;" /></td>
                                                         <td scope="col"><input type="text" readonly class="product-input form-control" name="CategoryName" asp-for="@item.CategoryName" style="width:90px;" /></td>
                                                         <td scope="col"><input type="text" readonly class="product-input form-control" name="VenderName" asp-for="@item.VenderName" style="width:90px;" /></td>
-                                                        <td scope="col"><input type="text" readonly class="product-input form-control" name="VenderStyle" asp-for="@item.VenderStyle" style="width:90px;" /></td>
+                                                        <td scope="col"><input type="text" readonly class="product-input form-control" name="VenderStyle" asp-for="@item.VenderStyle" style="width: 120px;" /></td>
                                                         <td scope="col"><input type="text" readonly class="product-input form-control" name="Length" asp-for="@item.Length" style="width:90px;" /></td>
                                                         <td scope="col"><input type="text" readonly class="product-input form-control" name="BandWidth" asp-for="@item.BandWidth" style="width:90px;" /></td>
                                                         <td scope="col"><input type="text" readonly class="product-input form-control" name="GoldWeight" asp-for="@item.GoldWeight" style="width:90px;" /></td>
@@ -289,7 +289,7 @@
                                             <tr>
                                                 <td scope="col"><input type="checkbox" class="chkId" /></td>
                                                 <td scope="col">
-                                                    <input type="text" name="Title"  asp-for="@item.Title" class="product-input form-control" readonly  value="@item.Title"  style="width:200px;" />
+                                                    <input type="text" name="Title" asp-for="@item.Title" class="product-input form-control" readonly value="@item.Title" style="width:200px;" />
                                                 </td>
                                                 <th scope="col"><input type="text" class="product-input form-control" readonly asp-for="@item.Sku" name="Sku" style="width:90px;" /></th>
                                                 <th scope="col"><input type="text" class="product-input form-control" readonly asp-for="@item.CategoryName" name="CategoryName" style="width:90px;" /></th>
@@ -391,7 +391,7 @@
                                             <tr>
                                                 <td scope="col"><input type="checkbox" class="chkId" /></td>
                                                 <td scope="col">
-                                                    <input type="text" name="Title" class="product-input form-control"  readonly asp-for="@item.Title" value="@item.Title" style="width:200px;" />
+                                                    <input type="text" name="Title" class="product-input form-control" readonly asp-for="@item.Title" value="@item.Title" style="width:200px;" />
                                                 </td>
                                                 <th scope="col"><input type="text" readonly class="product-input form-control" name="Sku" asp-for="@item.Sku" style="width:90px;" /></th>
                                                 <th scope="col"><input type="text" readonly class="product-input form-control" name="CategoryName" asp-for="@item.CategoryName" style="width:90px;" /></th>
@@ -494,7 +494,7 @@
                                                 <tr>
                                                     <td scope="col"><input type="checkbox" class="chkId" /></td>
                                                     <td scope="col">
-                                                        <input type="text" class="product-input form-control"  readonly name="Title" asp-for="@braceletData[i].Title" style="width:200px;" />
+                                                        <input type="text" class="product-input form-control" readonly name="Title" asp-for="@braceletData[i].Title" style="width:200px;" />
                                                     </td>
                                                     <th scope="col"><input type="text" readonly class="product-input form-control" name="Sku" asp-for="@braceletData[i].Sku" style="width:90px;" /></th>
                                                     <th scope="col"><input type="text" readonly class="product-input form-control" name="CategoryName" asp-for="@braceletData[i].CategoryName" style="width:90px;" /></th>
@@ -558,14 +558,28 @@
 
 
                                     <div class="mb-3" id="divZipDT" style="display: none;">
-                                        <label for="fileUpload" class="form-label">Select ZIP File</label>
-                                        <input type="file" class="form-control" id="fileUpload" accept=".zip">
-                                        <div class="form-text">Only .zip files are allowed. Max size: 5 GB.</div>
+                                            <label for="fileUpload" class="form-label">Select ZIP File</label>
+                                            <input type="file" class="form-control" id="fileUpload" accept=".zip">
+                                            <div class="form-text">Only .zip files are allowed. Max size: 5 GB.</div>
 
-                                        <div class="col-auto">
-                                            <button class="btn btn btn-theme" id="btnFileImgSave">Save</button>
+                                            <div class="col-auto">
+                                                <button class="btn btn btn-theme" id="btnFileImgSave">Save</button>
+                                            </div>
                                         </div>
-                                    </div>
+
+                                    @*<form asp-action="BulkProductCollectionImagesUpload" asp-controller="Jewellery" method="post" enctype="multipart/form-data">
+                                        <div class="mb-3" id="divZipDT" style="display: none;">
+                                            <label asp-for="ZipFile" class="form-label">Select ZIP File</label>
+                                            <input asp-for="ZipFile" class="form-control" accept=".zip" type="file" />
+                                            <span asp-validation-for="ZipFile" class="text-danger"></span>
+
+                                            <div class="form-text">Only .zip files are allowed. Max size: 5 GB.</div>
+
+                                            <div class="col-auto mt-2">
+                                                <button type="submit" class="btn btn-theme" id="btnFileImgSave">Save</button>
+                                            </div>
+                                        </div>
+                                    </form>*@
 
                                     <div class="mb-3" id="divFolderDT" style="display: none;">
                                         <label for="folderUpload" class="form-label">Select Folder</label>
@@ -598,3 +612,6 @@
         </div>
 
     </div> *@
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

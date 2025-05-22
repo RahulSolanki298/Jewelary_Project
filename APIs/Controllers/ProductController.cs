@@ -15,6 +15,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
+using IFormFile = Microsoft.AspNetCore.Http.IFormFile;
 
 namespace APIs.Controllers
 {

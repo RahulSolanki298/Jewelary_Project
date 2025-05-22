@@ -620,7 +620,7 @@ namespace Business.Repository
                                         Id = col.Id,
                                         Name = col.Name,
                                         SymbolName = col.SymbolName,
-                                        IsActivated = col.IsActive.HasValue ? col.IsActive.Value : false
+                                        IsActive = col.IsActive.HasValue ? col.IsActive.Value : false
                                     }).Distinct().ToListAsync();
 
                 var caratSizes = await (from col in _context.ProductProperty
@@ -631,7 +631,7 @@ namespace Business.Repository
                                         {
                                             Id = col.Id,
                                             Name = col.Name,
-                                            IsActivated = col.IsActive.HasValue ? col.IsActive.Value : false
+                                            IsActive = col.IsActive.HasValue ? col.IsActive.Value : false
                                         }).Distinct().ToListAsync();
 
                 var shapes = await (from col in _context.ProductProperty
@@ -643,7 +643,7 @@ namespace Business.Repository
                                         Id = col.Id,
                                         Name = col.Name,
                                         IconPath = col.IconPath,
-                                        IsActivated = col.IsActive.HasValue ? col.IsActive.Value : false
+                                        IsActive = col.IsActive.HasValue ? col.IsActive.Value : false
                                     }).Distinct().ToListAsync();
 
                 var prices = await (from pr in _context.ProductPrices
@@ -1357,7 +1357,7 @@ namespace Business.Repository
                                     Id = col.Id,
                                     Name = col.Name,
                                     SymbolName = col.SymbolName,
-                                    IsActivated = col.IsActive.HasValue ? col.IsActive.Value : false
+                                    IsActive = col.IsActive.HasValue ? col.IsActive.Value : false
                                 }).Distinct().ToListAsync();
 
             var caratSizes = await (from col in _context.ProductProperty
@@ -1368,7 +1368,7 @@ namespace Business.Repository
                                     {
                                         Id = col.Id,
                                         Name = col.Name,
-                                        IsActivated = col.IsActive.HasValue ? col.IsActive.Value : false
+                                        IsActive = col.IsActive.HasValue ? col.IsActive.Value : false
                                     }).Distinct().ToListAsync();
 
             var shapes = await (from col in _context.ProductProperty
@@ -1380,7 +1380,7 @@ namespace Business.Repository
                                     Id = col.Id,
                                     Name = col.Name,
                                     IconPath = col.IconPath,
-                                    IsActivated = col.IsActive.HasValue ? col.IsActive.Value : false
+                                    IsActive = col.IsActive.HasValue ? col.IsActive.Value : false
                                 }).Distinct().ToListAsync();
 
 
@@ -1526,7 +1526,7 @@ namespace Business.Repository
                                     Id = col.Id,
                                     Name = col.Name,
                                     SymbolName = col.SymbolName,
-                                    IsActivated = col.IsActive.HasValue ? col.IsActive.Value : false
+                                    IsActive = col.IsActive.HasValue ? col.IsActive.Value : false
                                 }).Distinct().ToListAsync();
 
             var caratSizes = await (from col in _context.ProductProperty
@@ -1537,7 +1537,7 @@ namespace Business.Repository
                                     {
                                         Id = col.Id,
                                         Name = col.Name,
-                                        IsActivated = col.IsActive.HasValue ? col.IsActive.Value : false
+                                        IsActive = col.IsActive.HasValue ? col.IsActive.Value : false
                                     }).Distinct().ToListAsync();
 
             var shapes = await (from col in _context.ProductProperty
@@ -1549,7 +1549,7 @@ namespace Business.Repository
                                     Id = col.Id,
                                     Name = col.Name,
                                     IconPath = col.IconPath,
-                                    IsActivated = col.IsActive.HasValue ? col.IsActive.Value : false
+                                    IsActive = col.IsActive.HasValue ? col.IsActive.Value : false
                                 }).Distinct().ToListAsync();
 
 

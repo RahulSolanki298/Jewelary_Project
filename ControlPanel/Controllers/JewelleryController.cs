@@ -1,7 +1,7 @@
 ﻿using Business.Repository.IRepository;
 using Common;
-using DataAccess.Data;
 using DataAccess.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -15,13 +15,18 @@ using System.Threading.Tasks;
 
 namespace ControlPanel.Controllers
 {
+
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+    [Authorize]
     public class JewelleryController : Controller
     {
         private readonly IProductRepository _productRepository;
+        private readonly IProductPropertyRepository _productPropertyRepository;
 
-        public JewelleryController(IProductRepository productRepository)
+        public JewelleryController(IProductRepository productRepository, IProductPropertyRepository productProperty)
         {
             _productRepository = productRepository;
+            _productPropertyRepository = productProperty;
         }
 
         public IActionResult Index()
@@ -33,6 +38,9 @@ namespace ControlPanel.Controllers
         public async Task<IActionResult> GetJewellries()
         {
             var productList = await _productRepository.GetProductStyleList();
+            ViewBag.KaratList = await _productPropertyRepository.GetKaratList();
+            ViewBag.PriceList = await _productPropertyRepository.GetProductPrices();
+
             return PartialView("_JewelleryList", productList);
         }
 
@@ -43,7 +51,7 @@ namespace ControlPanel.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ExcelUpload(IFormFile file)
+        public async Task<IActionResult> ExcelUpload(Microsoft.AspNetCore.Http.IFormFile file)
         {
             var productUpload = new List<ProductDTO>();
 
@@ -539,6 +547,73 @@ namespace ControlPanel.Controllers
         {
             var productList = await _productRepository.GetProductUploadRequestList();
             return View(productList);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> JewelryProperty()
+        {
+            var propertyList = await _productPropertyRepository.GetMainPropertyList();
+            return View(propertyList);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> JewelryPropertyItems(string propertyName)
+        {
+            var jewelryPropertyList = await _productPropertyRepository.GetPropertyItemsByName(propertyName);
+            return PartialView("~/Views/Jewellery/_ProductPropertyItems.cshtml", jewelryPropertyList);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> UpsertProductProperty(int? pId = 0)
+        {
+            var data = new ProductProperty();
+            ViewBag.ParentDrp = await _productPropertyRepository.GetMainPropertyList();
+
+            if (pId.HasValue && pId > 0)
+            {
+                data = await _productPropertyRepository.GetProductPropertyById(pId.Value);
+
+                return View(data);
+            }
+
+
+            return View(data);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpsertProductProperty(ProductProperty productPropData)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.ParentDrp = await _productPropertyRepository.GetMainPropertyList();
+
+                return View(productPropData);
+            }
+            
+            await _productPropertyRepository.SaveProductProperty(productPropData, productPropData.Id);
+
+
+            return RedirectToAction("JewelryProperty");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteProductProperty(int? pId = 0)
+        {
+            if (!pId.HasValue || pId <= 0)
+            {
+                return BadRequest("Invalid property ID.");
+            }
+
+            var success = await _productPropertyRepository.DeleteProductProperty(pId.Value);
+
+            if (!success)
+            {
+                return NotFound("Property not found or could not be deleted.");
+            }
+
+            return RedirectToAction("JewelryProperty");
         }
 
         private decimal ConvertStringToDecimal(string CellValue)

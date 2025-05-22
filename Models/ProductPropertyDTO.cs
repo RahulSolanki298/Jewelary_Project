@@ -18,7 +18,7 @@
 
         public int DispOrder { get; set; }
 
-        public bool IsActivated { get; set; }
+        public bool IsActive { get; set; }
 
     }
 }
