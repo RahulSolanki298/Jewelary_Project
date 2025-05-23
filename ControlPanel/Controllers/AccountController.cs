@@ -8,6 +8,7 @@ using Models;
 using System;
 using System.Data;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ControlPanel.Controllers
@@ -33,9 +34,11 @@ namespace ControlPanel.Controllers
             _otpService = oTPService;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public IActionResult Login()
         {
-            return View();
+            var loginDt=new AdminLoginModel();
+            return View(loginDt);
         }
 
         [HttpPost]
@@ -51,6 +54,10 @@ namespace ControlPanel.Controllers
                 var user = await _userManager.FindByNameAsync(model.UserName);
                 var roles = await _userManager.GetRolesAsync(user);
 
+                HttpContext.Session.SetString("UserId", user.Id);
+                HttpContext.Session.SetString("UserRoles", JsonSerializer.Serialize(roles));
+
+
                 // Generate OTP
                 //var otp = new Random().Next(100000, 999999).ToString();
                 //HttpContext.Session.SetString("OTP", otp);
@@ -61,6 +68,8 @@ namespace ControlPanel.Controllers
                 //await _otpService.SendOtpSmsAsync(user.PhoneNumber, otp);
 
                 //return RedirectToAction("VerifyOtp");
+
+                TempData["success"] = "Login successfully";
 
                 if (roles.Contains("Admin"))
                     return RedirectToAction("Index", "Home");
@@ -113,13 +122,19 @@ namespace ControlPanel.Controllers
             return View(data);
         }
 
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
             HttpContext.Session.Clear(); // Clear all session data
-            return RedirectToAction("Index", "Account");
+            return RedirectToAction("Login", "Account");
         }
 
     }

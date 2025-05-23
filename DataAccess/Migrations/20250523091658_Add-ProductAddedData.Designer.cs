@@ -4,14 +4,16 @@ using DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250523091658_Add-ProductAddedData")]
+    partial class AddProductAddedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1796,9 +1798,6 @@ namespace DataAccess.Migrations
                     b.Property<int?>("EventId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("FileUploadHistoryId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
@@ -1816,6 +1815,9 @@ namespace DataAccess.Migrations
 
                     b.Property<bool?>("IsDelete")
                         .HasColumnType("bit");
+
+                    b.Property<int?>("IsFileUploadHistoryId")
+                        .HasColumnType("int");
 
                     b.Property<bool?>("IsReadyforShip")
                         .HasColumnType("bit");
@@ -1855,6 +1857,9 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime>("ProductDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("ProductFileUploadHistoryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ProductSize")
                         .HasColumnType("nvarchar(max)");
@@ -1915,7 +1920,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FileUploadHistoryId");
+                    b.HasIndex("ProductFileUploadHistoryId");
 
                     b.ToTable("ProductHistory");
                 });
@@ -2480,7 +2485,7 @@ namespace DataAccess.Migrations
                 {
                     b.HasOne("DataAccess.Entities.ProductFileUploadHistory", "ProductFileUploadHistory")
                         .WithMany()
-                        .HasForeignKey("FileUploadHistoryId");
+                        .HasForeignKey("ProductFileUploadHistoryId");
 
                     b.Navigation("ProductFileUploadHistory");
                 });

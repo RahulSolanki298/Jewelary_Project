@@ -83,6 +83,10 @@ namespace DataAccess.Data
 
         public DbSet<ProductFileUploadHistory> ProductFileUploadHistory { get; set; }
 
+        public DbSet<DiamondHistory> DiamondHistory { get; set; }
+
+        public DbSet<ProductHistory> ProductHistory { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

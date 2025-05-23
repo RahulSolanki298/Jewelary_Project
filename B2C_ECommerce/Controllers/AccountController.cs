@@ -1,14 +1,10 @@
-﻿using System.Net.Http.Headers;
-using System.Net.Http;
-using System.Threading.Tasks;
-using B2C_ECommerce.IServices;
-using Microsoft.AspNetCore.Mvc;
-using Models;
-using Newtonsoft.Json.Linq;
+﻿using B2C_ECommerce.IServices;
 using Microsoft.AspNetCore.Http;
-using System;
-using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Models;
+using System;
+using System.Threading.Tasks;
 
 
 namespace B2C_ECommerce.Controllers
@@ -19,7 +15,7 @@ namespace B2C_ECommerce.Controllers
         private readonly IAccountService _accountService;
         private readonly ILogger<AccountController> _logger;
 
-        public AccountController(IAccountService accountService,ILogger<AccountController> logger)
+        public AccountController(IAccountService accountService, ILogger<AccountController> logger)
         {
             _accountService = accountService;
             _logger = logger;
@@ -35,10 +31,10 @@ namespace B2C_ECommerce.Controllers
             catch (Exception ex)
             {
 
-                _logger.LogError("Exception : ",ex.Message);
+                _logger.LogError("Exception : ", ex.Message);
                 return View("Error");
             }
-            
+
         }
 
 
@@ -47,18 +43,18 @@ namespace B2C_ECommerce.Controllers
         {
             if (ModelState.IsValid)
             {
-              var response=  await _accountService.CustomerSignInAsync(loginDT);
+                var response = await _accountService.CustomerSignInAsync(loginDT);
 
                 if (response != null && response.IsAuthSuccessful)
                 {
                     HttpContext.Response.Cookies.Append("Token", response.Token, new CookieOptions
                     {
-                        HttpOnly = true,          
-                        Secure = true,            
-                        SameSite = SameSiteMode.Strict, 
+                        HttpOnly = true,
+                        Secure = true,
+                        SameSite = SameSiteMode.Strict,
                         Expires = DateTimeOffset.UtcNow.AddDays(7)
                     });
-                    
+
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -82,12 +78,12 @@ namespace B2C_ECommerce.Controllers
 
                 var data = new UserRequestDTO()
                 {
-                    Email=registerDT.EmailId,
-                    FirstName=registerDT.FirstName,
-                    LastName=registerDT.LastName,
-                    PhoneNo=registerDT.PhoneNumber,
-                    Password=registerDT.TextPassword,
-                    ConfirmPassword=registerDT.ConfirmPassword
+                    Email = registerDT.EmailId,
+                    FirstName = registerDT.FirstName,
+                    LastName = registerDT.LastName,
+                    PhoneNo = registerDT.PhoneNumber,
+                    Password = registerDT.TextPassword,
+                    ConfirmPassword = registerDT.ConfirmPassword
                 };
 
                 var response = await _accountService.CustomerSignUpAsync(data);

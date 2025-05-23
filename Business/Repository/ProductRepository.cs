@@ -991,10 +991,6 @@ namespace Business.Repository
                         // Update existing product
                         existingProduct.Title = $"{product.EventName}";
                         existingProduct.Sku = product.Sku;
-                        //existingProduct.Price = product.Price;
-                        //existingProduct.UnitPrice = product.UnitPrice;
-                        //existingProduct.Quantity = product.Quantity;
-                        //existingProduct.IsActivated = product.IsActivated;
                         existingProduct.KaratId = karatId;
                         existingProduct.CenterCaratId = caratId;
                         existingProduct.BandWidth = product.BandWidth;
@@ -1024,16 +1020,12 @@ namespace Business.Repository
                             Length = product.Length,
                             ColorId = colorId,
                             Description = product.Description,
-                            //IsActivated = product.IsActivated,
                             BandWidth = product.BandWidth,
-                            //Price = product.Price > 0 ? product.Price : 0m,
-                            //UnitPrice = product.UnitPrice,
-                            //Quantity = product.Quantity,
                             ProductType = product.ProductType,
                             GoldWeight = product.GoldWeight,
                             Grades = product.Grades,
                             MMSize = product.MMSize,
-                            // NoOfStones = product.NoOfStones,
+                            NoOfStones = Convert.ToInt32(product.NoOfStones),
                             DiaWT = product.DiaWT,
                             CenterShapeId = shapeId,
                             Certificate = product.Certificate,
@@ -1045,9 +1037,9 @@ namespace Business.Repository
                             VenderStyle = product.VenderStyle,
                             Diameter = product.Diameter,
                             Id = Guid.NewGuid(),
-                            UploadStatus = SD.Requested,
-                            IsActivated = false,
-                            IsSuccess = false
+                            UploadStatus = SD.Pending,
+                            IsActivated = true,
+                            IsSuccess = true
                         };
 
                         productList.Add(newProduct);

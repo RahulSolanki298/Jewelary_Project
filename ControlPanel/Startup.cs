@@ -73,8 +73,8 @@ namespace ControlPanel
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    options.LoginPath = "/Admin/Login";            // Adjust if route differs
-                    options.AccessDeniedPath = "/Admin/AccessDenied";
+                    options.LoginPath = "~/Account/Index";            // Adjust if route differs
+                    options.AccessDeniedPath = "~/Account/AccessDenied";
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                     options.SlidingExpiration = true;
                 });
@@ -132,23 +132,20 @@ namespace ControlPanel
                 await next();
             });
 
-            app.UseAuthentication(); // Must come before UseAuthorization
+            app.UseAuthentication();
             app.UseAuthorization();
 
-            // Initialize database with seed data
             InitializeDatabase(dbInitializer).GetAwaiter().GetResult();
 
             app.UseEndpoints(endpoints =>
             {
-                // Area routing (must come before default route)
                 endpoints.MapControllerRoute(
                     name: "areas",
                     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
-                // Default routing
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Account}/{action=Index}/{id?}");
+                    pattern: "{controller=Account}/{action=Login}/{id?}");
             });
 
         }
@@ -161,7 +158,6 @@ namespace ControlPanel
             }
             catch (Exception ex)
             {
-                // Optional: log error or throw exception
                 Console.WriteLine($"Database initialization failed: {ex.Message}");
                 throw;
             }

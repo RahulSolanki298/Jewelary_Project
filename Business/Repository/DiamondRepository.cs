@@ -82,6 +82,20 @@ namespace Business.Repository
             }
         }
 
+        public async Task<DiamondHistory> GetDiamondByStoneId(string stoneId)
+        {
+            try
+            {
+                var diamonds = await _context.DiamondHistory.Where(x => x.StoneId == stoneId).FirstOrDefaultAsync();
+
+                return diamonds;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
         public async Task<IEnumerable<DiamondData>> GetShapeWiseDiamondList()
         {
             try

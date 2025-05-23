@@ -18,6 +18,11 @@
     </div>
     <button id="uploadBtn" type="submit" class="btn btn-theme">Upload</button>
 </form>
+<div id="loader-overlay">
+    <div class="text-center" id="txtLoader">
+        <img src="~/assets/loader/JF-WEB-LOADER.gif" style="width:100px;">
+    </div>
+</div>
 
 <div id="ImportProductList">
 
@@ -37,7 +42,7 @@
                 let formData = new FormData(form);
 
                 $('#uploadBtn').prop('disabled', true).text('Uploading...');
-                $('#loader').show();
+                showLoader();
 
                 $.ajax({
                     url: form.action,
@@ -46,9 +51,9 @@
                     contentType: false,
                     processData: false,
                     success: function (response) {
-                        $('#loader').hide();
+                        hideLoader();
                         $('#uploadBtn').prop('disabled', false).text('Upload');
-                        alert(response.message || 'Upload completed!');
+                        alert(response.message || 'Product File Uploaded Successfully.');
                         $("#ImportProductList").html("");
                         $("#ImportProductList").html(response);
 
@@ -109,7 +114,7 @@
                     contentType: false,
                     data: formData,
                     success: function (response) {
-                        alert('Saved successfully!');
+                        alert('Product Rings Saved Successfully!');
                     },
                     error: function (xhr, status, error) {
                         console.error("Error:", error);
@@ -167,7 +172,7 @@
                     contentType: false,
                     data: formData,
                     success: function (response) {
-                        alert('Saved successfully!');
+                        alert('Product Bands Saved Successfully');
                     },
                     error: function (xhr, status, error) {
                         console.error("Error:", error);
@@ -225,7 +230,7 @@
                     contentType: false,
                     data: formData,
                     success: function (response) {
-                        alert('Saved successfully!');
+                        alert('Product Earrings Saved Successfully');
                     },
                     error: function (xhr, status, error) {
                         console.error("Error:", error);
@@ -283,7 +288,7 @@
                     contentType: false,
                     data: formData,
                     success: function (response) {
-                        alert('Saved successfully!');
+                        alert('Product Pendant Saved Successfully');
                     },
                     error: function (xhr, status, error) {
                         console.error("Error:", error);
@@ -340,7 +345,7 @@
                     contentType: false,
                     data: formData,
                     success: function (response) {
-                        alert('Saved successfully!');
+                        alert('Product Bracelets Saved Successfully');
                     },
                     error: function (xhr, status, error) {
                         console.error("Error:", error);
@@ -374,8 +379,9 @@
 
 
             $('#ImportProductList').on("click", "#btnFileImgSave", function (e) {
+                debugger;
                 e.preventDefault();
-
+                showLoader();
                 var fileInput = $("#fileUpload")[0];
                 if (!fileInput || fileInput.files.length === 0) {
                     alert("Please upload a valid .zip file.");
@@ -393,13 +399,15 @@
                 formData.append("zipFile", file);
 
                 $.ajax({
-                    url: "@Url.Action("Jewellery", "BulkProductCollectionImagesUpload")", // Make sure this URL is correct
+                    url: "@Url.Action("UploadProductCollectionImages","Jewellery")", // Make sure this URL is correct
                     type: "POST",
                     data: formData,
                     processData: false,
                     contentType: false,
                     success: function (response) {
-                        $("#response").html("Upload successful: " + response);
+                        $("#response").html("Product Images and Video Uploaded successful: " + response);
+                        $("#_loaderDIV").hide();
+                        hideLoader();
                     },
                     error: function (xhr, status, error) {
                         console.error("Upload error:", xhr.responseText);
@@ -412,21 +420,27 @@
             $('#ImportProductList').on("click", "#btnFolderImgSave", function (e) {
                 e.preventDefault();
 
-                var folderPath = $("#folderPath").val();
-                if (!folderPath) {
-                    alert("Please enter a valid folder path.");
+                var files = $('#folderInput')[0].files;
+                if (files.length === 0) {
+                    alert("Please select a folder.");
                     return;
                 }
 
+                var formData = new FormData();
+                for (var i = 0; i < files.length; i++) {
+                    formData.append("files", files[i]);
+                }
+
                 $.ajax({
-                    url: "@SD.BaseApiUrl/api/product/BulkProductImagesUploadFromFolder",
-                    type: "POST",
-                    data: { folderPath: folderPath },
+                    url: '@Url.Action("UploadProductImagesFromFolder", "Jewellery")',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
                     success: function (response) {
                         $("#response").html("Upload successful: " + response);
                     },
-                    error: function (xhr, status, error) {
-                        console.error("Upload error:", xhr.responseText);
+                    error: function (xhr) {
                         $("#response").html("Upload failed: " + xhr.responseText);
                     }
                 });
@@ -520,5 +534,14 @@
 
 
         });
+
+
+        function showLoader() {
+            $('#txtLoader').show();
+        }
+
+        function hideLoader() {
+            $('#txtLoader').hide();
+        }
     </script>
 }

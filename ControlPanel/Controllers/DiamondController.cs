@@ -3,6 +3,7 @@ using Common;
 using CsvHelper;
 using DataAccess.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using OfficeOpenXml;
@@ -54,70 +55,70 @@ namespace ControlPanel.Controllers
             return PartialView("_DiamondList", data);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> UpsertDiamonds(IFormFile file)
-        //{
-        //    if (file == null || file.Length == 0)
-        //    {
-        //        TempData["UploadError"] = "No file uploaded.";
-        //        return RedirectToAction("UploadView"); // change this to your actual view
-        //    }
+        [HttpPost]
+        public async Task<IActionResult> UpsertDiamonds(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                TempData["error"] = "No file uploaded.";
+                return RedirectToAction("UploadView"); // change this to your actual view
+            }
 
-        //    string extension = Path.GetExtension(file.FileName).ToLowerInvariant();
-        //    if (extension != ".xlsx" && extension != ".csv")
-        //    {
-        //        TempData["UploadError"] = "Invalid file format. Only .xlsx or .csv files are supported.";
-        //        return RedirectToAction("Index");
-        //    }
+            string extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+            if (extension != ".xlsx" && extension != ".csv")
+            {
+                TempData["error"] = "Invalid file format. Only .xlsx or .csv files are supported.";
+                return RedirectToAction("Index");
+            }
 
-        //    try
-        //    {
-        //        // Step 1: Save upload history
-        //        var uploadHistory = new DiamondFileUploadHistory
-        //        {
-        //            Title = "Add File Upload",
-        //            UploadedDate = DateTime.UtcNow,
-        //            IsSuccess = 1
-        //        };
-        //        int uploadHistoryId = await _diamondRepository.AddDiamondFileUploadedHistory(uploadHistory);
+            try
+            {
+                // Step 1: Save upload history
+                var uploadHistory = new DiamondFileUploadHistory
+                {
+                    Title = "Add File Upload",
+                    UploadedDate = DateTime.UtcNow,
+                    IsSuccess = 1
+                };
+                int uploadHistoryId = await _diamondRepository.AddDiamondFileUploadedHistory(uploadHistory);
 
-        //        // Step 2: Read file into memory
-        //        using var memoryStream = new MemoryStream();
-        //        await file.CopyToAsync(memoryStream);
-        //        memoryStream.Position = 0;
+                // Step 2: Read file into memory
+                using var memoryStream = new MemoryStream();
+                await file.CopyToAsync(memoryStream);
+                memoryStream.Position = 0;
 
-        //        // Step 3: Parse data
-        //        var diamondsList = extension == ".xlsx"
-        //            ? await ParseExcelDiamondsAsync(memoryStream)
-        //            : await ParseCsvDiamondsAsync(memoryStream);
+                // Step 3: Parse data
+                var diamondsList = extension == ".xlsx"
+                    ? await ParseExcelDiamondsAsync(memoryStream)
+                    : await ParseCsvDiamondsAsync(memoryStream);
 
-        //        if (diamondsList == null || diamondsList.Count == 0)
-        //        {
-        //            TempData["UploadError"] = "No valid diamond records found in the file.";
-        //            return RedirectToAction("Index");
-        //        }
+                if (diamondsList == null || diamondsList.Count == 0)
+                {
+                    TempData["error"] = "No valid diamond records found in the file.";
+                    return RedirectToAction("Index");
+                }
 
-        //        // Step 4: Bulk insert
-        //        string jsonData = JsonConvert.SerializeObject(diamondsList);
-        //        var result = await _diamondRepository.BulkInsertDiamondsAsync(jsonData, uploadHistoryId);
+                // Step 4: Bulk insert
+                string jsonData = JsonConvert.SerializeObject(diamondsList);
+                var result = await _diamondRepository.BulkInsertDiamondsAsync(jsonData, uploadHistoryId);
 
-        //        TempData["UploadSuccess"] = $"File uploaded successfully. {diamondsList.Count} records inserted.";
-        //        return RedirectToAction("Index");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        TempData["UploadError"] = $"Internal server error: {ex.Message}";
-        //        return RedirectToAction("Index");
-        //    }
-        //}
+                TempData["success"] = $"File uploaded successfully. {diamondsList.Count} records inserted.";
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Internal server error: {ex.Message}";
+                return RedirectToAction("Index");
+            }
+        }
 
-        private async Task<List<Diamond>> ParseCsvDiamondsAsync(Stream stream)
+        private async Task<List<DiamondHistory>> ParseCsvDiamondsAsync(Stream stream)
         {
             using var reader = new StreamReader(stream);
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
             var records = csv.GetRecords<dynamic>().ToList();
 
-            var diamonds = new List<Diamond>();
+            var diamonds = new List<DiamondHistory>();
 
             foreach (var record in records.Skip(5)) // Skip header rows (assumed 1–5)
             {
@@ -130,7 +131,7 @@ namespace ControlPanel.Controllers
             return diamonds;
         }
 
-        private async Task<List<Diamond>> ParseExcelDiamondsAsync(Stream stream)
+        private async Task<List<DiamondHistory>> ParseExcelDiamondsAsync(Stream stream)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
@@ -138,10 +139,10 @@ namespace ControlPanel.Controllers
             var worksheet = package.Workbook.Worksheets.FirstOrDefault();
 
             if (worksheet == null || worksheet.Dimension == null)
-                return new List<Diamond>();
+                return new List<DiamondHistory>();
 
             int rowCount = worksheet.Dimension.Rows;
-            var diamonds = new List<Diamond>();
+            var diamonds = new List<DiamondHistory>();
 
             for (int row = 6; row <= rowCount; row++) // Start from row 6
             {
@@ -224,6 +225,8 @@ namespace ControlPanel.Controllers
                 await _diamondPPTY.UpdateAsync(existingProperty);
             }
 
+            TempData["success"] = "Diamond property has been saved successfully.";
+
             return RedirectToAction("DiamondProperty");
         }
 
@@ -245,7 +248,7 @@ namespace ControlPanel.Controllers
             return RedirectToAction("DiamondProperty");
         }
 
-        private async Task<Diamond> ParseExcelDiamondRowAsync(ExcelWorksheet worksheet, int row)
+        private async Task<DiamondHistory> ParseExcelDiamondRowAsync(ExcelWorksheet worksheet, int row)
         {
             var Video_NewVal = GetExcelHyperlink(worksheet.Cells[row, 26]);
             var DNA_NewVal = GetExcelHyperlink(worksheet.Cells[row, 3]);
@@ -262,9 +265,18 @@ namespace ControlPanel.Controllers
             int symmId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 13].Text, SD.Symmetry);
             int fluorId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 14].Text, SD.Fluor);
 
-            return new Diamond
+            var stoneId = worksheet.Cells[row, 2].Text;
+
+            var IsExist = await _diamondRepository.GetDiamondByStoneId(stoneId);
+
+            if (IsExist != null)
             {
-                StoneId = worksheet.Cells[row, 2].Text,
+                return IsExist;
+            }
+
+            return new DiamondHistory
+            {
+                StoneId = stoneId,
                 DNA = DNA_NewVal,
                 Step = worksheet.Cells[row, 4].Text,
                 TypeId = typeId > 0 ? typeId : null,
@@ -291,12 +303,15 @@ namespace ControlPanel.Controllers
                 DiamondImagePath = "-",
                 DiamondVideoPath = Video_NewVal,
                 Certificate = Certi_NewVal,
-                IsActivated = true
+                IsActivated = false,
+                UploadStatus=SD.Pending,
+                UpdatedDate=DateTime.Now
+
             };
         }
 
 
-        private async Task<Diamond> ParseCSVDiamondRowAsync(IDictionary<string, object> row)
+        private async Task<DiamondHistory> ParseCSVDiamondRowAsync(IDictionary<string, object> row)
         {
             string GetVal(string key) => row.ContainsKey(key) ? row[key]?.ToString() : null;
 
@@ -310,7 +325,7 @@ namespace ControlPanel.Controllers
             int symmId = await _diamondPPTY.GetDiamondPropertyId(GetVal("Symmetry"), SD.Symmetry);
             int fluorId = await _diamondPPTY.GetDiamondPropertyId(GetVal("Fluorescence"), SD.Fluor);
 
-            return new Diamond
+            return new DiamondHistory
             {
                 StoneId = GetVal("StoneId"),
                 DNA = GetVal("DNA"),
@@ -339,7 +354,10 @@ namespace ControlPanel.Controllers
                 DiamondImagePath = "-",
                 DiamondVideoPath = GetVal("Video"),
                 Certificate = GetVal("Certificate"),
-                IsActivated = true
+                IsActivated = false,
+                UpdatedDate = DateTime.Now,
+                UploadStatus = SD.Pending,
+                
             };
         }
 

@@ -21,9 +21,8 @@
     <link href="~/assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
     <link href="~/assets/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
 
-    
-    
 </head>
 <body>
     <header id="header" class="header fixed-top d-flex align-items-center">
@@ -241,9 +240,12 @@
                         </li>
 
                         <li>
-                            <form asp-controller="Account" asp-action="Logout" class="dropdown-item d-flex align-items-center" method="post">
-                                <button type="submit"><i class="bi bi-box-arrow-right"></i> Sign Out</button>
+                            <form id="logout-form" asp-controller="Account" asp-action="Logout" method="post" style="display:none;">
+                                @Html.AntiForgeryToken()
                             </form>
+                            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="bi bi-question-circle"></i> Sign Out
+                            </a>
                         </li>
                     </ul>
                 </li>
@@ -545,6 +547,7 @@
     </aside>
 
     <main id="main" class="main">
+        <partial name="_Notification" />
         @RenderBody()
     </main>
 
@@ -552,23 +555,22 @@
 
 
     <!-- jQuery (load first if any plugin depends on it) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- Vendor Libraries -->
-<script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="~/assets/vendor/chart.js/chart.umd.js"></script>
-<script src="~/assets/vendor/echarts/echarts.min.js"></script>
-<script src="~/assets/vendor/apexcharts/apexcharts.min.js"></script>
-<script src="~/assets/vendor/quill/quill.js"></script>
-<script src="~/assets/vendor/tinymce/tinymce.min.js"></script>
-<script src="~/assets/vendor/simple-datatables/simple-datatables.js"></script>
-<script src="~/assets/vendor/php-email-form/validate.js"></script>
+    <!-- Vendor Libraries -->
+    <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/vendor/chart.js/chart.umd.js"></script>
+    <script src="~/assets/vendor/echarts/echarts.min.js"></script>
+    <script src="~/assets/vendor/apexcharts/apexcharts.min.js"></script>
+    <script src="~/assets/vendor/quill/quill.js"></script>
+    <script src="~/assets/vendor/simple-datatables/simple-datatables.js"></script>
+    <script src="~/assets/vendor/php-email-form/validate.js"></script>
 
-<!-- Main JS -->
-<script src="~/assets/js/main.js"></script>
-
-<!-- Section for Page-Specific Scripts -->
-                    @await RenderSectionAsync("Scripts", required: false)
+    <!-- Main JS -->
+   @* <script src="~/assets/js/main.js"></script>*@
+    
+    <!-- Section for Page-Specific Scripts -->
+    @await RenderSectionAsync("Scripts", required: false)
 
 </body>
 </html>
