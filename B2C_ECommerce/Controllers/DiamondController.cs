@@ -22,9 +22,9 @@ namespace B2C_ECommerce.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index(string shape="")
+        public IActionResult Index(int? shapeId=0)
         {
-            ViewBag.Shape = shape;
+            ViewBag.ShapeId = shapeId;
             return View();
         }
 

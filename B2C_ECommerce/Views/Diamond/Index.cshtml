@@ -17,7 +17,7 @@
     }
 </style>
 
-<input type="text" id="txtShape" value="@ViewBag.Shape" />
+<input type="text" id="txtShape" value="@ViewBag.ShapeId" />
 <section>
     <div class="listingpage">
         <div class="home-giftbanner-main position-relative left-text-banner">
@@ -1039,6 +1039,7 @@
         //     }
 
         async function loadAllFunctions() {
+            debugger;
                         showLoader();
                         try {
                             await Promise.all([
@@ -1060,8 +1061,12 @@
                                 selectedLabs.push('GIA', 'IGI');
                             }
                             diamondFilters.LabNames = selectedLabs;
-                            if (txtShape != null && txtShape != undefined && txtShape != "") {
-                                diamondFilters.Shapes
+                            if (txtShape != null && txtShape != undefined && txtShape != "" && txtShape != '0') {
+                                if (!diamondFilters.Shapes.includes(txtShape))
+                                {
+                                    diamondFilters.Shapes.push(txtShape);
+                                }
+
                             }
 
                             getDiamondDataList(diamondFilters, page, rangeVal);
