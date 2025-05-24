@@ -1246,3 +1246,26 @@ h6 {
 .txt-dark {
     color: #151542 !important;
 }
+
+
+
+.container-login100 {
+    width: 100%;
+    min-height: 100vh;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;    
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    position: relative;
+    z-index: 1;
+    background-color: #fff;
+    background: url(../img/login-background.jpg) #fff;
+    background-size: cover;
+}
