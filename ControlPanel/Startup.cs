@@ -110,7 +110,9 @@ namespace ControlPanel
         }
 
         // Configure HTTP request pipeline
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDbInitializer dbInitializer)
+        public void Configure(IApplicationBuilder app,
+            IWebHostEnvironment env,
+            IDbInitializer dbInitializer)
         {
             if (env.IsDevelopment())
             {

@@ -243,7 +243,7 @@
                             <form id="logout-form" asp-controller="Account" asp-action="Logout" method="post" style="display:none;">
                                 @Html.AntiForgeryToken()
                             </form>
-                            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <a href="#" class="dropdown-item d-flex align-items-center" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 <i class="bi bi-question-circle"></i> Sign Out
                             </a>
                         </li>

@@ -178,6 +178,7 @@ namespace ControlPanel.Controllers
                     VenderName = worksheet.Cells[row, 6].Text,
                     VenderStyle = worksheet.Cells[row, 7].Text,
                     Sku = worksheet.Cells[row, 7].Text,
+                    Diameter= worksheet.Cells[row, 8].Text,
                     Length = worksheet.Cells[row, 9].Text,
                     BandWidth = worksheet.Cells[row, 10].Text,
                     GoldWeight = worksheet.Cells[row, 11].Text,
@@ -260,6 +261,8 @@ namespace ControlPanel.Controllers
                     VenderName = worksheet.Cells[row, 6].Text,
                     VenderStyle = worksheet.Cells[row, 7].Text,
                     Sku = worksheet.Cells[row, 7].Text,
+                    Diameter= worksheet.Cells[row, 8].Text,
+                    Length= worksheet.Cells[row, 9].Text,
                     BandWidth = worksheet.Cells[row, 10].Text,
                     GoldWeight = worksheet.Cells[row, 11].Text,
                     CTW = worksheet.Cells[row, 12].Text,
@@ -808,16 +811,16 @@ namespace ControlPanel.Controllers
 
 
     [HttpPost]
-        [RequestFormLimits(MultipartBodyLengthLimit = 5368709120)]
-        [RequestSizeLimit(5368709120)]
-        public async Task<IActionResult> UploadProductImagesFromFolder(List<IFormFile> files)
+    [RequestFormLimits(MultipartBodyLengthLimit = 5368709120)]
+    [RequestSizeLimit(5368709120)]
+    public async Task<IActionResult> UploadProductImagesFromFolder(List<IFormFile> folderUpload)
         {
             try
             {
-                if (files == null || files.Count == 0)
+                if (folderUpload == null || folderUpload.Count == 0)
                     return Json("No files uploaded.");
 
-                foreach (var file in files)
+                foreach (var file in folderUpload)
                 {
                     var fileName = Path.GetFileName(file.FileName);
                     var styleName = _productRepository.ExtractStyleName(fileName);

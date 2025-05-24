@@ -1152,12 +1152,7 @@ namespace Business.Repository
                         // Update existing product
                         existingProduct.Title = product.EventName;
                         existingProduct.Sku = product.Sku;
-                        //existingProduct.Price = product.Price;
-                        //existingProduct.UnitPrice = product.UnitPrice;
-                        //existingProduct.Quantity = product.Quantity;
-                        //existingProduct.IsActivated = product.IsActivated;
                         existingProduct.KaratId = karatId;
-                        //existingProduct.ShapeId = shapeId;
                         existingProduct.BandWidth = product.BandWidth;
                         existingProduct.GoldWeight = product.GoldWeight;
                         existingProduct.Grades = product.Grades;
@@ -1169,6 +1164,9 @@ namespace Business.Repository
                         existingProduct.EventId = events.Id;
                         existingProduct.WholesaleCost = product.WholesaleCost;
                         existingProduct.Description = product.Description;
+                        existingProduct.UpdatedBy = product.VenderId;
+                        existingProduct.UpdatedDate = DateTime.Now;
+                        existingProduct.UploadStatus = SD.Activated;
                         _context.Product.Update(existingProduct);
                         await _context.SaveChangesAsync();
 
@@ -1184,15 +1182,16 @@ namespace Business.Repository
                             KaratId = karatId,
                             ColorId = colorId,
                             Description = product.Description,
-                            //IsActivated = product.IsActivated,
-                            //Price = product.Price > 0 ? product.Price : 0m,
-                            //UnitPrice = product.UnitPrice,
-                            //Quantity = product.Quantity,
+                            Length = product.Length,
+                            BandWidth = product.BandWidth,
+                            CenterShapeId = product.CenterShapeId != null ? product.CenterShapeId : null,
+                            CenterCaratId = product.CenterCaratId != null ? product.CenterCaratId : null,
+                            ShapeId = product.ShapeId,
+                            NoOfStones = product.NoOfStones.HasValue ? product.NoOfStones.Value : 0,
                             ProductType = product.ProductType,
                             GoldWeight = product.GoldWeight,
                             Grades = product.Grades,
                             MMSize = product.MMSize,
-                            //NoOfStones = product.NoOfStones,
                             DiaWT = product.DiaWT,
                             Certificate = product.Certificate,
                             AccentStoneShapeId = shapeId,
@@ -1203,9 +1202,9 @@ namespace Business.Repository
                             VenderStyle = product.VenderStyle,
                             Diameter = product.Diameter,
                             Id = Guid.NewGuid(),
-                            IsActivated = false,
+                            IsActivated = true,
                             IsDelete = false,
-                            UploadStatus = SD.Requested
+                            UploadStatus = SD.Activated
                         };
 
                         //productList.Add(newProduct);
@@ -1716,7 +1715,7 @@ namespace Business.Repository
         public async Task<IEnumerable<ProductDTO>> GetProductUploadRequestList()
         {
             var products = await (from product in _context.Product
-                                  //join evt in _context.EventSites on product.EventId equals evt.Id
+                                      //join evt in _context.EventSites on product.EventId equals evt.Id
                                   join krt in _context.ProductProperty on product.KaratId equals krt.Id
                                   join cat in _context.Category on product.CategoryId equals cat.Id
                                   join color in _context.ProductProperty on product.ColorId equals color.Id into colorGroup
@@ -1763,7 +1762,7 @@ namespace Business.Repository
                                       Quantity = product.Quantity,
                                       KaratId = krt != null ? krt.Id : (int?)null,
                                       Karat = krt.Name
-                                  //}).Where(x => x.UploadStatus == SD.Requested).ToListAsync();
+                                      //}).Where(x => x.UploadStatus == SD.Requested).ToListAsync();
                                   }).ToListAsync();
 
 

@@ -2,15 +2,15 @@
 
 <div class="container mt-5" id="uploadWrapper">
     <div class="card shadow-lg p-4" id="divExcelUpload">
-        <h2 class="mb-3 text-primary">Upload Product File</h2>
+        <h2 class="mb-3 text-dark">Upload Product File</h2>
 
         @if (TempData["UploadSuccess"] != null)
         {
-        <div class="alert alert-success">@TempData["UploadSuccess"]</div>
+            <div class="alert alert-success">@TempData["UploadSuccess"]</div>
         }
         @if (TempData["UploadError"] != null)
         {
-        <div class="alert alert-danger">@TempData["UploadError"]</div>
+            <div class="alert alert-danger">@TempData["UploadError"]</div>
         }
 
         <form id="uploadForm" asp-controller="Jewellery" asp-action="ExcelUpload" method="post" enctype="multipart/form-data">
@@ -26,15 +26,10 @@
             <button id="uploadBtn" type="submit" class="btn btn-theme w-100">Upload File</button>
         </form>
     </div>
-
-    
-
-    <div id="ImportProductList" class="mt-4">
-        <!-- Loaded Product List Will Appear Here -->
-    </div>
 </div>
+<div id="ImportProductList">
 
-
+</div>
 @section Scripts
 {
     <script>
@@ -459,87 +454,158 @@
 
 
             $("#ImportProductList").on("click", "#btnEditRings", function () {
-                var isReadonly = $("#ringTable .product-input").first().prop("readonly");
+                var isReadonly = $("#ringTable .product-input").first().prop("disabled");
 
                 if (isReadonly) {
                     // Enable editing
-                    $("#ringTable .product-input").removeAttr("readonly");
+                    $("#ringTable .product-input").removeAttr("disabled");
                     $(this).text("Save Rings");
                 } else {
                     // Optionally handle save logic here
 
                     // Make fields readonly again
-                    $("#ringTable .product-input").attr("readonly", true);
+                    $("#ringTable .product-input").attr("disabled", true);
                     $(this).text("Edit Rings");
                 }
             });
 
+
             $("#ImportProductList").on("click", "#btnEditBands", function () {
-                var isReadonly = $("#bandTable .product-input").first().prop("readonly");
+                var isReadonly = $("#bandTable .product-input").first().prop("disabled");
 
                 if (isReadonly) {
                     // Enable editing
-                    $("#bandTable .product-input").removeAttr("readonly");
+                    $("#bandTable .product-input").removeAttr("disabled");
                     $(this).text("Save Bands");
                 } else {
                     // Optionally handle save logic here
 
                     // Make fields readonly again
-                    $("#bandTable .product-input").attr("readonly", true);
+                    $("#bandTable .product-input").attr("disabled", true);
                     $(this).text("Edit Bands");
                 }
             });
 
 
             $("#ImportProductList").on("click", "#btnEditEarring", function () {
-                var isReadonly = $("#EarringTable .product-input").first().prop("readonly");
+                var isReadonly = $("#EarringTable .product-input").first().prop("disabled");
 
                 if (isReadonly) {
                     // Enable editing
-                    $("#EarringTable .product-input").removeAttr("readonly");
+                    $("#EarringTable .product-input").removeAttr("disabled");
                     $(this).text("Save Earring");
                 } else {
                     // Optionally handle save logic here
 
                     // Make fields readonly again
-                    $("#EarringTable .product-input").attr("readonly", true);
+                    $("#EarringTable .product-input").attr("disabled", true);
                     $(this).text("Edit Earring");
                 }
             });
 
 
             $("#ImportProductList").on("click", "#btnEditPendant", function () {
-                var isReadonly = $("#PendantTable .product-input").first().prop("readonly");
+                var isReadonly = $("#PendantTable .product-input").first().prop("disabled");
 
                 if (isReadonly) {
                     // Enable editing
-                    $("#PendantTable .product-input").removeAttr("readonly");
-                    $(this).text("Save Rings");
+                    $("#PendantTable .product-input").removeAttr("disabled");
+                    $(this).text("Save Pendant");
                 } else {
                     // Optionally handle save logic here
 
                     // Make fields readonly again
-                    $("#PendantTable .product-input").attr("readonly", true);
+                    $("#PendantTable .product-input").attr("disabled", true);
                     $(this).text("Edit Pendant");
                 }
             });
 
 
             $("#ImportProductList").on("click", "#btnEditBracelets", function () {
-                var isReadonly = $("#BraceletsTable .product-input").first().prop("readonly");
+                var isReadonly = $("#BraceletsTable .product-input").first().prop("disabled");
 
                 if (isReadonly) {
                     // Enable editing
-                    $("#BraceletsTable .product-input").removeAttr("readonly");
+                    $("#BraceletsTable .product-input").removeAttr("disabled");
                     $(this).text("Save Bracelets");
                 } else {
                     // Optionally handle save logic here
 
                     // Make fields readonly again
-                    $("#BraceletsTable .product-input").attr("readonly", true);
+                    $("#BraceletsTable .product-input").attr("disabled", true);
                     $(this).text("Edit Bracelets");
                 }
             });
+
+
+
+
+            //$("#ImportProductList").on("click", "#btnEditBands", function () {
+            //    var isReadonly = $("#bandTable .product-input").first().prop("readonly");
+
+            //    if (isReadonly) {
+            //        // Enable editing
+            //        $("#bandTable .product-input").removeAttr("readonly");
+            //        $(this).text("Save Bands");
+            //    } else {
+            //        // Optionally handle save logic here
+
+            //        // Make fields readonly again
+            //        $("#bandTable .product-input").attr("readonly", true);
+            //        $(this).text("Edit Bands");
+            //    }
+            //});
+
+
+            //$("#ImportProductList").on("click", "#btnEditEarring", function () {
+            //    var isReadonly = $("#EarringTable .product-input").first().prop("readonly");
+
+            //    if (isReadonly) {
+            //        // Enable editing
+            //        $("#EarringTable .product-input").removeAttr("readonly");
+            //        $(this).text("Save Earring");
+            //    } else {
+            //        // Optionally handle save logic here
+
+            //        // Make fields readonly again
+            //        $("#EarringTable .product-input").attr("readonly", true);
+            //        $(this).text("Edit Earring");
+            //    }
+            //});
+
+
+            //$("#ImportProductList").on("click", "#btnEditPendant", function () {
+            //    var isReadonly = $("#PendantTable .product-input").first().prop("readonly");
+
+            //    if (isReadonly) {
+            //        // Enable editing
+            //        $("#PendantTable .product-input").removeAttr("readonly");
+            //        $(this).text("Save Rings");
+            //    } else {
+            //        // Optionally handle save logic here
+
+            //        // Make fields readonly again
+            //        $("#PendantTable .product-input").attr("readonly", true);
+            //        $(this).text("Edit Pendant");
+            //    }
+            //});
+
+
+            //$("#ImportProductList").on("click", "#btnEditBracelets", function () {
+            //    var isReadonly = $("#BraceletsTable .product-input").first().prop("readonly");
+
+            //    if (isReadonly) {
+            //        // Enable editing
+            //        $("#BraceletsTable .product-input").removeAttr("readonly");
+            //        $(this).text("Save Bracelets");
+            //    } else {
+            //        // Optionally handle save logic here
+
+            //        // Make fields readonly again
+            //        $("#BraceletsTable .product-input").attr("readonly", true);
+            //        $(this).text("Edit Bracelets");
+            //    }
+            //});
 
 
         });
