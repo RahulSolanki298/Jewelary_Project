@@ -544,7 +544,7 @@
                             <div class="container mt-4">
                                 <div class="row">
                                     <div class="col-12 text-center mb-3">
-                                        <h4 class="fw-bold">Upload ZIP File</h4>
+                                        <h4 class="txt-dark">Upload ZIP File</h4>
                                     </div>
                                 </div>
 
@@ -558,13 +558,22 @@
 
 
                                         <div class="mb-3" id="divZipDT" style="display: none;">
-                                            <label for="fileUpload" class="form-label">Select ZIP File</label>
+                                            <form id="uploadForm" asp-controller="Jewellery" asp-action="UploadProductCollectionImages" method="post" enctype="multipart/form-data">
+                                                <div class="mb-4">
+                                                    <label for="excelFile" class="form-label fw-bold">Select Excel or CSV File</label>
+                                                    <input type="file" class="form-control form-control-lg" id="zipFile" name="zipFile" accept=".zip" required>
+                                                </div>
+
+                                                <button id="uploadBtn" type="submit" class="btn btn-primary w-100">Upload File</button>
+                                            </form>
+
+                                            @*<label for="fileUpload" class="form-label">Select ZIP File</label>
                                             <input type="file" class="form-control" id="fileUpload" accept=".zip">
                                             <div class="form-text">Only .zip files are allowed. Max size: 5 GB.</div>
 
                                             <div class="col-auto">
                                                 <button class="btn btn btn-theme" id="btnFileImgSave">Save</button>
-                                            </div>
+                                            </div>*@
                                         </div>
 
                                         <div class="mb-3" id="divFolderDT" style="display: none;">

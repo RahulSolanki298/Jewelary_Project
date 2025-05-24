@@ -8,13 +8,12 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Graph.Models.ExternalConnectors;
 using System;
 using System.Threading.Tasks;
 
@@ -32,11 +31,6 @@ namespace ControlPanel
         // Add services to the container
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<FormOptions>(options =>
-            {
-                options.MultipartBodyLengthLimit = 10737418240; // 10 GB
-            });
-
             // Database context
             services.AddDbContext<ApplicationDBContext>(options =>
             options.UseSqlServer(
@@ -97,10 +91,20 @@ namespace ControlPanel
 
         private void ConfigureFormOptions(IServiceCollection services)
         {
+            services.Configure<IISServerOptions>(options =>
+            {
+                options.MaxRequestBodySize = 10737418240L; // 10 GB
+            });
+
+            services.Configure<KestrelServerOptions>(options =>
+            {
+                options.Limits.MaxRequestBodySize = 10737418240L; // 10 GB
+            });
+
             services.Configure<FormOptions>(options =>
             {
                 options.ValueLengthLimit = int.MaxValue;
-                options.MultipartBodyLengthLimit = 5368709120; // 5 GB
+                options.MultipartBodyLengthLimit = 10737418240L; // 10 GB
                 options.MemoryBufferThreshold = int.MaxValue;
             });
         }

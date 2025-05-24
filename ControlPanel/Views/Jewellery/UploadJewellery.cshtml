@@ -1,16 +1,16 @@
 ﻿@using Common
 
 <div class="container mt-5" id="uploadWrapper">
-    <div class="card shadow-lg p-4">
+    <div class="card shadow-lg p-4" id="divExcelUpload">
         <h2 class="mb-3 text-primary">Upload Product File</h2>
 
         @if (TempData["UploadSuccess"] != null)
         {
-            <div class="alert alert-success">@TempData["UploadSuccess"]</div>
+        <div class="alert alert-success">@TempData["UploadSuccess"]</div>
         }
         @if (TempData["UploadError"] != null)
         {
-            <div class="alert alert-danger">@TempData["UploadError"]</div>
+        <div class="alert alert-danger">@TempData["UploadError"]</div>
         }
 
         <form id="uploadForm" asp-controller="Jewellery" asp-action="ExcelUpload" method="post" enctype="multipart/form-data">
@@ -23,7 +23,7 @@
                 <img src="~/assets/loader/JF-WEB-LOADER.gif" style="width:100px;" alt="Loading..." />
             </div>
 
-            <button id="uploadBtn" type="submit" class="btn btn-primary w-100">Upload File</button>
+            <button id="uploadBtn" type="submit" class="btn btn-theme w-100">Upload File</button>
         </form>
     </div>
 
@@ -42,6 +42,7 @@
         $(document).ready(function () {
 
             $('#uploadForm').on('submit', function (e) {
+                debugger;
                 e.preventDefault();
 
                 let form = $(this)[0];
@@ -59,6 +60,8 @@
                     success: function (response) {
                         hideLoader();
                         $('#uploadBtn').prop('disabled', false).text('Upload');
+                        $("#excelFile").empty();
+                        $("#divExcelUpload").hide();
                         alert(response.message || 'Product File Uploaded Successfully.');
                         $("#ImportProductList").html("");
                         $("#ImportProductList").html(response);
