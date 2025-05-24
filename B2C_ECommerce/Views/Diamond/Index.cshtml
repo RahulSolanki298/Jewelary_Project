@@ -17,6 +17,7 @@
     }
 </style>
 
+<input type="text" id="txtShape" value="@ViewBag.Shape" />
 <section>
     <div class="listingpage">
         <div class="home-giftbanner-main position-relative left-text-banner">
@@ -133,7 +134,7 @@
             var rangeVal=10;
             var selectedLabs = [];
             let selectedCheckboxes = [];
-        
+            var txtShape = $("#txtShape").val();
 
             // Initialize filters
             const getValue = id => $(id).val() || '';
@@ -1059,6 +1060,10 @@
                                 selectedLabs.push('GIA', 'IGI');
                             }
                             diamondFilters.LabNames = selectedLabs;
+                            if (txtShape != null && txtShape != undefined && txtShape != "") {
+                                diamondFilters.Shapes
+                            }
+
                             getDiamondDataList(diamondFilters, page, rangeVal);
                         } catch (error) {
                             console.error("An error occurred while loading data:", error);
