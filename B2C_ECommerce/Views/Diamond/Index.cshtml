@@ -297,11 +297,16 @@
                         localStorage.setItem("wishlist", JSON.stringify(wishlist));
                         $(this).find(".heart-unchecked").show();
                         $(this).find(".heart-checked").hide();
+
+                        alert("Product has been removed from your wishlist.");
+
                     } else {
                         wishlist.push(diamondId);
                         localStorage.setItem("wishlist", JSON.stringify(wishlist));
                         $(this).find(".heart-unchecked").hide();
                         $(this).find(".heart-checked").show();
+                        alert("Product has been added to your wishlist.");
+
                     }
 
                     getWishlistCounter();
