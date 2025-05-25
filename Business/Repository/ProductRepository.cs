@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -934,24 +935,18 @@ namespace Business.Repository
             try
             {
                 // Step 0: Initialize variables
-                var styleDT = new ProductStyles();
                 var colors = await GetColorList();
                 var categories = await _context.Category.ToListAsync();
-                var subCategories = await _context.SubCategory.ToListAsync();
-                //var clarities = await GetClarityList();
-                var carats = await GetCaratList();
+                //var carats = await GetCaratList();
                 var karats = await GetKaratList();
                 var shapes = await GetShapeList();
 
-                // Step 1: Create dictionaries for fast lookup
                 var colorDict = colors.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
                 var categoryDict = categories.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
-                //var clarityDict = clarities.ToDictionary(x => x.Name, x => x.Id);
-                var caratDict = carats.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
+                //var caratDict = carats.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
                 var KaratDict = karats.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
                 var shapeDict = shapes.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
 
-                // Step 2: Retrieve existing products from database in bulk
                 var categoryId = categoryDict.GetValueOrDefault(categoryName);
                 var existingProducts = await _context.Product
                     .Where(x => x.CategoryId == categoryId)
@@ -961,7 +956,6 @@ namespace Business.Repository
                 var productPrices = new List<ProductPrices>();
                 var productWeights = new List<ProductWeight>();
 
-                // Step 3: Process each product
                 foreach (var product in products)
                 {
                     if (string.IsNullOrEmpty(product.ColorName)
@@ -1004,11 +998,13 @@ namespace Business.Repository
                         existingProduct.IsReadyforShip = product.IsReadyforShip;
                         existingProduct.EventId = events.Id;
                         existingProduct.WholesaleCost = product.WholesaleCost;
+                        existingProduct.Price = product.Price.HasValue ? product.Price.Value : 0;
+                        existingProduct.UnitPrice = product.UnitPrice.HasValue ? product.UnitPrice.Value : 0;
+                          
                         _context.Product.Update(existingProduct);
                     }
                     else
                     {
-                        // Insert new product
                         var newProduct = new Product
                         {
                             Title = $"{product.Title}",
@@ -1024,6 +1020,8 @@ namespace Business.Repository
                             ProductType = product.ProductType,
                             GoldWeight = product.GoldWeight,
                             Grades = product.Grades,
+                            Price=product.Price.HasValue ? product.Price.Value : 0,
+                            UnitPrice = product.UnitPrice.HasValue ? product.UnitPrice.Value : 0,
                             MMSize = product.MMSize,
                             NoOfStones = Convert.ToInt32(product.NoOfStones),
                             DiaWT = product.DiaWT,
@@ -1038,41 +1036,17 @@ namespace Business.Repository
                             Diameter = product.Diameter,
                             Id = Guid.NewGuid(),
                             UploadStatus = SD.Pending,
-                            IsActivated = true,
+                            IsActivated = false,
                             IsSuccess = true
                         };
 
                         productList.Add(newProduct);
-
-                        // Add associated prices and weights for new product
-                        productPrices.Add(new ProductPrices
-                        {
-                            KaratId = karatId,
-                            ProductId = newProduct.Id.ToString(),
-                            ProductPrice = product.Price
-                        });
-
-                        productWeights.Add(new ProductWeight
-                        {
-                            KaratId = karatId,
-                            ProductId = newProduct.Id.ToString(),
-                            Weight = !string.IsNullOrEmpty(product.GoldWeight) ? Convert.ToDecimal(product.GoldWeight) : 0
-                        });
                     }
                 }
 
-                // Step 4: Perform all database operations in bulk
                 if (productList.Any())
                 {
                     await _context.Product.AddRangeAsync(productList);
-                }
-                if (productPrices.Any())
-                {
-                    await _context.ProductPrices.AddRangeAsync(productPrices);
-                }
-                if (productWeights.Any())
-                {
-                    await _context.ProductWeights.AddRangeAsync(productWeights);
                 }
 
                 await _context.SaveChangesAsync();
@@ -1080,7 +1054,6 @@ namespace Business.Repository
             }
             catch (Exception ex)
             {
-                // Log the exception
                 Console.Error.WriteLine($"An error occurred: {ex.Message}");
                 return false;
             }
@@ -1726,7 +1699,7 @@ namespace Business.Repository
                                   from clarity in clarityGroup.DefaultIfEmpty()
                                   join size in _context.ProductProperty on product.CenterCaratId equals size.Id into sizeGroup
                                   from size in sizeGroup.DefaultIfEmpty()
-                                  where product.UploadStatus == SD.Requested
+                                  where product.UploadStatus == SD.Pending
                                   select new ProductDTO
                                   {
                                       Id = product.Id,
@@ -1769,6 +1742,20 @@ namespace Business.Repository
             // Return products where there are product images/videos
             return products;
         }
+
+
+        //public async Task<bool> UpdateProductStatus(string status)
+        //{
+        //    try
+        //    {
+        //        var result=_context.Product
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        throw;
+        //    }
+        //}
 
     }
 }

@@ -17,7 +17,7 @@
     }
 </style>
 
-<input type="text" id="txtShape" value="@ViewBag.ShapeId" />
+<input type="hidden" id="txtShape" value="@ViewBag.ShapeId" />
 <section>
     <div class="listingpage">
         <div class="home-giftbanner-main position-relative left-text-banner">
@@ -1066,6 +1066,7 @@
                                 {
                                     diamondFilters.Shapes.push(txtShape);
                                 }
+                                $(`.shape-btn[shapeId='${txtShape}']`).addClass('selected');
 
                             }
 

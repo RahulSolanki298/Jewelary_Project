@@ -43,8 +43,6 @@ namespace ControlPanel.Controllers
         public async Task<IActionResult> GetJewellries()
         {
             var productList = await _productRepository.GetProductStyleList();
-            ViewBag.KaratList = await _productPropertyRepository.GetKaratList();
-            ViewBag.PriceList = await _productPropertyRepository.GetProductPrices();
 
             return PartialView("_JewelleryList", productList);
         }
@@ -551,6 +549,14 @@ namespace ControlPanel.Controllers
 
         [HttpGet]
         public async Task<IActionResult> RequestedProductList()
+        {
+            var productList = await _productRepository.GetProductUploadRequestList();
+            return View(productList);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ChangeStatus(string status)
         {
             var productList = await _productRepository.GetProductUploadRequestList();
             return View(productList);
