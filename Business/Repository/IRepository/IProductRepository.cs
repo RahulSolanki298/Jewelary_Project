@@ -55,5 +55,14 @@ namespace Business.Repository.IRepository
 
         Task<IEnumerable<ProductDTO>> GetProductUploadRequestList();
 
+        Task<IEnumerable<ProductDTO>> GetProductPendingList();
+
+        Task<IEnumerable<ProductDTO>> GetProductHoldList();
+
+
+        Task<IEnumerable<ProductDTO>> GetProductDeActivatedList();
+
+        Task<bool> UpdateProductStatus(string[] productIds, string status);
+
     }
 }

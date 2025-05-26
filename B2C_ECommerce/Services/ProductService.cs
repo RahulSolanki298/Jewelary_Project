@@ -533,7 +533,7 @@ namespace B2C_ECommerce.Services
                                   select new ProductDTO
                                   {
                                       Id = product.Id,
-                                      Title = evt.EventName,
+                                      Title = product.Title,
                                       EventId = product.EventId,
                                       EventName = evt.EventName,
                                       BandWidth = product.BandWidth,
@@ -565,7 +565,7 @@ namespace B2C_ECommerce.Services
                                       CenterCaratName = size.Name,
                                       Quantity = product.Quantity,
                                       KaratId = krt != null ? krt.Id : (int?)null,
-                                      Karat = krt.Name
+                                      Karat = krt.Name,
                                   }).Where(x => x.IsActivated).ToListAsync();
 
             var groupedProducts = products.GroupBy(p => p.Sku);
@@ -611,18 +611,7 @@ namespace B2C_ECommerce.Services
                                         IsActive = col.IsActive.HasValue ? col.IsActive.Value : false
                                     }).Distinct().ToListAsync();
 
-                var prices = await (from pr in _context.ProductPrices
-                                    join prod in _context.Product on pr.ProductId equals prod.Id.ToString()
-                                    join kt in _context.ProductProperty on pr.ProductId equals kt.ParentId.ToString()
-                                    where pr.ProductId == firstProduct.Id.ToString()
-                                    select new ProductPriceDTO
-                                    {
-                                        Id = pr.Id,
-                                        KaratName = kt.Name,
-                                        ProductId = prod.Id.ToString(),
-                                        ProductPrice = prod.Price,
-                                        KaratId = pr.KaratId
-                                    }).Distinct().ToListAsync();
+                
 
                 var productDTO = new ProductDTO
                 {
@@ -663,7 +652,7 @@ namespace B2C_ECommerce.Services
                     VenderName = firstProduct.VenderName,
                     WholesaleCost = firstProduct.WholesaleCost,
                     ProductImageVideos = new List<ProductImageAndVideoDTO>(),
-                    Prices = prices
+                    
                 };
 
                 //  await _context.ProductPrices.Where(x => x.ProductId == firstProduct.Id.ToString()).ToListAsync();

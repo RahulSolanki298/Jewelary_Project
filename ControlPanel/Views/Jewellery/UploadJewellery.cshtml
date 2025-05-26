@@ -179,6 +179,8 @@
                     data: formData,
                     success: function (response) {
                         alert('Product Bands Saved Successfully');
+                        $("#btnSaveBands").hide();
+                        $("#btnEditBands").hide();
                     },
                     error: function (xhr, status, error) {
                         console.error("Error:", error);
@@ -237,6 +239,8 @@
                     data: formData,
                     success: function (response) {
                         alert('Product Earrings Saved Successfully');
+                         $("#btnSaveEarring").hide();
+                        $("#btnEditEarring").hide();
                     },
                     error: function (xhr, status, error) {
                         console.error("Error:", error);
@@ -295,6 +299,8 @@
                     data: formData,
                     success: function (response) {
                         alert('Product Pendant Saved Successfully');
+                        $("#btnSavePendant").hide();
+                        $("#btnEditPendant").hide();
                     },
                     error: function (xhr, status, error) {
                         console.error("Error:", error);
@@ -352,6 +358,8 @@
                     data: formData,
                     success: function (response) {
                         alert('Product Bracelets Saved Successfully');
+                        $("#btnSaveBracelets").hide();
+                        $("#btnEditBracelets").hide();
                     },
                     error: function (xhr, status, error) {
                         console.error("Error:", error);
@@ -385,7 +393,6 @@
 
 
             $('#ImportProductList').on("click", "#btnFileImgSave", function (e) {
-                debugger;
                 e.preventDefault();
                 showLoader();
                 var fileInput = $("#fileUpload")[0];
@@ -542,72 +549,7 @@
 
 
 
-            //$("#ImportProductList").on("click", "#btnEditBands", function () {
-            //    var isReadonly = $("#bandTable .product-input").first().prop("readonly");
-
-            //    if (isReadonly) {
-            //        // Enable editing
-            //        $("#bandTable .product-input").removeAttr("readonly");
-            //        $(this).text("Save Bands");
-            //    } else {
-            //        // Optionally handle save logic here
-
-            //        // Make fields readonly again
-            //        $("#bandTable .product-input").attr("readonly", true);
-            //        $(this).text("Edit Bands");
-            //    }
-            //});
-
-
-            //$("#ImportProductList").on("click", "#btnEditEarring", function () {
-            //    var isReadonly = $("#EarringTable .product-input").first().prop("readonly");
-
-            //    if (isReadonly) {
-            //        // Enable editing
-            //        $("#EarringTable .product-input").removeAttr("readonly");
-            //        $(this).text("Save Earring");
-            //    } else {
-            //        // Optionally handle save logic here
-
-            //        // Make fields readonly again
-            //        $("#EarringTable .product-input").attr("readonly", true);
-            //        $(this).text("Edit Earring");
-            //    }
-            //});
-
-
-            //$("#ImportProductList").on("click", "#btnEditPendant", function () {
-            //    var isReadonly = $("#PendantTable .product-input").first().prop("readonly");
-
-            //    if (isReadonly) {
-            //        // Enable editing
-            //        $("#PendantTable .product-input").removeAttr("readonly");
-            //        $(this).text("Save Rings");
-            //    } else {
-            //        // Optionally handle save logic here
-
-            //        // Make fields readonly again
-            //        $("#PendantTable .product-input").attr("readonly", true);
-            //        $(this).text("Edit Pendant");
-            //    }
-            //});
-
-
-            //$("#ImportProductList").on("click", "#btnEditBracelets", function () {
-            //    var isReadonly = $("#BraceletsTable .product-input").first().prop("readonly");
-
-            //    if (isReadonly) {
-            //        // Enable editing
-            //        $("#BraceletsTable .product-input").removeAttr("readonly");
-            //        $(this).text("Save Bracelets");
-            //    } else {
-            //        // Optionally handle save logic here
-
-            //        // Make fields readonly again
-            //        $("#BraceletsTable .product-input").attr("readonly", true);
-            //        $(this).text("Edit Bracelets");
-            //    }
-            //});
+           
 
 
         });

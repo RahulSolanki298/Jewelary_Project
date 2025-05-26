@@ -34,27 +34,27 @@ namespace ControlPanel.Controllers
             _env = env;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+    public IActionResult Index()
+    {
+        return View();
+    }
 
-        [HttpGet]
-        public async Task<IActionResult> GetJewellries()
-        {
-            var productList = await _productRepository.GetProductStyleList();
+    [HttpGet]
+    public async Task<IActionResult> GetJewellries()
+    {
+        var productList = await _productRepository.GetProductStyleList();
 
-            return PartialView("_JewelleryList", productList);
-        }
+        return PartialView("_JewelleryList", productList);
+    }
 
-        [HttpGet]
-        public async Task<IActionResult> UploadJewellery()
-        {
-            return View();
-        }
+    [HttpGet]
+    public IActionResult UploadJewellery()
+    {
+        return View();
+    }
 
-        [HttpPost]
-        public async Task<IActionResult> ExcelUpload(IFormFile file)
+    [HttpPost]
+    public async Task<IActionResult> ExcelUpload(IFormFile file)
         {
             var productUpload = new List<ProductDTO>();
 
@@ -108,8 +108,8 @@ namespace ControlPanel.Controllers
         }
 
 
-        [HttpPost]
-        public async Task<IActionResult> SaveAllProduct(string productsJson)
+    [HttpPost]
+    public async Task<IActionResult> SaveAllProduct(string productsJson)
         {
             if (string.IsNullOrEmpty(productsJson))
             {
@@ -156,7 +156,7 @@ namespace ControlPanel.Controllers
         }
 
 
-        #region Rings Data
+    #region Rings Data
 
         private List<ProductDTO> ProcessRingData(ExcelWorksheet worksheet)
         {
@@ -547,56 +547,77 @@ namespace ControlPanel.Controllers
 
         #endregion
 
-        [HttpGet]
-        public async Task<IActionResult> RequestedProductList()
+    [HttpGet]
+    public async Task<IActionResult> RequestedProductList()
+    {
+        var productList = await _productRepository.GetProductPendingList();
+        return View(productList);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> HoldProductList()
+    {
+        var productList = await _productRepository.GetProductHoldList();
+        return View(productList);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> DeactivatedProductList()
+    {
+        var productList = await _productRepository.GetProductDeActivatedList();
+        return View(productList);
+    }
+
+
+        [HttpPost]
+    public async Task<IActionResult> ChangeStatus(string[] pIds, string status)
+    {
+        if (pIds == null || pIds.Length == 0 || string.IsNullOrWhiteSpace(status))
         {
-            var productList = await _productRepository.GetProductUploadRequestList();
-            return View(productList);
+            return Json("Invalid input: Product IDs and status are required.");
         }
 
+        bool isUpdated = await _productRepository.UpdateProductStatus(pIds, status);
 
-        [HttpGet]
-        public async Task<IActionResult> ChangeStatus(string status)
+        string message = isUpdated
+            ? "Product status has been successfully updated."
+            : "Failed to update product status. Please try again.";
+
+        return Json(message);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> JewelryProperty()
+    {
+        var propertyList = await _productPropertyRepository.GetMainPropertyList();
+        return View(propertyList);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> JewelryPropertyItems(string propertyName)
+    {
+        var jewelryPropertyList = await _productPropertyRepository.GetPropertyItemsByName(propertyName);
+        return PartialView("~/Views/Jewellery/_ProductPropertyItems.cshtml", jewelryPropertyList);
+    }
+
+
+    [HttpGet]
+    public async Task<IActionResult> UpsertProductProperty(int? pId = 0)
+    {
+        var data = new ProductProperty();
+        ViewBag.ParentDrp = await _productPropertyRepository.GetMainPropertyList();
+
+        if (pId.HasValue && pId > 0)
         {
-            var productList = await _productRepository.GetProductUploadRequestList();
-            return View(productList);
-        }
-
-
-        [HttpGet]
-        public async Task<IActionResult> JewelryProperty()
-        {
-            var propertyList = await _productPropertyRepository.GetMainPropertyList();
-            return View(propertyList);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> JewelryPropertyItems(string propertyName)
-        {
-            var jewelryPropertyList = await _productPropertyRepository.GetPropertyItemsByName(propertyName);
-            return PartialView("~/Views/Jewellery/_ProductPropertyItems.cshtml", jewelryPropertyList);
-        }
-
-
-        [HttpGet]
-        public async Task<IActionResult> UpsertProductProperty(int? pId = 0)
-        {
-            var data = new ProductProperty();
-            ViewBag.ParentDrp = await _productPropertyRepository.GetMainPropertyList();
-
-            if (pId.HasValue && pId > 0)
-            {
-                data = await _productPropertyRepository.GetProductPropertyById(pId.Value);
-
-                return View(data);
-            }
-
+            data = await _productPropertyRepository.GetProductPropertyById(pId.Value);
 
             return View(data);
         }
+        return View(data);
+    }
 
-        [HttpPost]
-        public async Task<IActionResult> UpsertProductProperty(ProductProperty productPropData)
+    [HttpPost]
+    public async Task<IActionResult> UpsertProductProperty(ProductProperty productPropData)
         {
             if (!ModelState.IsValid)
             {
@@ -611,40 +632,40 @@ namespace ControlPanel.Controllers
             return RedirectToAction("JewelryProperty");
         }
 
-        [HttpGet]
-        public async Task<IActionResult> DeleteProductProperty(int? pId = 0)
+    [HttpGet]
+    public async Task<IActionResult> DeleteProductProperty(int? pId = 0)
+    {
+        if (!pId.HasValue || pId <= 0)
         {
-            if (!pId.HasValue || pId <= 0)
-            {
-                return BadRequest("Invalid property ID.");
-            }
-
-            var success = await _productPropertyRepository.DeleteProductProperty(pId.Value);
-
-            if (!success)
-            {
-                return NotFound("Property not found or could not be deleted.");
-            }
-
-            return RedirectToAction("JewelryProperty");
+            return BadRequest("Invalid property ID.");
         }
 
-        private decimal ConvertStringToDecimal(string CellValue)
-        {
-            // Remove $ sign and commas
-            string cleaned = CellValue.Replace("$", "").Replace(",", "");
+        var success = await _productPropertyRepository.DeleteProductProperty(pId.Value);
 
-            if (decimal.TryParse(cleaned, out decimal result))
-            {
-                return result;
-            }
-            else
-            {
-                return 0;
-            }
+        if (!success)
+        {
+            return NotFound("Property not found or could not be deleted.");
         }
 
-        private List<ProductDTO> CreateRingVariantsFromColor(ProductDTO baseProduct)
+        return RedirectToAction("JewelryProperty");
+    }
+
+    private decimal ConvertStringToDecimal(string CellValue)
+    {
+        // Remove $ sign and commas
+        string cleaned = CellValue.Replace("$", "").Replace(",", "");
+
+        if (decimal.TryParse(cleaned, out decimal result))
+        {
+            return result;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    private List<ProductDTO> CreateRingVariantsFromColor(ProductDTO baseProduct)
         {
             var result = new List<ProductDTO>();
 

@@ -30,4 +30,11 @@
     <Folder Include="wwwroot\UploadedFiles\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Views\Jewellery\HoldProductList.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
