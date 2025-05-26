@@ -34,27 +34,26 @@ namespace ControlPanel.Controllers
             _env = env;
         }
 
-    public IActionResult Index()
-    {
-        return View();
-    }
+        public IActionResult Index()
+        {
+            return View();
+        }
 
-    [HttpGet]
-    public async Task<IActionResult> GetJewellries()
-    {
-        var productList = await _productRepository.GetProductStyleList();
+        [HttpGet]
+        public async Task<IActionResult> GetJewellries()
+        {
+            var productList = await _productRepository.GetProductStyleList();
+            return PartialView("_JewelleryList", productList);
+        }
 
-        return PartialView("_JewelleryList", productList);
-    }
+        [HttpGet]
+        public IActionResult UploadJewellery()
+        {
+            return View();
+        }
 
-    [HttpGet]
-    public IActionResult UploadJewellery()
-    {
-        return View();
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> ExcelUpload(IFormFile file)
+        [HttpPost]
+        public async Task<IActionResult> ExcelUpload(IFormFile file)
         {
             var productUpload = new List<ProductDTO>();
 
@@ -108,8 +107,8 @@ namespace ControlPanel.Controllers
         }
 
 
-    [HttpPost]
-    public async Task<IActionResult> SaveAllProduct(string productsJson)
+        [HttpPost]
+        public async Task<IActionResult> SaveAllProduct(string productsJson)
         {
             if (string.IsNullOrEmpty(productsJson))
             {
@@ -156,7 +155,7 @@ namespace ControlPanel.Controllers
         }
 
 
-    #region Rings Data
+        #region Rings Data
 
         private List<ProductDTO> ProcessRingData(ExcelWorksheet worksheet)
         {
@@ -176,7 +175,7 @@ namespace ControlPanel.Controllers
                     VenderName = worksheet.Cells[row, 6].Text,
                     VenderStyle = worksheet.Cells[row, 7].Text,
                     Sku = worksheet.Cells[row, 7].Text,
-                    Diameter= worksheet.Cells[row, 8].Text,
+                    Diameter = worksheet.Cells[row, 8].Text,
                     Length = worksheet.Cells[row, 9].Text,
                     BandWidth = worksheet.Cells[row, 10].Text,
                     GoldWeight = worksheet.Cells[row, 11].Text,
@@ -259,8 +258,8 @@ namespace ControlPanel.Controllers
                     VenderName = worksheet.Cells[row, 6].Text,
                     VenderStyle = worksheet.Cells[row, 7].Text,
                     Sku = worksheet.Cells[row, 7].Text,
-                    Diameter= worksheet.Cells[row, 8].Text,
-                    Length= worksheet.Cells[row, 9].Text,
+                    Diameter = worksheet.Cells[row, 8].Text,
+                    Length = worksheet.Cells[row, 9].Text,
                     BandWidth = worksheet.Cells[row, 10].Text,
                     GoldWeight = worksheet.Cells[row, 11].Text,
                     CTW = worksheet.Cells[row, 12].Text,
@@ -367,7 +366,7 @@ namespace ControlPanel.Controllers
                     product.CategoryName = SD.Earrings;
                     product.Diameter = string.IsNullOrWhiteSpace(product.Diameter) ? tempProducts.Diameter : product.Diameter;
                     product.EventName = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
-                    product.Title = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
+                    product.Title = string.IsNullOrWhiteSpace(product.Title) ? tempProducts.Title : product.Title;
                     product.VenderName = string.IsNullOrWhiteSpace(product.VenderName) ? tempProducts.VenderName : product.VenderName;
                     product.VenderStyle = string.IsNullOrWhiteSpace(product.VenderStyle) ? tempProducts.VenderStyle : product.VenderStyle;
                     product.Sku = string.IsNullOrWhiteSpace(product.Sku) ? tempProducts.Sku : product.Sku;
@@ -442,7 +441,7 @@ namespace ControlPanel.Controllers
                 {
                     product.CategoryName = SD.Pendants;
                     product.EventName = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
-                    product.Title = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
+                    product.Title = string.IsNullOrWhiteSpace(product.Title) ? tempProducts.Title : product.Title;
                     product.VenderName = string.IsNullOrWhiteSpace(product.VenderName) ? tempProducts.VenderName : product.VenderName;
                     product.VenderStyle = string.IsNullOrWhiteSpace(product.VenderStyle) ? tempProducts.VenderStyle : product.VenderStyle;
                     product.Sku = string.IsNullOrWhiteSpace(product.Sku) ? tempProducts.Sku : product.Sku;
@@ -500,8 +499,8 @@ namespace ControlPanel.Controllers
                     ProductType = worksheet.Cells[row, 22].Text,
                     Price = ConvertStringToDecimal(worksheet.Cells[row, 23].Text),
                     UnitPrice = ConvertStringToDecimal(worksheet.Cells[row, 23].Text),
-                    Description = worksheet.Cells[row, 31].Text,
                     WholesaleCost = decimal.TryParse(worksheet.Cells[row, 26].Text, out var hCost) ? hCost : 0,
+                    Description = worksheet.Cells[row, 32].Text,
                     IsReadyforShip = !string.IsNullOrWhiteSpace(worksheet.Cells[row, 1].Text) && worksheet.Cells[row, 1].Text == SD.ReadyToPdp ? true : false
                 };
 
@@ -547,77 +546,77 @@ namespace ControlPanel.Controllers
 
         #endregion
 
-    [HttpGet]
-    public async Task<IActionResult> RequestedProductList()
-    {
-        var productList = await _productRepository.GetProductPendingList();
-        return View(productList);
-    }
+        [HttpGet]
+        public async Task<IActionResult> RequestedProductList()
+        {
+            var productList = await _productRepository.GetProductPendingList();
+            return View(productList);
+        }
 
-    [HttpGet]
-    public async Task<IActionResult> HoldProductList()
-    {
-        var productList = await _productRepository.GetProductHoldList();
-        return View(productList);
-    }
+        [HttpGet]
+        public async Task<IActionResult> HoldProductList()
+        {
+            var productList = await _productRepository.GetProductHoldList();
+            return View(productList);
+        }
 
-    [HttpGet]
-    public async Task<IActionResult> DeactivatedProductList()
-    {
-        var productList = await _productRepository.GetProductDeActivatedList();
-        return View(productList);
-    }
+        [HttpGet]
+        public async Task<IActionResult> DeactivatedProductList()
+        {
+            var productList = await _productRepository.GetProductDeActivatedList();
+            return View(productList);
+        }
 
 
         [HttpPost]
-    public async Task<IActionResult> ChangeStatus(string[] pIds, string status)
-    {
-        if (pIds == null || pIds.Length == 0 || string.IsNullOrWhiteSpace(status))
+        public async Task<IActionResult> ChangeStatus(string[] pIds, string status)
         {
-            return Json("Invalid input: Product IDs and status are required.");
+            if (pIds == null || pIds.Length == 0 || string.IsNullOrWhiteSpace(status))
+            {
+                return Json("Invalid input: Product IDs and status are required.");
+            }
+
+            bool isUpdated = await _productRepository.UpdateProductStatus(pIds, status);
+
+            string message = isUpdated
+                ? "Product status has been successfully updated."
+                : "Failed to update product status. Please try again.";
+
+            return Json(message);
         }
 
-        bool isUpdated = await _productRepository.UpdateProductStatus(pIds, status);
-
-        string message = isUpdated
-            ? "Product status has been successfully updated."
-            : "Failed to update product status. Please try again.";
-
-        return Json(message);
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> JewelryProperty()
-    {
-        var propertyList = await _productPropertyRepository.GetMainPropertyList();
-        return View(propertyList);
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> JewelryPropertyItems(string propertyName)
-    {
-        var jewelryPropertyList = await _productPropertyRepository.GetPropertyItemsByName(propertyName);
-        return PartialView("~/Views/Jewellery/_ProductPropertyItems.cshtml", jewelryPropertyList);
-    }
-
-
-    [HttpGet]
-    public async Task<IActionResult> UpsertProductProperty(int? pId = 0)
-    {
-        var data = new ProductProperty();
-        ViewBag.ParentDrp = await _productPropertyRepository.GetMainPropertyList();
-
-        if (pId.HasValue && pId > 0)
+        [HttpGet]
+        public async Task<IActionResult> JewelryProperty()
         {
-            data = await _productPropertyRepository.GetProductPropertyById(pId.Value);
+            var propertyList = await _productPropertyRepository.GetMainPropertyList();
+            return View(propertyList);
+        }
 
+        [HttpGet]
+        public async Task<IActionResult> JewelryPropertyItems(string propertyName)
+        {
+            var jewelryPropertyList = await _productPropertyRepository.GetPropertyItemsByName(propertyName);
+            return PartialView("~/Views/Jewellery/_ProductPropertyItems.cshtml", jewelryPropertyList);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> UpsertProductProperty(int? pId = 0)
+        {
+            var data = new ProductProperty();
+            ViewBag.ParentDrp = await _productPropertyRepository.GetMainPropertyList();
+
+            if (pId.HasValue && pId > 0)
+            {
+                data = await _productPropertyRepository.GetProductPropertyById(pId.Value);
+
+                return View(data);
+            }
             return View(data);
         }
-        return View(data);
-    }
 
-    [HttpPost]
-    public async Task<IActionResult> UpsertProductProperty(ProductProperty productPropData)
+        [HttpPost]
+        public async Task<IActionResult> UpsertProductProperty(ProductProperty productPropData)
         {
             if (!ModelState.IsValid)
             {
@@ -625,47 +624,47 @@ namespace ControlPanel.Controllers
 
                 return View(productPropData);
             }
-            
+
             await _productPropertyRepository.SaveProductProperty(productPropData, productPropData.Id);
 
 
             return RedirectToAction("JewelryProperty");
         }
 
-    [HttpGet]
-    public async Task<IActionResult> DeleteProductProperty(int? pId = 0)
-    {
-        if (!pId.HasValue || pId <= 0)
+        [HttpGet]
+        public async Task<IActionResult> DeleteProductProperty(int? pId = 0)
         {
-            return BadRequest("Invalid property ID.");
+            if (!pId.HasValue || pId <= 0)
+            {
+                return BadRequest("Invalid property ID.");
+            }
+
+            var success = await _productPropertyRepository.DeleteProductProperty(pId.Value);
+
+            if (!success)
+            {
+                return NotFound("Property not found or could not be deleted.");
+            }
+
+            return RedirectToAction("JewelryProperty");
         }
 
-        var success = await _productPropertyRepository.DeleteProductProperty(pId.Value);
-
-        if (!success)
+        private decimal ConvertStringToDecimal(string CellValue)
         {
-            return NotFound("Property not found or could not be deleted.");
+            // Remove $ sign and commas
+            string cleaned = CellValue.Replace("$", "").Replace(",", "");
+
+            if (decimal.TryParse(cleaned, out decimal result))
+            {
+                return result;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
-        return RedirectToAction("JewelryProperty");
-    }
-
-    private decimal ConvertStringToDecimal(string CellValue)
-    {
-        // Remove $ sign and commas
-        string cleaned = CellValue.Replace("$", "").Replace(",", "");
-
-        if (decimal.TryParse(cleaned, out decimal result))
-        {
-            return result;
-        }
-        else
-        {
-            return 0;
-        }
-    }
-
-    private List<ProductDTO> CreateRingVariantsFromColor(ProductDTO baseProduct)
+        private List<ProductDTO> CreateRingVariantsFromColor(ProductDTO baseProduct)
         {
             var result = new List<ProductDTO>();
 
@@ -720,127 +719,125 @@ namespace ControlPanel.Controllers
             return result;
         }
 
-
-    [HttpPost]
-    [DisableRequestSizeLimit]
-    public async Task<IActionResult> UploadProductCollectionImages()
-    {
-        try
+        [HttpPost]
+        [DisableRequestSizeLimit]
+        public async Task<IActionResult> UploadProductCollectionImages()
         {
-            var boundary = HeaderUtilities.RemoveQuotes(MediaTypeHeaderValue.Parse(Request.ContentType).Boundary).Value;
-            var reader = new MultipartReader(boundary, Request.Body);
-            var section = await reader.ReadNextSectionAsync();
-
-            if (section == null)
-                return Json("No file uploaded.");
-
-            while (section != null)
+            try
             {
-                if (ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out var contentDisposition))
+                var boundary = HeaderUtilities.RemoveQuotes(MediaTypeHeaderValue.Parse(Request.ContentType).Boundary).Value;
+                var reader = new MultipartReader(boundary, Request.Body);
+                var section = await reader.ReadNextSectionAsync();
+
+                if (section == null)
+                    return Json("No file uploaded.");
+
+                while (section != null)
                 {
-                    if (contentDisposition.DispositionType == "form-data" &&
-                        !string.IsNullOrEmpty(contentDisposition.FileName.Value))
+                    if (ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out var contentDisposition))
                     {
-                        string fileName = contentDisposition.FileName.Value.Trim('"');
-                        string extractedFolder = Path.Combine(_env.WebRootPath, "UploadedFiles", "Collections");
-                        Directory.CreateDirectory(extractedFolder);
-
-                        string zipPath = Path.Combine(extractedFolder, fileName);
-                        await using (var targetStream = System.IO.File.Create(zipPath))
+                        if (contentDisposition.DispositionType == "form-data" &&
+                            !string.IsNullOrEmpty(contentDisposition.FileName.Value))
                         {
-                            await section.Body.CopyToAsync(targetStream);
-                        }
+                            string fileName = contentDisposition.FileName.Value.Trim('"');
+                            string extractedFolder = Path.Combine(_env.WebRootPath, "UploadedFiles", "Collections");
+                            Directory.CreateDirectory(extractedFolder);
 
-                        List<DataAccess.Entities.Product> prdDesignDT = new();
-                        var prdDT = new ProductImages();
-
-                        using (ZipArchive archive = ZipFile.OpenRead(zipPath))
-                        {
-                            foreach (ZipArchiveEntry entry in archive.Entries)
+                            string zipPath = Path.Combine(extractedFolder, fileName);
+                            await using (var targetStream = System.IO.File.Create(zipPath))
                             {
-                                if (entry.FullName.EndsWith("/") || string.IsNullOrEmpty(entry.Name)) continue; // skip folders
+                                await section.Body.CopyToAsync(targetStream);
+                            }
 
-                                if (entry.Name.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
-                                    entry.Name.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
-                                    entry.Name.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
-                                    entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+                            List<DataAccess.Entities.Product> prdDesignDT = new();
+                            var prdDT = new ProductImages();
+
+                            using (ZipArchive archive = ZipFile.OpenRead(zipPath))
+                            {
+                                foreach (ZipArchiveEntry entry in archive.Entries)
                                 {
-                                    var styleName = _productRepository.ExtractStyleName(entry.Name);
-                                    if (styleName == null) continue;
+                                    if (entry.FullName.EndsWith("/") || string.IsNullOrEmpty(entry.Name)) continue; // skip folders
 
-                                    var metalId = await _productRepository.GetMetalId(styleName.ColorName);
-                                    if (metalId == 0) continue;
-
-                                    prdDesignDT = await _productRepository.GetProductDataByDesignNo(styleName.DesignNo, metalId);
-                                    if (prdDesignDT.Count == 0) continue;
-
-                                    foreach (var pro in prdDesignDT)
+                                    if (entry.Name.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                                        entry.Name.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
+                                        entry.Name.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
+                                        entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        prdDT = new ProductImages
+                                        var styleName = _productRepository.ExtractStyleName(entry.Name);
+                                        if (styleName == null) continue;
+
+                                        var metalId = await _productRepository.GetMetalId(styleName.ColorName);
+                                        if (metalId == 0) continue;
+
+                                        prdDesignDT = await _productRepository.GetProductDataByDesignNo(styleName.DesignNo, metalId);
+                                        if (prdDesignDT.Count == 0) continue;
+
+                                        foreach (var pro in prdDesignDT)
                                         {
-                                            ProductId = pro.Id.ToString(),
-                                            MetalId = metalId,
-                                            Sku = styleName.DesignNo,
-                                            ShapeId = pro.ShapeId
-                                        };
-
-                                        string folderPath = Path.Combine(extractedFolder, styleName.DesignNo);
-                                        Directory.CreateDirectory(folderPath);
-
-                                        string destinationPath = Path.Combine(folderPath, entry.Name);
-                                        entry.ExtractToFile(destinationPath, overwrite: true);
-
-                                        string relativePath = Path.Combine("UploadedFiles", "Collections", styleName.DesignNo, entry.Name)
-                                                                .Replace("\\", "/");
-
-                                        int pId = await _productRepository.SaveImageVideoPath(relativePath);
-
-                                        if (entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            prdDT.VideoId = pId;
-                                        }
-                                        else
-                                        {
-                                            if (styleName.Index == 1)
+                                            prdDT = new ProductImages
                                             {
-                                                prdDT.ImageLgId = pId;
-                                                prdDT.IsDefault = true;
+                                                ProductId = pro.Id.ToString(),
+                                                MetalId = metalId,
+                                                Sku = styleName.DesignNo,
+                                                ShapeId = pro.ShapeId
+                                            };
+
+                                            string folderPath = Path.Combine(extractedFolder, styleName.DesignNo);
+                                            Directory.CreateDirectory(folderPath);
+
+                                            string destinationPath = Path.Combine(folderPath, entry.Name);
+                                            entry.ExtractToFile(destinationPath, overwrite: true);
+
+                                            string relativePath = Path.Combine("UploadedFiles", "Collections", styleName.DesignNo, entry.Name)
+                                                                    .Replace("\\", "/");
+
+                                            int pId = await _productRepository.SaveImageVideoPath(relativePath);
+
+                                            if (entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+                                            {
+                                                prdDT.VideoId = pId;
                                             }
                                             else
                                             {
-                                                prdDT.ImageLgId = pId;
+                                                if (styleName.Index == 1)
+                                                {
+                                                    prdDT.ImageLgId = pId;
+                                                    prdDT.IsDefault = true;
+                                                }
+                                                else
+                                                {
+                                                    prdDT.ImageLgId = pId;
+                                                }
+                                                prdDT.ImageIndexNumber = styleName.Index;
                                             }
-                                            prdDT.ImageIndexNumber = styleName.Index;
-                                        }
 
-                                        await _productRepository.SaveImageVideoAsync(prdDT);
+                                            await _productRepository.SaveImageVideoAsync(prdDT);
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        System.IO.File.Delete(zipPath); // Clean up zip
-                        return Json("File uploaded and processed successfully.");
+                            System.IO.File.Delete(zipPath); // Clean up zip
+                            return RedirectToAction("ThankYouForUploaded");
+                        }
                     }
+
+                    section = await reader.ReadNextSectionAsync();
                 }
 
-                section = await reader.ReadNextSectionAsync();
+                //return Json("No valid section found in upload.");
+                return RedirectToAction("Index");
             }
-
-            return Json("No valid section found in upload.");
+            catch (Exception ex)
+            {
+                return RedirectToAction("Index");
+            }
         }
-        catch (Exception ex)
-        {
-            return Json($"An error occurred: {ex.Message}");
-        }
-    }
 
-
-
-    [HttpPost]
-    [RequestFormLimits(MultipartBodyLengthLimit = 5368709120)]
-    [RequestSizeLimit(5368709120)]
-    public async Task<IActionResult> UploadProductImagesFromFolder(List<IFormFile> folderUpload)
+        [HttpPost]
+        [RequestFormLimits(MultipartBodyLengthLimit = 5368709120)]
+        [RequestSizeLimit(5368709120)]
+        public async Task<IActionResult> UploadProductImagesFromFolder(List<IFormFile> folderUpload)
         {
             try
             {
@@ -902,6 +899,11 @@ namespace ControlPanel.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult ThankYouForUploaded()
+        {
+            return View();
+        }
 
     }
 }

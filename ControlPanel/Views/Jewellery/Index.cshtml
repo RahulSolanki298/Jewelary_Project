@@ -59,6 +59,13 @@
 
 </div>
 
+<div class="modal fade" id="showProgramCollection" tabindex="-1" data-bs-backdrop="false">
+
+
+</div>
+
+
+
 @section Scripts
 {
     <script>
@@ -68,6 +75,26 @@
             //$("#ExcelUpload").on("click",function(){
             //    $("#showFileUpload").modal("show");
             //});
+
+            $('#chkAllIds').on('change', function () {
+                var isChecked = $(this).is(':checked');
+                $('#ringTable .chkId').not(this).prop('checked', isChecked);
+                updateSelectedIds();
+            });
+
+            // Handle individual checkbox change
+            $('#jewelleryList').on('change', '.chkId:not(#chkAllIds)', function () {
+                var allChecked = $('#ringTable .chkId:not(#chkAllIds)').length ===
+                    $('#ringTable .chkId:not(#chkAllIds):checked').length;
+                $('#chkAllIds').prop('checked', allChecked);
+                updateSelectedIds();
+            });
+
+            $('#jewelleryList').on('change', '#chkAllIds', function () {
+                var isChecked = $(this).is(':checked');
+                $('#ringTable .chkId').not(this).prop('checked', isChecked);
+                updateSelectedIds();
+            });
 
             $('#uploadForm').on('submit', function (e) {
                 e.preventDefault();
@@ -92,7 +119,7 @@
                         $('#uploadBtn').prop('disabled', false).text('Upload');
 
                         // Inject response data into the modal
-                      
+
                     },
                     error: function (xhr) {
                         $('#loader').hide();
@@ -102,10 +129,47 @@
                 });
             });
 
+            $('#jewelleryList').on('click', '.dropdown-item', function (e) {
+                    e.preventDefault();
+
+                    var status = $(this).data('status');
+                    var productIds = $('#txtProductIds').val();
+
+                    if (!productIds) {
+                        alert('No product IDs selected.');
+                        return;
+                    }
+
+                var idsArray = productIds.split(',');
+
+                if (status == "Program" || status == "Collection") {
+
+                }
+                else
+                {
+                     $.ajax({
+                        url: '@Url.Action("ChangeStatus", "Jewellery")', // 🔁 Replace with your actual API endpoint
+                        method: 'POST',
+                        data: {
+                            pIds: idsArray,
+                            status: status
+                        },
+                        success: function(response) {
+                            alert('Products updated to "' + status + '" successfully.');
+                            console.log(response);
+                            location.reload();
+                        },
+                        error: function(xhr, status, error) {
+                            alert('An error occurred while updating products.');
+                            console.error(error);
+                        }
+                    });
+                }
+            });
+
         });
 
         function getDiamondList() {
-            debugger;
             $.ajax({
                 url: '@Url.Action("GetJewellries", "Jewellery")',
                 type: 'GET',
@@ -135,6 +199,20 @@
                     console.error('Error loading diamond list:', error);
                 }
             });
+        }
+
+        function updateSelectedIds() {
+            let selectedIds = getSelectedIds();
+            $('#txtProductIds').val(selectedIds.join(','));
+        }
+
+        // Utility: Get selected checkbox values
+        function getSelectedIds() {
+            let ids = [];
+            $('#ringTable .chkId:not(#chkAllIds):checked').each(function () {
+                ids.push($(this).val());
+            });
+            return ids;
         }
     </script>
 }

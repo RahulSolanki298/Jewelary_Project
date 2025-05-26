@@ -11,8 +11,18 @@ namespace Models
         public string OrderCode { get; set; }
 
         public string CustomerCode { get; set; } //  Customer
+        
+        public string CustomerName { get; set; } //  Customer
 
         public int NoOfQty { get; set; }
+
+        public string CoupanCode { get; set; }
+
+        public int? CoupanId { get; set; }
+
+        public decimal? Dicount { get; set; }
+
+        public decimal? DicountAmount { get; set; }
 
         public decimal NetAmount { get; set; }
 
@@ -21,6 +31,5 @@ namespace Models
         public DateTime? UpdatedDate { get; set; }
 
         public string PaymentStatus { get; set; }  //  Payment Pending, Payment 
-
     }
 }

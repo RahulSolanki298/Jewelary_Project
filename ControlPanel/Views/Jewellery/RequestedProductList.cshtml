@@ -1,5 +1,8 @@
 ﻿@model IEnumerable<Models.ProductDTO>
 @using Common;
+@{
+    string defaultImage = string.Empty;
+}
 
 
 
@@ -39,8 +42,8 @@
                 <thead>
                     <tr>
                         <th scope="col"><input type="checkbox" class="chkId" id="chkAllIds" /></th>
-                        <th scope="col">Status</th>
                         <th scope="col">Image</th>
+                        <th scope="col">Status</th>
                         <th scope="col">Title</th>
                         <th scope="col">Vendor</th>
                         <th scope="col">Style</th>
@@ -57,18 +60,26 @@
                     {
                         foreach (var item in Model)
                         {
+                            defaultImage = string.Empty;
+                            if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
+                            {
+                                defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
+                            }
                             <tr>
                                 <td><input type="checkbox" class="chkId" value="@item.Id" /></td>
                                 <td>
-                                    @item.UploadStatus
+                                    <a href="#" productId="@item.Id">
+                                        <img src="@SD.ImgUrl/@defaultImage" alt="@item.Title" style="height:100px;" />
+                                    </a>
                                 </td>
                                 <td>
-                                    <img src="@item.DefaultImage" alt="@item.Title" style="width:25px;" onerror="this.onerror=null;this.src='/images/default.jpg';" />
+                                    @item.UploadStatus
                                 </td>
                                 <td>
                                     <h5>@item.Title</h5>
                                     <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
                                 </td>
+
                                 <td>@item.VenderName</td>
                                 <td>@item.Sku</td>
                                 <td>@item.ColorName</td>
@@ -111,9 +122,9 @@
                 updateSelectedIds();
             });
 
+
             // Update status button click
         $('.dropdown-item').on('click', function(e) {
-            debugger;
             e.preventDefault();
 
             var status = $(this).data('status');

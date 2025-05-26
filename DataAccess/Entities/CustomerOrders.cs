@@ -14,6 +14,14 @@ namespace DataAccess.Entities
 
         public string CustomerCode { get; set; } //  Customer
 
+        public string CoupanCode { get; set; }
+
+        public int? CoupanId { get; set; }
+
+        public decimal? Dicount { get; set; }
+
+        public decimal? DicountAmount { get; set; }
+
         public int NoOfQty { get; set; }
         
         public decimal NetAmount { get; set; }

@@ -13,16 +13,16 @@
             <a class="" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-three-dots-vertical"></i>
             </a>
-            <input type="hidden" id="txtProductIds" />
-
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="#" data-status="Activated">Activated</a></li>
                 <li><a class="dropdown-item" href="#" data-status="Deactivated">Deactivated</a></li>
                 <li><a class="dropdown-item" href="#" data-status="Hold">Hold</a></li>
+                <li><a class="dropdown-item" href="#" data-status="Program">Program</a></li>
+                <li><a class="dropdown-item" href="#" data-status="Collection">Collection</a></li>
             </ul>
-
         </div>
     </div>
+    <input type="hidden" id="txtProductIds" />
 
 </div>
 
@@ -40,7 +40,7 @@
         <a class="nav-link" id="pendant-tab" data-bs-toggle="tab" tabindex="-1" href="#pendantList" role="tab" aria-controls="pandantList" aria-disabled="false">Pendant List</a>
     </li>
     <li class="nav-item" role="presentation">
-        <a class="nav-link" id="bracelets-tab" data-bs-toggle="tab" tabindex="-1" href="#braceletsList" role="tab" aria-controls="braceletList" aria-disabled="false">bracelet List</a>
+        <a class="nav-link" id="bracelets-tab" data-bs-toggle="tab" tabindex="-1" href="#braceletsList" role="tab" aria-controls="braceletList" aria-disabled="false">Bracelet List</a>
     </li>
 </ul>
 
@@ -49,12 +49,13 @@
         <table class="table" id="ringTable">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
+                    <th scope="col"><input type="checkbox" class="chkId" id="chkAllIds" /></th>
                     <th scope="col">Image</th>
                     <th scope="col">Status</th>
                     <th scope="col">Title</th>
                     <th scope="col">Vendor</th>
                     <th scope="col">Style</th>
+                    <th scope="col">Color</th>
                     <th scope="col">Length</th>
                     <th scope="col">Band Width</th>
                     <th scope="col">Weight</th>
@@ -68,13 +69,13 @@
 
                     @foreach (var item in Model.Where(x => x.CategoryName == SD.Rings))
                     {
-                        if (item.ProductImageVideos.Any())
+                        if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
                         {
                             defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
                         }
-                        
+
                         <tr>
-                            <td scope="col"><input type="checkbox" class="chkId" /></td>
+                            <td scope="col"><input type="checkbox" class="chkId" value="@item.Id" /></td>
                             <td scope="col">
                                 <img src="@SD.ImgUrl/@defaultImage" style="height:100px;" />
                             </td>
@@ -85,6 +86,7 @@
                             </td>
                             <td scope="col">@item.VenderName</td>
                             <td scope="col">@item.Sku</td>
+                            <td scope="col">@item.ColorName</td>
                             <td scope="col">@item.Length</td>
                             <td scope="col">@item.BandWidth</td>
                             <td scope="col">@item.GoldWeight</td>
@@ -106,15 +108,16 @@
         <table class="table" id="bandTable">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
+                    <th scope="col"><input type="checkbox" class="chkId" id="chkAllIds" /></th>
                     <th scope="col">
                         Image
                     </th>
+                    <th scope="col">Status</th>
                     <th scope="col">
                         Title
                     </th>
-                    <th scope="col">Status</th>
                     <th scope="col">Vendor</th>
+                    <th scope="col">Color</th>
                     <th scope="col">Style</th>
                     <th scope="col">Band Width</th>
                     <th scope="col">Weight</th>
@@ -125,27 +128,32 @@
             <tbody>
                 @if (Model != null)
                 {
-
                     @foreach (var item in Model.Where(x => x.CategoryName == SD.Bands))
                     {
-                <tr>
-                    <td scope="col"><input type="checkbox" class="chkId" /></td>
-                    <td scope="col">
-                                <img src="@SD.ImgUrl/@item.DefaultImage" style="height:100px;" />
-                    </td>
-                    <td scope="col">
-                        <h5>@item.Title</h5>
-                        <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
-                    </td>
-                            <th scope="col">@item.UploadStatus</th>
+                        if (item.ProductImageVideos.Any())
+                        {
+                            defaultImage = string.Empty;
+                            defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
+                        }
+                        <tr>
+                            <td scope="col"><input type="checkbox" class="chkId" value="@item.Id" /></td>
+                            <td scope="col">
+                                <img src="@SD.ImgUrl/@defaultImage" style="height:100px;" />
+                            </td>
+                            <td scope="col">@item.UploadStatus</td>
+                            <td scope="col">
+                                <h5>@item.Title</h5>
+                                <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
+                            </td>
                             <td scope="col">@item.VenderName</td>
-                    <td scope="col">@item.Sku</td>
-                    <td scope="col">@item.BandWidth</td>
-                    <td scope="col">@item.GoldWeight</td>
-                    <td scope="col">@item.Karat</td>
-                    <td scope="col">@item.Price</td>
+                            <td scope="col">@item.ColorName</td>
+                            <td scope="col">@item.Sku</td>
+                            <td scope="col">@item.BandWidth</td>
+                            <td scope="col">@item.GoldWeight</td>
+                            <td scope="col">@item.Karat</td>
+                            <td scope="col">@item.Price</td>
 
-                </tr>
+                        </tr>
                     }
                 }
                 else
@@ -165,11 +173,12 @@
                     <th scope="col">
                         Image
                     </th>
+                    <th scope="col">Status</th>
                     <th scope="col">
                         Title
                     </th>
-                    <th scope="col">Status</th>
                     <th scope="col">Vendor</th>
+                    <th scope="col">Color</th>
                     <th scope="col">Style</th>
                     <th scope="col">Band Width</th>
                     <th scope="col">Weight</th>
@@ -182,24 +191,31 @@
             <tbody>
                 @if (Model != null)
                 {
-                    foreach (var item in Model.Where(x => x.CategoryName == SD.Bands))
+                    foreach (var item in Model.Where(x => x.CategoryName == SD.Earrings))
                     {
+                        defaultImage = string.Empty;
+                        if (item.ProductImageVideos.Any())
+                        {
+                            defaultImage = string.Empty;
+                            defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
+                        }
                         <tr>
-                            <td><input type="checkbox" class="chkId" /></td>
-                            <td><img src="@SD.ImgUrl/@item.DefaultImage" style="height:100px;" /></td>
+                            <td><input type="checkbox" class="chkId" value="@item.Id"  /></td>
+                            <td><img src="@SD.ImgUrl/@defaultImage" style="height:100px;" /></td>
+                            <td scope="col">@item.UploadStatus</td>
                             <td>
                                 <h5>@item.Title</h5>
                                 <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
                             </td>
-                            <th scope="col">@item.UploadStatus</th>
                             <td>@item.VenderName</td>
+                            <td>@item.ColorName</td>
                             <td>@item.Sku</td>
                             <td>@item.BandWidth</td>
                             <td>@item.GoldWeight</td>
                             <td>@item.Karat</td>
                             <td>@item.Price</td>
                         </tr>
- }
+                    }
                 }
                 else
                 {
@@ -217,15 +233,16 @@
         <table class="table" id="PendantTable">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
+                    <th scope="col"><input type="checkbox" class="chkId" id="chkAllIds" /></th>
                     <th scope="col">
                         Image
                     </th>
+                    <th scope="col">Status</th>
                     <th scope="col">
                         Title
                     </th>
-                    <th scope="col">Status</th>
                     <th scope="col">Vendor</th>
+                    <th scope="col">Color</th>
                     <th scope="col">Style</th>
                     <th scope="col">Length</th>
                     <th scope="col">Weight</th>
@@ -239,16 +256,22 @@
 
                     @foreach (var item in Model.Where(x => x.CategoryName == SD.Pendants))
                     {
+                        defaultImage = string.Empty;
+                        if (item.ProductImageVideos.Any())
+                        {
+                            defaultImage = string.Empty;
+                            defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
+                        }
                         <tr>
                             <td scope="col"><input type="checkbox" class="chkId" /></td>
                             <td scope="col">
-                                <img src="@SD.ImgUrl/@item.DefaultImage" style="height:100px;" />
+                                <img src="@SD.ImgUrl/@defaultImage" style="height:100px;" />
                             </td>
+                            <td scope="col">@item.UploadStatus</td>
                             <td scope="col">
                                 <h5>@item.Title</h5>
                                 <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
                             </td>
-                            <th scope="col">@item.UploadStatus</th>
                             <td scope="col">@item.VenderName</td>
                             <td scope="col">@item.Sku</td>
                             <td scope="col">@item.Length</td>
@@ -271,14 +294,14 @@
         <table class="table" id="BraceletsTable">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
+                    <th scope="col"><input type="checkbox" class="chkId" id="chkAllIds" /></th>
                     <th scope="col">
                         Image
                     </th>
+                    <th scope="col">Status</th>
                     <th scope="col">
                         Title
                     </th>
-                    <th scope="col">Status</th>
                     <th scope="col">Vendor</th>
                     <th scope="col">Style</th>
                     <th scope="col">Length</th>
@@ -295,16 +318,22 @@
 
                     @foreach (var item in Model.Where(x => x.CategoryName == SD.Bracelets))
                     {
+                        defaultImage = string.Empty;
+                        if (item.ProductImageVideos.Any())
+                        {
+                            defaultImage = string.Empty;
+                            defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
+                        }
                         <tr>
                             <td scope="col"><input type="checkbox" class="chkId" /></td>
                             <td scope="col">
-                                <img src="@SD.ImgUrl/@item.DefaultImage" style="height:100px;" />
+                                <img src="@SD.ImgUrl/@defaultImage" style="height:100px;" />
                             </td>
+                            <th scope="col">@item.UploadStatus</th>
                             <td scope="col">
                                 <h5>@item.Title</h5>
                                 <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
                             </td>
-                            <th scope="col">@item.UploadStatus</th>
                             <td scope="col">@item.VenderName</td>
                             <td scope="col">@item.Sku</td>
                             <td scope="col">@item.Length</td>

@@ -1,1 +1,163 @@
-﻿
+﻿@using Common
+<div class="row mb-2">
+    <div class="col-lg-6">
+        <h4>Order Process</h4>
+    </div>
+    <div class="col-lg-6">
+        <div class="btn-group dropup float-end">
+            <a class="" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-three-dots-vertical"></i>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#" data-status="OrderAccepted">@SD.OrderAccepted</a></li>
+                <li><a class="dropdown-item" href="#" data-status="StartPackaging">@SD.StartPackaging</a></li>
+                <li><a class="dropdown-item" href="#" data-status="ReadyForShipment">@SD.ReadyForShipment</a></li>
+                <li><a class="dropdown-item" href="#" data-status="Shipped">@SD.Shipped</a></li>
+                <li><a class="dropdown-item" href="#" data-status="Delivered">@SD.Delivered</a></li>
+                <li><a class="dropdown-item" href="#" data-status="Complated">@SD.Complated</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="btnOrderAccepted">Order Accepted</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="btnStartPackaging">Start Packaging</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="btnReadyForShipment">Ready For Shipment</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="btnShipped">Shipped</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="btnDelivered">Delivered</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="btnComplated">Complated</a>
+    </li>
+</ul>
+
+<div id="orderContainer">
+
+
+</div>
+
+@section Scripts{ 
+    <script>
+        $(document).ready(function () {
+            getOrderAcceptedList();
+
+            $("#btnOrderAccepted").click(function () {
+                getOrderAcceptedList();
+            });
+
+            $("#btnStartPackaging").click(function () {
+                getOrderStartPackList();
+            });
+
+            $("#getOrderReadyForShipmentList").click(function () {
+                getOrderReadyForShipmentList();
+            });
+
+            $("#btnShipped").click(function () {
+                getOrderShippedList();
+            });
+
+            $("#btnDelivered").click(function () {
+                getOrderDeliveredList();
+            });
+
+            $("#btnComplated").click(function () {
+                getOrderComplatedList();
+            });
+        });
+
+        function getOrderAcceptedList() {
+            $.ajax({
+                url: '@Url.Action("OrderAccepted", "Orders")',
+                type: 'GET',
+                success: function (result) {
+                    $('#orderContainer').html("");
+                    $('#orderContainer').html(result);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error loading order request list:', xhr.responseText, status, error);
+                }
+            });
+        }
+
+        function getOrderStartPackList() {
+            $.ajax({
+                url: '@Url.Action("OrderStartPackList", "Orders")',
+                type: 'GET',
+                success: function (result) {
+                    $('#orderContainer').html("");
+                    $('#orderContainer').html(result);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error loading diamond list:', xhr.responseText, status, error);
+                }
+            });
+        }
+
+        function getOrderReadyForShipmentList() {
+            $.ajax({
+                url: '@Url.Action("OrderReadyForShipmentList", "Orders")',
+                type: 'GET',
+                success: function (result) {
+                    $('#orderContainer').html("");
+                    $('#orderContainer').html(result);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error loading diamond list:', xhr.responseText, status, error);
+                }
+            });
+        }
+
+        function getOrderShippedList() {
+            $.ajax({
+                url: '@Url.Action("OrderShipped", "Orders")',
+                type: 'GET',
+                success: function (result) {
+                    $('#orderContainer').html("");
+                    $('#orderContainer').html(result);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error loading Order Shipped list:', xhr.responseText, status, error);
+                }
+            });
+        }
+
+        function getOrderDeliveredList() {
+            $.ajax({
+                url: '@Url.Action("OrderDelivered", "Orders")',
+                type: 'GET',
+                success: function (result) {
+                    $('#orderContainer').html("");
+                    $('#orderContainer').html(result);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error loading diamond list:', xhr.responseText, status, error);
+                }
+            });
+        }
+
+        function getOrderComplatedList() {
+            $.ajax({
+                url: '@Url.Action("OrderCompleted", "Orders")',
+                type: 'GET',
+                success: function (result) {
+                    $('#orderContainer').html("");
+                    $('#orderContainer').html(result);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error loading diamond list:', xhr.responseText, status, error);
+                }
+            });
+        }
+    </script>
+}

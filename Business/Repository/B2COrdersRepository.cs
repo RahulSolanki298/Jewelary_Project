@@ -23,6 +23,7 @@ namespace Business.Repository
         public async Task<IEnumerable<CustomerOrders>> GetB2COrderAcceptList()
         {
             return await (from ord in _context.CustomerOrders
+                          join dt in _context.CustomerOrderItems on ord.OrderId.ToString() equals dt.OrderId
                           join sts in _context.CustomerOrderStatus on ord.OrderId.ToString() equals sts.OrderId
                           join status in _context.OrderStatus on sts.CurrentStatusId equals status.Id
                           where status.Name == SD.Requested
@@ -95,14 +96,21 @@ namespace Business.Repository
         public async Task<IEnumerable<CustomerOrders>> GetB2COrderRequestList()
         {
             return await(from ord in _context.CustomerOrders
+                         join itm in _context.CustomerOrderItems on ord.OrderId.ToString() equals itm.OrderId
                          join sts in _context.CustomerOrderStatus on ord.OrderId.ToString() equals sts.OrderId
                          join status in _context.OrderStatus on sts.CurrentStatusId equals status.Id
                          where status.Name == SD.Requested
                          select ord).OrderByDescending(x=>x.CreatedDate).ToListAsync();
         }
 
-
-        
+        public async Task<IEnumerable<CustomerOrders>> GetB2COrderPackageList()
+        {
+            return await (from ord in _context.CustomerOrders
+                          join sts in _context.CustomerOrderStatus on ord.OrderId.ToString() equals sts.OrderId
+                          join status in _context.OrderStatus on sts.CurrentStatusId equals status.Id
+                          where status.Name != SD.StartPackaging
+                          select ord).OrderByDescending(x => x.CreatedDate).ToListAsync();
+        }
 
     }
 }

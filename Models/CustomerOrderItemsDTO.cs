@@ -18,18 +18,11 @@ namespace Models
 
         public decimal UnitPrice { get; set; }
 
-        public string CoupanCode { get; set; }
-
-        public int? CoupanId { get; set; }
-
-        public decimal? Dicount { get; set; }
-
-        public decimal? DicountAmount { get; set; }
-
         public decimal TotalAmount { get; set; }
 
         public DateTime? CreatedDate { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
+
     }
 }

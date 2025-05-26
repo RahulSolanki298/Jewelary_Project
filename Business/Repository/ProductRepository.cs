@@ -601,17 +601,20 @@ namespace Business.Repository
                                       CenterCaratName = size.Name,
                                       Quantity = product.Quantity,
                                       KaratId = krt != null ? krt.Id : (int?)null,
-                                      Karat = krt.Name
-                                      //}).Where(x => x.IsActivated).ToListAsync();
-                                  }).ToListAsync();
+                                      Karat = krt.Name,
+                                      UploadStatus=product.UploadStatus,
+                                      WholesaleCost=product.WholesaleCost,
+                                      ProductDate=product.ProductDate,
+                                      MMSize=product.MMSize
+                                  }).OrderBy(x=>x.Sku).ToListAsync();
 
-            var groupedProducts = products.GroupBy(p => p.Sku);
+            //var groupedProducts = products.GroupBy(p => p.Sku);
 
             var productDTOList = new List<ProductDTO>();
 
-            foreach (var grp in groupedProducts)
+            foreach (var firstProduct in products)
             {
-                var firstProduct = grp.First();
+                //var firstProduct = grp.First();
 
                 var metals = await (from col in _context.ProductProperty
                                     join prod in _context.Product on col.Id equals prod.ColorId
@@ -648,18 +651,7 @@ namespace Business.Repository
                                         IsActive = col.IsActive.HasValue ? col.IsActive.Value : false
                                     }).Distinct().ToListAsync();
 
-                var prices = await (from pr in _context.ProductPrices
-                                    join prod in _context.Product on pr.ProductId equals prod.Id.ToString()
-                                    join kt in _context.ProductProperty on pr.ProductId equals kt.ParentId.ToString()
-                                    where pr.ProductId == firstProduct.Id.ToString()
-                                    select new ProductPriceDTO
-                                    {
-                                        Id = pr.Id,
-                                        KaratName = kt.Name,
-                                        ProductId = prod.Id.ToString(),
-                                        ProductPrice = prod.Price,
-                                        KaratId = pr.KaratId
-                                    }).Distinct().ToListAsync();
+                
 
                 var productDTO = new ProductDTO
                 {
@@ -700,7 +692,10 @@ namespace Business.Repository
                     VenderName = firstProduct.VenderName,
                     WholesaleCost = firstProduct.WholesaleCost,
                     ProductImageVideos = new List<ProductImageAndVideoDTO>(),
-                    Prices = prices
+                    Diameter=firstProduct.Diameter,
+                    DiaWT=firstProduct.DiaWT,
+                    CTW=firstProduct.CTW,
+                    UploadStatus=firstProduct.UploadStatus,
                 };
 
                 //  await _context.ProductPrices.Where(x => x.ProductId == firstProduct.Id.ToString()).ToListAsync();
@@ -1727,7 +1722,7 @@ namespace Business.Repository
                                       Karat = krt.Name,
                                       UploadStatus = product.UploadStatus
                                       //}).Where(x => x.UploadStatus == SD.Requested).ToListAsync();
-                                  }).ToListAsync();
+                                  }).OrderBy(x => x.Sku).ToListAsync();
 
 
             // Return products where there are product images/videos
@@ -1765,7 +1760,6 @@ namespace Business.Repository
                                       ClarityId = clarity != null ? clarity.Id : (int?)null,
                                       ClarityName = clarity.Name,
                                       ShapeName = shape.Name,
-                                      //ShapeId = shape != null ? shape.Id : (int?)null,
                                       CenterShapeName = shape.Name,
                                       UnitPrice = product.UnitPrice,
                                       Price = product.Price,
@@ -1885,7 +1879,9 @@ namespace Business.Repository
                     VenderName = firstProduct.VenderName,
                     WholesaleCost = firstProduct.WholesaleCost,
                     ProductImageVideos = new List<ProductImageAndVideoDTO>(),
-                    Prices = prices
+                    Prices = prices,
+                    UploadStatus=firstProduct.UploadStatus,
+                    IsReadyforShip=firstProduct.IsReadyforShip,
                 };
 
                 //  await _context.ProductPrices.Where(x => x.ProductId == firstProduct.Id.ToString()).ToListAsync();
@@ -1968,7 +1964,7 @@ namespace Business.Repository
                                       Quantity = product.Quantity,
                                       KaratId = krt != null ? krt.Id : (int?)null,
                                       Karat = krt.Name
-                                  }).ToListAsync();
+                                  }).OrderBy(x=>x.Sku).ToListAsync();
 
             return products;
         }
@@ -2025,7 +2021,7 @@ namespace Business.Repository
                                       Quantity = product.Quantity,
                                       KaratId = krt != null ? krt.Id : (int?)null,
                                       Karat = krt.Name
-                                  }).ToListAsync();
+                                  }).OrderBy(x => x.Sku).ToListAsync();
 
             return products;
         }
@@ -2066,6 +2062,8 @@ namespace Business.Repository
                 return false;
             }
         }
+
+        
 
     }
 }

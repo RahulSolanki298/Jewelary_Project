@@ -25,30 +25,67 @@ namespace ControlPanel.Controllers
         }
 
         [HttpGet]
+        public IActionResult OrderRequestData()
+        {
+            return View();
+        }
+
+        [HttpGet]
         public async Task<IActionResult> OrderRequests()
         {
             var requestList = await _OrderRepo.GetB2COrderRequestList();
-            return View(requestList);
+            return PartialView("_OrderRequests", requestList);
         }
 
         [HttpGet]
-        public IActionResult OrderProcessList()
+        public async Task<IActionResult> OrderAccepted()
         {
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult OrderRejectList()
-        {
-            return View();
+            var requestList = await _OrderRepo.GetB2COrderAcceptList();
+            return PartialView("_OrderRequests", requestList);
         }
 
 
         [HttpGet]
-        public IActionResult OrderCancelList()
+        public async Task<IActionResult> OrderRejected()
         {
-            return View();
+            var requestList = await _OrderRepo.GetB2COrderRejectList();
+            return PartialView("_OrderRequests", requestList);
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> OrderStartPackList()
+        {
+            var requestList = await _OrderRepo.GetB2COrderPackageList();
+            return PartialView("_OrderRequests", requestList);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> OrderReadyForShipmentList()
+        {
+            var requestList = await _OrderRepo.GetB2COrderReadyForShipmentList();
+            return PartialView("_OrderRequests", requestList);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> OrderShipped()
+        {
+            var requestList = await _OrderRepo.GetB2COrderShippedList();
+            return PartialView("_OrderRequests", requestList);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> OrderDelivered()
+        {
+            var requestList = await _OrderRepo.GetB2COrderDeliveredList();
+            return PartialView("_OrderRequests", requestList);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> OrderCompleted()
+        {
+            var requestList = await _OrderRepo.GetB2COrderComplatedList();
+            return PartialView("_OrderRequests", requestList);
+        }
     }
 }

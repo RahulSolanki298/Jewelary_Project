@@ -1,7 +1,9 @@
 ﻿@model IEnumerable<Models.ProductDTO>
 @using Common;
 
-
+@{
+    string defaultImage = string.Empty;
+}
 
 <section class="section">
     <div class="row mb-2">
@@ -56,13 +58,14 @@
                     {
                         foreach (var item in Model)
                         {
+                            defaultImage = string.Empty;
                             <tr>
                                 <td><input type="checkbox" class="chkId" value="@item.Id" /></td>
                                 <td>
                                     @item.UploadStatus
                                 </td>
                                 <td>
-                                    <img src="@item.DefaultImage" alt="@item.Title" style="width:25px;" onerror="this.onerror=null;this.src='/images/default.jpg';" />
+                                    <img src="@SD.ImgUrl/@defaultImage" alt="@item.Title" style="width:25px;" onerror="this.onerror=null;this.src='';" />
                                 </td>
                                 <td>
                                     <h5>@item.Title</h5>

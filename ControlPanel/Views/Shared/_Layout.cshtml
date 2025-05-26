@@ -300,18 +300,21 @@
                                 <i class="bi bi-circle"></i><span>Jewellary Data</span>
                             </a>
                         </li>
-
                         <li>
                             <a href="@Url.Action("RequestedProductList","Jewellery")">
                                 <i class="bi bi-circle"></i><span>Jewellary Status</span>
-                                @* Jewellary varify *@
                             </a>
                         </li>
 
                         <li>
                             <a href="@Url.Action("HoldProductList","Jewellery")">
                                 <i class="bi bi-circle"></i><span>Hold Jewellary</span>
-                                @* Jewellary varify *@
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="@Url.Action("DeactivatedProductList","Jewellery")">
+                                <i class="bi bi-circle"></i><span>Deactivated Jewellary</span>
                             </a>
                         </li>
                     </ul>
@@ -328,7 +331,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="@Url.Action("OrderProcess","Orders")">
+                            <a href="@Url.Action("Index","Orders")">
                                 <i class="bi bi-circle"></i><span>Order Process</span>
                             </a>
                         </li>
@@ -432,6 +435,12 @@
                                 @* Jewellary varify *@
                             </a>
                         </li>
+                        <li>
+                            <a href="@Url.Action("DeactivatedProductList","Jewellery")">
+                                <i class="bi bi-circle"></i><span>Deactivated Jewellary</span>
+                            </a>
+                        </li>
+
                     </ul>
                 </li>
 
@@ -441,12 +450,12 @@
                     </a>
                     <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                         <li>
-                            <a href="@Url.Action("OrderRequestList","Orders")">
+                            <a href="@Url.Action("OrderRequestData","Orders")">
                                 <i class="bi bi-circle"></i><span>Order Request</span>
                             </a>
                         </li>
                         <li>
-                            <a href="@Url.Action("OrderProcess","Orders")">
+                            <a href="@Url.Action("Index","Orders")">
                                 <i class="bi bi-circle"></i><span>Order Process</span>
                             </a>
                         </li>

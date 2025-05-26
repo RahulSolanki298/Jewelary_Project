@@ -1,8 +1,8 @@
 ﻿@model IEnumerable<Models.ProductDTO>
 @using Common;
-
-
-
+@{
+    string defaultImage = string.Empty;
+}
 <section class="section">
     <div class="row mb-2">
         <div class="col-lg-6">
@@ -56,13 +56,19 @@
                     {
                         foreach (var item in Model)
                         {
+                            defaultImage = string.Empty;
+                            if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
+                            {
+                                defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
+                            }
                             <tr>
                                 <td><input type="checkbox" class="chkId" value="@item.Id" /></td>
+
                                 <td>
-                                    @item.UploadStatus
+                                    <img src="@SD.ImgUrl/@defaultImage" alt="@item.Title" style="width:25px;"  />
                                 </td>
                                 <td>
-                                    <img src="@item.DefaultImage" alt="@item.Title" style="width:25px;" onerror="this.onerror=null;this.src='/images/default.jpg';" />
+                                    @item.UploadStatus
                                 </td>
                                 <td>
                                     <h5>@item.Title</h5>
