@@ -57,10 +57,13 @@
                         $('#uploadBtn').prop('disabled', false).text('Upload');
                         $("#excelFile").empty();
                         $("#divExcelUpload").hide();
-                        alert(response.message || 'Product File Uploaded Successfully.');
                         $("#ImportProductList").html("");
                         $("#ImportProductList").html(response);
-
+                        Swal.fire({
+                            title: response.message || 'Product File Uploaded Successfully.',
+                            icon: "success",
+                            draggable: true
+                        });
                     },
                     error: function (xhr, status, error) {
                         $('#loader').hide();
@@ -120,7 +123,11 @@
                     success: function (response) {
                         $("#btnSaveRings").hide();
                         $("#btnEditRings").hide();
-                        alert('Product Rings Saved Successfully!');
+                        Swal.fire({
+                            title: response.message || 'Product Rings Saved Successfully!',
+                            icon: "success",
+                            draggable: true
+                        });
                     },
                     error: function (xhr, status, error) {
                         console.error("Error:", error);
@@ -178,7 +185,11 @@
                     contentType: false,
                     data: formData,
                     success: function (response) {
-                        alert('Product Bands Saved Successfully');
+                        Swal.fire({
+                            title: response.message || 'Product Bands Saved Successfully!',
+                            icon: "success",
+                            draggable: true
+                        });
                         $("#btnSaveBands").hide();
                         $("#btnEditBands").hide();
                     },
@@ -238,7 +249,11 @@
                     contentType: false,
                     data: formData,
                     success: function (response) {
-                        alert('Product Earrings Saved Successfully');
+                        Swal.fire({
+                            title: response.message || 'Product Bands Saved Successfully!',
+                            icon: "success",
+                            draggable: true
+                        });
                          $("#btnSaveEarring").hide();
                         $("#btnEditEarring").hide();
                     },
@@ -298,7 +313,11 @@
                     contentType: false,
                     data: formData,
                     success: function (response) {
-                        alert('Product Pendant Saved Successfully');
+                        Swal.fire({
+                            title: response.message || 'Product Pendant Saved Successfully!',
+                            icon: "success",
+                            draggable: true
+                        });
                         $("#btnSavePendant").hide();
                         $("#btnEditPendant").hide();
                     },
@@ -357,9 +376,13 @@
                     contentType: false,
                     data: formData,
                     success: function (response) {
-                        alert('Product Bracelets Saved Successfully');
                         $("#btnSaveBracelets").hide();
                         $("#btnEditBracelets").hide();
+                        Swal.fire({
+                            title: response.message || 'Product Bracelets Saved Successfully!',
+                            icon: "success",
+                            draggable: true
+                        });
                     },
                     error: function (xhr, status, error) {
                         console.error("Error:", error);
@@ -393,44 +416,67 @@
 
 
             $('#ImportProductList').on("click", "#btnFileImgSave", function (e) {
-                e.preventDefault();
-                showLoader();
-                var fileInput = $("#fileUpload")[0];
-                if (!fileInput || fileInput.files.length === 0) {
-                    alert("Please upload a valid .zip file.");
-                    return;
-                }
+                    e.preventDefault();
 
-                var file = fileInput.files[0];
+                    var $button = $(this);
+                    var fileInput = $("#fileUpload")[0];
 
-                if (file.type !== "application/zip" && !file.name.endsWith(".zip")) {
-                    alert("Only .zip files are allowed.");
-                    return;
-                }
-
-                var formData = new FormData();
-                formData.append("zipFile", file);
-
-                $.ajax({
-                    url: "@Url.Action("UploadProductCollectionImages","Jewellery")", // Make sure this URL is correct
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (response) {
-                        $("#response").html("Product Images and Video Uploaded successful: " + response);
-                        $("#_loaderDIV").hide();
-                        hideLoader();
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Upload error:", xhr.responseText);
-                        $("#response").html("Upload failed: " + xhr.responseText);
+                    if (!fileInput || fileInput.files.length === 0) {
+                        Swal.fire({
+                            title: "No file selected!",
+                            text: "Please upload a valid .zip file.",
+                            icon: "warning"
+                        });
+                        return;
                     }
+
+                    var file = fileInput.files[0];
+                    if (file.type !== "application/zip" && !file.name.endsWith(".zip")) {
+                        Swal.fire({
+                            title: "Invalid file type!",
+                            text: "Only .zip files are allowed.",
+                            icon: "error"
+                        });
+                        return;
+                    }
+
+                    var formData = new FormData();
+                    formData.append("zipFile", file);
+
+                    $button.prop('disabled', true);  // Disable the button
+                    showLoader();
+
+                    $.ajax({
+                        url: "@Url.Action("UploadProductCollectionImages","Jewellery")",
+                        type: "POST",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            Swal.fire({
+                                title: 'Upload Successful!',
+                                text: 'Product images and video have been uploaded.',
+                                icon: "success"
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Upload error:", xhr.responseText);
+                            Swal.fire({
+                                title: "Upload Failed",
+                                text: xhr.responseText || "An error occurred during upload.",
+                                icon: "error"
+                            });
+                        },
+                        complete: function () {
+                            $button.prop('disabled', false);  // Re-enable the button
+                            hideLoader();
+                        }
+                    });
                 });
-            });
 
 
-            $('#ImportProductList').on("click", "#btnFolderImgSave", function (e) {
+
+           $('#ImportProductList').on("click", "#btnFolderImgSave", function (e) {
                 e.preventDefault();
 
                 var files = $('#folderInput')[0].files;
@@ -438,6 +484,9 @@
                     alert("Please select a folder.");
                     return;
                 }
+
+                var $button = $(this); // reference to the button
+                $button.prop('disabled', true); // disable the button
 
                 var formData = new FormData();
                 for (var i = 0; i < files.length; i++) {
@@ -455,9 +504,13 @@
                     },
                     error: function (xhr) {
                         $("#response").html("Upload failed: " + xhr.responseText);
+                    },
+                    complete: function () {
+                        $button.prop('disabled', false); // re-enable the button after request finishes
                     }
                 });
             });
+
 
 
 
@@ -547,34 +600,50 @@
             });
 
 
-             $('#ImportProductList').on('submit','#uploadForm', function (e) {
+        $('#ImportProductList').on('submit','#uploadForm', function (e) {
             e.preventDefault();
 
             var formData = new FormData(this);
 
             $('#loader').show();
-            $('#uploadBtn').prop('disabled', true);
+            $("#uploadForm").prop('disabled', true);
 
             $.ajax({
-                url: '/Jewellery/UploadProductCollectionImages', // Update this if needed
+                url: '@Url.Action("UploadProductCollectionImages", "Jewellery")', // Update this if needed
                 type: 'POST',
                 data: formData,
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    $('#responseMsg').html('<div class="alert alert-success">Upload successful!</div>');
+                    //$('#responseMsg').html('<div class="alert alert-success">Upload successful!</div>');
+                    Swal.fire({
+                        title: "Product images and videoes has been uploaded successful!",
+                        icon: "success",
+                        draggable: true
+                    });
                 },
                 error: function (xhr, status, error) {
-                    $('#responseMsg').html('<div class="alert alert-danger">Upload failed: ' + error + '</div>');
+                    //$('#responseMsg').html('<div class="alert alert-danger">Upload failed: ' + error + '</div>');
+                    Swal.fire({
+                        title: "Product images and videoes has been uploaded fail!",
+                        icon: "fail",
+                        draggable: true
+                    });
                 },
                 complete: function () {
                     $('#loader').hide();
-                    $('#uploadBtn').prop('disabled', false);
+                    //$('#uploadBtn').prop('disabled', false);
+                    $("#uploadForm").prop('disabled', false);
+                    Swal.fire({
+                        title: "Product images and videoes has been uploaded fail!",
+                        icon: "fail",
+                        draggable: true
+                    });
                 }
             });
         });
 
-           
+
 
 
         });

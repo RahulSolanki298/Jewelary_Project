@@ -565,7 +565,7 @@ namespace Business.Repository
                                   from clarity in clarityGroup.DefaultIfEmpty()
                                   join size in _context.ProductProperty on product.CenterCaratId equals size.Id into sizeGroup
                                   from size in sizeGroup.DefaultIfEmpty()
-                                  where product.UploadStatus == SD.Activated 
+                                  where product.UploadStatus == SD.Activated
                                   select new ProductDTO
                                   {
                                       Id = product.Id,
@@ -602,11 +602,11 @@ namespace Business.Repository
                                       Quantity = product.Quantity,
                                       KaratId = krt != null ? krt.Id : (int?)null,
                                       Karat = krt.Name,
-                                      UploadStatus=product.UploadStatus,
-                                      WholesaleCost=product.WholesaleCost,
-                                      ProductDate=product.ProductDate,
-                                      MMSize=product.MMSize
-                                  }).OrderBy(x=>x.Sku).ToListAsync();
+                                      UploadStatus = product.UploadStatus,
+                                      WholesaleCost = product.WholesaleCost,
+                                      ProductDate = product.ProductDate,
+                                      MMSize = product.MMSize
+                                  }).OrderBy(x => x.Sku).ToListAsync();
 
             //var groupedProducts = products.GroupBy(p => p.Sku);
 
@@ -651,7 +651,7 @@ namespace Business.Repository
                                         IsActive = col.IsActive.HasValue ? col.IsActive.Value : false
                                     }).Distinct().ToListAsync();
 
-                
+
 
                 var productDTO = new ProductDTO
                 {
@@ -692,10 +692,10 @@ namespace Business.Repository
                     VenderName = firstProduct.VenderName,
                     WholesaleCost = firstProduct.WholesaleCost,
                     ProductImageVideos = new List<ProductImageAndVideoDTO>(),
-                    Diameter=firstProduct.Diameter,
-                    DiaWT=firstProduct.DiaWT,
-                    CTW=firstProduct.CTW,
-                    UploadStatus=firstProduct.UploadStatus,
+                    Diameter = firstProduct.Diameter,
+                    DiaWT = firstProduct.DiaWT,
+                    CTW = firstProduct.CTW,
+                    UploadStatus = firstProduct.UploadStatus,
                 };
 
                 //  await _context.ProductPrices.Where(x => x.ProductId == firstProduct.Id.ToString()).ToListAsync();
@@ -1085,7 +1085,7 @@ namespace Business.Repository
                 var productList = new List<Product>();
                 var updateList = new List<Product>();
 
-                int colorId, categoryId, karatId, shapeId,centerShapeId,centerCaratId=0;
+                int colorId, categoryId, karatId, shapeId, centerShapeId, centerCaratId = 0;
 
                 // Step 3: Process each product
                 foreach (var product in products)
@@ -1101,8 +1101,8 @@ namespace Business.Repository
                     categoryId = categoryDict.GetValueOrDefault(categoryName);
                     shapeId = shapeDict.GetValueOrDefault(product.AccentStoneShapeName);
                     karatId = KaratDict.GetValueOrDefault(product.Karat);
-                    centerShapeId= shapeDict.GetValueOrDefault(product.CenterShapeName);
-                    centerCaratId= shapeDict.GetValueOrDefault(product.CenterCaratName);
+                    centerShapeId = shapeDict.GetValueOrDefault(product.CenterShapeName);
+                    centerCaratId = shapeDict.GetValueOrDefault(product.CenterCaratName);
 
                     var events = await GetEventSitesByName(product.EventName);
 
@@ -1731,67 +1731,63 @@ namespace Business.Repository
 
         public async Task<IEnumerable<ProductDTO>> GetProductPendingList()
         {
-            var products = await (from product in _context.Product
-                                  join evt in _context.EventSites on product.EventId equals evt.Id
-                                  join krt in _context.ProductProperty on product.KaratId equals krt.Id
-                                  join cat in _context.Category on product.CategoryId equals cat.Id
-                                  join color in _context.ProductProperty on product.ColorId equals color.Id into colorGroup
-                                  from color in colorGroup.DefaultIfEmpty()
-                                  join shape in _context.ProductProperty on product.CenterShapeId equals shape.Id into shapeGroup
-                                  from shape in shapeGroup.DefaultIfEmpty()
-                                  join clarity in _context.ProductProperty on product.ClarityId equals clarity.Id into clarityGroup
-                                  from clarity in clarityGroup.DefaultIfEmpty()
-                                  join size in _context.ProductProperty on product.CenterCaratId equals size.Id into sizeGroup
-                                  from size in sizeGroup.DefaultIfEmpty()
-                                  where product.UploadStatus == SD.Pending
-                                  select new ProductDTO
-                                  {
-                                      Id = product.Id,
-                                      Title = evt.EventName,
-                                      EventId = product.EventId,
-                                      EventName = evt.EventName,
-                                      BandWidth = product.BandWidth,
-                                      Length = product.Length,
-                                      CaratName = product.Carat,
-                                      CategoryId = cat != null ? cat.Id : (int?)null,
-                                      CategoryName = cat.Name,
-                                      ColorId = color != null ? color.Id : (int?)null,
-                                      ColorName = color.Name,
-                                      ClarityId = clarity != null ? clarity.Id : (int?)null,
-                                      ClarityName = clarity.Name,
-                                      ShapeName = shape.Name,
-                                      CenterShapeName = shape.Name,
-                                      UnitPrice = product.UnitPrice,
-                                      Price = product.Price,
-                                      IsActivated = product.IsActivated,
-                                      CaratSizeId = product.CaratSizeId,
-                                      Description = product.Description,
-                                      Sku = product.Sku,
-                                      ProductType = cat.ProductType,
-                                      VenderName = product.Vendor,
-                                      Grades = product.Grades,
-                                      GoldWeight = product.GoldWeight,
-                                      IsReadyforShip = product.IsReadyforShip,
-                                      VenderStyle = product.VenderStyle,
-                                      CenterCaratId = size.Id,
-                                      CenterShapeId = shape != null ? shape.Id : (int?)null,
-                                      CenterCaratName = size.Name,
-                                      Quantity = product.Quantity,
-                                      KaratId = krt != null ? krt.Id : (int?)null,
-                                      Karat = krt.Name,
-                                      UploadStatus=product.UploadStatus,
-                                      ProductDate=product.UpdatedDate
-                                      
-                                  }).ToListAsync();
+            var groupedProducts = await (from product in _context.Product
+                                         join evt in _context.EventSites on product.EventId equals evt.Id
+                                         join krt in _context.ProductProperty on product.KaratId equals krt.Id
+                                         join cat in _context.Category on product.CategoryId equals cat.Id
+                                         join color in _context.ProductProperty on product.ColorId equals color.Id into colorGroup
+                                         from color in colorGroup.DefaultIfEmpty()
+                                         join shape in _context.ProductProperty on product.CenterShapeId equals shape.Id into shapeGroup
+                                         from shape in shapeGroup.DefaultIfEmpty()
+                                         join clarity in _context.ProductProperty on product.ClarityId equals clarity.Id into clarityGroup
+                                         from clarity in clarityGroup.DefaultIfEmpty()
+                                         join size in _context.ProductProperty on product.CenterCaratId equals size.Id into sizeGroup
+                                         from size in sizeGroup.DefaultIfEmpty()
+                                         where product.UploadStatus == SD.Pending
+                                         select new ProductDTO
+                                         {
+                                             Id = product.Id,
+                                             Title = evt.EventName,
+                                             EventId = product.EventId,
+                                             EventName = evt.EventName,
+                                             BandWidth = product.BandWidth,
+                                             Length = product.Length,
+                                             CaratName = product.Carat,
+                                             CategoryId = cat != null ? cat.Id : (int?)null,
+                                             CategoryName = cat.Name,
+                                             ColorId = color != null ? color.Id : (int?)null,
+                                             ColorName = color.Name,
+                                             ClarityId = clarity != null ? clarity.Id : (int?)null,
+                                             ClarityName = clarity.Name,
+                                             ShapeName = shape.Name,
+                                             CenterShapeName = shape.Name,
+                                             UnitPrice = product.UnitPrice,
+                                             Price = product.Price,
+                                             IsActivated = product.IsActivated,
+                                             CaratSizeId = product.CaratSizeId,
+                                             Description = product.Description,
+                                             Sku = product.Sku,
+                                             ProductType = cat.ProductType,
+                                             VenderName = product.Vendor,
+                                             Grades = product.Grades,
+                                             GoldWeight = product.GoldWeight,
+                                             IsReadyforShip = product.IsReadyforShip,
+                                             VenderStyle = product.VenderStyle,
+                                             CenterCaratId = size.Id,
+                                             CenterShapeId = shape != null ? shape.Id : (int?)null,
+                                             CenterCaratName = size.Name,
+                                             Quantity = product.Quantity,
+                                             KaratId = krt != null ? krt.Id : (int?)null,
+                                             Karat = krt.Name,
+                                             UploadStatus = product.UploadStatus,
+                                             ProductDate = product.UpdatedDate
 
-            var groupedProducts = products.GroupBy(p => p.Sku);
+                                         }).OrderByDescending(X => X.Sku).ToListAsync();
 
             var productDTOList = new List<ProductDTO>();
 
-            foreach (var grp in groupedProducts)
+            foreach (var firstProduct in groupedProducts)
             {
-                var firstProduct = grp.First();
-
                 var metals = await (from col in _context.ProductProperty
                                     join prod in _context.Product on col.Id equals prod.ColorId
                                     join colN in _context.ProductProperty on col.ParentId equals colN.Id
@@ -1880,14 +1876,14 @@ namespace Business.Repository
                     WholesaleCost = firstProduct.WholesaleCost,
                     ProductImageVideos = new List<ProductImageAndVideoDTO>(),
                     Prices = prices,
-                    UploadStatus=firstProduct.UploadStatus,
-                    IsReadyforShip=firstProduct.IsReadyforShip,
+                    UploadStatus = firstProduct.UploadStatus,
+                    IsReadyforShip = firstProduct.IsReadyforShip,
                 };
 
                 //  await _context.ProductPrices.Where(x => x.ProductId == firstProduct.Id.ToString()).ToListAsync();
 
                 // Step 4: Get the product images for the first product
-                var productImages = await _context.ProductImages.Where(x => x.ProductId == firstProduct.Id.ToString()).ToListAsync();
+                var productImages = await _context.ProductImages.Where(x => x.ProductId == firstProduct.Id.ToString() && x.MetalId == firstProduct.ColorId).ToListAsync();
 
                 foreach (var image in productImages)
                 {
@@ -1931,7 +1927,7 @@ namespace Business.Repository
                                   {
                                       Id = product.Id,
                                       Title = evt.EventName,
-                                      UploadStatus=product.UploadStatus,
+                                      UploadStatus = product.UploadStatus,
                                       EventId = product.EventId,
                                       EventName = evt.EventName,
                                       BandWidth = product.BandWidth,
@@ -1964,7 +1960,7 @@ namespace Business.Repository
                                       Quantity = product.Quantity,
                                       KaratId = krt != null ? krt.Id : (int?)null,
                                       Karat = krt.Name
-                                  }).OrderBy(x=>x.Sku).ToListAsync();
+                                  }).OrderBy(x => x.Sku).ToListAsync();
 
             return products;
         }
@@ -2025,11 +2021,11 @@ namespace Business.Repository
 
             return products;
         }
-        public async Task<bool> UpdateProductStatus(string[] productIds,string status)
+        public async Task<bool> UpdateProductStatus(string[] productIds, string status)
         {
             try
             {
-                var products=new List<Product>();
+                var products = new List<Product>();
                 var product = new Product();
                 for (int i = 0; i < productIds.Length; i++)
                 {
@@ -2037,9 +2033,9 @@ namespace Business.Repository
                     product = await _context.Product.Where(x => x.Id.ToString() == productIds[i].ToString()).FirstOrDefaultAsync();
                     if (product != null)
                     {
-                        product.UploadStatus=status;
-                        product.UpdatedDate=DateTime.Now;
-                        if (product.UploadStatus==SD.Activated)
+                        product.UploadStatus = status;
+                        product.UpdatedDate = DateTime.Now;
+                        if (product.UploadStatus == SD.Activated)
                         {
                             product.IsActivated = true;
                         }
@@ -2063,7 +2059,7 @@ namespace Business.Repository
             }
         }
 
-        
+
 
     }
 }
