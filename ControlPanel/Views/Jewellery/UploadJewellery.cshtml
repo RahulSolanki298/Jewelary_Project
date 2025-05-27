@@ -547,7 +547,32 @@
             });
 
 
+             $('#ImportProductList').on('submit','#uploadForm', function (e) {
+            e.preventDefault();
 
+            var formData = new FormData(this);
+
+            $('#loader').show();
+            $('#uploadBtn').prop('disabled', true);
+
+            $.ajax({
+                url: '/Jewellery/UploadProductCollectionImages', // Update this if needed
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    $('#responseMsg').html('<div class="alert alert-success">Upload successful!</div>');
+                },
+                error: function (xhr, status, error) {
+                    $('#responseMsg').html('<div class="alert alert-danger">Upload failed: ' + error + '</div>');
+                },
+                complete: function () {
+                    $('#loader').hide();
+                    $('#uploadBtn').prop('disabled', false);
+                }
+            });
+        });
 
            
 

@@ -556,7 +556,9 @@
                                                             <label for="excelFile" class="form-label fw-bold">Select Zip File</label>
                                                             <input type="file" class="form-control form-control-lg" id="zipFile" name="zipFile" accept=".zip" required>
                                                         </div>
-
+                                                        <div id="loader" style="display:none;">
+                                                            <span class="spinner-border text-primary" role="status"></span> Uploading...
+                                                        </div>
                                                         <button id="uploadBtn" type="submit" class="btn btn-theme w-100">Upload File</button>
                                                     </form>
 
@@ -569,6 +571,7 @@
                                                         <div class="form-text">Select Folder Path</div>
 
                                                         <div class="row justify-content-center">
+                                                            
                                                             <div class="col-auto">
                                                                 <button class="btn btn-theme w-100" type="submit" id="btnFolderImgSave">Upload Folder</button>
                                                             </div>
