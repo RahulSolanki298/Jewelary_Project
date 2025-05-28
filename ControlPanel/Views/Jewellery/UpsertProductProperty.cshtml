@@ -1,13 +1,7 @@
 ﻿@model DataAccess.Entities.ProductProperty
 
-@{
-    ViewData["Title"] = "Create Product Property";
 
-
-
-}
-
-<h2>Create Diamond Property</h2>
+<h2>@ViewBag.Title</h2>
 
 <form asp-action="UpsertProductProperty" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -73,4 +67,35 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $("document").ready(function () {
+            $('#productPropertyForm').on('submit', function (e) {
+                e.preventDefault(); // prevent default form submission
+
+                var form = $(this);
+                var actionUrl = form.attr('action');
+                var formData = form.serialize();
+
+                $.ajax({
+                    type: 'POST',
+                    url: actionUrl,
+                    data: formData,
+                    success: function (response) {
+                        Swal.fire({
+                            title: response.message || 'Product Property Saved Successfully!',
+                            icon: "success",
+                            draggable: true
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle error (display validation errors, etc.)
+                        console.error("Submission failed:", xhr.responseText);
+                        alert("Error saving data.");
+                    }
+                });
+            });
+        });
+    </script>
+
 }

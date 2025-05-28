@@ -1,9 +1,6 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace DataAccess.Entities
+﻿namespace DataAccess.Entities
 {
-    public class ProductCollectionItems
+    public class ProductStyleItems
     {
         public int Id { get; set; }
 

@@ -130,6 +130,7 @@
             });
 
             $('#jewelleryList').on('click', '.dropdown-item', function (e) {
+                debugger;
                     e.preventDefault();
 
                     var status = $(this).data('status');
@@ -147,6 +148,7 @@
                 }
                 else
                 {
+                    debugger;
                      $.ajax({
                         url: '@Url.Action("ChangeStatus", "Jewellery")', // 🔁 Replace with your actual API endpoint
                         method: 'POST',
@@ -154,13 +156,26 @@
                             pIds: idsArray,
                             status: status
                         },
-                        success: function(response) {
-                            alert('Products updated to "' + status + '" successfully.');
-                            console.log(response);
-                            location.reload();
+                         success: function (response) {
+                             debugger;
+                            //alert('Products updated to "' + status + '" successfully.');
+                            Swal.fire({
+                                title: 'Products updated to "' + status + '" successfully.',
+                                icon: "success",
+                                draggable: true
+                            });
+                             console.log(response);
+                             setTimeout(function () {
+                                 location.reload();
+                             }, 600);
+
                         },
                         error: function(xhr, status, error) {
-                            alert('An error occurred while updating products.');
+                            Swal.fire({
+                                title: "An error occurred while updating products.",
+                                icon: "success",
+                                draggable: true
+                            });
                             console.error(error);
                         }
                     });
@@ -206,7 +221,6 @@
             $('#txtProductIds').val(selectedIds.join(','));
         }
 
-        // Utility: Get selected checkbox values
         function getSelectedIds() {
             let ids = [];
             $('#ringTable .chkId:not(#chkAllIds):checked').each(function () {

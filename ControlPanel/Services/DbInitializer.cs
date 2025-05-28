@@ -45,7 +45,7 @@ namespace ControlPanel.Services
 
             await SeedCategoriesAsync();
 
-            await SeedSubCategoriesAsync();
+            //await SeedSubCategoriesAsync();
 
             await SeedProductPropertiesAsync();
         }
@@ -108,44 +108,44 @@ namespace ControlPanel.Services
             {
                 var categories = new List<Category>
                 {
-                    new Category { Name = "Rings", ProductType = "Diamond" },
-                    new Category { Name = "Earrings", ProductType = "Diamond" },
-                    new Category { Name = "Nackleces", ProductType = "Diamond" },
-                    new Category { Name = "Pendants", ProductType = "Diamond" },
-                    new Category { Name = "Bracelets", ProductType = "Diamond" },
-                    new Category { Name = "Cufflinks", ProductType = "Diamond" },
-                    new Category { Name = "Brooch", ProductType = "Diamond" },
-                    new Category { Name = "Bangle", ProductType = "Diamond" }
+                    new Category { Name = "Rings", ProductType = "Diamond",IsActivated=true },
+                    new Category { Name = "Earrings", ProductType = "Diamond",IsActivated=true },
+                    new Category { Name = "Nackleces", ProductType = "Diamond",IsActivated=true },
+                    new Category { Name = "Pendants", ProductType = "Diamond",IsActivated=true },
+                    new Category { Name = "Bracelets", ProductType = "Diamond",IsActivated=true },
+                    new Category { Name = "Cufflinks", ProductType = "Diamond",IsActivated=true },
+                    new Category { Name = "Brooch", ProductType = "Diamond" ,IsActivated=true},
+                    new Category { Name = "Bangle", ProductType = "Diamond" ,IsActivated=true}
                 };
                 await _db.Category.AddRangeAsync(categories);
                 await _db.SaveChangesAsync();
             }
         }
 
-        private async Task SeedSubCategoriesAsync()
-        {
-            if (!await _db.SubCategory.AnyAsync())
-            {
-                var ringCategory = await _db.Category.Where(x => x.Name == "Rings").FirstOrDefaultAsync();
+        //private async Task SeedSubCategoriesAsync()
+        //{
+        //    if (!await _db.SubCategory.AnyAsync())
+        //    {
+        //        var ringCategory = await _db.Category.Where(x => x.Name == "Rings").FirstOrDefaultAsync();
 
-                if (ringCategory != null)
-                {
-                    var subCategories = new List<SubCategory>
-                    {
-                        new SubCategory { Name = "Solitaire Rings", CategoryId = ringCategory.Id },
-                        new SubCategory { Name = "Earrings", CategoryId = ringCategory.Id },
-                        new SubCategory { Name = "Nackleces", CategoryId = ringCategory.Id },
-                        new SubCategory { Name = "Pendants", CategoryId = ringCategory.Id },
-                        new SubCategory { Name = "Bracelets", CategoryId = ringCategory.Id },
-                        new SubCategory { Name = "Cufflinks", CategoryId = ringCategory.Id },
-                        new SubCategory { Name = "Brooch", CategoryId = ringCategory.Id },
-                        new SubCategory { Name = "Bangle", CategoryId = ringCategory.Id }
-                    };
-                    await _db.SubCategory.AddRangeAsync(subCategories);
-                    await _db.SaveChangesAsync();
-                }
-            }
-        }
+        //        if (ringCategory != null)
+        //        {
+        //            var subCategories = new List<SubCategory>
+        //            {
+        //                new SubCategory { Name = "Solitaire Rings", CategoryId = ringCategory.Id },
+        //                new SubCategory { Name = "Earrings", CategoryId = ringCategory.Id },
+        //                new SubCategory { Name = "Nackleces", CategoryId = ringCategory.Id },
+        //                new SubCategory { Name = "Pendants", CategoryId = ringCategory.Id },
+        //                new SubCategory { Name = "Bracelets", CategoryId = ringCategory.Id },
+        //                new SubCategory { Name = "Cufflinks", CategoryId = ringCategory.Id },
+        //                new SubCategory { Name = "Brooch", CategoryId = ringCategory.Id },
+        //                new SubCategory { Name = "Bangle", CategoryId = ringCategory.Id }
+        //            };
+        //            await _db.SubCategory.AddRangeAsync(subCategories);
+        //            await _db.SaveChangesAsync();
+        //        }
+        //    }
+        //}
 
         private async Task SeedProductPropertiesAsync()
         {

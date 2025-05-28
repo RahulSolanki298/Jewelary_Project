@@ -603,17 +603,17 @@ namespace ControlPanel.Controllers
         [HttpGet]
         public async Task<IActionResult> UpsertProductProperty(int? pId = 0)
         {
-            var data = new ProductProperty();
             ViewBag.ParentDrp = await _productPropertyRepository.GetMainPropertyList();
+            var isEdit = pId.HasValue && pId > 0;
+            ViewBag.Title = isEdit ? "Edit Jewellery Property" : "Create Jewellery Property";
 
-            if (pId.HasValue && pId > 0)
-            {
-                data = await _productPropertyRepository.GetProductPropertyById(pId.Value);
+            var data = isEdit
+                ? await _productPropertyRepository.GetProductPropertyById(pId.Value)
+                : new ProductProperty();
 
-                return View(data);
-            }
             return View(data);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> UpsertProductProperty(ProductProperty productPropData)
@@ -627,7 +627,9 @@ namespace ControlPanel.Controllers
 
             await _productPropertyRepository.SaveProductProperty(productPropData, productPropData.Id);
 
-
+            TempData["Status"] = "Success";
+            TempData["Message"] = "Product property has been updated successfully.";
+            
             return RedirectToAction("JewelryProperty");
         }
 
@@ -636,16 +638,22 @@ namespace ControlPanel.Controllers
         {
             if (!pId.HasValue || pId <= 0)
             {
-                return BadRequest("Invalid property ID.");
+                TempData["Status"] = "Fail";
+                TempData["Message"] = "Invalid property ID.";
+                return RedirectToAction("JewelryProperty");
             }
 
             var success = await _productPropertyRepository.DeleteProductProperty(pId.Value);
 
             if (!success)
             {
-                return NotFound("Property not found or could not be deleted.");
+                TempData["Status"] = "Fail";
+                TempData["Message"] = "Property not found or could not be deleted.";
+                return RedirectToAction("JewelryProperty");
             }
 
+            TempData["Status"] = "Success";
+            TempData["Message"] = "Property has been saved successfully.";
             return RedirectToAction("JewelryProperty");
         }
 

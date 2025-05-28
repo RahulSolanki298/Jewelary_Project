@@ -7,7 +7,7 @@
 
 }
 
-<h2>Create Diamond Property</h2>
+<h2>@ViewBag.Title</h2>
 
 <form asp-action="AddDiamondProperty" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -21,7 +21,7 @@
 
     <div class="form-group">
         <label asp-for="Description" class="control-label"></label>
-        <textarea asp-for="Description" class="form-control"></textarea>
+        <textarea asp-for="Description" class="form-control border-0 shadow"></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
 
@@ -78,5 +78,12 @@
 </form>
 
 @section Scripts {
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'anchor autolink charmap codesample emoticons  lists   table visualblocks wordcount',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough |  align lineheight | numlist bullist indent outdent',
+        });
+    </script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

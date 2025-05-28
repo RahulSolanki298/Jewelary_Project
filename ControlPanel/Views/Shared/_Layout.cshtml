@@ -19,9 +19,16 @@
     <link href="~/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
     <link href="~/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
     <link href="~/assets/vendor/simple-datatables/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+
+    <!-- Place the first <script> tag in your HTML's <head> -->
+    <script src="https://cdn.tiny.cloud/1/gb1shqdvpfopuzthl3uwmxipvnfnkp9xk13tb00spoyk15wt/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <!-- Place the following <script> and <textarea> tags your HTML's <body> -->
+    
 
     <link href="~/assets/css/style.css" rel="stylesheet">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
     <link rel="stylesheet" href="sweetalert2.min.css">
 </head>
 <body>
@@ -448,6 +455,19 @@
 
                 <li class="nav-item">
                     <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
+                        <i class="bi bi-layout-text-window-reverse"></i><span>Category</span><i class="bi bi-chevron-down ms-auto"></i>
+                    </a>
+                    <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                        <li>
+                            <a href="@Url.Action("Index","Category")">
+                                <i class="bi bi-circle"></i><span>Category List</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
                         <i class="bi bi-layout-text-window-reverse"></i><span>Orders</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>
                     <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
@@ -574,13 +594,7 @@
     </aside>
 
     <main id="main" class="main">
-        <partial name="_Notification" />
-        <!-- Global Loader -->
-        <div id="global-loader" style="display:none;">
-            <div class="loader-overlay">
-                <div class="spinner"></div>
-            </div>
-        </div>
+        @await Html.PartialAsync("_Notification")
 
         @RenderBody()
     </main>
@@ -599,49 +613,10 @@
     <script src="~/assets/vendor/quill/quill.js"></script>
     <script src="~/assets/vendor/simple-datatables/simple-datatables.js"></script>
     <script src="~/assets/vendor/php-email-form/validate.js"></script>
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gb1shqdvpfopuzthl3uwmxipvnfnkp9xk13tb00spoyk15wt/tinymce-jquery@2/dist/tinymce-jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <!-- Main JS -->
-    @* <script src="~/assets/js/main.js"></script>*@
-    <script>
-        function showLoader() {
-            document.getElementById("global-loader").style.display = "flex";
-        }
-
-        function hideLoader() {
-            document.getElementById("global-loader").style.display = "none";
-        }
-
-        // Use event delegation and fallback handling
-        $(function () {
-            // Show loader on link click (excluding hash-only links, mailto, etc.)
-            $(document).on("click", "a[href]:not([href='#']):not([target='_blank'])", function (e) {
-                const href = $(this).attr('href');
-                if (href && !href.startsWith("mailto:") && !href.startsWith("javascript:")) {
-                    showLoader();
-                }
-            });
-
-            // Show loader on form submit
-            $(document).on("submit", "form", function () {
-                showLoader();
-            });
-
-            // Optional: show loader on submit buttons
-            $(document).on("click", "button[type='submit'], input[type='submit']", function () {
-                showLoader();
-            });
-
-            // Hide loader after full page load
-            $(window).on("load", function () {
-                hideLoader();
-            });
-        });
-    </script>
-
-
-
-    <!-- Section for Page-Specific Scripts -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
 </body>

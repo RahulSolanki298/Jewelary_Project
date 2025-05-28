@@ -87,6 +87,10 @@ namespace DataAccess.Data
 
         public DbSet<ProductHistory> ProductHistory { get; set; }
 
+        public DbSet<ApplicationPlatforms> ApplicationPlatforms { get; set; }
+
+        public DbSet<ProductStyleItems> ProductStyleItems { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

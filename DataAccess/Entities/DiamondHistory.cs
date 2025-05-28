@@ -5,6 +5,7 @@ namespace DataAccess.Entities
     public class DiamondHistory
     {
         public int Id { get; set; }
+        public string DiamondId { get; set; }
         public string StoneId { get; set; }
         public string DNA { get; set; }
         public string Step { get; set; }
@@ -109,6 +110,5 @@ namespace DataAccess.Entities
         public DateTime? CreatedDate { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; } 
-        public int? HistoryId { get; set; }
     }
 }

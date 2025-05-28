@@ -33,7 +33,7 @@ namespace ControlPanel.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            // var data = await _diamondRepository.GetDiamondList();
+
             return View();
         }
 
@@ -157,6 +157,7 @@ namespace ControlPanel.Controllers
         [HttpGet]
         public IActionResult GetDiamond(int diamondId)
         {
+            ViewBag.Title = "Diamond Details";
             var data = _diamondRepository.GetDiamondById(diamondId);
             return View(data);
         }

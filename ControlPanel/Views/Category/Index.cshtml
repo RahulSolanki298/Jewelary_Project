@@ -1,0 +1,37 @@
+﻿
+<div class="row mb-2">
+    <div class="col-lg-12">
+        <h4>Category List</h4>
+    </div>
+</div>
+<div class="row mb-2" id="categoryList">
+
+</div>
+
+
+
+@section Scripts{
+    <script>
+        //categoryTable
+        $(document).ready(function () {
+            categoryList();
+        });
+
+        function categoryList()
+        {
+            $.ajax({
+                url: '@Url.Action("CategoryList", "Category")',
+                type: 'GET',
+                success: function (result)
+                {
+                    $('#categoryList').html("");
+                    $('#categoryList').html(result);
+                },
+                error: function (xhr, status, error)
+                {
+                    console.error('Error loading category list:', error);
+                }
+            });
+        }
+    </script>
+}

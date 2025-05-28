@@ -6,6 +6,7 @@ namespace DataAccess.Entities
     public class ProductHistory
     {
         public Guid Id { get; set; }
+        public string ProductId { get; set; }
         public string DesignNo { get; set; }
         public string ParentDesign { get; set; }
         public string ProductSize { get; set; }
@@ -71,6 +72,6 @@ namespace DataAccess.Entities
         public bool? IsDelete { get; set; }
 
         [ForeignKey("FileUploadHistoryId")]
-        public ProductFileUploadHistory ProductFileUploadHistory { get; set; }
+        public virtual ProductFileUploadHistory ProductFileUploadHistory { get; set; }
     }
 }

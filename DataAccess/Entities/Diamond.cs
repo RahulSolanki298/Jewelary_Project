@@ -108,7 +108,9 @@ namespace DataAccess.Entities
         public string CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
         public string UpdatedBy { get; set; }
-        public DateTime? UpdatedDate { get; set; } 
-        public int? HistoryId { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public int? LiveOnId { get; set; }  // Website,Mobile 
+
+        public int? FileUploadHistoryId { get; set; }
     }
 }
