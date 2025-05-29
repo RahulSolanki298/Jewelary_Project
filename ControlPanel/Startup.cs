@@ -59,7 +59,7 @@ namespace ControlPanel
             services.AddScoped<IB2COrdersRepository, B2COrdersRepository>();
             services.AddScoped<IDiamondRepository, DiamondRepository>();
             services.AddScoped<IDiamondPropertyRepository, DiamondPropertyRepository>();
-            //services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IProductStyleRepository, ProductStyleRepository>();
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDBContext>()
                 .AddDefaultTokenProviders();

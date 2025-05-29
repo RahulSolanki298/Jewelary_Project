@@ -4,6 +4,8 @@
     {
         public int Id { get; set; }
 
+        public int? StyleId { get; set; }
+
         public string ProductId { get; set; }
 
         public string UserId { get; set; }

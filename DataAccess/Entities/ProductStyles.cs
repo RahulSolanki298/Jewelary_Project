@@ -10,6 +10,10 @@ namespace DataAccess.Entities
 
         public string VenderId { get; set; }
 
+        public int? CategoryId { get; set; }
+
+        public string StyleImage { get; set; }
+
         public DateTime CreatedDate { get; set; } = DateTime.Now;
 
         public DateTime? UpdatedDate { get; set; }

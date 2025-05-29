@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataAccess.Entities
 {
@@ -6,17 +8,14 @@ namespace DataAccess.Entities
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage ="Please enter category name.")]
         public string Name { get; set; }
 
         public string Prefix { get; set; }
 
         public string Title { get; set; }
 
-        [Required(ErrorMessage = "Please enter seo title.")]
         public string SEO_Title { get; set; }
 
-        [Required(ErrorMessage = "Please enter seo url.")]
         public string SEO_Url { get; set; }
 
         public int DisplayOrder { get; set; }
@@ -26,5 +25,8 @@ namespace DataAccess.Entities
         public string ProductType { get; set; }
 
         public bool IsActivated { get; set; } = false;
+
+        [NotMapped]
+        public IFormFile ImageFile { get; set; }
     }
 }

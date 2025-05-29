@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Business.Repository.IRepository
 {
-    public interface CollectionRepository
+    public interface ICollectionRepository
     {
         Task<List<ProductCollections>> GetProductCollections();
         Task<ProductCollections> GetProductCollectionById(int id);

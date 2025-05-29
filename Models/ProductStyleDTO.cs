@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models
 {
@@ -6,7 +7,12 @@ namespace Models
     {
         public int Id { get; set; }
 
+        [Required(ErrorMessage = "Style Name is required")]
+        [StringLength(100)]
         public string StyleName { get; set; }
+
+        [Required(ErrorMessage = "Vendor Name is required")]
+        public string VenderName { get; set; }
 
         public string VenderId { get; set; }
 
@@ -16,5 +22,8 @@ namespace Models
 
         public bool? IsActivated { get; set; } = false;
 
+        public string StyleImage { get; set; }
+
     }
+
 }

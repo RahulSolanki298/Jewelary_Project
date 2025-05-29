@@ -9,15 +9,11 @@
             <th scope="col">
                 Image
             </th>
-            <th scope="col">Status</th>
             <th scope="col">
                 Category Name
             </th>
-            <th scope="col">Title</th>
-            <th scope="col">Prefix</th>
-            <th scope="col">SEO Title</th>
-            <th scope="col">SEO URL</th>
-
+            <th scope="col">Status</th>
+            <th scope="col">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -25,19 +21,23 @@
         {
             @foreach (var item in Model)
             {
-                <tr>
-                    <td scope="col"><input type="checkbox" class="chkId" value="@item.Id" /></td>
+                <tr class="clickable-row" data-propertyName="@item.Name">
+                    <td scope="col">
+                        <input type="checkbox" class="chkId" value="@item.Id" /></td>
                     <td scope="col">
                         <img src="@SD.ImgUrl/@item.CategoryImage" style="height:100px;" />
                     </td>
-                    <td scope="col">@item.IsActivated</td>
                     <td scope="col">
                         @item.Name
                     </td>
-                    <td scope="col">@item.Title</td>
-                    <td scope="col">@item.Prefix</td>
-                    <td scope="col">@item.SEO_Title</td>
-                    <td scope="col">@item.SEO_Url</td>
+                    <td scope="col">@item.IsActivated</td>
+                    <td scope="col">
+                        <select class="setProgram">
+                            <option value="">Select Action</option>
+                            <option value="Styles">Product Styles</option>
+                            <option value="Collection">Product Collection</option>
+                        </select>
+                    </td>
                 </tr>
             }
         }
