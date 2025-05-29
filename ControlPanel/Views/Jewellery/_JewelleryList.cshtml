@@ -6,7 +6,7 @@
 
 <div class="row mb-2">
     <div class="col-lg-6">
-        <h4>Activated Jewelry</h4>
+       
     </div>
     <div class="col-lg-6">
         <div class="btn-group dropup float-end">
@@ -28,19 +28,19 @@
 
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
-        <a class="nav-link active" id="rings-tab" data-bs-toggle="tab" href="#ringList" role="tab" aria-controls="ringList" aria-selected="true">Rings</a>
+        <a class="nav-link active" id="rings-tab" data-bs-toggle="tab" href="#ringList" role="tab" aria-controls="ringList" aria-selected="true">Rings <span class="badge badge-light bg-dark ml-2 ringcount">@Model.Where(x => x.CategoryName == @SD.Rings && x.UploadStatus == SD.Activated).GroupBy(x => x.VenderStyle).Count()</span></a>
     </li>
     <li class="nav-item" role="presentation">
-        <a class="nav-link" id="bands-tab" data-bs-toggle="tab" href="#bandList" role="tab" aria-controls="bandList" aria-selected="false">Bands</a>
+        <a class="nav-link" id="bands-tab" data-bs-toggle="tab" href="#bandList" role="tab" aria-controls="bandList" aria-selected="false">Bands <span class="badge badge-light bg-dark ml-2 ringcount">@Model.Where(x => x.CategoryName == @SD.Bands && x.UploadStatus == SD.Activated).GroupBy(x => x.VenderStyle).Count()</span></a>
     </li>
     <li class="nav-item" role="presentation">
-        <a class="nav-link" id="earrings-tab" data-bs-toggle="tab" href="#earringList" role="tab" aria-controls="earringList" aria-selected="false">Earrings</a>
+        <a class="nav-link" id="earrings-tab" data-bs-toggle="tab" href="#earringList" role="tab" aria-controls="earringList" aria-selected="false">Earrings <span class="badge badge-light bg-dark ml-2 ringcount">@Model.Where(x => x.CategoryName == @SD.Earrings && x.UploadStatus == SD.Activated).GroupBy(x => x.VenderStyle).Count()</span></a>
     </li>
     <li class="nav-item" role="presentation">
-        <a class="nav-link" id="pendant-tab" data-bs-toggle="tab" tabindex="-1" href="#pendantList" role="tab" aria-controls="pandantList" aria-disabled="false">Pendant List</a>
+        <a class="nav-link" id="pendant-tab" data-bs-toggle="tab" tabindex="-1" href="#pendantList" role="tab" aria-controls="pandantList" aria-disabled="false">Pendant <span class="badge badge-light bg-dark ml-2 ringcount"> @Model.Where(x => x.CategoryName == @SD.Pendants && x.UploadStatus == SD.Activated).GroupBy(x => x.VenderStyle).Count()</span></a>
     </li>
     <li class="nav-item" role="presentation">
-        <a class="nav-link" id="bracelets-tab" data-bs-toggle="tab" tabindex="-1" href="#braceletsList" role="tab" aria-controls="braceletList" aria-disabled="false">Bracelet List</a>
+        <a class="nav-link" id="bracelets-tab" data-bs-toggle="tab" tabindex="-1" href="#braceletsList" role="tab" aria-controls="braceletList" aria-disabled="false">Bracelet <span class="badge badge-light bg-dark ml-2 ringcount"> @Model.Where(x => x.CategoryName == @SD.Bracelets && x.UploadStatus == SD.Activated).GroupBy(x => x.VenderStyle).Count()</span></a>
     </li>
 </ul>
 

@@ -75,7 +75,7 @@
 
     private async Task SaveCategory()
     {
-        await categoryRepository.SaveCategory(category, category.Id);
+        await categoryRepository.SaveCategory(category);
         category = new DataAccess.Entities.Category();
         Snackbar.Add("Category has been saved successfully.", Severity.Success);
         Navigation.NavigateTo("/applications/category/categoryList");

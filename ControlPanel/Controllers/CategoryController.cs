@@ -40,45 +40,45 @@ namespace ControlPanel.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> StyleList(int categoryId)
+        public async Task<IActionResult> StyleAndCollectionList(int categoryId,string type)
         {
-            var data = await _productStyleRepository.GetProductStyleByCategoryId(categoryId);
-            return PartialView("_GetProductStyleList", data);
+            if (type == "styles")
+            {
+                var data = await _productStyleRepository.GetProductStyleByCategoryId(categoryId);
+                return PartialView("_GetProductStyleList", data);
+            }
+            else if (type == "collections")
+            {
+                var data = await _productStyleRepository.GetProductCollectionsByCategoryId(categoryId);
+                return PartialView("_GetProductCollectionList", data);
+            }
+            return null;   
         }
+
 
         [HttpGet]
-        public async Task<IActionResult> CollectionList(int categoryId)
+        public async Task<IActionResult> DeleteCategory(int id = 0)
         {
-            var data = await _categoryRepository.GetCategoryList();
-            return PartialView("_GetProductCollectionList", data);
+            if (id > 0)
+            {
+                var result = await _categoryRepository.DeleteCategoryById(id);
+
+                if (result==true)
+                {
+                    TempData["Status"] = "Success";
+                    TempData["Message"] = "Product category has been deleted successfully.";
+                }
+                else
+                {
+                    TempData["Status"] = "Fail";
+                    TempData["Message"] = "Product category has been deleted successfully.";
+                }
+
+                return RedirectToAction("Index");
+            }
+
+            return View();
         }
-
-
-        //[HttpGet]
-        //public async Task<IActionResult> CategoryList()
-        //{
-        //    bool status = false;
-        //    string strResult = "";
-        //    string strMessage = "Data Not Found";
-
-        //    var data = await _categoryRepository.GetCategoryList();
-
-        //    if (data != null)
-        //    {
-        //        status = true;
-        //        strMessage = "";
-        //        strResult = JsonConvert.SerializeObject(data);
-        //    }
-        //    return Json(new
-        //    {
-        //        Data = new
-        //        {
-        //            status = status,
-        //            result = strResult,
-        //            message = strMessage
-        //        }
-        //    });
-        //}
 
         [HttpGet]
         public async Task<IActionResult> GetCategory(int? id = 0)

@@ -1,0 +1,113 @@
+﻿@model IEnumerable<Models.ProductDTO>
+@using Common
+
+<style>
+    .product-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .product-card {
+        flex: 1 1 300px;
+        max-width: 300px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        font-family: 'Segoe UI', sans-serif;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .product-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+    }
+
+    .product-image img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .product-details {
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .product-title {
+        font-size: 1.3em;
+        margin: 0 0 10px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .product-description {
+        font-size: 0.95em;
+        color: #666;
+        margin-bottom: auto;
+    }
+
+    .product-price {
+        font-size: 1.1em;
+        color: #e91e63;
+        margin: 14px 0;
+        font-weight: bold;
+    }
+
+    .add-to-cart {
+        align-self: flex-start;
+        background: #e91e63;
+        color: #fff;
+        padding: 10px 18px;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.95em;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .add-to-cart:hover {
+        background: #d81b60;
+    }
+
+    .product-description {
+        white-space: normal;
+        overflow-wrap: break-word;
+        max-height: 150px; /* optional: limit the height */
+        overflow-y: auto; /* optional: scroll if too long */
+        font-size: 14px; /* optional: adjust font size for readability */
+    }
+
+    @*@media (max-width: 768px) {
+        .product-card {
+            max-width: 100%;
+        }
+    }*@
+</style>
+
+<div class="product-grid">
+    @foreach (var item in Model)
+    {
+        var imageUrl = item.ProductImageVideos?.FirstOrDefault()?.ImageUrl
+                       ?? "images/default-product.png"; // Ensure this path is correct
+
+        <div class="product-card">
+            <div class="product-image">
+                <img src="@($"{SD.ImgUrl}/{imageUrl}")" alt="@item.VenderStyle" />
+            </div>
+            <div class="product-details">
+                <h2 class="product-title">@(!string.IsNullOrEmpty(item.Title) ? item.Title : item.EventName)</h2>
+                <p class="product-description">@item.Description</p>
+                <div class="product-price" style="color:#151542;">@item.Price</div>
+                <button class="btn btn-lg btn-theme">Show More Details</button>
+            </div>
+        </div>
+    }
+</div>

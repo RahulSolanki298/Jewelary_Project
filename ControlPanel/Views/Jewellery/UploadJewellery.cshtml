@@ -421,12 +421,16 @@
                     var $button = $(this);
                     var fileInput = $("#fileUpload")[0];
 
+                $("#btnFileImgSave").attr("disabled");
+
                     if (!fileInput || fileInput.files.length === 0) {
                         Swal.fire({
                             title: "No file selected!",
                             text: "Please upload a valid .zip file.",
                             icon: "warning"
                         });
+                        $("#btnFileImgSave").removeAttr("disabled");
+
                         return;
                     }
 
@@ -437,6 +441,7 @@
                             text: "Only .zip files are allowed.",
                             icon: "error"
                         });
+                        $("#btnFileImgSave").removeAttr("disabled");
                         return;
                     }
 
@@ -458,9 +463,11 @@
                                 text: 'Product images and video have been uploaded.',
                                 icon: "success"
                             });
+                            $("#btnFileImgSave").removeAttr("disabled");
                         },
                         error: function (xhr, status, error) {
                             console.error("Upload error:", xhr.responseText);
+                            $("#btnFileImgSave").removeAttr("disabled");
                             Swal.fire({
                                 title: "Upload Failed",
                                 text: xhr.responseText || "An error occurred during upload.",
@@ -521,7 +528,7 @@
                 if (isReadonly) {
                     // Enable editing
                     $("#ringTable .product-input").removeAttr("disabled");
-                    $(this).text("Save Rings");
+                    $(this).text("Update");
                 } else {
                     // Optionally handle save logic here
 
@@ -538,7 +545,7 @@
                 if (isReadonly) {
                     // Enable editing
                     $("#bandTable .product-input").removeAttr("disabled");
-                    $(this).text("Save Bands");
+                    $(this).text("Update");
                 } else {
                     // Optionally handle save logic here
 
@@ -555,7 +562,7 @@
                 if (isReadonly) {
                     // Enable editing
                     $("#EarringTable .product-input").removeAttr("disabled");
-                    $(this).text("Save Earring");
+                    $(this).text("Update");
                 } else {
                     // Optionally handle save logic here
 
@@ -572,7 +579,7 @@
                 if (isReadonly) {
                     // Enable editing
                     $("#PendantTable .product-input").removeAttr("disabled");
-                    $(this).text("Save Pendant");
+                    $(this).text("Update");
                 } else {
                     // Optionally handle save logic here
 
@@ -589,7 +596,7 @@
                 if (isReadonly) {
                     // Enable editing
                     $("#BraceletsTable .product-input").removeAttr("disabled");
-                    $(this).text("Save Bracelets");
+                    $(this).text("Update");
                 } else {
                     // Optionally handle save logic here
 

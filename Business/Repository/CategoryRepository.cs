@@ -41,16 +41,21 @@ namespace Business.Repository
 
         public async Task<IEnumerable<Category>> GetCategoryList() => await _context.Category.ToListAsync();
 
-        public async Task<Category> SaveCategory(Category category, int catId = 0)
+        public async Task<Category> SaveCategory(Category category)
         {
             try
             {
-                if (catId > 0)
+                if (category != null && category.Id > 0)
                 {
-                    var categoryDT = await _context.Category.FirstOrDefaultAsync(x => x.Id == catId);
+                    var categoryDT = await _context.Category.FirstOrDefaultAsync(x => x.Id == category.Id);
                     categoryDT.Name = category.Name;
                     categoryDT.ProductType = category.ProductType;
-
+                    categoryDT.CategoryImage = category.CategoryImage;
+                    categoryDT.DisplayOrder = category.DisplayOrder;
+                    categoryDT.SEO_Title = category.SEO_Title;
+                    categoryDT.SEO_Url = category.SEO_Url;
+                    categoryDT.IsActivated = category.IsActivated;
+                    categoryDT.Prefix = category.Prefix;
                     _context.Category.Update(categoryDT);
                     _context.SaveChanges();
 
@@ -61,6 +66,12 @@ namespace Business.Repository
                     var categoryDT = new Category();
                     categoryDT.Name = category.Name;
                     categoryDT.ProductType = category.ProductType;
+                    categoryDT.CategoryImage = category.CategoryImage;
+                    categoryDT.DisplayOrder = category.DisplayOrder;
+                    categoryDT.SEO_Title = category.SEO_Title;
+                    categoryDT.SEO_Url = category.SEO_Url;
+                    categoryDT.IsActivated = category.IsActivated;
+                    categoryDT.Prefix = category.Prefix;
                     await _context.Category.AddAsync(categoryDT);
                     await _context.SaveChangesAsync();
                     return categoryDT;

@@ -16,6 +16,10 @@ namespace Business.Repository.IRepository
 
         Task<List<ProductStyles>> GetProductStyleByCategoryId(int categoryId);
 
+        Task<List<ProductCollections>> GetProductCollectionsByCategoryId(int categoryId);
+
+        Task<IEnumerable<ProductDTO>> GetProductStyleItemsList();
+
         Task<bool> DeleteProductStyle(int styleId);
         
         Task<bool> SaveProductStyle(ProductStyleDTO product);

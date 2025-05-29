@@ -130,7 +130,6 @@
             });
 
             $('#jewelleryList').on('click', '.dropdown-item', function (e) {
-                debugger;
                     e.preventDefault();
 
                     var status = $(this).data('status');
@@ -148,7 +147,6 @@
                 }
                 else
                 {
-                    debugger;
                      $.ajax({
                         url: '@Url.Action("ChangeStatus", "Jewellery")', // 🔁 Replace with your actual API endpoint
                         method: 'POST',

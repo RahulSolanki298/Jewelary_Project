@@ -616,22 +616,45 @@ namespace ControlPanel.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> UpsertProductProperty(ProductProperty productPropData)
+        public async Task<IActionResult> UpsertProductProperty(ProductProperty productPropData, IFormFile UploadFile)
         {
             if (!ModelState.IsValid)
             {
                 ViewBag.ParentDrp = await _productPropertyRepository.GetMainPropertyList();
-
                 return View(productPropData);
+            }
+
+            // Handle file upload
+            if (UploadFile != null && UploadFile.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+
+                // Ensure the folder exists
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(UploadFile.FileName);
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await UploadFile.CopyToAsync(stream);
+                }
+
+                // Optionally assign file name to productPropData for DB storage
+                productPropData.IconPath = "/uploads/" + uniqueFileName;
             }
 
             await _productPropertyRepository.SaveProductProperty(productPropData, productPropData.Id);
 
             TempData["Status"] = "Success";
             TempData["Message"] = "Product property has been updated successfully.";
-            
+
             return RedirectToAction("JewelryProperty");
         }
+
 
         [HttpGet]
         public async Task<IActionResult> DeleteProductProperty(int? pId = 0)

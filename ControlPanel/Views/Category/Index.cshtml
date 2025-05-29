@@ -7,20 +7,23 @@
     <div class="row">
         <div class="col-lg-6 col-md-12 mb-4">
             <div class="card shadow-sm">
-                <div class="card-body p-0">
-                    <div class="row mb-2" id="categoryList">
+                <div class="card-body p-0"  id="categoryList">
+                    
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-body p-0" id="propertyDT">
+                    
 
-                    </div>
+                    
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-6 col-md-12" id="propertyDT">
-            
-        </div>
     </div>
 </div>
-
 
 @section Scripts{
     <script>
@@ -28,20 +31,48 @@
         $(document).ready(function () {
             categoryList();
 
-            $('.clickable-row').on('click', function () {
-                var propertyName = $(this).data('propertyname'); // Ensure correct casing in data attribute
+            $('#categoryList').on('click', '.show-property', function (e) {
+                debugger;
+                e.preventDefault();
+
+                const categoryId = $(this).data('category-id');
+                const type = $(this).data('type'); // "styles" or "collections"
+
+                if (!categoryId || !type) {
+                    console.warn('Missing category ID or type.');
+                    return;
+                }
 
                 $.ajax({
-                    url: '@Url.Action("JewelryPropertyItems", "Category")' + '?propertyName=' + encodeURIComponent(propertyName),
+                    url: '@Url.Action("StyleAndCollectionList", "Category")',
                     method: 'GET',
-                    contentType: 'application/json',
+                    data: { categoryId: categoryId, type: type },
                     success: function (data) {
-                        $("#propertyDT").empty().html(data); // Clear and update content
+                        $('#propertyDT').empty().html(data); // Replace or update your target container
                     },
                     error: function (xhr, status, error) {
-                        console.error('API call failed:', error);
+                        console.error('Failed to load property items:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops!',
+                            text: 'Something went wrong while loading the data.'
+                        });
                     }
                 });
+            });
+
+            $('.setProgram').on('change', function () {
+                debugger;
+                var $parent = $(this).closest('td');
+                var value = $(this).val();
+
+                $parent.find('.style-details, .collection-list').hide();
+
+                if (value === 'Styles') {
+                    $parent.find('.style-details').show();
+                } else if (value === 'Collection') {
+                    $parent.find('.collection-list').show();
+                }
             });
 
         function categoryList()
@@ -61,6 +92,6 @@
             });
         }
         });
-         
+
     </script>
 }

@@ -8,7 +8,7 @@
 <section class="section">
     <div class="row mb-2">
         <div class="col-lg-6">
-            <h4>Hold Jewelry</h4>
+            <h4>Request List</h4>
         </div>
         <div class="col-lg-6">
             <div class="btn-group dropup float-end">
@@ -21,31 +21,44 @@
                     <li><a class="dropdown-item" href="#" data-status="Activated">Activated</a></li>
                     <li><a class="dropdown-item" href="#" data-status="Deactivated">Deactivated</a></li>
                     <li><a class="dropdown-item" href="#" data-status="Hold">Hold</a></li>
+                    <li><a class="dropdown-item" href="#" data-status="Pending">Pending</a></li>
                 </ul>
 
             </div>
         </div>
 
     </div>
-
     <div class="row mb-2">
-        <div class="col-lg-12">
-        </div>
-        <div class="col-lg-12">
-        </div>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="rings-tab" data-bs-toggle="tab" href="#ringList" role="tab" aria-controls="ringList" aria-selected="true">Rings</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="bands-tab" data-bs-toggle="tab" href="#bandList" role="tab" aria-controls="bandList" aria-selected="false">Bands</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="earrings-tab" data-bs-toggle="tab" href="#earringList" role="tab" aria-controls="earringList" aria-selected="false">Earrings</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="pendant-tab" data-bs-toggle="tab" tabindex="-1" href="#pendantList" role="tab" aria-controls="pandantList" aria-disabled="false">Pendant List</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="bracelets-tab" data-bs-toggle="tab" tabindex="-1" href="#braceletsList" role="tab" aria-controls="braceletList" aria-disabled="false">Bracelet List</a>
+            </li>
+        </ul>
     </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <table class="table" id="RequestedListTable">
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="ringList" role="tabpanel" aria-labelledby="rings-tab">
+            <table class="table RequestedListTable" id="ringTable">
                 <thead>
                     <tr>
-                        <th scope="col"><input type="checkbox" class="chkId" id="chkAllIds" /></th>
-                        <th scope="col">Status</th>
+                        <th scope="col"><input type="checkbox" class="chkId" id="chkRingsIds" /></th>
                         <th scope="col">Image</th>
+                        <th scope="col">Status</th>
                         <th scope="col">Title</th>
                         <th scope="col">Vendor</th>
                         <th scope="col">Style</th>
-                        <th scope="col">Color name</th>
+                        <th scope="col">Color</th>
                         <th scope="col">Length</th>
                         <th scope="col">Band Width</th>
                         <th scope="col">Weight</th>
@@ -56,27 +69,154 @@
                 <tbody>
                     @if (Model != null)
                     {
-                        foreach (var item in Model)
+
+                        @foreach (var item in Model.Where(x => x.CategoryName == SD.Rings))
+                        {
+                            if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
+                            {
+                                defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
+                            }
+
+                            <tr>
+                                <td scope="col"><input type="checkbox" class="chkId" value="@item.Id" /></td>
+                                <td scope="col">
+                                    <img src="@SD.ImgUrl/@defaultImage" style="height:100px;" />
+                                </td>
+                                <td scope="col">@item.UploadStatus</td>
+                                <td scope="col">
+                                    <h5>@item.Title</h5>
+                                    <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
+                                </td>
+                                <td scope="col">@item.VenderName</td>
+                                <td scope="col">@item.Sku</td>
+                                <td scope="col">@item.ColorName</td>
+                                <td scope="col">@item.Length</td>
+                                <td scope="col">@item.BandWidth</td>
+                                <td scope="col">@item.GoldWeight</td>
+                                <td scope="col">@item.Karat</td>
+                                <td scope="col">@item.Price</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="12"> No data found</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="bandList" role="tabpanel" aria-labelledby="bands-tab">
+            <table class="table RequestedListTable" id="bandTable">
+                <thead>
+                    <tr>
+                        <th scope="col"><input type="checkbox" class="chkId" id="chkBandIds" /></th>
+                        <th scope="col">
+                            Image
+                        </th>
+                        <th scope="col">Status</th>
+                        <th scope="col">
+                            Title
+                        </th>
+                        <th scope="col">Vendor</th>
+                        <th scope="col">Color</th>
+                        <th scope="col">Style</th>
+                        <th scope="col">Band Width</th>
+                        <th scope="col">Weight</th>
+                        <td scope="col">Karat</td>
+                        <td scope="col">Price</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
+                    {
+                        @foreach (var item in Model.Where(x => x.CategoryName == SD.Bands))
+                        {
+                            if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
+                            {
+                                defaultImage = string.Empty;
+                                defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
+                            }
+                            <tr>
+                                <td scope="col"><input type="checkbox" class="chkId" value="@item.Id" /></td>
+                                <td scope="col">
+                                    <img src="@SD.ImgUrl/@defaultImage" style="height:100px;" />
+                                </td>
+                                <td scope="col">@item.UploadStatus</td>
+                                <td scope="col">
+                                    <h5>@item.Title</h5>
+                                    <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
+                                </td>
+                                <td scope="col">@item.VenderName</td>
+                                <td scope="col">@item.ColorName</td>
+                                <td scope="col">@item.Sku</td>
+                                <td scope="col">@item.BandWidth</td>
+                                <td scope="col">@item.GoldWeight</td>
+                                <td scope="col">@item.Karat</td>
+                                <td scope="col">@item.Price</td>
+
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="12"> No data found</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="earringList" role="tabpanel" aria-labelledby="earrings-tab">
+            <table class="table RequestedListTable" id="EarringTable">
+                <thead>
+                    <tr>
+                        <th scope="col"><input type="checkbox" class="chkId" id="chkEarringIds" /></th>
+                        <th scope="col">
+                            Image
+                        </th>
+                        <th scope="col">Status</th>
+                        <th scope="col">
+                            Title
+                        </th>
+                        <th scope="col">Vendor</th>
+                        <th scope="col">Color</th>
+                        <th scope="col">Style</th>
+                        <th scope="col">Diameter</th>
+                        <th scope="col">Weight</th>
+                        <th scope="col">CTW</th>
+                        <th scope="col">Karat</th>
+                        <th scope="col">Price</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                <tbody>
+                    @if (Model != null)
+                    {
+                        foreach (var item in Model.Where(x => x.CategoryName == SD.Earrings))
                         {
                             defaultImage = string.Empty;
+                            if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
+                            {
+                                defaultImage = string.Empty;
+                                defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
+                            }
                             <tr>
                                 <td><input type="checkbox" class="chkId" value="@item.Id" /></td>
-                                <td>
-                                    @item.UploadStatus
-                                </td>
-                                <td>
-                                    <img src="@SD.ImgUrl/@defaultImage" alt="@item.Title" style="width:25px;" onerror="this.onerror=null;this.src='';" />
-                                </td>
+                                <td><img src="@SD.ImgUrl/@defaultImage" style="height:100px;" /></td>
+                                <td scope="col">@item.UploadStatus</td>
                                 <td>
                                     <h5>@item.Title</h5>
                                     <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
                                 </td>
                                 <td>@item.VenderName</td>
-                                <td>@item.Sku</td>
                                 <td>@item.ColorName</td>
-                                <td>@item.Length</td>
-                                <td>@item.BandWidth</td>
+                                <td>@item.Sku</td>
+                                <td>@item.Diameter</td>
                                 <td>@item.GoldWeight</td>
+                                <td>@item.CTW</td>
                                 <td>@item.Karat</td>
                                 <td>@item.Price</td>
                             </tr>
@@ -85,7 +225,135 @@
                     else
                     {
                         <tr>
-                            <td colspan="11">No data found</td>
+
+                            <td colspan="12">No data found</td>
+
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+        <div class="tab-pane fade" id="pendantList" role="tabpanel" aria-labelledby="pandant-tab">
+            <table class="table RequestedListTable" id="PendantTable">
+                <thead>
+                    <tr>
+                        <th scope="col"><input type="checkbox" class="chkId" id="chkPendantIds" /></th>
+                        <th scope="col">
+                            Image
+                        </th>
+                        <th scope="col">Status</th>
+                        <th scope="col">
+                            Title
+                        </th>
+                        <th scope="col">Vendor</th>
+                        <th scope="col">Color</th>
+                        <th scope="col">Style</th>
+                        <th scope="col">Length</th>
+                        <th scope="col">Weight</th>
+                        <th scope="col">Karat</th>
+                        <th scope="col">Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
+                    {
+
+                        @foreach (var item in Model.Where(x => x.CategoryName == SD.Pendants))
+                        {
+                            defaultImage = string.Empty;
+                            if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
+                            {
+                                defaultImage = string.Empty;
+                                defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
+                            }
+                            <tr>
+                                <td scope="col"><input type="checkbox" class="chkId" /></td>
+                                <td scope="col">
+                                    <img src="@SD.ImgUrl/@defaultImage" style="height:100px;" />
+                                </td>
+                                <td scope="col">@item.UploadStatus</td>
+                                <td scope="col">
+                                    <h5>@item.Title</h5>
+                                    <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
+                                </td>
+                                <td scope="col">@item.VenderName</td>
+                                <td scope="col">@item.ColorName</td>
+                                <td scope="col">@item.VenderStyle</td>
+                                <td scope="col">@item.Length</td>
+                                <td scope="col">@item.GoldWeight</td>
+                                <td scope="col">@item.Karat</td>
+                                <td scope="col">@item.Price</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="12"> No data found</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade RequestedListTable" id="braceletsList" role="tabpanel" aria-labelledby="bracelets-tab">
+            <table class="table" id="BraceletsTable">
+                <thead>
+                    <tr>
+                        <th scope="col"><input type="checkbox" class="chkId" id="chkBraceletIds" /></th>
+                        <th scope="col">
+                            Image
+                        </th>
+                        <th scope="col">Status</th>
+                        <th scope="col">
+                            Title
+                        </th>
+                        <th scope="col">Vendor</th>
+                        <th scope="col">Style</th>
+                        <th scope="col">Length</th>
+                        <th scope="col">Band Width</th>
+                        <th scope="col">Weight</th>
+                        <th scope="col">Karat</th>
+                        <th scope="col">Price</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
+                    {
+
+                        @foreach (var item in Model.Where(x => x.CategoryName == SD.Bracelets))
+                        {
+                            defaultImage = string.Empty;
+                            if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
+                            {
+                                defaultImage = string.Empty;
+                                defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
+                            }
+                            <tr>
+                                <td scope="col"><input type="checkbox" class="chkId" /></td>
+                                <td scope="col">
+                                    <img src="@SD.ImgUrl/@defaultImage" style="height:100px;" />
+                                </td>
+                                <th scope="col">@item.UploadStatus</th>
+                                <td scope="col">
+                                    <h5>@item.Title</h5>
+                                    <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
+                                </td>
+                                <td scope="col">@item.VenderName</td>
+                                <td scope="col">@item.Sku</td>
+                                <td scope="col">@item.Length</td>
+                                <td scope="col">@item.BandWidth</td>
+                                <td scope="col">@item.GoldWeight</td>
+                                <td scope="col">@item.Karat</td>
+                                <td scope="col">@item.Price</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="12"> No data found</td>
                         </tr>
                     }
                 </tbody>
@@ -97,73 +365,94 @@
 
 @section Scripts {
     <script>
-        $(document).ready(function () {
-            // Toggle all checkboxes when 'Select All' is clicked
-            $('#chkAllIds').on('change', function () {
-                var isChecked = $(this).is(':checked');
-                $('#RequestedListTable .chkId').not(this).prop('checked', isChecked);
-                updateSelectedIds();
-            });
+    $(document).ready(function () {
 
-            // Handle individual checkbox change
-            $('#RequestedListTable').on('change', '.chkId:not(#chkAllIds)', function () {
-                var allChecked = $('#RequestedListTable .chkId:not(#chkAllIds)').length ===
-                                 $('#RequestedListTable .chkId:not(#chkAllIds):checked').length;
-                $('#chkAllIds').prop('checked', allChecked);
-                updateSelectedIds();
-            });
+        // Handle Select All checkboxes per table
+        $('table.RequestedListTable thead input[type="checkbox"]').on('change', function () {
+            let table = $(this).closest('table');
+            let isChecked = $(this).is(':checked');
+            table.find('tbody input.chkId').prop('checked', isChecked);
+            updateSelectedIds();
+        });
 
-            // Update status button click
-        $('.dropdown-item').on('click', function(e) {
-            debugger;
-            e.preventDefault();
+        // Handle individual checkbox change
+        $('table.RequestedListTable tbody').on('change', '.chkId', function () {
+            let table = $(this).closest('table');
+            let allChecked = table.find('tbody .chkId').length === table.find('tbody .chkId:checked').length;
+            table.find('thead input[type="checkbox"]').prop('checked', allChecked);
+            updateSelectedIds();
+        });
 
-            var status = $(this).data('status');
-            var productIds = $('#txtProductIds').val();
+        // Dropdown item click for status update
+        $('.dropdown-item').on('click', function (e) {
+    e.preventDefault();
 
-            if (!productIds) {
-                alert('No product IDs selected.');
-                return;
-            }
+    let status = $(this).data('status');
+    let productIds = $('#txtProductIds').val();
 
-            var idsArray = productIds.split(',');
+    if (!productIds) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'No items selected',
+            text: 'Please select at least one product to update the status.',
+        });
+        return;
+    }
+
+    // Show confirmation dialog
+    Swal.fire({
+        title: 'Are you sure?',
+        text: `You are about to change the status to "${status}". This action cannot be undone.`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, update it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            let idsArray = productIds.split(',');
 
             $.ajax({
-                url: '@Url.Action("ChangeStatus", "Jewellery")', // 🔁 Replace with your actual API endpoint
+                url: '@Url.Action("ChangeStatus", "Jewellery")',
                 method: 'POST',
                 data: {
                     pIds: idsArray,
                     status: status
                 },
-                success: function(response) {
-                    alert('Products updated to "' + status + '" successfully.');
-                    console.log(response);
-                    location.reload();
+                success: function (response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Updated',
+                        text: `Products updated to "${status}" successfully.`,
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        location.reload();
+                    });
                 },
-                error: function(xhr, status, error) {
-                    alert('An error occurred while updating products.');
+                error: function (xhr, status, error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An error occurred while updating the products.',
+                    });
                     console.error(error);
                 }
             });
-        });
-
-            // Utility: Collect selected checkbox values and update hidden input
-            function updateSelectedIds() {
-                let selectedIds = getSelectedIds();
-                $('#txtProductIds').val(selectedIds.join(','));
-            }
-
-            // Utility: Get selected checkbox values
-            function getSelectedIds() {
-                let ids = [];
-                $('#RequestedListTable .chkId:not(#chkAllIds):checked').each(function () {
-                    ids.push($(this).val());
-                });
-                return ids;
-            }
-        });
+        }
+    });
+});
 
 
-
+        // Utility: Update hidden input with selected IDs from active tab
+        function updateSelectedIds() {
+            let activeTable = $('.tab-pane.active table');
+            let ids = [];
+            activeTable.find('tbody .chkId:checked').each(function () {
+                ids.push($(this).val());
+            });
+            $('#txtProductIds').val(ids.join(','));
+        }
+    });
     </script>
+
 }

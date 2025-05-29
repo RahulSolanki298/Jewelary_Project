@@ -184,8 +184,9 @@
                         <th scope="col">Vendor</th>
                         <th scope="col">Color</th>
                         <th scope="col">Style</th>
-                        <th scope="col">Band Width</th>
+                        <th scope="col">Diameter</th>
                         <th scope="col">Weight</th>
+                        <th scope="col">CTW</th>
                         <th scope="col">Karat</th>
                         <th scope="col">Price</th>
 
@@ -193,16 +194,16 @@
                 </thead>
                 <tbody>
                 <tbody>
-                        @if (Model != null)
+                    @if (Model != null)
+                    {
+                        foreach (var item in Model.Where(x => x.CategoryName == SD.Earrings))
                         {
-                            foreach (var item in Model.Where(x => x.CategoryName == SD.Earrings))
+                            defaultImage = string.Empty;
+                            if (item.ProductImageVideos.Any())
                             {
                                 defaultImage = string.Empty;
-                                if (item.ProductImageVideos.Any())
-                                {
-                                    defaultImage = string.Empty;
-                                    defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
-                                }
+                                defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
+                            }
                             <tr>
                                 <td><input type="checkbox" class="chkId" value="@item.Id" /></td>
                                 <td><img src="@SD.ImgUrl/@defaultImage" style="height:100px;" /></td>
@@ -214,21 +215,22 @@
                                 <td>@item.VenderName</td>
                                 <td>@item.ColorName</td>
                                 <td>@item.Sku</td>
-                                <td>@item.BandWidth</td>
+                                <td>@item.Diameter</td>
                                 <td>@item.GoldWeight</td>
+                                <td>@item.CTW</td>
                                 <td>@item.Karat</td>
                                 <td>@item.Price</td>
                             </tr>
-                            }
                         }
-                        else
-                        {
+                    }
+                    else
+                    {
                         <tr>
 
                             <td colspan="12">No data found</td>
 
                         </tr>
-                        }
+                    }
                 </tbody>
 
             </table>
@@ -277,7 +279,8 @@
                                     <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
                                 </td>
                                 <td scope="col">@item.VenderName</td>
-                                <td scope="col">@item.Sku</td>
+                                <td scope="col">@item.ColorName</td>
+                                <td scope="col">@item.VenderStyle</td>
                                 <td scope="col">@item.Length</td>
                                 <td scope="col">@item.GoldWeight</td>
                                 <td scope="col">@item.Karat</td>
@@ -411,37 +414,70 @@
             });
 
             // Status Update Button Click
-            $('.dropdown-item').on('click', function (e) {
-                e.preventDefault();
+           $(document).ready(function () {
+                        $('.dropdown-item').on('click', function (e) {
+                            e.preventDefault();
 
-                const status = $(this).data('status');
-                const productIds = $('#txtProductIds').val();
+                            const newStatus = $(this).data('status');
+                            const selectedProductIds = $('#txtProductIds').val();
 
-                if (!productIds) {
-                    alert('No product IDs selected.');
-                    return;
-                }
+                            if (!selectedProductIds) {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'No items selected',
+                                    text: 'Please select at least one product to update the status.',
+                                });
+                                return;
+                            }
 
-                const idsArray = productIds.split(',');
+                            Swal.fire({
+                                title: 'Are you sure?',
+                                text: `You are about to change the status to "${newStatus}". This action cannot be undone.`,
+                                icon: 'question',
+                                showCancelButton: true,
+                                confirmButtonText: 'Yes, update it!',
+                                cancelButtonText: 'Cancel'
+                            }).then((result) => {
+                                if (!result.isConfirmed) return;
 
-                $.ajax({
-                    url: '@Url.Action("ChangeStatus", "Jewellery")',
-                    method: 'POST',
-                    data: {
-                        pIds: idsArray,
-                        status: status
-                    },
-                    success: function (response) {
-                        alert(`Products updated to "${status}" successfully.`);
-                        console.log(response);
-                        location.reload();
-                    },
-                    error: function (xhr, status, error) {
-                        alert('An error occurred while updating products.');
-                        console.error(error);
-                    }
-                });
+                                const productIdArray = selectedProductIds.split(',').map(id => id.trim()).filter(Boolean);
+
+                                if (productIdArray.length === 0) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Invalid IDs',
+                                        text: 'Could not parse any valid product IDs.',
+                                    });
+                                    return;
+                                }
+
+                                $.ajax({
+                                    url: '@Url.Action("ChangeStatus", "Jewellery")',
+                                    method: 'POST',
+                                    data: {
+                                        pIds: productIdArray,
+                                        status: newStatus
+                                    },
+                                    success: function (response) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Status Updated',
+                                            text: `Products successfully updated to "${newStatus}".`,
+                                        }).then(() => location.reload());
+                                    },
+                                    error: function (xhr, status, error) {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Update Failed',
+                                            text: 'An error occurred while updating the product status.',
+                                        });
+                                        console.error('AJAX Error:', { status, error, xhr });
+                                    }
+                                });
+                            });
+                        });
             });
+
 
             // ID Getters & Updaters
             function updateRingSelectedIds() {

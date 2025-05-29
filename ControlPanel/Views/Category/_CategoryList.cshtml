@@ -1,42 +1,61 @@
 ﻿@using DataAccess.Entities
 @using Common
 @model IEnumerable<Category>
+@{
+    int index = 1;
+}
 
 <table class="table" id="categoryTable">
     <thead>
         <tr>
-            <th scope="col"><input type="checkbox" class="chkId" id="chkAllIds" /></th>
-            <th scope="col">
-                Image
-            </th>
-            <th scope="col">
-                Category Name
-            </th>
+            <th scope="col">Srno</th>
+            <th scope="col">Image</th>
+            <th scope="col">Category Name</th>
             <th scope="col">Status</th>
             <th scope="col">Actions</th>
         </tr>
     </thead>
     <tbody>
-        @if (Model != null)
+        @if (Model != null && Model.Any())
         {
-            @foreach (var item in Model)
+            foreach (var item in Model)
             {
-                <tr class="clickable-row" data-propertyName="@item.Name">
-                    <td scope="col">
-                        <input type="checkbox" class="chkId" value="@item.Id" /></td>
-                    <td scope="col">
-                        <img src="@SD.ImgUrl/@item.CategoryImage" style="height:100px;" />
+                <tr class="clickable-row" data-property-name="@item.Name">
+                    <td>@(index++)</td>
+                    <td>
+                        <img src="@($"{SD.ImgUrl}/{item.CategoryImage}")" alt="@item.Name Image" style="height:100px;" loading="lazy" />
                     </td>
-                    <td scope="col">
-                        @item.Name
-                    </td>
-                    <td scope="col">@item.IsActivated</td>
-                    <td scope="col">
-                        <select class="setProgram">
-                            <option value="">Select Action</option>
-                            <option value="Styles">Product Styles</option>
-                            <option value="Collection">Product Collection</option>
-                        </select>
+                    <td>@item.Name</td>
+                    <td>@(item.IsActivated ? "Active" : "Inactive")</td>
+                    <td>
+                        <div class="dropdown">
+                            <a class="" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item show-property" data-type="styles" data-category-id="@item.Id">
+                                        <i class="bi bi-pencil-square me-1"></i>Show Styles
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item show-property" data-type="collections" data-category-id="@item.Id">
+                                        <i class="bi bi-pencil-square me-1"></i>Show Collections
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("GetCategory","Category",new { id=item.Id})">
+                                        <i class="bi bi-pencil-square me-1"></i>Edit
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="@Url.Action("DeleteCategory","Category",new { id=item.Id})">
+                                        <i class="bi bi-trash me-1"></i>Delete
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
                     </td>
                 </tr>
             }
@@ -44,8 +63,24 @@
         else
         {
             <tr>
-                <td colspan="12"> No data found</td>
+                <td colspan="5" class="text-center">No data found</td>
             </tr>
         }
     </tbody>
 </table>
+
+@section Scripts{
+    <script>
+        $(document).on('click', '.dropdown-item', function (e) {
+            e.preventDefault();
+            const action = $(this).data('status');
+            // Example logic
+            if (action === 'Activated') {
+                // Open edit modal
+            } else if (action === 'Deactivated') {
+                // Confirm delete
+            }
+        });
+
+    </script>
+}

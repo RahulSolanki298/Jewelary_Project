@@ -698,8 +698,6 @@ namespace Business.Repository
                     UploadStatus = firstProduct.UploadStatus,
                 };
 
-                //  await _context.ProductPrices.Where(x => x.ProductId == firstProduct.Id.ToString()).ToListAsync();
-
                 // Step 4: Get the product images for the first product
                 var productImages = await _context.ProductImages.Where(x => x.ProductId == firstProduct.Id.ToString()).ToListAsync();
 
@@ -718,7 +716,6 @@ namespace Business.Repository
                     productDTO.ProductImageVideos.Add(imageVideo);
                 }
 
-                // Add the productDTO to the result list
                 productDTOList.Add(productDTO);
             }
 
@@ -1088,6 +1085,8 @@ namespace Business.Repository
                 int colorId, categoryId, karatId, shapeId, centerShapeId, centerCaratId = 0;
 
                 // Step 3: Process each product
+                var newProducts = new List<Product>();
+
                 foreach (var product in products)
                 {
                     if (string.IsNullOrEmpty(product.ColorName)
@@ -1102,10 +1101,9 @@ namespace Business.Repository
                     shapeId = shapeDict.GetValueOrDefault(product.AccentStoneShapeName);
                     karatId = KaratDict.GetValueOrDefault(product.Karat);
                     centerShapeId = shapeDict.GetValueOrDefault(product.CenterShapeName);
-                    centerCaratId = shapeDict.GetValueOrDefault(product.CenterCaratName);
+                    centerCaratId = GetProductCarat(product.CenterCaratName);  // If this returns int, else adapt
 
                     var events = await GetEventSitesByName(product.EventName);
-
 
                     existingProduct = await _context.Product
                         .Where(x => x.CategoryId == categoryId
@@ -1116,9 +1114,7 @@ namespace Business.Repository
 
                     if (existingProduct != null)
                     {
-
-                        // Update existing product
-                        existingProduct.Title = product.EventName;
+                        existingProduct.Title = product.Title;
                         existingProduct.Sku = product.Sku;
                         existingProduct.KaratId = karatId;
                         existingProduct.BandWidth = product.BandWidth;
@@ -1126,30 +1122,28 @@ namespace Business.Repository
                         existingProduct.Grades = product.Grades;
                         existingProduct.MMSize = product.MMSize;
                         existingProduct.CTW = product.CTW;
-                        existingProduct.Price = product.Price.HasValue ? product.Price.Value : 0;
-                        existingProduct.UnitPrice = product.UnitPrice.HasValue ? product.UnitPrice.Value : 0;
+                        existingProduct.Price = product.Price ?? 0;
+                        existingProduct.UnitPrice = product.UnitPrice ?? 0;
                         existingProduct.Certificate = product.Certificate;
                         existingProduct.AccentStoneShapeId = shapeId;
                         existingProduct.IsReadyforShip = product.IsReadyforShip;
                         existingProduct.EventId = events.Id;
                         existingProduct.CenterCaratId = centerCaratId;
-                        existingProduct.CenterShapeId = centerCaratId;
+                        existingProduct.CenterShapeId = centerShapeId;  // Fixed here
                         existingProduct.WholesaleCost = product.WholesaleCost;
                         existingProduct.Description = product.Description;
                         existingProduct.UpdatedBy = product.VenderId;
                         existingProduct.UpdatedDate = DateTime.Now;
                         existingProduct.UploadStatus = product.UploadStatus;
-                        _context.Product.Update(existingProduct);
-                        await _context.SaveChangesAsync();
 
+                        _context.Product.Update(existingProduct);
                     }
                     else
                     {
-                        // Insert new product
                         newProduct = new Product
                         {
-                            Title = product.Sku,
-                            Sku = product.Sku ?? throw new ArgumentNullException(nameof(product.Sku)), // Ensures Sku is not null
+                            Title = product.Title,
+                            Sku = product.Sku ?? throw new ArgumentNullException(nameof(product.Sku)),
                             CategoryId = categoryId,
                             KaratId = karatId,
                             ColorId = colorId,
@@ -1157,9 +1151,9 @@ namespace Business.Repository
                             Length = product.Length,
                             BandWidth = product.BandWidth,
                             CenterCaratId = centerCaratId,
-                            CenterShapeId = centerCaratId,
+                            CenterShapeId = centerShapeId,  // Fixed here
                             ShapeId = shapeId,
-                            NoOfStones = product.NoOfStones.HasValue ? product.NoOfStones.Value : 0,
+                            NoOfStones = product.NoOfStones ?? 0,
                             ProductType = product.ProductType,
                             GoldWeight = product.GoldWeight,
                             Grades = product.Grades,
@@ -1174,19 +1168,35 @@ namespace Business.Repository
                             VenderStyle = product.VenderStyle,
                             Diameter = product.Diameter,
                             WholesaleCost = product.WholesaleCost,
-                            Price = product.Price.HasValue ? product.Price.Value : 0,
-                            UnitPrice = product.UnitPrice.HasValue ? product.UnitPrice.Value : 0,
+                            Price = product.Price ?? 0,
+                            UnitPrice = product.UnitPrice ?? 0,
                             Id = Guid.NewGuid(),
                             IsActivated = false,
                             IsDelete = false,
                             UploadStatus = SD.Pending
                         };
 
-                        //productList.Add(newProduct);
-                        await _context.Product.AddAsync(newProduct);
-                        await _context.SaveChangesAsync();
+                        newProducts.Add(newProduct);
                     }
                 }
+
+                if (newProducts.Any())
+                {
+                    await _context.Product.AddRangeAsync(newProducts);
+                }
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine($"Save failed: {ex.Message} - Inner: {ex.InnerException?.Message}");
+                    return false;
+                }
+
+                return true;
+
 
 
                 return true;

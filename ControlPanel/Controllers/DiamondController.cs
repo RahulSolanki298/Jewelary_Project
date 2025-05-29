@@ -194,7 +194,7 @@ namespace ControlPanel.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddDiamondProperty(DiamondProperty diamondData)
+        public async Task<IActionResult> AddDiamondProperty(DiamondProperty diamondData, IFormFile UploadFile)
         {
             if (!ModelState.IsValid)
             {
@@ -202,6 +202,23 @@ namespace ControlPanel.Controllers
 
                 return View(diamondData);
             }
+            if (UploadFile != null && UploadFile.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "diamondProp");
+                Directory.CreateDirectory(uploadsFolder); // Ensure folder exists
+
+                var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(UploadFile.FileName);
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await UploadFile.CopyToAsync(fileStream);
+                }
+
+                // Save file path or name to the database, e.g.:
+                diamondData.IconPath = "/diamondProp/" + uniqueFileName;
+            }
+
 
             if (diamondData == null || diamondData.Id <= 0)
             {
@@ -305,8 +322,8 @@ namespace ControlPanel.Controllers
                 DiamondVideoPath = Video_NewVal,
                 Certificate = Certi_NewVal,
                 IsActivated = false,
-                UploadStatus=SD.Pending,
-                UpdatedDate=DateTime.Now
+                UploadStatus = SD.Pending,
+                UpdatedDate = DateTime.Now
 
             };
         }
@@ -358,7 +375,7 @@ namespace ControlPanel.Controllers
                 IsActivated = false,
                 UpdatedDate = DateTime.Now,
                 UploadStatus = SD.Pending,
-                
+
             };
         }
 
