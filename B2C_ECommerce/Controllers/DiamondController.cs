@@ -93,9 +93,9 @@ namespace B2C_ECommerce.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetSingleDiamond(int diamondId, string diamondProparty)
+        public IActionResult GetSingleDiamond(int diamondId, string diamondProparty)
         {
-            var diamondDT = await _diamondService.GetDiamondById(diamondId);
+            var diamondDT = _diamondService.GetDiamondById(diamondId);
             ViewBag.V_OR_I = diamondProparty;
             return View(diamondDT);
         }

@@ -368,8 +368,6 @@ namespace B2C_ECommerce.Services
                                   from clarity in clarityGroup.DefaultIfEmpty()
                                   join size in _context.ProductProperty on product.CaratSizeId equals size.Id into sizeGroup
                                   from size in sizeGroup.DefaultIfEmpty()
-                                  join sty in _context.ProductProperty on product.StyleId equals sty.Id into styleGroup
-                                  from sty in styleGroup.DefaultIfEmpty()
                                   join kt in _context.ProductProperty on product.KaratId equals kt.Id into ktGroup
                                   from kt in ktGroup.DefaultIfEmpty()
                                   where product.IsActivated != false && product.Sku == sku
@@ -399,7 +397,6 @@ namespace B2C_ECommerce.Services
                                       Description = product.Description,
                                       Sku = product.Sku,
                                       ProductType = cat.ProductType,
-                                      StyleId = product.StyleId,
                                       KaratId = product.KaratId,
                                       Karat = kt != null ? kt.Name : null
                                   }).ToListAsync();

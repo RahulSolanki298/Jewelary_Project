@@ -23,5 +23,7 @@ namespace Business.Repository.IRepository
         Task<bool> DeleteProductStyle(int styleId);
         
         Task<bool> SaveProductStyle(ProductStyleDTO product);
+
+        Task<bool> AddOrUpdateBulkProductStyle(BulkUpdateStatusRequest data);
     }
 }

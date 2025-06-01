@@ -74,7 +74,7 @@ namespace B2C_ECommerce.Services
             }
         }
 
-        public async Task<DiamondData> GetDiamondById(int diamondId)
+        public DiamondData GetDiamondById(int diamondId)
         {
             try
             {
@@ -166,7 +166,6 @@ namespace B2C_ECommerce.Services
             return result;
         }
 
-
         public async Task<CaratSizeRanges> GetCaratSizeDataRangeAsync1()
         {
             var minCarat = await _context.Diamonds
@@ -188,7 +187,6 @@ namespace B2C_ECommerce.Services
 
             return data;
         }
-
 
         public async Task<IEnumerable<DiamondPropertyDTO>> GetCutListAsync()
         {
@@ -340,7 +338,6 @@ namespace B2C_ECommerce.Services
 
             return result;
         }
-
 
         public async Task<IEnumerable<DiamondPropertyDTO>> GetSymmetryListAsync()
         {

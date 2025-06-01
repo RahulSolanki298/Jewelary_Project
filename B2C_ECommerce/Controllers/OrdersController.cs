@@ -8,5 +8,12 @@ namespace B2C_ECommerce.Controllers
         {
             return View();
         }
+
+        public IActionResult AddToCard()
+        {
+
+            return View();
+        }
+
     }
 }
