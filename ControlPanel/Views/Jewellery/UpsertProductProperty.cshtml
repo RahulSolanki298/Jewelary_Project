@@ -16,7 +16,7 @@
                     <div class="card-body p-4">
                         <div class="row">
                             <div class="col-lg-10 col-md-10 col-sm-8">
-                                <form id="productPropertyForm" asp-action="UpsertProductProperty" method="post">
+                                <form id="productPropertyForm" asp-action="UpsertProductProperty" method="post" enctype="multipart/form-data">
                                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                     <input asp-for="Id" type="hidden" class="form-control" />
 
@@ -28,7 +28,7 @@
 
                                     <div class="form-group mb-3">
                                         <label asp-for="Description" class="control-label"></label>
-                                        <textarea id="descriptionEditor" asp-for="Description" class="form-control"></textarea>
+                                        <textarea id="Description" asp-for="Description" class="form-control"></textarea>
                                         <span asp-validation-for="Description" class="text-danger"></span>
                                     </div>
 
@@ -108,24 +108,11 @@
     @await Html.PartialAsync("_ValidationScriptsPartial")
 
     <script>
-        tinymce.init({
-            selector: '#descriptionEditor',
-            menubar: false,
-            plugins: 'lists link code',
-            toolbar: 'undo redo | bold italic | bullist numlist | link code',
-            setup: function (editor) {
-                editor.on('change', function () {
-                    tinymce.triggerSave(); // Ensures textarea gets updated before form post
-                });
-            }
-        });
+        
 
         $(document).ready(function () {
             $('#productPropertyForm').on('submit', function (e) {
                 e.preventDefault();
-
-                // Trigger TinyMCE save
-                tinymce.triggerSave();
 
                 var form = $(this);
                 var actionUrl = form.attr('action');
@@ -147,7 +134,12 @@
                     }
                 });
             });
-
+            $('#Description').summernote({
+                height: 400, // set editor height
+                minHeight: null, // set minimum height of editor
+                maxHeight: null, // set maximum height of editor
+                focus: true // set focus to editable area after initializing summernote
+            });
         });
 
         function previewImage(event) {

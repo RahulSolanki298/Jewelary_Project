@@ -27,7 +27,7 @@
             <form id="uploadForm" asp-controller="Jewellery" asp-action="ExcelUpload" method="post" enctype="multipart/form-data">
                 <div class="modal-header">
                     <h5 class="modal-title">Upload Excel</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <a class="text-danger" data-bs-dismiss="modal" aria-label="Close" id="btnClose">X</a>
                 </div>
                 <div class="modal-body">
                     @if (TempData["UploadSuccess"] != null)
@@ -129,6 +129,10 @@
                         alert('Upload failed: ' + xhr.responseText);
                     }
                 });
+            });
+
+            $("#btnClose").click(function () {
+                $("#showFileUpload").modal("hide");
             });
 
             $('#jewelleryList').on('click', '.dropdown-item', function (e) {

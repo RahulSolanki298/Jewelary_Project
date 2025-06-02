@@ -126,6 +126,8 @@
 
                 string jsonData = JsonConvert.SerializeObject(diamondsDTList);
                 var result = await _diamondRepository.BulkInsertDiamondsAsync(jsonData, diamondId);
+
+                await _diamondRepository.BulkInsertDiamondHistoryAsync(result);
             }
             else if (format == ".csv")
             {

@@ -54,8 +54,7 @@ namespace ControlPanel.Controllers
             }
             return null;   
         }
-
-
+        
         [HttpGet]
         public async Task<IActionResult> DeleteCategory(int id = 0)
         {
@@ -93,7 +92,7 @@ namespace ControlPanel.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveCategory(Category category)
+        public async Task<IActionResult> GetCategory(Category category)
         {
             if (ModelState.IsValid)
             {
@@ -123,7 +122,5 @@ namespace ControlPanel.Controllers
 
             return View(category);
         }
-
-
     }
 }

@@ -107,6 +107,10 @@ namespace ControlPanel
                 options.MultipartBodyLengthLimit = 10737418240L; // 10 GB
                 options.MemoryBufferThreshold = int.MaxValue;
             });
+
+
+           
+
         }
 
         // Configure HTTP request pipeline

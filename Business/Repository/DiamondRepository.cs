@@ -119,24 +119,84 @@ namespace Business.Repository
             }
         }
 
-        public async Task<bool> BulkInsertDiamondsAsync(string jsonData, int historyId)
+        public async Task<List<Diamond>> BulkInsertDiamondsAsync(string jsonData, int historyId)
         {
+            if (string.IsNullOrWhiteSpace(jsonData))
+                return new List<Diamond>();
+
             try
             {
-                if (string.IsNullOrWhiteSpace(jsonData)) return false;
-
                 var jsonParam = new SqlParameter("@JsonData", jsonData);
                 var historyIdParam = new SqlParameter("@HistoryId", historyId);
 
-                await _context.Database.ExecuteSqlRawAsync(
-                    "EXEC InsertDiamondsFromJson @JsonData, @HistoryId",
-                    jsonParam, historyIdParam);
+                var result = await _context.Diamonds
+                    .FromSqlRaw("EXEC InsertDiamondsFromJson @JsonData, @HistoryId", jsonParam, historyIdParam)
+                    .ToListAsync();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                // Log exception
+                return new List<Diamond>();
+            }
+        }
+
+        public async Task<bool> BulkInsertDiamondHistoryAsync(List<Diamond> data)
+        {
+            try
+            {
+                List<DiamondHistory> diamondHistories = new List<DiamondHistory>();
+
+                foreach (var item in data)
+                {
+                    var diamondHist = new DiamondHistory
+                    {
+                        DiamondId = item.Id,
+                        StoneId = item.StoneId,
+                        DNA = item.DNA,
+                        Step = item.Step,
+                        TypeId = item.TypeId,
+                        LabId = item.LabId,
+                        ShapeId = item.ShapeId,
+                        Carat = item.Carat,
+                        ClarityId = item.ClarityId,
+                        ColorId = item.ColorId,
+                        CutId = item.CutId,
+                        PolishId = item.PolishId,
+                        SymmetryId = item.SymmetryId,
+                        FluorId = item.FluorId,
+                        RAP = item.RAP,
+                        Discount = item.Discount,
+                        Price = item.Price,
+                        Amount = item.Amount,
+                        Measurement = item.Measurement,
+                        Ratio = item.Ratio,
+                        Depth = item.Depth,
+                        Table = item.Table,
+                        Shade = item.Shade,
+                        LabShape = item.LabShape,
+                        RapAmount = item.RapAmount,
+                        Certificate = item.Certificate,
+                        DiamondImagePath = item.DiamondImagePath,
+                        DiamondVideoPath = item.DiamondVideoPath,
+                        IsActivated = item.IsActivated,
+                        CreatedDate = DateTime.Now
+                    };
+
+                    diamondHistories.Add(diamondHist);
+                }
+
+                await _context.DiamondHistory.AddRangeAsync(diamondHistories);
+                await _context.SaveChangesAsync();
 
                 return true;
             }
             catch (Exception ex)
             {
-                // Optionally log ex.Message
+                // Log exception
+                Console.WriteLine($"Error in BulkInsertDiamondHistoryAsync: {ex.Message}");
+                // Optionally log stack trace or use a logger
                 return false;
             }
         }
@@ -164,19 +224,19 @@ namespace Business.Repository
             try
             {
                 var result = await (from histroty in _context.DiamondFileUploadHistory
-                              join usr in _context.ApplicationUser on histroty.UploadedBy equals usr.Id
-                              select new DiamondFileUploadHistoryDTO
-                              {
-                                  Id=histroty.Id,
-                                  Title=histroty.Title,
-                                  UploadedPersonName=usr.FirstName+" "+usr.LastName,
-                                  UploadedBy=histroty.UploadedBy,
-                                  NoOfFailed=histroty.NoOfFailed,
-                                  NoOfSuccess=histroty.NoOfSuccess,
-                                  IsSuccess=histroty.IsSuccess,
-                                  UploadedDate=histroty.UploadedDate
-                              }).ToListAsync();
-                             
+                                    join usr in _context.ApplicationUser on histroty.UploadedBy equals usr.Id
+                                    select new DiamondFileUploadHistoryDTO
+                                    {
+                                        Id = histroty.Id,
+                                        Title = histroty.Title,
+                                        UploadedPersonName = usr.FirstName + " " + usr.LastName,
+                                        UploadedBy = histroty.UploadedBy,
+                                        NoOfFailed = histroty.NoOfFailed,
+                                        NoOfSuccess = histroty.NoOfSuccess,
+                                        IsSuccess = histroty.IsSuccess,
+                                        UploadedDate = histroty.UploadedDate
+                                    }).ToListAsync();
+
                 return result;
             }
             catch (Exception)

@@ -14,7 +14,7 @@
             <h4 class="text-uppercase">Diamond Details</h4>
         </div>
         <div class="col-xxl-2 col-xl-2 col-lg-3 col-md-3 col-sm-4">
-            <button class="btn btn-theme float-end" id="ExcelUpload">Upload Excel</button>
+            <button class="btn btn-theme float-end" id="ExcelUpload" title="Upload diamonds with excel upload."><i class="bi bi-plus-circle me-1"></i> Upload Diamonds</button>
         </div>
     </div>
 
@@ -36,9 +36,9 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <form id="uploadForm" asp-controller="Diamond" asp-action="UpsertDiamonds" method="post" enctype="multipart/form-data">
-                    <div class="modal-header">
+                    <div class="modal-header bg-dark text-light">
                         <h5 class="modal-title">Upload Excel</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close btn-danger" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         @if (TempData["UploadSuccess"] != null)
@@ -53,13 +53,25 @@
                             <label for="excelFile" class="form-label">Select Excel or CSV File</label>
                             <input type="file" class="form-control" id="excelFile" name="file" accept=".xls,.xlsx,.csv" required>
                         </div>
-                        <div id="loader" style="display:none;">
-                            <span class="spinner-border text-primary" role="status"></span> Uploading...
+                        <div class="col-12">
+                            <h5>Note :</h5>
+                            <p>
+                                we accept CSV and Excel File for upload bulk diamond.<br />
+                                excel format is : <a href="~/FileFormats/DiamondFormat.xlsx">Download</a>
+                            </p>
                         </div>
+                        @*<div id="loader" style="display:none;">
+                            <span class="spinner-border text-primary" role="status"></span> Uploading...
+                        </div>*@
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
+                        <div class="row">
+                            <div class="col-12">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                <button id="uploadBtn" type="submit" class="btn btn-dark">Upload</button>
+                            </div>
+                        </div>
+                       
                     </div>
                 </form>
             </div>

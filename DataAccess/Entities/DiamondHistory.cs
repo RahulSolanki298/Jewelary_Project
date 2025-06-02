@@ -5,7 +5,7 @@ namespace DataAccess.Entities
     public class DiamondHistory
     {
         public int Id { get; set; }
-        public string DiamondId { get; set; }
+        public int DiamondId { get; set; }
         public string StoneId { get; set; }
         public string DNA { get; set; }
         public string Step { get; set; }

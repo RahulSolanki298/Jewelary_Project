@@ -18,6 +18,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 
 namespace ControlPanel.Controllers
 {
@@ -884,12 +885,12 @@ namespace ControlPanel.Controllers
                     section = await reader.ReadNextSectionAsync();
                 }
 
-                return RedirectToAction("ThankYouForUploaded");
+                return Json("Images and Videoes have been uploaded successfully.");
 
             }
             catch (Exception ex)
             {
-                return RedirectToAction("Index");
+                return Json("Images and Videoes have been failed to upload.");
             }
         }
 
@@ -902,7 +903,19 @@ namespace ControlPanel.Controllers
             try
             {
                 if (folderUpload == null || folderUpload.Count == 0)
-                    return Json("No files uploaded.");
+                    return Json(new { success = false, message = "No files uploaded." });
+
+                // Get the encryption key
+                var keyFile = Request.Form.Files["encryptionKey"];
+                if (keyFile == null)
+                    return Json(new { success = false, message = "Encryption key is missing." });
+
+                byte[] keyBytes;
+                using (var ms = new MemoryStream())
+                {
+                    await keyFile.CopyToAsync(ms);
+                    keyBytes = ms.ToArray();
+                }
 
                 foreach (var file in folderUpload)
                 {
@@ -915,6 +928,25 @@ namespace ControlPanel.Controllers
 
                     var prdDesignDT = await _productRepository.GetProductDataByDesignNo(styleName.DesignNo, metalId);
                     if (prdDesignDT.Count == 0) continue;
+
+                    // Decrypt the file content
+                    byte[] encryptedBytes;
+                    using (var ms = new MemoryStream())
+                    {
+                        await file.CopyToAsync(ms);
+                        encryptedBytes = ms.ToArray();
+                    }
+
+                    byte[] decryptedBytes;
+                    try
+                    {
+                        decryptedBytes = DecryptAesGcm(encryptedBytes, keyBytes);
+                    }
+                    catch (Exception)
+                    {
+                        // Skip file if decryption fails
+                        continue;
+                    }
 
                     foreach (var pro in prdDesignDT)
                     {
@@ -932,31 +964,26 @@ namespace ControlPanel.Controllers
                         if (fileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
                         {
                             string destPath = Path.Combine(baseFolder, fileName);
-                            using var stream = new FileStream(destPath, FileMode.Create);
-                            await file.CopyToAsync(stream);
+                            await System.IO.File.WriteAllBytesAsync(destPath, decryptedBytes);
 
                             string relativePath = Path.Combine("UploadedFiles", "Collections", styleName.DesignNo, fileName).Replace("\\", "/");
                             prdDT.VideoId = await _productRepository.SaveImageVideoPath(relativePath);
                         }
                         else
                         {
-                            using var ms = new MemoryStream();
-                            await file.CopyToAsync(ms);
-                            ms.Position = 0;
-
-                            // Save original (Lg) from memory stream
+                            using var ms = new MemoryStream(decryptedBytes);
                             string lgFileName = $"{Path.GetFileNameWithoutExtension(fileName)}_Lg{Path.GetExtension(fileName)}";
                             string lgPath = Path.Combine(baseFolder, lgFileName);
+
                             await using (var fs = new FileStream(lgPath, FileMode.Create))
                             {
-                                ms.Position = 0; // Reset position before writing
+                                ms.Position = 0;
                                 await ms.CopyToAsync(fs);
                             }
 
                             string lgRelativePath = Path.Combine("UploadedFiles", "Collections", styleName.DesignNo, lgFileName).Replace("\\", "/");
                             prdDT.ImageLgId = await _productRepository.SaveImageVideoPath(lgRelativePath);
 
-                            // Now reuse for resizing
                             ms.Position = 0;
                             using var originalImage = Image.FromStream(ms);
 
@@ -970,6 +997,7 @@ namespace ControlPanel.Controllers
                             {
                                 string resizedFileName = $"{Path.GetFileNameWithoutExtension(fileName)}_{size.Key}{Path.GetExtension(fileName)}";
                                 string resizedPath = Path.Combine(baseFolder, resizedFileName);
+
                                 ResizeAndSaveImage(originalImage, resizedPath, size.Value);
 
                                 string relativePath = Path.Combine("UploadedFiles", "Collections", styleName.DesignNo, resizedFileName).Replace("\\", "/");
@@ -985,22 +1013,20 @@ namespace ControlPanel.Controllers
                                         break;
                                 }
                             }
-
-
                         }
 
                         await _productRepository.SaveImageVideoAsync(prdDT);
                     }
                 }
 
-                return RedirectToAction("ThankYouForUploaded");
+                return Json(new { success = true, message = "Files uploaded and processed successfully." });
             }
             catch (Exception ex)
             {
-
-                return Json(500, $"An error occurred: {ex.Message}");
+                return Json(new { success = false, message = $"An error occurred: {ex.Message}" });
             }
         }
+
 
         private void ResizeAndSaveImage(Image originalImage, string outputPath, Size targetSize)
         {
@@ -1026,6 +1052,25 @@ namespace ControlPanel.Controllers
             resized.Save(outputPath, ImageFormat.Jpeg);
         }
 
+        private byte[] DecryptAesGcm(byte[] encryptedData, byte[] key)
+        {
+            const int IvSize = 12;
+            const int TagSize = 16;
+
+            if (encryptedData.Length < IvSize + TagSize)
+                throw new Exception("Invalid encrypted data length.");
+
+            byte[] iv = encryptedData.Take(IvSize).ToArray();
+            byte[] ciphertext = encryptedData.Skip(IvSize).Take(encryptedData.Length - IvSize - TagSize).ToArray();
+            byte[] tag = encryptedData.Skip(encryptedData.Length - TagSize).ToArray();
+
+            byte[] plaintext = new byte[ciphertext.Length];
+
+            using var aesGcm = new AesGcm(key);
+            aesGcm.Decrypt(iv, ciphertext, tag, plaintext);
+
+            return plaintext;
+        }
 
 
         [HttpGet]

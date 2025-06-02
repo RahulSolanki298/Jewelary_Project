@@ -4,6 +4,7 @@ using CsvHelper;
 using DataAccess.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using OfficeOpenXml;
@@ -22,12 +23,14 @@ namespace ControlPanel.Controllers
     {
         private readonly IDiamondRepository _diamondRepository;
         private readonly IDiamondPropertyRepository _diamondPPTY;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public DiamondController(IDiamondRepository diamondRepository,
-            IDiamondPropertyRepository diamondPPTY)
+            IDiamondPropertyRepository diamondPPTY, UserManager<ApplicationUser> userManager)
         {
             _diamondRepository = diamondRepository;
             _diamondPPTY = diamondPPTY;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -60,14 +63,19 @@ namespace ControlPanel.Controllers
         {
             if (file == null || file.Length == 0)
             {
-                TempData["error"] = "No file uploaded.";
+                TempData["Status"] = "Fail";
+                TempData["Message"] = "No file uploaded.";
                 return RedirectToAction("UploadView"); // change this to your actual view
             }
+
+            var userId = HttpContext.Session.GetString("UserId");
+            var user = await _userManager.FindByIdAsync(userId);
 
             string extension = Path.GetExtension(file.FileName).ToLowerInvariant();
             if (extension != ".xlsx" && extension != ".csv")
             {
-                TempData["error"] = "Invalid file format. Only .xlsx or .csv files are supported.";
+                TempData["Status"] = "Fail";
+                TempData["Message"] = "Invalid file format. Only .xlsx or .csv files are supported.";
                 return RedirectToAction("Index");
             }
 
@@ -76,8 +84,9 @@ namespace ControlPanel.Controllers
                 // Step 1: Save upload history
                 var uploadHistory = new DiamondFileUploadHistory
                 {
-                    Title = "Add File Upload",
+                    Title = $"Diamond File Upload with {user.FirstName} {user.LastName}",
                     UploadedDate = DateTime.UtcNow,
+                    UploadedBy=userId,
                     IsSuccess = 1
                 };
                 int uploadHistoryId = await _diamondRepository.AddDiamondFileUploadedHistory(uploadHistory);
@@ -94,7 +103,8 @@ namespace ControlPanel.Controllers
 
                 if (diamondsList == null || diamondsList.Count == 0)
                 {
-                    TempData["error"] = "No valid diamond records found in the file.";
+                    TempData["Status"] = "Fail";
+                    TempData["Message"] = "No valid diamond records found in the file.";
                     return RedirectToAction("Index");
                 }
 
@@ -102,12 +112,14 @@ namespace ControlPanel.Controllers
                 string jsonData = JsonConvert.SerializeObject(diamondsList);
                 var result = await _diamondRepository.BulkInsertDiamondsAsync(jsonData, uploadHistoryId);
 
-                TempData["success"] = $"File uploaded successfully. {diamondsList.Count} records inserted.";
+                TempData["Status"] = "Success";
+                TempData["Message"] = $"File uploaded successfully. {diamondsList.Count} records inserted.";
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                TempData["error"] = $"Internal server error: {ex.Message}";
+                TempData["Status"] = "Success";
+                TempData["Message"] = $"Internal server error: {ex.Message}";
                 return RedirectToAction("Index");
             }
         }
@@ -218,18 +230,15 @@ namespace ControlPanel.Controllers
                 // Save file path or name to the database, e.g.:
                 diamondData.IconPath = "/diamondProp/" + uniqueFileName;
             }
-
-
-            if (diamondData == null || diamondData.Id <= 0)
-            {
-                await _diamondPPTY.AddAsync(diamondData);
-            }
-            else
+            
+            if (diamondData != null && diamondData.Id > 0)
             {
                 var existingProperty = await _diamondPPTY.GetDiamondPropertyByIdAsync(diamondData.Id);
                 if (existingProperty == null)
                 {
-                    return NotFound("Property not found.");
+                    TempData["Status"] = "Fail";
+                    TempData["Message"] = "Diamond Property not found.";
+                    return View(diamondData);
                 }
 
                 existingProperty.Name = diamondData.Name;
@@ -242,8 +251,13 @@ namespace ControlPanel.Controllers
 
                 await _diamondPPTY.UpdateAsync(existingProperty);
             }
+            else
+            {
+                await _diamondPPTY.AddAsync(diamondData);
+            }
 
-            TempData["success"] = "Diamond property has been saved successfully.";
+            TempData["Status"] = "Success";
+            TempData["Message"] = "Diamond property has been saved successfully.";
 
             return RedirectToAction("DiamondProperty");
         }
@@ -253,16 +267,21 @@ namespace ControlPanel.Controllers
         {
             if (!pId.HasValue || pId <= 0)
             {
-                return BadRequest("Invalid property ID.");
+                TempData["Status"] = "Fail";
+                TempData["Message"] = "Invalid property ID.";
+                return RedirectToAction("DiamondProperty");
             }
 
             var success = await _diamondPPTY.DeleteAsync(pId.Value);
 
             if (!success)
             {
-                return NotFound("Property not found or could not be deleted.");
+                TempData["Status"] = "Fail";
+                TempData["Message"] = "Diamond property has been failed to deleted.";
+                return RedirectToAction("DiamondProperty");
             }
-
+            TempData["Status"] = "Success";
+            TempData["Message"] = "Diamond property has been deleted successfully.";
             return RedirectToAction("DiamondProperty");
         }
 

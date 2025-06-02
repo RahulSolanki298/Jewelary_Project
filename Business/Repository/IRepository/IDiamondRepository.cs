@@ -19,9 +19,11 @@ namespace Business.Repository.IRepository
 
         Task<int> AddDiamondFileUploadedHistory(DiamondFileUploadHistory diamondFileUpload);
 
-        Task<bool> BulkInsertDiamondsAsync(string jsonData, int historyId);
+        Task<List<Diamond>> BulkInsertDiamondsAsync(string jsonData, int historyId);
 
         Task<IEnumerable<DiamondFileUploadHistoryDTO>> GetDiamondFileUploadedHistories();
+
+        Task<bool> BulkInsertDiamondHistoryAsync(List<Diamond> data);
 
         Task<DiamondHistory> GetDiamondByStoneId(string stoneId);
     }

@@ -20,7 +20,7 @@
                     <div class="card-body p-4">
                         <div class="row">
                             <div class="col-lg-10 col-md-10 col-sm-8">
-                                <form asp-action="AddDiamondProperty" method="post">
+                                <form asp-action="AddDiamondProperty" method="post" enctype="multipart/form-data">
                                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                     <input asp-for="Id" type="hidden" class="form-control" />
 
@@ -117,10 +117,14 @@
 
     @section Scripts {
         <script>
-            tinymce.init({
-                selector: 'textarea',
-                plugins: 'anchor autolink charmap codesample emoticons  lists   table visualblocks wordcount',
-                toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough |  align lineheight | numlist bullist indent outdent',
+
+            $(document).ready(function () {
+                $('#Description').summernote({
+                    height: 400,
+                    minHeight: null,
+                    maxHeight: null,
+                    focus: true
+                });
             });
 
             function previewImage(event) {

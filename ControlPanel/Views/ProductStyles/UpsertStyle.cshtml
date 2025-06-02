@@ -1,0 +1,67 @@
+﻿@model Models.ProductStyleDTO
+
+@{
+    ViewData["Title"] = "Product Styles";
+}
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col">
+            <h4 class="text-uppercase fw-bold border-bottom pb-2">@ViewData["Title"]</h4>
+        </div>
+    </div>
+    <div class="row justify-content-center mt-3">
+        <div class="col-12 col-xl-10">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-lg-10 col-md-10 col-sm-8">
+                            <form asp-action="GetCategory" enctype="multipart/form-data">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="form-group mb-3">
+                                    <input asp-for="Id" class="form-control" type="hidden" />
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label asp-for="StyleName" class="control-label"></label>
+                                    <input asp-for="StyleName" class="form-control" />
+                                    <span asp-validation-for="StyleName" class="text-danger"></span>
+                                </div>
+                                @*<div class="form-group mb-3">
+                                    <label asp-for="ImageFile" class="control-label">Style Image</label>
+                                    <input asp-for="ImageFile" class="form-control" type="file" />
+                                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+
+                                </div>*@
+
+                                <div class="form-group form-check mb-3">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" asp-for="IsActivated" /> @Html.DisplayNameFor(model => model.IsActivated)
+                                    </label>
+                                </div>
+
+                                <div class="form-check mb-3">
+                                    <button type="submit" class="btn btn-theme mt-2">Submit</button>
+                                    <a href="@Url.Action("Index","Category")" class="btn btn-danger mt-2">Back to Category</a>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-4">
+                            <div>
+                                @if (@Model.StyleImage != null)
+                                {
+                                    <img src="@Model.StyleImage" id="imagePreview" class="img-fluid img-responsive img-thumbnail" />
+                                }
+                                else
+                                {
+                                    <img src="~/assets/img/no-image.png" id="imagePreview" class="img-fluid img-responsive img-thumbnail" />
+
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

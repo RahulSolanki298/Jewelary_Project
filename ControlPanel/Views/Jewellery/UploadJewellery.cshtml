@@ -6,11 +6,11 @@
 
         @if (TempData["UploadSuccess"] != null)
         {
-            <div class="alert alert-success">@TempData["UploadSuccess"]</div>
+        <div class="alert alert-success">@TempData["UploadSuccess"]</div>
         }
         @if (TempData["UploadError"] != null)
         {
-            <div class="alert alert-danger">@TempData["UploadError"]</div>
+        <div class="alert alert-danger">@TempData["UploadError"]</div>
         }
 
         <form id="uploadForm" asp-controller="Jewellery" asp-action="ExcelUpload" method="post" enctype="multipart/form-data">
@@ -38,12 +38,11 @@
 
             $('#uploadForm').on('submit', function (e) {
                 e.preventDefault();
-
+                $('#loader').show();
                 let form = $(this)[0];
                 let formData = new FormData(form);
 
                 $('#uploadBtn').prop('disabled', true).text('Uploading...');
-                showLoader();
 
                 $.ajax({
                     url: form.action,
@@ -127,6 +126,8 @@
                             icon: "success",
                             draggable: true
                         });
+                        $(".ringcount").removeClass("bg-dark");
+                        $(".ringcount").addClass("bg-success");
                     },
                     error: function (xhr, status, error) {
                         console.error("Error:", error);
@@ -191,6 +192,9 @@
                         });
                         $("#btnSaveBands").hide();
                         $("#btnEditBands").hide();
+
+                        $(".bandscount").removeClass("bg-dark");
+                        $(".bandscount").addClass("bg-success");
                     },
                     error: function (xhr, status, error) {
                         console.error("Error:", error);
@@ -255,6 +259,9 @@
                         });
                          $("#btnSaveEarring").hide();
                         $("#btnEditEarring").hide();
+
+                        $(".earringscount").removeClass("bg-dark");
+                        $(".earringscount").addClass("bg-success");
                     },
                     error: function (xhr, status, error) {
                         console.error("Error:", error);
@@ -319,6 +326,10 @@
                         });
                         $("#btnSavePendant").hide();
                         $("#btnEditPendant").hide();
+
+
+                        $(".pendantcount").removeClass("bg-dark");
+                        $(".pendantcount").addClass("bg-success");
                     },
                     error: function (xhr, status, error) {
                         console.error("Error:", error);
@@ -382,6 +393,9 @@
                             icon: "success",
                             draggable: true
                         });
+
+                        $(".braceletcount").removeClass("bg-dark");
+                        $(".braceletcount").addClass("bg-success");
                     },
                     error: function (xhr, status, error) {
                         console.error("Error:", error);
@@ -597,78 +611,125 @@
                 }
             });
 
-            $('#ImportProductList').on('submit','#uploadForm', function (e) {
-            e.preventDefault();
+            $('#ImportProductList').on('submit', '#uploadForm', function (e) {
+                debugger;
+                    e.preventDefault();
 
-            var formData = new FormData(this);
+                    var formData = new FormData(this);
 
-            $('#loader').show();
-            $("#uploadForm").prop('disabled', true);
+                    $('#loader').show();
+                    $("#uploadForm").prop('disabled', true);
+                        $.ajax({
+                            url: '@Url.Action("UploadProductCollectionImages", "Jewellery")', // Update this if needed
+                            type: 'POST',
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                            success: function (response) {
+                                debugger;
+                                //Swal.fire({
+                                //    title: response,
+                                //    icon: "success",
+                                //    draggable: true
+                                //});
+                                window.location.replace("@Url.Action("ThankYouForUploaded","Jewellery")");
 
-            $.ajax({
-                url: '@Url.Action("UploadProductCollectionImages", "Jewellery")', // Update this if needed
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    //$('#responseMsg').html('<div class="alert alert-success">Upload successful!</div>');
-                    Swal.fire({
-                        title: "Product images and videoes has been uploaded successful!",
-                        icon: "success",
-                        draggable: true
+                            },
+                            error: function (xhr, status, error) {
+                                Swal.fire({
+                                    title: error,
+                                    icon: "fail",
+                                    draggable: true
+                                });
+                            },
+                            complete: function ()
+                            {
+                                $('#loader').hide();
+                                $("#uploadForm").prop('disabled', false);
+                            }
+                        });
+            });
+
+            $('#ImportProductList').on('submit', "#uploadForm2", async function (e) {
+                e.preventDefault();
+
+                $('#folderloader').show();
+                $('#status').text("");
+                $("#btnFolderImgSave").prop('disabled', true);
+
+                const files = $('#folderUpload')[0].files;
+
+                if (files.length === 0) {
+                    $('#status').text("Please select a folder with files.");
+                    $('#folderloader').hide();
+                    $("#btnFolderImgSave").prop('disabled', false);
+                    return;
+                }
+
+                const formData = new FormData();
+
+                try {
+                    const key = await window.crypto.subtle.generateKey(
+                        { name: "AES-GCM", length: 256 },
+                        true,
+                        ["encrypt", "decrypt"]
+                    );
+
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+                        const arrayBuffer = await file.arrayBuffer();
+
+                        // Use random IV for each file
+                        const iv = window.crypto.getRandomValues(new Uint8Array(12));
+                        const encryptedData = await window.crypto.subtle.encrypt(
+                            { name: "AES-GCM", iv },
+                            key,
+                            arrayBuffer
+                        );
+
+                        // Convert encrypted data to Blob and append to FormData
+                        const encryptedBlob = new Blob([iv, new Uint8Array(encryptedData)], { type: "application/octet-stream" });
+                        formData.append('folderUpload', encryptedBlob, file.name + ".enc");
+                    }
+
+                    // Optional: Export the key and send to server if needed
+                    const exportedKey = await window.crypto.subtle.exportKey("raw", key);
+                    const keyBlob = new Blob([new Uint8Array(exportedKey)], { type: "application/octet-stream" });
+                    formData.append("encryptionKey", keyBlob);
+
+                    $.ajax({
+                        url: $('#uploadForm2').attr('action'),
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (response) {
+                            Swal.fire({
+                                title: "Product images and videos have been uploaded securely!",
+                                icon: "success"
+                            });
+                            $('#status').text("Upload successful.");
+                        },
+                        error: function (xhr) {
+                            $('#status').html(`<span style="color:red;">Error: ${xhr.responseText}</span>`);
+                            Swal.fire({
+                                title: "Secure upload failed!",
+                                icon: "error"
+                            });
+                        },
+                        complete: function () {
+                            $('#folderloader').hide();
+                            $("#btnFolderImgSave").prop('disabled', false);
+                        }
                     });
-                },
-                error: function (xhr, status, error) {
-                    //$('#responseMsg').html('<div class="alert alert-danger">Upload failed: ' + error + '</div>');
-                    Swal.fire({
-                        title: "Product images and videoes has been uploaded fail!",
-                        icon: "fail",
-                        draggable: true
-                    });
-                },
-                complete: function () {
-                    $('#loader').hide();
-                    //$('#uploadBtn').prop('disabled', false);
-                    $("#uploadForm").prop('disabled', false);
-                    Swal.fire({
-                        title: "Product images and videoes has been uploaded fail!",
-                        icon: "fail",
-                        draggable: true
-                    });
+
+                } catch (err) {
+                    console.error("Encryption error:", err);
+                    $('#status').html(`<span style="color:red;">Encryption failed: ${err.message}</span>`);
+                    $('#folderloader').hide();
+                    $("#btnFolderImgSave").prop('disabled', false);
                 }
             });
-        });
-
-            $('#ImportProductList').on('submit',"#uploadForm2" ,function (e) {
-            e.preventDefault();
-
-            var formData = new FormData();
-            var files = $('#folderUpload')[0].files;
-
-            if (files.length === 0) {
-                $('#status').text("Please select a folder with files.");
-                return;
-            }
-
-            for (var i = 0; i < files.length; i++) {
-                formData.append('folderUpload', files[i]);
-            }
-
-            $.ajax({
-                url: '@Url.Action("UploadProductImagesFromFolder", "Jewellery")', // Replace with your actual controller route
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    $('#status').html(`<span style="color:green;">${response}</span>`);
-                },
-                error: function (xhr) {
-                    $('#status').html(`<span style="color:red;">Error: ${xhr.responseText}</span>`);
-                }
-            });
-        });
 
         });
 

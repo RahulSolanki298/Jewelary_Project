@@ -69,11 +69,36 @@ namespace ControlPanel.Controllers
 
 
         [HttpPost]
+        public async Task<IActionResult> UpsertStyle(int? styleId = 0)
+        {
+            var result = new ProductStyleDTO();
+            if (ModelState.IsValid)
+            {
+                if (styleId.HasValue && styleId.Value > 0)
+                {
+                    var data = await _productStyles.GetProductStyleById(styleId.Value);
+                    if (data != null)
+                    {
+                        var dt = new ProductStyleDTO();
+                        dt.Id = data.Id;
+                        dt.StyleName = data.StyleName;
+                        dt.VenderId = data.VenderId;
+                        dt.StyleImage = data.StyleImage;
+                        dt.IsActivated = data.IsActivated;
+                        dt.UpdatedDate = DateTime.Now;
+                        return View(data);
+                    }
+                }
+            }
+            return View(result);
+        }
+
+        [HttpPost]
         public async Task<IActionResult> UpsertStyle(ProductStyleDTO productStyles)
         {
             if (ModelState.IsValid)
             {
-              var result= await _productStyles.SaveProductStyle(productStyles);
+                var result = await _productStyles.SaveProductStyle(productStyles);
                 if (result != true)
                 {
                     TempData["Status"] = "Error";
@@ -85,7 +110,7 @@ namespace ControlPanel.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View();
+            return View(productStyles);
         }
     }
 }

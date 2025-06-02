@@ -539,7 +539,7 @@
                                     <div class="container mt-2">
                                         <div class="row">
                                             <div class="col-12 text-center mb-3">
-                                                <h4 class="txt-dark">Upload ZIP File</h4>
+                                                <h4 class="txt-dark">Upload Images and Videos File</h4>
                                             </div>
                                         </div>
 
@@ -570,10 +570,9 @@
                                                     <form id="uploadForm2" asp-controller="Jewellery" asp-action="UploadProductImagesFromFolder" method="post" enctype="multipart/form-data">
                                                         <label for="folderUpload" class="form-label">Select Folder</label>
                                                         <input type="file" class="form-control form-control-lg" id="folderUpload" webkitdirectory directory multiple>
-                                                        @* <div class="form-text">Select Folder Path</div> *@
 
                                                         <div class="row justify-content-center">
-                                                            <div id="loader" style="display:none;">
+                                                            <div id="folderloader" style="display:none;">
                                                                 <span class="spinner-border text-primary" role="status"></span> Uploading...
                                                             </div>
                                                             <div class="col-auto">
@@ -581,6 +580,7 @@
                                                             </div>
                                                         </div>
                                                     </form>
+                                                    <div id="status" style="margin-top:10px;"></div>
                                                 </div>
                                             </div>
                                         </div>
