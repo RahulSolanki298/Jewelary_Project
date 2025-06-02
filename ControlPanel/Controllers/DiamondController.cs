@@ -86,7 +86,7 @@ namespace ControlPanel.Controllers
                 {
                     Title = $"Diamond File Upload with {user.FirstName} {user.LastName}",
                     UploadedDate = DateTime.UtcNow,
-                    UploadedBy=userId,
+                    UploadedBy = userId,
                     IsSuccess = 1
                 };
                 int uploadHistoryId = await _diamondRepository.AddDiamondFileUploadedHistory(uploadHistory);
@@ -111,6 +111,10 @@ namespace ControlPanel.Controllers
                 // Step 4: Bulk insert
                 string jsonData = JsonConvert.SerializeObject(diamondsList);
                 var result = await _diamondRepository.BulkInsertDiamondsAsync(jsonData, uploadHistoryId);
+                if (result.Count > 0)
+                {
+                    await _diamondRepository.BulkInsertDiamondHistoryAsync(result);
+                }
 
                 TempData["Status"] = "Success";
                 TempData["Message"] = $"File uploaded successfully. {diamondsList.Count} records inserted.";
@@ -230,7 +234,7 @@ namespace ControlPanel.Controllers
                 // Save file path or name to the database, e.g.:
                 diamondData.IconPath = "/diamondProp/" + uniqueFileName;
             }
-            
+
             if (diamondData != null && diamondData.Id > 0)
             {
                 var existingProperty = await _diamondPPTY.GetDiamondPropertyByIdAsync(diamondData.Id);

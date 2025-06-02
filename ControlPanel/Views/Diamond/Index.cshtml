@@ -212,9 +212,9 @@
                             return '<div style="margin:4px;"><a href="' + value + '" target="_blank"><i class="bi bi-file-earmark" style="font-size:20px;margin:2px 15px;"></i></a></div>';
                         };
 
-                        var Dnalink = function (row, column, value) {
-                            return '<div style="margin:4px;"><a href="' + value + '" target="_blank">Click Here</a></div>';
-                        };
+                        //var Dnalink = function (row, column, value) {
+                        //    return '<div style="margin:4px;"><a href="' + value + '" target="_blank">Click Here</a></div>';
+                        //};
 
                         var action = function (row, columnfield, value, defaulthtml, columnproperties, rowdata) {
                             return '<button title="" class="btn btn-dark btn-sm" style="margin:1px 15px;"><i class="bi bi-layout-text-window-reverse"></i></button>';
@@ -262,7 +262,7 @@
                                 { text: 'Stone ID', pinned: true, datafield: 'StoneId', style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
                                 { text: 'Video', pinned: true, datafield: 'DiamondVideoPath', cellsrenderer: videolink, style: blackstyle, width: 90, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
                                 { text: 'Certi', pinned: true, datafield: 'Certificate',cellsrenderer: Certilink, style: blackstyle, width: 60, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
-                                { text: 'DNA', datafield: 'DNA',cellsrenderer: Dnalink, style: blackstyle, width: 90, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+                                //{ text: 'DNA', datafield: 'DNA',cellsrenderer: Dnalink, style: blackstyle, width: 90, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
                                 { text: 'Step',datafield: 'Step', style: blackstyle, width: 100, align: 'center', cellsalign: 'left' },
                                 { text: 'Type',datafield: 'TypeName', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
                                 { text: 'Lab',datafield: 'LabName', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
