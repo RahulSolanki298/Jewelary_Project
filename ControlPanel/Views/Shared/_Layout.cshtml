@@ -5,16 +5,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]- Jewel Facet</title>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     <link href="~/assets/img/logo_QKP_icon.ico" rel="icon">
     <link href="~/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
     <link href="https://fonts.gstatic.com" rel="preconnect">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-    
-    <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
     <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="~/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
     <link href="~/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
@@ -22,8 +19,13 @@
     <link href="~/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
     <link href="~/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
     <link href="~/assets/vendor/simple-datatables/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
 
+    <link rel="stylesheet" href="sweetalert2.min.css">
     <link href="~/assets/css/style.css" rel="stylesheet">
+
+
 </head>
 <body>
     <header id="header" class="header fixed-top d-flex align-items-center">
@@ -50,7 +52,7 @@
                         <i class="bi bi-search"></i>
                     </a>
                 </li>
-                
+
                 <li class="nav-item dropdown">
 
                     <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
@@ -241,9 +243,11 @@
                         </li>
 
                         <li>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <i class="bi bi-box-arrow-right"></i>
-                                <span>Sign Out</span>
+                            <form id="logout-form" asp-controller="Account" asp-action="Logout" method="post" style="display:none;">
+                                @Html.AntiForgeryToken()
+                            </form>
+                            <a href="#" class="dropdown-item d-flex align-items-center" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="bi bi-question-circle"></i> Sign Out
                             </a>
                         </li>
                     </ul>
@@ -251,8 +255,8 @@
             </ul>
         </nav>
     </header>
-    
-    
+
+
     <aside id="sidebar" class="sidebar">
 
         <ul class="sidebar-nav" id="sidebar-nav">
@@ -272,7 +276,7 @@
                     </a>
                     <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                         <li>
-                            <a href="\jewelfacetadmin\Diamond\Property">
+                            <a href="@Url.Action("Property","Diamond")">
                                 <i class="bi bi-circle"></i><span>Diamond Property</span>
                             </a>
                         </li>
@@ -299,6 +303,36 @@
                                 <i class="bi bi-circle"></i><span>Jewellary Data</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="@Url.Action("RequestedProductList","Jewellery")">
+                                <i class="bi bi-circle"></i><span>Jewellary Status</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="@Url.Action("HoldProductList","Jewellery")">
+                                <i class="bi bi-circle"></i><span>Hold Jewellary</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="@Url.Action("DeactivatedProductList","Jewellery")">
+                                <i class="bi bi-circle"></i><span>Deactivated Jewellary</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
+                        <i class="bi bi-layout-text-window-reverse"></i><span>Category</span><i class="bi bi-chevron-down ms-auto"></i>
+                    </a>
+                    <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                        <li>
+                            <a href="@Url.Action("Index","Category")">
+                                <i class="bi bi-circle"></i><span>Category List</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
@@ -313,7 +347,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="@Url.Action("OrderProcess","Orders")">
+                            <a href="@Url.Action("Index","Orders")">
                                 <i class="bi bi-circle"></i><span>Order Process</span>
                             </a>
                         </li>
@@ -346,7 +380,9 @@
                             </a>
                         </li>
                     </ul>
-                </li><!-- End Charts Nav -->
+                </li>
+
+                <!-- End Charts Nav -->
 
                 <li class="nav-item">
                     <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
@@ -379,7 +415,7 @@
                     </a>
                     <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                         <li>
-                            <a href="@Url.Action("Property","Diamond")">
+                            <a href="@Url.Action("DiamondProperty","Diamond")">
                                 <i class="bi bi-circle"></i><span>Diamond Property</span>
                             </a>
                         </li>
@@ -397,7 +433,7 @@
                     </a>
                     <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                         <li>
-                            <a href="@Url.Action("Property","Jewellery")">
+                            <a href="@Url.Action("JewelryProperty","Jewellery")">
                                 <i class="bi bi-circle"></i><span>Jewellery Property</span>
                             </a>
                         </li>
@@ -406,8 +442,65 @@
                                 <i class="bi bi-circle"></i><span>Jewellary Data</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="@Url.Action("RequestedProductList","Jewellery")">
+                                <i class="bi bi-circle"></i><span>Requested Product</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("HoldProductList","Jewellery")">
+                                <i class="bi bi-circle"></i><span>Hold Jewellary</span>
+                                @* Jewellary varify *@
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("DeactivatedProductList","Jewellery")">
+                                <i class="bi bi-circle"></i><span>Deactivated Jewellary</span>
+                            </a>
+                        </li>
+
                     </ul>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed" data-bs-target="#category-nav" data-bs-toggle="collapse" href="#">
+                        <i class="bi bi-layout-text-window-reverse"></i><span>Category</span><i class="bi bi-chevron-down ms-auto"></i>
+                    </a>
+                    <ul id="category-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                        <li>
+                            <a href="@Url.Action("Index","Category")">
+                                <i class="bi bi-circle"></i><span>Category List</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed" data-bs-target="#styles-nav" data-bs-toggle="collapse" href="#">
+                        <i class="bi bi-layout-text-window-reverse"></i><span>Product Program</span><i class="bi bi-chevron-down ms-auto"></i>
+                    </a>
+                    <ul id="styles-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                        <li>
+                            <a href="@Url.Action("Index","ProductStyles")">
+                                <i class="bi bi-circle"></i><span>Program List</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed" data-bs-target="#collection-nav" data-bs-toggle="collapse" href="#">
+                        <i class="bi bi-layout-text-window-reverse"></i><span>Product Collection</span><i class="bi bi-chevron-down ms-auto"></i>
+                    </a>
+                    <ul id="collection-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                        <li>
+                            <a href="@Url.Action("Index","ProductStyles")">
+                                <i class="bi bi-circle"></i><span>Collection List</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
 
                 <li class="nav-item">
                     <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
@@ -415,12 +508,12 @@
                     </a>
                     <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                         <li>
-                            <a href="@Url.Action("OrderRequestList","Orders")">
+                            <a href="@Url.Action("OrderRequestData","Orders")">
                                 <i class="bi bi-circle"></i><span>Order Request</span>
                             </a>
                         </li>
                         <li>
-                            <a href="@Url.Action("OrderProcess","Orders")">
+                            <a href="@Url.Action("Index","Orders")">
                                 <i class="bi bi-circle"></i><span>Order Process</span>
                             </a>
                         </li>
@@ -453,7 +546,9 @@
                             </a>
                         </li>
                     </ul>
-                </li><!-- End Charts Nav -->
+                </li>
+
+                <!-- End Charts Nav -->
 
                 <li class="nav-item">
                     <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
@@ -476,10 +571,12 @@
                             </a>
                         </li>
                     </ul>
-                </li><!-- End Icons Nav -->
+                </li>
+
+                <!-- End Icons Nav -->
             }
-     
-    <li class="nav-heading">Pages</li>
+
+            @* <li class="nav-heading">Pages</li>
         <li class="nav-item">
             <a class="nav-link collapsed" href="#">
                 <i class="bi bi-person"></i>
@@ -527,29 +624,54 @@
                 <i class="bi bi-file-earmark"></i>
                 <span>Blank</span>
             </a>
-        </li>
+        </li> *@
 
         </ul>
     </aside>
 
     <main id="main" class="main">
-            @RenderBody()
+        @await Html.PartialAsync("_Notification")
+        @Html.Partial("_Loading")
+
+        @RenderBody()
     </main>
 
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-    
+
+    <!-- jQuery (load first if any plugin depends on it) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="~/assets/vendor/apexcharts/apexcharts.min.js"></script>
+
+    <!-- Vendor Libraries -->
     <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="~/assets/vendor/chart.js/chart.umd.js"></script>
     <script src="~/assets/vendor/echarts/echarts.min.js"></script>
+    <script src="~/assets/vendor/apexcharts/apexcharts.min.js"></script>
     <script src="~/assets/vendor/quill/quill.js"></script>
     <script src="~/assets/vendor/simple-datatables/simple-datatables.js"></script>
-    <script src="~/assets/vendor/tinymce/tinymce.min.js"></script>
     <script src="~/assets/vendor/php-email-form/validate.js"></script>
-    <script src="~/assets/js/main.js"></script>
-    
+    <script src="https://cdn.tiny.cloud/1/3l8g87ya8w9troc7u7hi2060g8v9wlu46xivtaz7yaurnsg5/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script>
+        function showLoader() {
+            document.getElementById('loader-wrapper').style.display = 'block';
+        }
+
+        function hideLoader() {
+            document.getElementById('loader-wrapper').style.display = 'none';
+        }
+
+        $(window).on('beforeunload',function(){
+            showLoader();
+        });
+
+        $(document).on('submit', 'form', function () {
+            showLoader();
+        });
+        
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

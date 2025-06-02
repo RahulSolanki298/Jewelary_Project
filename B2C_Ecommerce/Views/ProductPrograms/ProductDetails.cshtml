@@ -1,0 +1,888 @@
+﻿@model Models.ProductDTO
+@using Common
+@{
+    ViewData["Title"] = "Product Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    <link href="~/assets/css/lightslider/lightslider.css" rel="stylesheet" rel="stylesheet" />
+    
+    <style>
+
+    #lightSliderVertical li 
+    {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 400px; /* adjust as needed */
+            width: 100%;
+            overflow: hidden;
+            background-color: #f8f8f8; /* optional, helps visualize spacing */
+    }
+
+     #lightSliderVertical li img,
+     #lightSliderVertical li video {
+         max-height: 100%;
+         max-width: 100%;
+         object-fit: contain;
+         display: block;
+     }
+
+    .metalHide {
+            color: black;
+            font-size: 16px;
+            font-weight: normal;
+            border: none;
+        }
+
+    .metalShow {
+            color: black;
+            font-size: 16px;
+            font-weight: bold;
+            border: 1px solid black;
+            display: block;
+        }
+
+    </style>
+}
+
+<!-- page main wrapper start -->
+<div class="shop-main-wrapper padding-top-50 padding-bottom-50 pb-0">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- product details wrapper start -->
+            <div class="col-lg-12 order-1 order-lg-2">
+                <!-- product details inner end -->
+                <div class="product-details-inner">
+                    <div class="row">
+                        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                            <div class="demo">
+                                <div class="vertical-slider-wrapper d-flex">
+                                    <ul id="lightSliderVertical" class="img-with-bg">
+                                        @if (Model != null && Model.ProductImageVideos.Count > 0)
+                                        {
+                                            foreach (var item in Model.ProductImageVideos)
+                                            {
+                                                if (!string.IsNullOrEmpty(item.ImageUrl) && item.ImageUrl != "-")
+                                                {
+                                                    <li data-thumb="@($"{SD.ImgUrl}/{item.ImageUrl}")">
+                                                       
+                                                        @* <a href="@($"{SD.ImgUrl}/{item.ImageUrl}")"
+                                                           data-fancybox="gallery"
+                                                           data-caption="Product Image"
+                                                           data-thumb="@($"{SD.ImgUrl}/{item.ImageUrl}")"
+                                                           data-zoomable="true">
+                                                            <img  src="@($"{SD.ImgUrl}/{item.ImageUrl}")" class="img-zoom" />
+                                                        </a> *@
+                                                       
+                                                        <a>
+                                                            <img src="@($"{SD.ImgUrl}/{item.ImageUrl}")" class="zoom-images" />
+                                                        </a>
+                                                       
+                                                    </li>
+                                                }
+                                                else if (!string.IsNullOrEmpty(item.VideoUrl) && item.VideoUrl != "-")
+                                                {
+                                                    <li data-thumb="@SD.ImgUrl/assets/img/video/video-icon.svg">
+                                                        @* <a href="@($"{SD.ImgUrl}/{item.VideoUrl}")" data-fancybox="gallery" data-caption="Product Video">
+                                                            <video autoplay="autoplay" loop="loop" muted="muted" playsinline preload="auto" style="max-width: 100%;">
+                                                                <source src="@($"{SD.ImgUrl}/{item.VideoUrl}")" type="video/mp4" />
+                                                            </video>
+                                                        </a> *@
+                                                        <a>
+                                                            <video autoplay="autoplay" loop="loop" muted="muted" playsinline preload="auto" style="max-width: 100%;">
+                                                                <source src="@($"{SD.ImgUrl}/{item.VideoUrl}")" type="video/mp4" />
+                                                            </video>
+                                                        </a>
+                                                    </li>
+                                                }
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6  col-sm-12">
+                            <div class="product-details-des">
+                                @*<h3 class="product-name">@Model.ShapeName @Model.BandWidth @Model.Length @Model.Sku</h3>*@
+                                <h3 class="product-name">@(Model.Title != null ? Model.Title : Model.EventName) </h3>
+                                <span class="text-black-50">@Model.Karat @Model.ColorName @Model.ProductType @Model.CenterCaratName</span>
+
+                                <div class="price-box  d-flex">
+                                    <span class="price-regular" style="font-size: x-large; font-family: Castoro serif; ">$@Model.Price USD</span>
+                                    <span class="price-old"><del>$@Model.UnitPrice</del> USD</span>
+                                </div>
+                                <div class="price-box  d-flex">
+                                    <label>Leave Review</label>
+                                    <div class="ratings" style="padding-left:15px;">
+                                        <span><i class="fa fa-star-o"></i></span>
+                                        <span><i class="fa fa-star-o"></i></span>
+                                        <span><i class="fa fa-star-o"></i></span>
+                                        <span><i class="fa fa-star-o"></i></span>
+                                        <span><i class="fa fa-star-o"></i></span>
+                                    </div>
+                                </div>
+                                <hr />
+
+                                <div class="pt-3">
+                                    <h6 class="option-title"> <span style="font-weight:bold;">Metal :</span>  <span class="active-metal">@Model.ColorName</span> </h6>
+                                    <ul class="color-categories-details">
+                                        @foreach (var color in Model.Metals)
+                                        {
+                                            <li>
+                                                <a class="@color.SymbolName metalColor" metalId="@color.Id" href="javascript:void(0)" title="@color.Name" productId="@Model.Sku" data-colorName="@color.Name"></a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+
+                                <div class="pt-3">
+                                    <h6 class="option-title"> <span style="font-weight:bold;">Diamond Shape</span> : <span class="active-shape">@(Model.CenterShapeName != null ? Model.CenterShapeName : "-")</span> </h6>
+                                    <ul class="shape-categories-details">
+                                        @foreach (var shape in Model.Shapes)
+                                        {
+                                            <li>
+                                                <a href="#" title="@shape.Name">
+                                                    <img class="shape-img" src="@SD.ShapeImgUrl@shape.IconPath" title="@shape.Name" />
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+
+                                <div class="pt-4">
+                                    <h5 class="offer-text"><strong>Carat Weight :</strong> @Model.CaratName</h5>
+                                    @*<ul class="size-categories-details">
+                                            @foreach (var item in Model.CaratSizes)
+                                            {
+                                                <li>
+                                                    <a class="text-black-50" href="#" >@item.Name</a>
+                                                </li>
+                                            }
+                                        </ul>*@
+                                    <div class="product-countdown">
+
+                                        @foreach (var item in Model.CaratSizes)
+                                        {
+                                            <div class="single-countdown selectedCaratClick"><span class="single-countdown__time" title="@item.Name">@item.Name</span></div>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="availability">
+                                    <i class="fa fa-check-circle"></i>
+                                    <span>In stock</span>
+                                </div>
+                                <p class="pro-desc">
+                                    @*@Model.Description*@
+                                </p>
+                                <div class="quantity-cart-box d-flex align-items-center">
+                                    <div class="action_link">
+                                        <a class="btn btn-cart2" href="#">Add to cart</a>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="useful-links">
+                                    <a href="#" data-bs-toggle="tooltip" title="Compare"><i class="pe-7s-refresh-2"></i>compare</a>
+                                    <a href="#" data-bs-toggle="tooltip" title="Wishlist"><i class="pe-7s-like"></i>wishlist</a>
+                                </div>
+                                <div class="delivery_date_shortcode">
+                                    <h2 class="delivery_msg">Estimated Delivery Date (Working Day)</h2>
+                                    <div class="order_steps">
+                                        <div class="order_step_box">
+                                            <img src="https://purejewels.co.in/assets/images/offer/order_icon.gif" alt="order_icon">
+                                            <h6>Order Confirmed</h6>
+                                            <h6 id="orderdate">4th Apr 2025</h6>
+                                        </div>
+                                        <div class="order_step_box">
+                                            <img src="https://purejewels.co.in/assets/images/offer/shipped_icon.gif" alt="shipped_icon">
+                                            <h6>Shipped</h6>
+                                            <h6 class="shippdate">12th Apr 2025</h6>
+                                        </div>
+                                        <div class="order_step_box">
+                                            <img src="https://purejewels.co.in/assets/images/offer/doorstep_icon.gif" alt="doorstep_icon">
+                                            <h6>At Your Doorstep</h6>
+                                            <h6 class="doorstepdate">15th Apr 2025</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="like-icon">
+                                    <a class="facebook" href="#"><i class="fa fa-facebook"></i>like</a>
+                                    <a class="twitter" href="#"><i class="fa fa-twitter"></i>tweet</a>
+                                    <a class="pinterest" href="#"><i class="fa fa-pinterest"></i>save</a>
+                                    <a class="google" href="#"><i class="fa fa-google-plus"></i>share</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- product details inner end -->
+                <!-- product details reviews start -->
+                <div class="product-details-reviews section-padding pb-0">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="product-review-info">
+                                <ul class="nav review-tab">
+                                    <li>
+                                        <a class="active" data-bs-toggle="tab" href="#tab_one">Product Details</a>
+                                    </li>
+                                    <li>
+                                        <a data-bs-toggle="tab" href="#tab_two">information</a>
+                                    </li>
+                                    <li>
+                                        <a data-bs-toggle="tab" href="#tab_three">reviews (1)</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content reviews-tab">
+                                    <div class="tab-pane fade show active" id="tab_one">
+                                        <div class="tab-one">
+                                            <p>
+                                                @Model.Description
+                                            </p>
+
+                                            <div>
+                                                <ul>
+                                                    <li> <span class="text-dark">Carat Weight :</span> @Model.GoldWeight</li>
+                                                    <li> <span class="text-dark">Center Stone :</span> @Model.CenterCaratName</li>
+                                                    <li> <span class="text-dark">Center Shape :</span> @Model.CenterShapeName</li>
+                                                    <li> <span class="text-dark">Diamond Quality :</span> @Model.Grades @Model.Certificate</li>
+                                                    <li> <span class="text-dark">Band Width :</span> @Model.BandWidth</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="tab_two">
+                                        <table class="table table-bordered">
+                                            <tbody>
+                                                <tr>
+                                                    <td>metals :</td>
+                                                    <td>
+                                                        @foreach (var item in Model.Metals)
+                                                        {
+                                                            <span> @item.Name</span>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>size :</td>
+                                                    <td>
+                                                        @foreach (var item in Model.CaratSizes)
+                                                        {
+                                                            <span>@item.Name</span>
+                                                        }
+
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="tab-pane fade" id="tab_three">
+                                        <form action="#" class="review-form">
+                                            <h5>1 review for <span>Chaz Kangeroo</span></h5>
+                                            <div class="total-reviews">
+                                                <div class="rev-avatar">
+                                                    <img src="~/assets/img/about/avatar.jpg" alt="">
+                                                </div>
+                                                <div class="review-box">
+                                                    <div class="ratings">
+                                                        <span class="good"><i class="fa fa-star"></i></span>
+                                                        <span class="good"><i class="fa fa-star"></i></span>
+                                                        <span class="good"><i class="fa fa-star"></i></span>
+                                                        <span class="good"><i class="fa fa-star"></i></span>
+                                                        <span><i class="fa fa-star"></i></span>
+                                                    </div>
+                                                    <div class="post-author">
+                                                        <p><span>admin -</span> 30 Mar, 2019</p>
+                                                    </div>
+                                                    <p>
+                                                        Aliquam fringilla euismod risus ac bibendum. Sed sit
+                                                        amet sem varius ante feugiat lacinia. Nunc ipsum nulla,
+                                                        vulputate ut venenatis vitae, malesuada ut mi. Quisque
+                                                        iaculis, dui congue placerat pretium, augue erat
+                                                        accumsan lacus
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col">
+                                                    <label class="col-form-label">
+                                                        <span class="text-danger">*</span>
+                                                        Your Name
+                                                    </label>
+                                                    <input type="text" class="form-control" required="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col">
+                                                    <label class="col-form-label">
+                                                        <span class="text-danger">*</span>
+                                                        Your Email
+                                                    </label>
+                                                    <input type="email" class="form-control" required="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col">
+                                                    <label class="col-form-label">
+                                                        <span class="text-danger">*</span>
+                                                        Your Review
+                                                    </label>
+                                                    <textarea class="form-control" required=""></textarea>
+                                                    <div class="help-block pt-10">
+                                                        <span class="text-danger">Note:</span>
+                                                        HTML is not translated!
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col">
+                                                    <label class="col-form-label">
+                                                        <span class="text-danger">*</span>
+                                                        Rating
+                                                    </label>
+                                                    &nbsp;&nbsp;&nbsp; Bad&nbsp;
+                                                    <input type="radio" value="1" name="rating">
+                                                    &nbsp;
+                                                    <input type="radio" value="2" name="rating">
+                                                    &nbsp;
+                                                    <input type="radio" value="3" name="rating">
+                                                    &nbsp;
+                                                    <input type="radio" value="4" name="rating">
+                                                    &nbsp;
+                                                    <input type="radio" value="5" name="rating" checked="">
+                                                    &nbsp;Good
+                                                </div>
+                                            </div>
+                                            <div class="buttons">
+                                                <button class="btn btn-sqr" type="submit">Continue</button>
+                                            </div>
+                                        </form> <!-- end of review-form -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- product details reviews end -->
+            </div>
+            <!-- product details wrapper end -->
+        </div>
+    </div>
+</div>
+<!-- page main wrapper end -->
+<!-- related products area start -->
+<section class="related-products section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <!-- section title start -->
+                <div class="section-title text-center">
+                    <h2 class="title">Related Products</h2>
+                    <p class="sub-title">Add related products to weekly lineup</p>
+                </div>
+                <!-- section title start -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="product-carousel-4 slick-row-10 slick-arrow-style">
+                    <!-- product item start -->
+                    <div class="product-item">
+                        <figure class="product-thumb">
+                            <a href="product-details.html">
+                                <img class="pri-img" src="~/assets/img/product/product-11.jpg" alt="product">
+                                <img class="sec-img" src="~/assets/img/product/product-8.jpg" alt="product">
+                            </a>
+                            <div class="product-badge">
+                                <div class="product-label new">
+                                    <span>new</span>
+                                </div>
+                                <div class="product-label discount">
+                                    <span>10%</span>
+                                </div>
+                            </div>
+                            <div class="button-group">
+                                <a href="wishlist.html" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to wishlist"><i class="pe-7s-like"></i></a>
+                                <a href="compare.html" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to Compare"><i class="pe-7s-refresh-2"></i></a>
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#quick_view"><span data-bs-toggle="tooltip" data-bs-placement="left" title="Quick View"><i class="pe-7s-search"></i></span></a>
+                            </div>
+                            <div class="cart-hover">
+                                <button class="btn btn-cart">add to cart</button>
+                            </div>
+                        </figure>
+                        <div class="product-caption text-center">
+                            <div class="product-identity">
+                                <p class="manufacturer-name"><a href="product-details.html">Gold</a></p>
+                            </div>
+                            <ul class="color-categories">
+                                <li>
+                                    <a class="c-lightblue" href="#" title="LightSteelblue"></a>
+                                </li>
+                                <li>
+                                    <a class="c-darktan" href="#" title="Darktan"></a>
+                                </li>
+                                <li>
+                                    <a class="c-grey" href="#" title="Grey"></a>
+                                </li>
+                                <li>
+                                    <a class="c-brown" href="#" title="Brown"></a>
+                                </li>
+                            </ul>
+                            <h6 class="product-name">
+                                <a href="product-details.html">Perfect Diamond Jewelry</a>
+                            </h6>
+                            <div class="price-box">
+                                <span class="price-regular">$60.00</span>
+                                <span class="price-old"><del>$70.00</del></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- product item end -->
+                    <!-- product item start -->
+                    <div class="product-item">
+                        <figure class="product-thumb">
+                            <a href="product-details.html">
+                                <img class="pri-img" src="~/assets/img/product/product-12.jpg" alt="product">
+                                <img class="sec-img" src="~/assets/img/product/product-7.jpg" alt="product">
+                            </a>
+                            <div class="product-badge">
+                                <div class="product-label new">
+                                    <span>sale</span>
+                                </div>
+                                <div class="product-label discount">
+                                    <span>new</span>
+                                </div>
+                            </div>
+                            <div class="button-group">
+                                <a href="wishlist.html" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to wishlist"><i class="pe-7s-like"></i></a>
+                                <a href="compare.html" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to Compare"><i class="pe-7s-refresh-2"></i></a>
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#quick_view"><span data-bs-toggle="tooltip" data-bs-placement="left" title="Quick View"><i class="pe-7s-search"></i></span></a>
+                            </div>
+                            <div class="cart-hover">
+                                <button class="btn btn-cart">add to cart</button>
+                            </div>
+                        </figure>
+                        <div class="product-caption text-center">
+                            <div class="product-identity">
+                                <p class="manufacturer-name"><a href="product-details.html">mony</a></p>
+                            </div>
+                            <ul class="color-categories">
+                                <li>
+                                    <a class="c-lightblue" href="#" title="LightSteelblue"></a>
+                                </li>
+                                <li>
+                                    <a class="c-darktan" href="#" title="Darktan"></a>
+                                </li>
+                                <li>
+                                    <a class="c-grey" href="#" title="Grey"></a>
+                                </li>
+                                <li>
+                                    <a class="c-brown" href="#" title="Brown"></a>
+                                </li>
+                            </ul>
+                            <h6 class="product-name">
+                                <a href="product-details.html">Handmade Golden Necklace</a>
+                            </h6>
+                            <div class="price-box">
+                                <span class="price-regular">$50.00</span>
+                                <span class="price-old"><del>$80.00</del></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- product item end -->
+                    <!-- product item start -->
+                    <div class="product-item">
+                        <figure class="product-thumb">
+                            <a href="product-details.html">
+                                <img class="pri-img" src="~/assets/img/product/product-13.jpg" alt="product">
+                                <img class="sec-img" src="~/assets/img/product/product-6.jpg" alt="product">
+                            </a>
+                            <div class="product-badge">
+                                <div class="product-label new">
+                                    <span>new</span>
+                                </div>
+                            </div>
+                            <div class="button-group">
+                                <a href="wishlist.html" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to wishlist"><i class="pe-7s-like"></i></a>
+                                <a href="compare.html" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to Compare"><i class="pe-7s-refresh-2"></i></a>
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#quick_view"><span data-bs-toggle="tooltip" data-bs-placement="left" title="Quick View"><i class="pe-7s-search"></i></span></a>
+                            </div>
+                            <div class="cart-hover">
+                                <button class="btn btn-cart">add to cart</button>
+                            </div>
+                        </figure>
+                        <div class="product-caption text-center">
+                            <div class="product-identity">
+                                <p class="manufacturer-name"><a href="product-details.html">Diamond</a></p>
+                            </div>
+                            <ul class="color-categories">
+                                <li>
+                                    <a class="c-lightblue" href="#" title="LightSteelblue"></a>
+                                </li>
+                                <li>
+                                    <a class="c-darktan" href="#" title="Darktan"></a>
+                                </li>
+                                <li>
+                                    <a class="c-grey" href="#" title="Grey"></a>
+                                </li>
+                                <li>
+                                    <a class="c-brown" href="#" title="Brown"></a>
+                                </li>
+                            </ul>
+                            <h6 class="product-name">
+                                <a href="product-details.html">Perfect Diamond Jewelry</a>
+                            </h6>
+                            <div class="price-box">
+                                <span class="price-regular">$99.00</span>
+                                <span class="price-old"><del></del></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- product item end -->
+                    <!-- product item start -->
+                    <div class="product-item">
+                        <figure class="product-thumb">
+                            <a href="product-details.html">
+                                <img class="pri-img" src="~/assets/img/product/product-14.jpg" alt="product">
+                                <img class="sec-img" src="~/assets/img/product/product-5.jpg" alt="product">
+                            </a>
+                            <div class="product-badge">
+                                <div class="product-label new">
+                                    <span>sale</span>
+                                </div>
+                                <div class="product-label discount">
+                                    <span>15%</span>
+                                </div>
+                            </div>
+                            <div class="button-group">
+                                <a href="wishlist.html" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to wishlist"><i class="pe-7s-like"></i></a>
+                                <a href="compare.html" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to Compare"><i class="pe-7s-refresh-2"></i></a>
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#quick_view"><span data-bs-toggle="tooltip" data-bs-placement="left" title="Quick View"><i class="pe-7s-search"></i></span></a>
+                            </div>
+                            <div class="cart-hover">
+                                <button class="btn btn-cart">add to cart</button>
+                            </div>
+                        </figure>
+                        <div class="product-caption text-center">
+                            <div class="product-identity">
+                                <p class="manufacturer-name"><a href="product-details.html">silver</a></p>
+                            </div>
+                            <ul class="color-categories">
+                                <li>
+                                    <a class="c-lightblue" href="#" title="LightSteelblue"></a>
+                                </li>
+                                <li>
+                                    <a class="c-darktan" href="#" title="Darktan"></a>
+                                </li>
+                                <li>
+                                    <a class="c-grey" href="#" title="Grey"></a>
+                                </li>
+                                <li>
+                                    <a class="c-brown" href="#" title="Brown"></a>
+                                </li>
+                            </ul>
+                            <h6 class="product-name">
+                                <a href="product-details.html">Diamond Exclusive Ornament</a>
+                            </h6>
+                            <div class="price-box">
+                                <span class="price-regular">$55.00</span>
+                                <span class="price-old"><del>$75.00</del></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- product item end -->
+                    <!-- product item start -->
+                    <div class="product-item">
+                        <figure class="product-thumb">
+                            <a href="product-details.html">
+                                <img class="pri-img" src="~/assets/img/product/product-15.jpg" alt="product">
+                                <img class="sec-img" src="~/assets/img/product/product-4.jpg" alt="product">
+                            </a>
+                            <div class="product-badge">
+                                <div class="product-label new">
+                                    <span>new</span>
+                                </div>
+                                <div class="product-label discount">
+                                    <span>20%</span>
+                                </div>
+                            </div>
+                            <div class="button-group">
+                                <a href="wishlist.html" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to wishlist"><i class="pe-7s-like"></i></a>
+                                <a href="compare.html" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to Compare"><i class="pe-7s-refresh-2"></i></a>
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#quick_view"><span data-bs-toggle="tooltip" data-bs-placement="left" title="Quick View"><i class="pe-7s-search"></i></span></a>
+                            </div>
+                            <div class="cart-hover">
+                                <button class="btn btn-cart">add to cart</button>
+                            </div>
+                        </figure>
+                        <div class="product-caption text-center">
+                            <div class="product-identity">
+                                <p class="manufacturer-name"><a href="product-details.html">mony</a></p>
+                            </div>
+                            <ul class="color-categories">
+                                <li>
+                                    <a class="c-lightblue" href="#" title="LightSteelblue"></a>
+                                </li>
+                                <li>
+                                    <a class="c-darktan" href="#" title="Darktan"></a>
+                                </li>
+                                <li>
+                                    <a class="c-grey" href="#" title="Grey"></a>
+                                </li>
+                                <li>
+                                    <a class="c-brown" href="#" title="Brown"></a>
+                                </li>
+                            </ul>
+                            <h6 class="product-name">
+                                <a href="product-details.html">Citygold Exclusive Ring</a>
+                            </h6>
+                            <div class="price-box">
+                                <span class="price-regular">$60.00</span>
+                                <span class="price-old"><del>$70.00</del></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- product item end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {        
+    <script src="~/assets/js/plugins/lightslider.js"></script>
+    
+    <script>
+        
+        let vSlider;
+        let resizeTimeout;
+        function initializeSlider() {
+            if (vSlider) vSlider.destroy();
+
+            const isMobileOrTablet = window.innerWidth <= 768; // You can adjust the breakpoint
+
+
+            vSlider = $("#lightSliderVertical").lightSlider({
+                gallery: true,
+                item: 1,
+                loop: true,
+                slideMargin: 0,
+                thumbItem: 5,
+                galleryMargin: 10,
+                thumbMargin: 10,
+                //vertical: true,
+                vertical: !isMobileOrTablet,
+                onSliderLoad: function () {
+                   
+
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            initializeSlider();
+
+            $(document).on("click", ".metalColor", function () {
+                const colorId = $(this).attr("metalId");
+                const productId = $(this).attr("productId");
+                GetProductByColorId(productId, colorId);
+            });
+
+            $(window).on('resize', function () {
+                //initializeSlider(); // Re-init on resize
+
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(function () {
+                    initializeSlider(); // Re-initialize after resizing stops
+                }, 300);
+
+            });
+        });
+
+        function GetProductByColorId(productId, colorId) {
+            $.ajax({
+                url: '@Url.Action("ProductDetailsByColorId", "Products")',
+                data: {
+                    sku: productId,
+                    colorId: parseInt(colorId)
+                },
+                type: 'GET',
+                dataType: 'json'
+            }).done(function (response) {
+                const baseUrl = '@SD.ImgUrl'.replace(/\\/g, '/');
+
+                $(".product-name").text(response.title);
+                $(".price-regular[data-sku='" + productId + "']").text(response.Price);
+                $(".price-old[data-sku='" + productId + "']").html('<del>' + response.unitPrice + '</del>');
+                $(".active-metal").text(response.colorName);
+
+                const images = (response.productImageVideos || []).filter(x => x.imageUrl && x.imageUrl !== "-");
+
+                let sliderHtml = "";
+
+                images.forEach((image, index) => {
+                    const imgUrl = baseUrl + '/' + image.imageUrl.replace(/\\/g, '/');
+                    const altText = response.colorName + " - Image " + (index + 1);
+
+                    sliderHtml += `
+                        <li data-thumb="${imgUrl}">
+                           
+                            <a>
+                                <img src="${imgUrl}" alt="${altText}" class="zoom-images" />
+                            </a>
+                          
+                        </li>`;
+                });
+
+                const videos = (response.productImageVideos || []).filter(x => x.videoUrl && x.videoUrl !== "-");
+                let vdoSliderHtml = "";
+
+                videos.forEach((vdo, index) => {
+                    const vdoUrl = baseUrl + '/' + vdo.videoUrl.replace(/\\/g, '/');
+                    const altText = response.colorName + " - Image " + (index + 1);
+
+                    sliderHtml += `
+                        <li data-thumb="@SD.ImgUrl/assets/img/video/video-icon.svg">                           
+                            <a>
+                                <video autoplay="autoplay" loop="loop" muted="muted" playsinline preload="auto" style="max-width: 100%;">
+                                                                <source src="${vdoUrl}" type="video/mp4">
+                                                            </video>
+                            </a>
+                        </li>`;
+                });
+
+                $("#lightSliderVertical").html(sliderHtml);
+                initializeSlider();
+            }).fail(function (xhr, status, error) {
+                console.error("AJAX Error:", status, error);
+            });
+        }
+    </script>
+
+
+
+   @*  <script>
+        $(function () {
+          var zoomed = false;
+          var isDragging = false;
+          var lastX, lastY;
+          var posX = 0, posY = 0;
+
+          var $img = $('.zoom-images');
+
+          $img.on('click', function (e) {
+              debugger;
+            if (!zoomed) {
+              zoomed = true;
+              $(this).css('cursor', 'grab');
+              $(this).css('transform', 'scale(2)');
+            } else {
+              zoomed = false;
+              $(this).css('cursor', 'zoom-in');
+              $(this).css({
+                transform: 'scale(1)',
+                top: 0,
+                left: 0
+              });
+              posX = posY = 0;
+            }
+          });
+
+          $img.on('mousedown', function (e) {
+            if (!zoomed) return;
+            isDragging = true;
+            lastX = e.pageX;
+            lastY = e.pageY;
+            $(this).css('cursor', 'grabbing');
+          });
+
+          $(document).on('mousemove', function (e) {
+            if (isDragging && zoomed) {
+              var dx = e.pageX - lastX;
+              var dy = e.pageY - lastY;
+
+              posX += dx;
+              posY += dy;
+
+              $img.css({
+                top: posY + 'px',
+                left: posX + 'px'
+              });
+
+              lastX = e.pageX;
+              lastY = e.pageY;
+            }
+          });
+
+          $(document).on('mouseup', function () {
+            if (zoomed) {
+              isDragging = false;
+              $img.css('cursor', 'grab');
+            }
+          });
+        });
+    </script> *@
+
+    <script>
+        $(function () {
+          var zoomed = false;
+          var isDragging = false;
+          var lastX, lastY;
+          var posX = 0, posY = 0;
+
+          // Use event delegation
+          $(document).on('click', '.zoom-images', function (e) {
+            if (!zoomed) {
+              zoomed = true;
+              $(this).css('cursor', 'grab');
+              $(this).css('transform', 'scale(2)');
+            } else {
+              zoomed = false;
+              $(this).css('cursor', 'zoom-in');
+              $(this).css({
+                transform: 'scale(1)',
+                top: 0,
+                left: 0
+              });
+              posX = posY = 0;
+            }
+          });
+
+          $(document).on('mousedown', '.zoom-images', function (e) {
+            if (!zoomed) return;
+            isDragging = true;
+            lastX = e.pageX;
+            lastY = e.pageY;
+            $(this).css('cursor', 'grabbing');
+          });
+
+          $(document).on('mousemove', function (e) {
+            if (isDragging && zoomed) {
+              var dx = e.pageX - lastX;
+              var dy = e.pageY - lastY;
+
+              posX += dx;
+              posY += dy;
+
+              $('.zoom-images').css({
+                top: posY + 'px',
+                left: posX + 'px'
+              });
+
+              lastX = e.pageX;
+              lastY = e.pageY;
+            }
+          });
+
+          $(document).on('mouseup', function () {
+            if (zoomed) {
+              isDragging = false;
+              $('.zoom-images').css('cursor', 'grab');
+            }
+          });
+        });
+    </script>
+
+
+}

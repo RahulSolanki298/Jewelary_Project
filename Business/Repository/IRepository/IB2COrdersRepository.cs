@@ -23,5 +23,7 @@ namespace Business.Repository.IRepository
         Task<IEnumerable<CustomerOrders>> GetB2COrderReadyForShipmentList();
 
         Task<IEnumerable<CustomerOrders>> GetB2COrderShippedList();
+
+        Task<IEnumerable<CustomerOrders>> GetB2COrderPackageList();
     }
 }

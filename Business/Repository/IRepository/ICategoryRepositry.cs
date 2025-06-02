@@ -8,7 +8,7 @@ namespace Business.Repository.IRepository
     {
         public Task<Category> GetCategoryById(int id);
         public Task<IEnumerable<Category>> GetCategoryList();
-        public Task<Category> SaveCategory(Category category, int catId = 0);
+        public Task<Category> SaveCategory(Category category);
         public Task<bool> DeleteCategoryById(int id);
 
     }

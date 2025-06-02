@@ -1,0 +1,51 @@
+﻿@using Common
+@{
+    ViewData["Title"] = "OrderRequestData";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row mb-2">
+    <div class="col-lg-6">
+        <h4>Order Request Data</h4>
+    </div>
+    <div class="col-lg-6">
+        <div class="btn-group dropup float-end">
+            <a class="" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-three-dots-vertical"></i>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#" data-status="@SD.OrderAccepted">Order Accepted</a></li>
+                <li><a class="dropdown-item" href="#" data-status="@SD.OrderRejected">Order Rejected</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="tblOrderRequest">
+
+</div>
+
+
+@section Scripts
+{ 
+    <script>
+        $(document).ready(function () {
+            getOrderRequestDT();
+        });
+
+        function getOrderRequestDT()
+        {
+            $.ajax({
+                URL: '@Url.Action("OrderRequests", "Orders")',
+                type: 'GET',
+                success: function (result) {
+                    $('#tblOrderRequest').html("");
+                    $('#tblOrderRequest').html(result);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error loading diamond list:', xhr.responseText, status, error);
+                }
+            });
+        }
+    </script>
+}

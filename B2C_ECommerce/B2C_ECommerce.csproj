@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\UploadedFiles\Styles\Band\Band_Rings_Diamond_Silver_0.5_GJSKU-001123_1.jpg" />
+    <Content Remove="wwwroot\UploadedFiles\Styles\Band\Band_Rings_Diamond_Silver_0.5_GJSKU-001123_2.jpg" />
+    <Content Remove="wwwroot\UploadedFiles\Styles\Band\Band_Rings_Diamond_Silver_0.5_GJSKU-001123_3.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.17" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
@@ -31,6 +37,12 @@
   <ItemGroup>
     <Folder Include="Logs\" />
     <Folder Include="wwwroot\assets\Images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\UploadedFiles\Styles\Band\Band_Rings_Diamond_Silver_0.5_GJSKU-001123_1.jpg" />
+    <None Include="wwwroot\UploadedFiles\Styles\Band\Band_Rings_Diamond_Silver_0.5_GJSKU-001123_2.jpg" />
+    <None Include="wwwroot\UploadedFiles\Styles\Band\Band_Rings_Diamond_Silver_0.5_GJSKU-001123_3.jpg" />
   </ItemGroup>
 
 </Project>

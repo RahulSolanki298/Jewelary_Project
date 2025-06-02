@@ -30,6 +30,13 @@ namespace Business.Repository.IRepository
 
         Task<PriceRanges> GetPriceRangeAsync();
 
+        Task<IEnumerable<ProductPriceDTO>> GetProductPrices();
+
+
+        Task<IEnumerable<ProductPropertyDTO>> GetKaratList();
+
+
+        Task<IEnumerable<ProductPropertyDTO>> GetPropertyItemsByName(string propertyName);
 
     }
 }

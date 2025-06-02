@@ -1,0 +1,25 @@
+﻿@{
+    var Status = TempData["Status"] as string;
+    var Message = TempData["Message"] as string;
+}
+
+@if (!string.IsNullOrEmpty(Status))
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            var status = '@Status';
+            var message = '@Message';
+
+            if (status === "Success") {
+                toastr.success(message, status);
+
+            } else if (status === "Fail") {
+                toastr.error(message, status);
+            }
+        });
+    </script>
+}
+

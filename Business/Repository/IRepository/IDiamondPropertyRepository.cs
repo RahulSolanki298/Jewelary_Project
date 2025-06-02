@@ -32,9 +32,11 @@ namespace Business.Repository.IRepository
 
         Task<IEnumerable<DiamondPropertyDTO>> GetMetalListAsync();
 
+        Task<List<DiamondPropertyDTO>> GetPropertyItemsByName(string propertyName);
         Task<RatioDto> GetRatioRangeAsync();
+        Task<DiamondProperty> GetDiamondPropertyByIdAsync(int id);
 
-
+        Task<bool> DeleteDiamondProperty(int propertyId);
 
     }
 }

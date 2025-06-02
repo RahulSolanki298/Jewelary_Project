@@ -1,27 +1,30 @@
 ﻿using Business.Repository.IRepository;
+using Common;
 using CsvHelper;
 using DataAccess.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Models;
 using Newtonsoft.Json;
 using OfficeOpenXml;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System;
-using System.Threading.Tasks;
 using System.Linq;
-using Common;
+using System.Threading.Tasks;
 
 namespace ControlPanel.Controllers
 {
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+    [Authorize]
     public class DiamondController : Controller
     {
         private readonly IDiamondRepository _diamondRepository;
         private readonly IDiamondPropertyRepository _diamondPPTY;
 
-        public DiamondController(IDiamondRepository diamondRepository, IDiamondPropertyRepository diamondPPTY)
+        public DiamondController(IDiamondRepository diamondRepository,
+            IDiamondPropertyRepository diamondPPTY)
         {
             _diamondRepository = diamondRepository;
             _diamondPPTY = diamondPPTY;
@@ -30,13 +33,25 @@ namespace ControlPanel.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+
             return View();
         }
 
         [HttpGet]
-        public async Task<IActionResult> DiamondList()
+        public async Task<IActionResult> DiamondList(int page = 1, int pageSize = 10)
         {
-            var data= await _diamondRepository.GetDiamondList();
+            var data = await _diamondRepository.GetDiamondList();
+
+            var totalItems = data.Count();
+
+            var diamonds = data
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+            ViewBag.CurrentPage = page;
+
             return PartialView("_DiamondList", data);
         }
 
@@ -45,14 +60,14 @@ namespace ControlPanel.Controllers
         {
             if (file == null || file.Length == 0)
             {
-                TempData["UploadError"] = "No file uploaded.";
+                TempData["error"] = "No file uploaded.";
                 return RedirectToAction("UploadView"); // change this to your actual view
             }
 
             string extension = Path.GetExtension(file.FileName).ToLowerInvariant();
             if (extension != ".xlsx" && extension != ".csv")
             {
-                TempData["UploadError"] = "Invalid file format. Only .xlsx or .csv files are supported.";
+                TempData["error"] = "Invalid file format. Only .xlsx or .csv files are supported.";
                 return RedirectToAction("Index");
             }
 
@@ -79,7 +94,7 @@ namespace ControlPanel.Controllers
 
                 if (diamondsList == null || diamondsList.Count == 0)
                 {
-                    TempData["UploadError"] = "No valid diamond records found in the file.";
+                    TempData["error"] = "No valid diamond records found in the file.";
                     return RedirectToAction("Index");
                 }
 
@@ -87,23 +102,23 @@ namespace ControlPanel.Controllers
                 string jsonData = JsonConvert.SerializeObject(diamondsList);
                 var result = await _diamondRepository.BulkInsertDiamondsAsync(jsonData, uploadHistoryId);
 
-                TempData["UploadSuccess"] = $"File uploaded successfully. {diamondsList.Count} records inserted.";
+                TempData["success"] = $"File uploaded successfully. {diamondsList.Count} records inserted.";
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                TempData["UploadError"] = $"Internal server error: {ex.Message}";
+                TempData["error"] = $"Internal server error: {ex.Message}";
                 return RedirectToAction("Index");
             }
         }
 
-        private async Task<List<Diamond>> ParseCsvDiamondsAsync(Stream stream)
+        private async Task<List<DiamondHistory>> ParseCsvDiamondsAsync(Stream stream)
         {
             using var reader = new StreamReader(stream);
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
             var records = csv.GetRecords<dynamic>().ToList();
 
-            var diamonds = new List<Diamond>();
+            var diamonds = new List<DiamondHistory>();
 
             foreach (var record in records.Skip(5)) // Skip header rows (assumed 1–5)
             {
@@ -116,7 +131,7 @@ namespace ControlPanel.Controllers
             return diamonds;
         }
 
-        private async Task<List<Diamond>> ParseExcelDiamondsAsync(Stream stream)
+        private async Task<List<DiamondHistory>> ParseExcelDiamondsAsync(Stream stream)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
@@ -124,10 +139,10 @@ namespace ControlPanel.Controllers
             var worksheet = package.Workbook.Worksheets.FirstOrDefault();
 
             if (worksheet == null || worksheet.Dimension == null)
-                return new List<Diamond>();
+                return new List<DiamondHistory>();
 
             int rowCount = worksheet.Dimension.Rows;
-            var diamonds = new List<Diamond>();
+            var diamonds = new List<DiamondHistory>();
 
             for (int row = 6; row <= rowCount; row++) // Start from row 6
             {
@@ -142,23 +157,116 @@ namespace ControlPanel.Controllers
         [HttpGet]
         public IActionResult GetDiamond(int diamondId)
         {
+            ViewBag.Title = "Diamond Details";
             var data = _diamondRepository.GetDiamondById(diamondId);
             return View(data);
         }
 
         [HttpGet]
-        public IActionResult DiamondProperty()
+        public async Task<IActionResult> DiamondProperty()
         {
-            return View();
+            var diamondList = await _diamondPPTY.GetAllAsync();
+            return View(diamondList);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DiamondPropertyItems(string propertyName)
+        {
+            var diamondList = await _diamondPPTY.GetPropertyItemsByName(propertyName);
+            return PartialView("~/Views/Diamond/_DiamondPropertyItems.cshtml", diamondList);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddDiamondProperty(int? pId = 0)
+        {
+            var data = new DiamondProperty();
+            ViewBag.ParentDrp = _diamondPPTY.GetAllAsync().Result.Where(x => x.ParentId == null).ToList();
+
+            if (pId.HasValue && pId > 0)
+            {
+                data = await _diamondPPTY.GetDiamondPropertyByIdAsync(pId.Value);
+
+                return View(data);
+            }
+
+
+            return View(data);
         }
 
         [HttpPost]
-        public IActionResult UpsertProperty(DiamondData diamondData)
+        public async Task<IActionResult> AddDiamondProperty(DiamondProperty diamondData, IFormFile UploadFile)
         {
-            return View();
+            if (!ModelState.IsValid)
+            {
+                ViewBag.ParentDrp = _diamondPPTY.GetAllAsync().Result.Where(x => x.ParentId == null).ToList();
+
+                return View(diamondData);
+            }
+            if (UploadFile != null && UploadFile.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "diamondProp");
+                Directory.CreateDirectory(uploadsFolder); // Ensure folder exists
+
+                var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(UploadFile.FileName);
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await UploadFile.CopyToAsync(fileStream);
+                }
+
+                // Save file path or name to the database, e.g.:
+                diamondData.IconPath = "/diamondProp/" + uniqueFileName;
+            }
+
+
+            if (diamondData == null || diamondData.Id <= 0)
+            {
+                await _diamondPPTY.AddAsync(diamondData);
+            }
+            else
+            {
+                var existingProperty = await _diamondPPTY.GetDiamondPropertyByIdAsync(diamondData.Id);
+                if (existingProperty == null)
+                {
+                    return NotFound("Property not found.");
+                }
+
+                existingProperty.Name = diamondData.Name;
+                existingProperty.SymbolName = diamondData.SymbolName;
+                existingProperty.IconPath = diamondData.IconPath;
+                existingProperty.Description = diamondData.Description;
+                existingProperty.IsActivated = diamondData.IsActivated;
+                existingProperty.ParentId = diamondData.ParentId;
+                existingProperty.DispOrder = diamondData.DispOrder;
+
+                await _diamondPPTY.UpdateAsync(existingProperty);
+            }
+
+            TempData["success"] = "Diamond property has been saved successfully.";
+
+            return RedirectToAction("DiamondProperty");
         }
 
-        private async Task<Diamond> ParseExcelDiamondRowAsync(ExcelWorksheet worksheet, int row)
+        [HttpGet]
+        public async Task<IActionResult> DeleteDiamondProperty(int? pId = 0)
+        {
+            if (!pId.HasValue || pId <= 0)
+            {
+                return BadRequest("Invalid property ID.");
+            }
+
+            var success = await _diamondPPTY.DeleteAsync(pId.Value);
+
+            if (!success)
+            {
+                return NotFound("Property not found or could not be deleted.");
+            }
+
+            return RedirectToAction("DiamondProperty");
+        }
+
+        private async Task<DiamondHistory> ParseExcelDiamondRowAsync(ExcelWorksheet worksheet, int row)
         {
             var Video_NewVal = GetExcelHyperlink(worksheet.Cells[row, 26]);
             var DNA_NewVal = GetExcelHyperlink(worksheet.Cells[row, 3]);
@@ -175,9 +283,18 @@ namespace ControlPanel.Controllers
             int symmId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 13].Text, SD.Symmetry);
             int fluorId = await _diamondPPTY.GetDiamondPropertyId(worksheet.Cells[row, 14].Text, SD.Fluor);
 
-            return new Diamond
+            var stoneId = worksheet.Cells[row, 2].Text;
+
+            var IsExist = await _diamondRepository.GetDiamondByStoneId(stoneId);
+
+            if (IsExist != null)
             {
-                StoneId = worksheet.Cells[row, 2].Text,
+                return IsExist;
+            }
+
+            return new DiamondHistory
+            {
+                StoneId = stoneId,
                 DNA = DNA_NewVal,
                 Step = worksheet.Cells[row, 4].Text,
                 TypeId = typeId > 0 ? typeId : null,
@@ -204,12 +321,15 @@ namespace ControlPanel.Controllers
                 DiamondImagePath = "-",
                 DiamondVideoPath = Video_NewVal,
                 Certificate = Certi_NewVal,
-                IsActivated = true
+                IsActivated = false,
+                UploadStatus = SD.Pending,
+                UpdatedDate = DateTime.Now
+
             };
         }
 
 
-        private async Task<Diamond> ParseCSVDiamondRowAsync(IDictionary<string, object> row)
+        private async Task<DiamondHistory> ParseCSVDiamondRowAsync(IDictionary<string, object> row)
         {
             string GetVal(string key) => row.ContainsKey(key) ? row[key]?.ToString() : null;
 
@@ -223,7 +343,7 @@ namespace ControlPanel.Controllers
             int symmId = await _diamondPPTY.GetDiamondPropertyId(GetVal("Symmetry"), SD.Symmetry);
             int fluorId = await _diamondPPTY.GetDiamondPropertyId(GetVal("Fluorescence"), SD.Fluor);
 
-            return new Diamond
+            return new DiamondHistory
             {
                 StoneId = GetVal("StoneId"),
                 DNA = GetVal("DNA"),
@@ -252,7 +372,10 @@ namespace ControlPanel.Controllers
                 DiamondImagePath = "-",
                 DiamondVideoPath = GetVal("Video"),
                 Certificate = GetVal("Certificate"),
-                IsActivated = true
+                IsActivated = false,
+                UpdatedDate = DateTime.Now,
+                UploadStatus = SD.Pending,
+
             };
         }
 
@@ -290,5 +413,37 @@ namespace ControlPanel.Controllers
             return null; // No hyperlink found
         }
 
+        //Raj 
+        public IActionResult JqxDemo()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult getDiamondList()
+        {
+            bool status = false;
+            string strResult = "";
+            string strMessage = "Data Not Found";
+
+            var data = _diamondRepository.GetDiamondList().Result;
+            if (data != null)
+            {
+                status = true;
+                strMessage = "";
+                strResult = JsonConvert.SerializeObject(data);
+            }
+            return Json(new
+            {
+                Data = new
+                {
+                    status = status,
+                    result = strResult,
+                    message = strMessage
+                }
+            });
+
+
+        }
     }
 }

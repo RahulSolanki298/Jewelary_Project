@@ -39,22 +39,22 @@
                 <tr class="text-center">
                     <td>
                         <a href="@item.DiamondVideoPath" target="_blank">
-                            <img src="@SD.ImgUrl@item.IconPath" class="rounded shadow-sm" style="height:60px;width:60px;" />
+                            <img src="@SD.ShapeImgUrl@item.IconPath" class="rounded shadow-sm" style="height:60px;width:60px;" />
                         </a>
                         <a href="@item.DiamondVideoPath" target="_blank">
-                            <img src="@SD.ImgUrl/assets/img/360-degrees.png" class="rounded" style="height:35px;width:35px;" />
+                            <img src="@SD.ShapeImgUrl/assets/img/360-degrees.png" class="rounded" style="height:35px;width:35px;" />
                         </a>
-                        <img src="@SD.ImgUrl/assets/img/icon/fast-shipping-icon.png" class="rounded" style="height:45px;width:45px;float:right" />
+                        <img src="@SD.ShapeImgUrl/assets/img/icon/fast-shipping-icon.png" class="rounded" style="height:45px;width:45px;float:right" />
                     </td>
                     <td>
                         <a href="#" data-certi="@item.Certificate" class="text-decoration-none text-dark clsCertificate">
                             @if (item.LabName == "IGI")
                             {
-                                <img src="@SD.ImgUrl/assets/img/logo/IGI.png" style="width:200px;" />
+                                <img src="@SD.ShapeImgUrl/assets/img/logo/IGI.png" style="width:200px;" />
                             }
                             else if (item.LabName == "GIA")
                             {
-                                <img src="@SD.ImgUrl/assets/img/logo/GIA.png" style="width:200px;" />
+                                <img src="@SD.ShapeImgUrl/assets/img/logo/GIA.png" style="width:200px;" />
                             }
                         </a>
                     </td>
@@ -70,8 +70,8 @@
                     <td><input type="checkbox" style="width:20px;height:20px;" diamondId="@item.Id" /></td>
                     <td>
                         <a class="wishlist-toggle" data-diamondId="@item.Id">
-                            <img src="@SD.ImgUrl/assets/img/Heart-Unchecked.png" class="img-fluid heart-unchecked" style="width:25px;height:25px;" />
-                            <img src="@SD.ImgUrl/assets/img/Heart-Checked.png" class="img-fluid heart-checked" style="width:25px;height:25px;display:none;" />
+                            <img src="@SD.ShapeImgUrl/assets/img/Heart-Unchecked.png" class="img-fluid heart-unchecked" style="width:25px;height:25px;" />
+                            <img src="@SD.ShapeImgUrl/assets/img/Heart-Checked.png" class="img-fluid heart-checked" style="width:25px;height:25px;display:none;" />
                         </a>
                     </td>
                     <td>

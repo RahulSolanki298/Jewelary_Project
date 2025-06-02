@@ -4,7 +4,7 @@
     ViewData["Title"] = "Product Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
     <link href="~/assets/css/lightslider/lightslider.css" rel="stylesheet" rel="stylesheet" />
-    
+
     <style>
 
     #lightSliderVertical li 
@@ -56,6 +56,10 @@
                         <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12">
                             <div class="demo">
                                 <div class="vertical-slider-wrapper d-flex">
+                                    @if (Model != null)
+                                    {
+                                        <input type="hidden" id="productId" value="@Model.Id" />
+                                    }
                                     <ul id="lightSliderVertical" class="img-with-bg">
                                         @if (Model != null && Model.ProductImageVideos.Count > 0)
                                         {
@@ -64,29 +68,29 @@
                                                 if (!string.IsNullOrEmpty(item.ImageUrl) && item.ImageUrl != "-")
                                                 {
                                                     <li data-thumb="@($"{SD.ImgUrl}/{item.ImageUrl}")">
-                                                       
+
                                                         @* <a href="@($"{SD.ImgUrl}/{item.ImageUrl}")"
-                                                           data-fancybox="gallery"
-                                                           data-caption="Product Image"
-                                                           data-thumb="@($"{SD.ImgUrl}/{item.ImageUrl}")"
-                                                           data-zoomable="true">
-                                                            <img  src="@($"{SD.ImgUrl}/{item.ImageUrl}")" class="img-zoom" />
-                                                        </a> *@
-                                                       
+                               data-fancybox="gallery"
+                               data-caption="Product Image"
+                               data-thumb="@($"{SD.ImgUrl}/{item.ImageUrl}")"
+                               data-zoomable="true">
+                                <img  src="@($"{SD.ImgUrl}/{item.ImageUrl}")" class="img-zoom" />
+                            </a> *@
+
                                                         <a>
                                                             <img src="@($"{SD.ImgUrl}/{item.ImageUrl}")" class="zoom-images" />
                                                         </a>
-                                                       
+
                                                     </li>
                                                 }
                                                 else if (!string.IsNullOrEmpty(item.VideoUrl) && item.VideoUrl != "-")
                                                 {
                                                     <li data-thumb="@SD.ImgUrl/assets/img/video/video-icon.svg">
                                                         @* <a href="@($"{SD.ImgUrl}/{item.VideoUrl}")" data-fancybox="gallery" data-caption="Product Video">
-                                                            <video autoplay="autoplay" loop="loop" muted="muted" playsinline preload="auto" style="max-width: 100%;">
-                                                                <source src="@($"{SD.ImgUrl}/{item.VideoUrl}")" type="video/mp4" />
-                                                            </video>
-                                                        </a> *@
+                                <video autoplay="autoplay" loop="loop" muted="muted" playsinline preload="auto" style="max-width: 100%;">
+                                    <source src="@($"{SD.ImgUrl}/{item.VideoUrl}")" type="video/mp4" />
+                                </video>
+                            </a> *@
                                                         <a>
                                                             <video autoplay="autoplay" loop="loop" muted="muted" playsinline preload="auto" style="max-width: 100%;">
                                                                 <source src="@($"{SD.ImgUrl}/{item.VideoUrl}")" type="video/mp4" />
@@ -185,7 +189,7 @@
 
                                 <div class="useful-links">
                                     <a href="#" data-bs-toggle="tooltip" title="Compare"><i class="pe-7s-refresh-2"></i>compare</a>
-                                    <a href="#" data-bs-toggle="tooltip" title="Wishlist"><i class="pe-7s-like"></i>wishlist</a>
+                                    <a href="#" data-bs-toggle="tooltip" id="btnWishListDT" title="Wishlist"><i class="pe-7s-like"></i>wishlist</a>
                                 </div>
                                 <div class="delivery_date_shortcode">
                                     <h2 class="delivery_msg">Estimated Delivery Date (Working Day)</h2>
@@ -679,6 +683,8 @@
                 }
             });
         }
+        var selectedproductId = JSON.parse(localStorage.getItem('productIds')) || [];
+
 
         $(document).ready(function () {
             initializeSlider();
@@ -697,6 +703,29 @@
                     initializeSlider(); // Re-initialize after resizing stops
                 }, 300);
 
+            });
+
+            $("#btnWishListDT").click(function () {
+                var pId = $("#productId").val(); // get product ID
+
+                if (!pId) {
+                    alert("Invalid product ID.");
+                    return;
+                }
+
+                // Get existing wishlist or initialize empty
+                let wishlist = JSON.parse(localStorage.getItem("ProductWishlist")) || [];
+
+                // Check if product is already in the wishlist
+                if (!wishlist.includes(pId)) {
+                    wishlist.push(pId); // Add new product ID
+                    localStorage.setItem("ProductWishlist", JSON.stringify(wishlist)); // Save back to localStorage
+                    alert("Product added to wishlist.");
+                } else {
+                    alert("Product is already in your wishlist.");
+                }
+
+                // Optional: Update a UI element or badge count
             });
         });
 

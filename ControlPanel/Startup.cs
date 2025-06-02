@@ -7,8 +7,9 @@ using DataAccess.Entities;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,7 +33,10 @@ namespace ControlPanel
         {
             // Database context
             services.AddDbContext<ApplicationDBContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(
+        Configuration.GetConnectionString("DefaultConnection"),
+        sqlServerOptions => sqlServerOptions.EnableRetryOnFailure()
+    ));
 
             services.AddSession(options =>
             {
@@ -55,7 +59,7 @@ namespace ControlPanel
             services.AddScoped<IB2COrdersRepository, B2COrdersRepository>();
             services.AddScoped<IDiamondRepository, DiamondRepository>();
             services.AddScoped<IDiamondPropertyRepository, DiamondPropertyRepository>();
-            //services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IProductStyleRepository, ProductStyleRepository>();
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDBContext>()
                 .AddDefaultTokenProviders();
@@ -63,21 +67,52 @@ namespace ControlPanel
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    options.LoginPath = "/Admin/Login";            // Adjust if route differs
-                    options.AccessDeniedPath = "/Admin/AccessDenied";
+                    options.LoginPath = "~/Account/Index";            // Adjust if route differs
+                    options.AccessDeniedPath = "~/Account/AccessDenied";
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                     options.SlidingExpiration = true;
                 });
+
+            ConfigureFormOptions(services);
 
             // Authorization support
             services.AddAuthorization();
 
             // MVC & Razor
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.AllowedForNewUsers = true;
+            });
+        }
+
+        private void ConfigureFormOptions(IServiceCollection services)
+        {
+            services.Configure<IISServerOptions>(options =>
+            {
+                options.MaxRequestBodySize = 10737418240L; // 10 GB
+            });
+
+            services.Configure<KestrelServerOptions>(options =>
+            {
+                options.Limits.MaxRequestBodySize = 10737418240L; // 10 GB
+            });
+
+            services.Configure<FormOptions>(options =>
+            {
+                options.ValueLengthLimit = int.MaxValue;
+                options.MultipartBodyLengthLimit = 10737418240L; // 10 GB
+                options.MemoryBufferThreshold = int.MaxValue;
+            });
         }
 
         // Configure HTTP request pipeline
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDbInitializer dbInitializer)
+        public void Configure(IApplicationBuilder app,
+            IWebHostEnvironment env,
+            IDbInitializer dbInitializer)
         {
             if (env.IsDevelopment())
             {
@@ -95,23 +130,28 @@ namespace ControlPanel
             app.UseRouting();
             app.UseSession();
 
-            app.UseAuthentication(); // Must come before UseAuthorization
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+                context.Response.Headers["Pragma"] = "no-cache";
+                context.Response.Headers["Expires"] = "0";
+                await next();
+            });
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
-            // Initialize database with seed data
             InitializeDatabase(dbInitializer).GetAwaiter().GetResult();
 
             app.UseEndpoints(endpoints =>
             {
-                // Area routing (must come before default route)
                 endpoints.MapControllerRoute(
                     name: "areas",
                     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
-                // Default routing
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Account}/{action=Index}/{id?}");
+                    pattern: "{controller=Account}/{action=Login}/{id?}");
             });
 
         }
@@ -124,7 +164,6 @@ namespace ControlPanel
             }
             catch (Exception ex)
             {
-                // Optional: log error or throw exception
                 Console.WriteLine($"Database initialization failed: {ex.Message}");
                 throw;
             }

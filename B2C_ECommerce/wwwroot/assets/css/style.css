@@ -1943,7 +1943,8 @@ textarea {
 
 .mobile-navigation {
     overflow: hidden;
-    max-height: 250px;
+    /*max-height: 250px;*/
+    max-height: 320px;
 }
 
     .mobile-navigation nav {
@@ -7597,13 +7598,14 @@ a {
         font-size: 26px;
     }
 
-    .category-detail {
-        padding-top: 18px;
-    }
+.category-detail {
+    padding-top: 18px;
+    padding-bottom: 18px;
+}
 
     .sub-hd1 {
         font-size: 14px;
-        font-weight: 500;
+        font-weight: 900;
         line-height: 26px;
         letter-spacing: 0.02em;
         color: white;

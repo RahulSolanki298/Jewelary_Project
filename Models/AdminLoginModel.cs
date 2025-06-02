@@ -4,10 +4,10 @@ namespace Models
 {
     public class AdminLoginModel
     {
-        [Required]
+        [Required(ErrorMessage ="Please eneter username.")]
         public string UserName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Please eneter password.")]
         [StringLength(30, ErrorMessage = "Password must be at least 8 characters long.", MinimumLength = 8)]
         public string Password { get; set; }
 

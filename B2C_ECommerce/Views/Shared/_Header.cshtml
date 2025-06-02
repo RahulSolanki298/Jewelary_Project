@@ -5,12 +5,12 @@
         <div class="header-top bg-gold">
             <div class="container-fluid">
                 <div class="row align-items-center">
-                    <div class="col-xxl-10 col-xl-10 col-lg-10 col-md-9">
+                    <div class="col-xxl-10 col-xl-10 col-lg-9 col-md-8">
                         <div class="welcome-message">
                             <p class="text-white text-center">Free Matching Band when You Design Your Ring.</p>
                         </div>
                     </div>
-                    <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 text-right">
+                    <div class="col-xxl-2 col-xl-2 col-lg-3 col-md-4 text-right">
                         <div class="header-top-settings">
                             <ul class="nav align-items-center justify-content-end">
                                 <!-- Currency Dropdown -->
@@ -63,21 +63,21 @@
                                 <nav class="desktop-menu">
                                     <ul>
                                         <li class="active position-static">
-                                            <a href="#">Engagement</a>
+                                            <a href="@Url.Action("Index","ProductPrograms",new {type="Solitaire"})">Engagement</a>
                                             <ul class="megamenu dropdown">
                                                 <li class="mega-title">
                                                     <span>Shop by Style</span>
                                                     <ul>
-                                                        <li><a href="#">Solitaire</a></li>
-                                                        <li><a href="#">Side Stone</a></li>
-                                                        <li><a href="#">Halo</a></li>
-                                                        <li><a href="#">Three Stone</a></li>
-                                                        <li><a href="#">Hidden Halo</a></li>
-                                                        <li><a href="#">Vintage</a></li>
-                                                        <li><a href="#">Bridal Sets</a></li>
-                                                        <li><a href="#">Gemstone</a></li>
-                                                        <li><a href="#"> Badgley Mischka</a></li>
-                                                        <li><a href="#">Customer Favorites</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="Solitaire"})">Solitaire</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="SideStone"})">Side Stone</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="Halo"})">Halo</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="ThreeStone"})">Three Stone</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="HiddenHalo"})">Hidden Halo</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="Vintage"})">Vintage</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="BridalSets"})">Bridal Sets</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="Gemstone"})">Gemstone</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="BadgleyMischka"})"> Badgley Mischka</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="CustomerFavorites"})">Customer Favorites</a></li>
                                                     </ul>
                                                 </li>
                                                 <li class="mega-title">
@@ -112,21 +112,21 @@
                                             </ul>
                                         </li>
                                         <li class="position-static">
-                                            <a href="#">Wedding</a>
+                                            <a href="@Url.Action("Index","ProductPrograms",new {type="Bands"})">Wedding</a>
                                             <ul class="megamenu dropdown">
                                                 <li class="mega-title">
                                                     <span>Shop by Style</span>
                                                     <ul>
-                                                        <li><a href="#">Wedding and Anniversary</a></li>
-                                                        <li><a href="#">Eternity</a></li>
-                                                        <li><a href="#">3/4 Eternity</a></li>
-                                                        <li><a href="#">Enhancers</a></li>
-                                                        <li><a href="#">Curve Bands</a></li>
-                                                        <li><a href="#">Open Bands</a></li>
-                                                        <li><a href="#">Design Your Stack</a></li>
-                                                        <li><a href="#">Customer Favorites</a></li>
-                                                    </ul>
-                                                </li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="WeddingAndAnniversary"})">Wedding and Anniversary</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="Eternity"})">Eternity</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="3/4 Eternity"})">3/4 Eternity</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="Enhancers"})">Enhancers</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="Curve Bands"})">Curve Bands</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="Open Bands"})">Open Bands</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="DesignYourStack"})">Design Your Stack</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="CustomerFavorites"})">Customer Favorites</a></li>
+                                                    </ul>                                                       
+                                                </li>                                                           
                                                 <li class="mega-title">
                                                     <span>Shop by Shape</span>
                                                     <ul>
@@ -245,21 +245,21 @@
                                                 <li class="mega-title">
                                                     <span>Shop by Shape</span>
                                                     <ul>
-                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Princess.svg" style="width:30px;"> Princess</a></li>
-                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Round.svg" style="width:30px;"> Round</a></li>
-                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Radiant.svg" style="width:30px;"> Radiant-Cut</a></li>
-                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Emerald.svg" style="width:30px;"> Emerald</a></li>
-                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Oval.svg" style="width:30px;"> Oval</a></li>
+                                                        <li><a href="@Url.Action("Index","Diamond",new { shapeId=457})"><img src="~/assets/img/diamond-svg/Princess.svg" style="width:30px;"> Princess</a></li>
+                                                        <li><a href="@Url.Action("Index","Diamond",new { shapeId=456})"><img src="~/assets/img/diamond-svg/Round.svg" style="width:30px;"> Round</a></li>
+                                                        <li><a href="@Url.Action("Index","Diamond",new { shapeId=464})"><img src="~/assets/img/diamond-svg/Radiant.svg" style="width:30px;"> Radiant-Cut</a></li>
+                                                        <li><a href="@Url.Action("Index","Diamond",new { shapeId=463})"><img src="~/assets/img/diamond-svg/Emerald.svg" style="width:30px;"> Emerald</a></li>
+                                                        <li><a href="@Url.Action("Index","Diamond",new { shapeId=461})"><img src="~/assets/img/diamond-svg/Oval.svg" style="width:30px;"> Oval</a></li>
                                                     </ul>
                                                 </li>
                                                 <li class="mega-title">
                                                     <span></span>
                                                     <ul>
-                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Cushion.svg" style="width:30px;"> CushionLong</a></li>
-                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Heart.svg" style="width:30px;"> Heart</a></li>
-                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Marquise.svg" style="width:30px;"> Marquise</a></li>
-                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Square Emerald.svg" style="width:30px;"> Sq.Emerald</a></li>
-                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Asscher.svg" style="width:30px;"> Asscher</a></li>
+                                                        <li><a href="@Url.Action("Index","Diamond",new { shapeId=462})"><img src="~/assets/img/diamond-svg/Cushion.svg" style="width:30px;"> CushionLong</a></li>
+                                                        <li><a href="@Url.Action("Index","Diamond",new { shapeId=460})"><img src="~/assets/img/diamond-svg/Heart.svg" style="width:30px;"> Heart</a></li>
+                                                        <li><a href="@Url.Action("Index","Diamond",new { shapeId=458})"><img src="~/assets/img/diamond-svg/Marquise.svg" style="width:30px;"> Marquise</a></li>
+                                                        <li><a href="@Url.Action("Index","Diamond",new { shapeId=465})"><img src="~/assets/img/diamond-svg/Square Emerald.svg" style="width:30px;"> Sq.Emerald</a></li>
+                                                        @*<li><a href="@Url.Action("Index","Diamond",new { shapeId="Asscher"})"><img src="~/assets/img/diamond-svg/Asscher.svg" style="width:30px;"> Asscher</a></li>*@
                                                     </ul>
                                                 </li>
                                                 <li class="megamenu-banners d-none d-lg-block">
@@ -297,7 +297,7 @@
                                 <li>
                                     <a href="#" class="minicart-btn">
                                         <i class="pe-7s-cart"></i>
-                                        <div class="notification">0</div>
+                                        <div class="notification" id="addtoCardCounter">0</div>
                                     </a>
                                 </li>
                                 <li>
@@ -365,21 +365,21 @@
                     <nav>
                         <ul class="mobile-menu">
                             <li class="menu-item-has-children">
-                                <a href="#">Engagement</a>
+                                <a href="@Url.Action("Index","ProductPrograms",new {type="Solitaire"})">Engagement</a>
                                 <ul class="megamenu dropdown">
                                     <li class="mega-title menu-item-has-children">
                                         <a href="#">Shop by Style</a>
                                         <ul class="dropdown">
-                                            <li><a href="#">Solitaire</a></li>
-                                            <li><a href="#">Side Stone</a></li>
-                                            <li><a href="#">Halo</a></li>
-                                            <li><a href="#">Three Stone</a></li>
-                                            <li><a href="#">Hidden Halo</a></li>
-                                            <li><a href="#">Vintage</a></li>
-                                            <li><a href="#">Bridal Sets</a></li>
-                                            <li><a href="#">Gemstone</a></li>
-                                            <li><a href="#"> Badgley Mischka</a></li>
-                                            <li><a href="#">Customer Favorites</a></li>
+                                            <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="Solitaire"})">Solitaire</a></li>
+                                            <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="SideStone"})">Side Stone</a></li>
+                                            <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="Halo"})">Halo</a></li>
+                                            <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="ThreeStone"})">Three Stone</a></li>
+                                            <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="HiddenHalo"})">Hidden Halo</a></li>
+                                            <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="Vintage"})">Vintage</a></li>
+                                            <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="BridalSets"})">Bridal Sets</a></li>
+                                            <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="Gemstone"})">Gemstone</a></li>
+                                            <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="BadgleyMischka"})"> Badgley Mischka</a></li>
+                                            <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="CustomerFavorites"})">Customer Favorites</a></li>
                                         </ul>
                                     </li>
                                     <li class="mega-title menu-item-has-children">
@@ -409,19 +409,19 @@
                                 </ul>
                             </li>
                             <li class="menu-item-has-children">
-                                <a href="#">Wedding</a>
+                                <a href="@Url.Action("Index","ProductPrograms",new {type="Bands"})">Wedding</a>
                                 <ul class="megamenu dropdown">
                                     <li class="mega-title menu-item-has-children">
                                         <a href="#">Shop by Style</a>
                                         <ul class="dropdown">
-                                            <li><a href="#">Wedding and Anniversary</a></li>
-                                            <li><a href="#">Eternity</a></li>
-                                            <li><a href="#">3/4 Eternity</a></li>
-                                            <li><a href="#">Enhancers</a></li>
-                                            <li><a href="#">Curve Bands</a></li>
-                                            <li><a href="#">Open Bands</a></li>
-                                            <li><a href="#">Design Your Stack</a></li>
-                                            <li><a href="#">Customer Favorites</a></li>
+                                            <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="WeddingAndAnniversary"})">Wedding and Anniversary</a></li>
+                                            <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="Eternity"})">Eternity</a></li>
+                                            <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="3/4 Eternity"})">3/4 Eternity</a></li>
+                                            <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="Enhancers"})">Enhancers</a></li>
+                                            <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="Curve Bands"})">Curve Bands</a></li>
+                                            <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="Open Bands"})">Open Bands</a></li>
+                                            <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="DesignYourStack"})">Design Your Stack</a></li>
+                                            <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="CustomerFavorites"})">Customer Favorites</a></li>
                                         </ul>
                                     </li>
                                     <li class="mega-title menu-item-has-children">
@@ -448,7 +448,7 @@
                                             <li><a href="#"><img src="~/assets/img/icon/platinum-new.svg" style="width:30px;" /> Platinum</a></li>
                                         </ul>
                                     </li>
-                                    <li>
+                                    @* <li>
                                         <a href="#">
                                             <img src="~/assets/img/banner/img1-static-menu.jpg" alt="">
                                         </a>
@@ -457,11 +457,11 @@
                                         <a href="#">
                                             <img src="~/assets/img/banner/img2-static-menu.jpg" alt="">
                                         </a>
-                                    </li>
+                                    </li> *@
                                 </ul>
                             </li>
                             <li class="menu-item-has-children ">
-                                <a href="#">Jewelry</a>
+                                <a href="@Url.Action("Index","Products")">Jewelry</a>
                                 <ul class="dropdown">
                                     <li class="menu-item-has-children">
                                         <a href="#">Rings</a>
@@ -522,15 +522,15 @@
                                             <li><a href="#">Cufflinks</a></li>
                                         </ul>
                                     </li>
-                                    <li>
+                                    @* <li>
                                         <a href="#">
                                             <img src="~/assets/img/banner/ring-banner.jpeg" alt="" />
                                         </a>
-                                    </li>
+                                    </li> *@
                                 </ul>
                             </li>
                             <li class="menu-item-has-children ">
-                                <a href="/Diamond/Index">Diamond</a>
+                                <a href="@Url.Action("Index","Diamond")">Diamond</a>
                                 <ul class="megamenu dropdown">
                                     <li class="mega-title menu-item-has-children">
                                         <a href="#">Shop by Shape</a>
@@ -547,11 +547,11 @@
                                             <li><a href="#"><img src="~/assets/img/diamond-svg/Asscher.svg" style="width:30px;"> Asscher</a></li>
                                         </ul>
                                     </li>
-                                    <li>
+                                    @* <li>
                                         <a href="#">
                                             <img src="~/assets/img/banner/img1-static-menu.jpg" alt="">
                                         </a>
-                                    </li>
+                                    </li> *@
                                 </ul>
                             </li>
                             <li><a href="#">Custom</a></li>

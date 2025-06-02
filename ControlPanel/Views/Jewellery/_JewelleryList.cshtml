@@ -1,51 +1,61 @@
 ﻿@model IEnumerable<Models.ProductDTO>
 @using Common
+@{
+    string defaultImage = string.Empty;
+}
 
+<div class="row mb-2">
+    <div class="col-lg-6">
+        <div class="btn-group dropup float-end">
+            <a class="" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-three-dots-vertical"></i>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#" data-status="Deactivated">Deactivated</a></li>
+                <li><a class="dropdown-item" href="#" data-status="Hold">Hold</a></li>
+                <li><a class="dropdown-item" href="#" data-status="Program">Program</a></li>
+                <li><a class="dropdown-item" href="#" data-status="Collection">Collection</a></li>
+            </ul>
+        </div>
+    </div>
+    <input type="hidden" id="txtProductIds" />
+</div>
 
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
-        <a class="nav-link active" id="rings-tab" data-bs-toggle="tab" href="#ringList" role="tab" aria-controls="ringList" aria-selected="true">Rings</a>
+        <a class="nav-link active" id="rings-tab" data-bs-toggle="tab" href="#ringList" role="tab" aria-controls="ringList" aria-selected="true">Rings <span class="badge badge-light bg-dark ml-2 ringcount">@Model.Where(x => x.CategoryName == @SD.Rings && x.UploadStatus == SD.Activated).GroupBy(x => x.VenderStyle).Count()</span></a>
     </li>
     <li class="nav-item" role="presentation">
-        <a class="nav-link" id="bands-tab" data-bs-toggle="tab" href="#bandList" role="tab" aria-controls="bandList" aria-selected="false">Bands</a>
+        <a class="nav-link" id="bands-tab" data-bs-toggle="tab" href="#bandList" role="tab" aria-controls="bandList" aria-selected="false">Bands <span class="badge badge-light bg-dark ml-2 ringcount">@Model.Where(x => x.CategoryName == @SD.Bands && x.UploadStatus == SD.Activated).GroupBy(x => x.VenderStyle).Count()</span></a>
     </li>
     <li class="nav-item" role="presentation">
-        <a class="nav-link" id="earrings-tab" data-bs-toggle="tab" href="#earringList" role="tab" aria-controls="earringList" aria-selected="false">Earrings</a>
+        <a class="nav-link" id="earrings-tab" data-bs-toggle="tab" href="#earringList" role="tab" aria-controls="earringList" aria-selected="false">Earrings <span class="badge badge-light bg-dark ml-2 ringcount">@Model.Where(x => x.CategoryName == @SD.Earrings && x.UploadStatus == SD.Activated).GroupBy(x => x.VenderStyle).Count()</span></a>
     </li>
     <li class="nav-item" role="presentation">
-        <a class="nav-link" id="pendant-tab" data-bs-toggle="tab" tabindex="-1" href="#pendantList" role="tab" aria-controls="pandantList" aria-disabled="false">Pendant List</a>
+        <a class="nav-link" id="pendant-tab" data-bs-toggle="tab" tabindex="-1" href="#pendantList" role="tab" aria-controls="pandantList" aria-disabled="false">Pendant <span class="badge badge-light bg-dark ml-2 ringcount"> @Model.Where(x => x.CategoryName == @SD.Pendants && x.UploadStatus == SD.Activated).GroupBy(x => x.VenderStyle).Count()</span></a>
     </li>
     <li class="nav-item" role="presentation">
-        <a class="nav-link" id="bracelets-tab" data-bs-toggle="tab" tabindex="-1" href="#braceletsList" role="tab" aria-controls="braceletList" aria-disabled="false">bracelet List</a>
+        <a class="nav-link" id="bracelets-tab" data-bs-toggle="tab" tabindex="-1" href="#braceletsList" role="tab" aria-controls="braceletList" aria-disabled="false">Bracelet <span class="badge badge-light bg-dark ml-2 ringcount"> @Model.Where(x => x.CategoryName == @SD.Bracelets && x.UploadStatus == SD.Activated).GroupBy(x => x.VenderStyle).Count()</span></a>
     </li>
 </ul>
 
 <div class="tab-content" id="myTabContent">
-    @*<div class="container" style="display:none;">
-        <button class="btn btn-sm btn-danger text-end">Delete</button>
-        <button class="btn btn-sm btn-success">Hold</button>
-    </div>*@
-
     <div class="tab-pane fade show active" id="ringList" role="tabpanel" aria-labelledby="rings-tab">
-
         <table class="table" id="ringTable">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">
-                        Image
-                    </th>
-                    <th scope="col">
-                        Title
-                    </th>
+                    <th scope="col"><input type="checkbox" class="chkId" id="chkAllIds" /></th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Title</th>
                     <th scope="col">Vendor</th>
                     <th scope="col">Style</th>
+                    <th scope="col">Color</th>
                     <th scope="col">Length</th>
                     <th scope="col">Band Width</th>
                     <th scope="col">Weight</th>
-                    <th scope="col">Price (14k)</th>
-                    <th scope="col">Price (18k)</th>
-                    <th scope="col">Price (20k)</th>
+                    <th scope="col">Karat</th>
+                    <th scope="col">Price</th>
                 </tr>
             </thead>
             <tbody>
@@ -54,22 +64,28 @@
 
                     @foreach (var item in Model.Where(x => x.CategoryName == SD.Rings))
                     {
+                        if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
+                        {
+                            defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
+                        }
+
                         <tr>
-                            <td scope="col"><input type="checkbox" class="chkId" /></td>
+                            <td scope="col"><input type="checkbox" class="chkId" value="@item.Id" /></td>
                             <td scope="col">
-                                <img src="@item.DefaultImage" style="width:25px;" />
+                                <img src="@SD.ImgUrl/@defaultImage" style="height:100px;" />
                             </td>
+                            <td scope="col">@item.UploadStatus</td>
                             <td scope="col">
                                 <h5>@item.Title</h5>
                                 <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
                             </td>
                             <td scope="col">@item.VenderName</td>
-                            <td scope="col">@item.StyleName</td>
+                            <td scope="col">@item.Sku</td>
+                            <td scope="col">@item.ColorName</td>
                             <td scope="col">@item.Length</td>
                             <td scope="col">@item.BandWidth</td>
                             <td scope="col">@item.GoldWeight</td>
-                            <td scope="col">@item.Price</td>
-                            <td scope="col">@item.Price</td>
+                            <td scope="col">@item.Karat</td>
                             <td scope="col">@item.Price</td>
                         </tr>
                     }
@@ -87,47 +103,51 @@
         <table class="table" id="bandTable">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
+                    <th scope="col"><input type="checkbox" class="chkId" id="chkAllIds" /></th>
                     <th scope="col">
                         Image
                     </th>
+                    <th scope="col">Status</th>
                     <th scope="col">
                         Title
                     </th>
                     <th scope="col">Vendor</th>
+                    <th scope="col">Color</th>
                     <th scope="col">Style</th>
-                    <th scope="col">Length</th>
                     <th scope="col">Band Width</th>
                     <th scope="col">Weight</th>
-                    <th scope="col">Price (14k)</th>
-                    <th scope="col">Price (18k)</th>
-                    <th scope="col">Price (20k)</th>
-
+                    <td scope="col">Karat</td>
+                    <td scope="col">Price</td>
                 </tr>
             </thead>
             <tbody>
                 @if (Model != null)
                 {
-
                     @foreach (var item in Model.Where(x => x.CategoryName == SD.Bands))
                     {
+                        if (item.ProductImageVideos.Any())
+                        {
+                            defaultImage = string.Empty;
+                            defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
+                        }
                         <tr>
-                            <td scope="col"><input type="checkbox" class="chkId" /></td>
+                            <td scope="col"><input type="checkbox" class="chkId" value="@item.Id" /></td>
                             <td scope="col">
-                                <img src="@item.DefaultImage" style="width:25px;" />
+                                <img src="@SD.ImgUrl/@defaultImage" style="height:100px;" />
                             </td>
+                            <td scope="col">@item.UploadStatus</td>
                             <td scope="col">
                                 <h5>@item.Title</h5>
                                 <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
                             </td>
                             <td scope="col">@item.VenderName</td>
-                            <td scope="col">@item.StyleName</td>
-                            <td scope="col">@item.Length</td>
+                            <td scope="col">@item.ColorName</td>
+                            <td scope="col">@item.Sku</td>
                             <td scope="col">@item.BandWidth</td>
                             <td scope="col">@item.GoldWeight</td>
+                            <td scope="col">@item.Karat</td>
                             <td scope="col">@item.Price</td>
-                            <td scope="col">@item.Price</td>
-                            <td scope="col">@item.Price</td>
+
                         </tr>
                     }
                 }
@@ -148,76 +168,81 @@
                     <th scope="col">
                         Image
                     </th>
+                    <th scope="col">Status</th>
                     <th scope="col">
                         Title
                     </th>
                     <th scope="col">Vendor</th>
+                    <th scope="col">Color</th>
                     <th scope="col">Style</th>
-                    <th scope="col">Length</th>
                     <th scope="col">Band Width</th>
                     <th scope="col">Weight</th>
-                    <th scope="col">Price (14k)</th>
-                    <th scope="col">Price (18k)</th>
-                    <th scope="col">Price (20k)</th>
+                    <th scope="col">Karat</th>
+                    <th scope="col">Price</th>
 
                 </tr>
             </thead>
             <tbody>
+            <tbody>
                 @if (Model != null)
                 {
-
-                    @foreach (var item in Model.Where(x => x.CategoryName == SD.Earrings))
+                    foreach (var item in Model.Where(x => x.CategoryName == SD.Earrings))
                     {
+                        defaultImage = string.Empty;
+                        if (item.ProductImageVideos.Any())
+                        {
+                            defaultImage = string.Empty;
+                            defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
+                        }
                         <tr>
-                            <td scope="col"><input type="checkbox" class="chkId" /></td>
-                            <td scope="col">
-                                <img src="@item.DefaultImage" style="width:25px;" />
-                            </td>
-                            <td scope="col">
+                            <td><input type="checkbox" class="chkId" value="@item.Id"  /></td>
+                            <td><img src="@SD.ImgUrl/@defaultImage" style="height:100px;" /></td>
+                            <td scope="col">@item.UploadStatus</td>
+                            <td>
                                 <h5>@item.Title</h5>
                                 <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
                             </td>
-                            <td scope="col">@item.VenderName</td>
-                            <td scope="col">@item.StyleName</td>
-                            <td scope="col">@item.Length</td>
-                            <td scope="col">@item.BandWidth</td>
-                            <td scope="col">@item.GoldWeight</td>
-                            <td scope="col">@item.Price</td>
-                            <td scope="col">@item.Price</td>
-                            <td scope="col">@item.Price</td>
+                            <td>@item.VenderName</td>
+                            <td>@item.ColorName</td>
+                            <td>@item.Sku</td>
+                            <td>@item.BandWidth</td>
+                            <td>@item.GoldWeight</td>
+                            <td>@item.Karat</td>
+                            <td>@item.Price</td>
                         </tr>
                     }
                 }
                 else
                 {
                     <tr>
-                        <td colspan="12"> No data found</td>
+
+                        <td colspan="12">No data found</td>
+
                     </tr>
                 }
             </tbody>
+
         </table>
     </div>
-
     <div class="tab-pane fade" id="pendantList" role="tabpanel" aria-labelledby="pandant-tab">
         <table class="table" id="PendantTable">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
+                    <th scope="col"><input type="checkbox" class="chkId" id="chkAllIds" /></th>
                     <th scope="col">
                         Image
                     </th>
+                    <th scope="col">Status</th>
                     <th scope="col">
                         Title
                     </th>
                     <th scope="col">Vendor</th>
+                    <th scope="col">Color</th>
                     <th scope="col">Style</th>
                     <th scope="col">Length</th>
-                    <th scope="col">Band Width</th>
                     <th scope="col">Weight</th>
-                    <th scope="col">Price (14k)</th>
-                    <th scope="col">Price (18k)</th>
-                    <th scope="col">Price (20k)</th>
-
+                    <th scope="col">Karat</th>
+                    <th scope="col">Price</th>
                 </tr>
             </thead>
             <tbody>
@@ -226,22 +251,27 @@
 
                     @foreach (var item in Model.Where(x => x.CategoryName == SD.Pendants))
                     {
+                        defaultImage = string.Empty;
+                        if (item.ProductImageVideos.Any())
+                        {
+                            defaultImage = string.Empty;
+                            defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
+                        }
                         <tr>
                             <td scope="col"><input type="checkbox" class="chkId" /></td>
                             <td scope="col">
-                                <img src="@item.DefaultImage" style="width:25px;" />
+                                <img src="@SD.ImgUrl/@defaultImage" style="height:100px;" />
                             </td>
+                            <td scope="col">@item.UploadStatus</td>
                             <td scope="col">
                                 <h5>@item.Title</h5>
                                 <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
                             </td>
                             <td scope="col">@item.VenderName</td>
-                            <td scope="col">@item.StyleName</td>
+                            <td scope="col">@item.Sku</td>
                             <td scope="col">@item.Length</td>
-                            <td scope="col">@item.BandWidth</td>
                             <td scope="col">@item.GoldWeight</td>
-                            <td scope="col">@item.Price</td>
-                            <td scope="col">@item.Price</td>
+                            <td scope="col">@item.Karat</td>
                             <td scope="col">@item.Price</td>
                         </tr>
                     }
@@ -255,15 +285,15 @@
             </tbody>
         </table>
     </div>
-
-    <div class="tab-pane fade" id="BraceletsList" role="tabpanel" aria-labelledby="bracelets-tab">
+    <div class="tab-pane fade" id="braceletsList" role="tabpanel" aria-labelledby="bracelets-tab">
         <table class="table" id="BraceletsTable">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
+                    <th scope="col"><input type="checkbox" class="chkId" id="chkAllIds" /></th>
                     <th scope="col">
                         Image
                     </th>
+                    <th scope="col">Status</th>
                     <th scope="col">
                         Title
                     </th>
@@ -272,9 +302,8 @@
                     <th scope="col">Length</th>
                     <th scope="col">Band Width</th>
                     <th scope="col">Weight</th>
-                    <th scope="col">Price (14k)</th>
-                    <th scope="col">Price (18k)</th>
-                    <th scope="col">Price (20k)</th>
+                    <th scope="col">Karat</th>
+                    <th scope="col">Price</th>
 
                 </tr>
             </thead>
@@ -284,22 +313,28 @@
 
                     @foreach (var item in Model.Where(x => x.CategoryName == SD.Bracelets))
                     {
+                        defaultImage = string.Empty;
+                        if (item.ProductImageVideos.Any())
+                        {
+                            defaultImage = string.Empty;
+                            defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
+                        }
                         <tr>
                             <td scope="col"><input type="checkbox" class="chkId" /></td>
                             <td scope="col">
-                                <img src="@item.DefaultImage" style="width:25px;" />
+                                <img src="@SD.ImgUrl/@defaultImage" style="height:100px;" />
                             </td>
+                            <th scope="col">@item.UploadStatus</th>
                             <td scope="col">
                                 <h5>@item.Title</h5>
                                 <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
                             </td>
                             <td scope="col">@item.VenderName</td>
-                            <td scope="col">@item.StyleName</td>
+                            <td scope="col">@item.Sku</td>
                             <td scope="col">@item.Length</td>
                             <td scope="col">@item.BandWidth</td>
                             <td scope="col">@item.GoldWeight</td>
-                            <td scope="col">@item.Price</td>
-                            <td scope="col">@item.Price</td>
+                            <td scope="col">@item.Karat</td>
                             <td scope="col">@item.Price</td>
                         </tr>
                     }
@@ -313,8 +348,4 @@
             </tbody>
         </table>
     </div>
-</div>
-<div class="container">
-    <button class="btn btn-sm btn-danger text-end">Back</button>
-    <button class="btn btn-sm btn-success" id="btnVarify">Varify</button>
 </div>

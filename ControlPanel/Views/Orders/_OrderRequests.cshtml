@@ -1,0 +1,49 @@
+﻿@model IEnumerable<DataAccess.Entities.CustomerOrders>
+
+<section class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <table class="table" id="RequestedListTable">
+                <thead>
+                    <tr>
+                        <th scope="col">Customer Code</th>
+                        <th scope="col">Order Date</th>
+                        <th scope="col">Customer Name</th>
+                        <th scope="col">Order Code</th>
+                        <th scope="col">No Of Qty</th>
+                        <th scope="col">Net Amount</th>
+                        <th scope="col">Payment Status</th>
+                        <th scope="col">Created Date</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
+                    {
+                        foreach (var item in Model)
+                        {
+                    <tr>
+                        <td scope="col">@item.CustomerCode</td>
+                        <td scope="col">@item.OrderDate</td>
+                        <td scope="col">@item.CustomerCode</td>
+                        <td scope="col">@item.OrderCode</td>
+                        <td scope="col">@item.NoOfQty</td>
+                        <td scope="col">@item.NetAmount</td>
+                        <td scope="col">@item.PaymentStatus</td>
+                        <td scope="col">
+                            <a href="#">Go To Items</a>
+                        </td>
+                    </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="11">No data found</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

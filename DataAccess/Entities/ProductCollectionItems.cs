@@ -1,4 +1,7 @@
-﻿namespace DataAccess.Entities
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DataAccess.Entities
 {
     public class ProductCollectionItems
     {

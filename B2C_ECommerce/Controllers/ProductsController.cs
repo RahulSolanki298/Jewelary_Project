@@ -1,11 +1,8 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using B2C_ECommerce.IServices;
-using Business.Repository.IRepository;
+﻿using B2C_ECommerce.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using Newtonsoft.Json;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace B2C_ECommerce.Controllers
 {
@@ -36,10 +33,10 @@ namespace B2C_ECommerce.Controllers
         {
             var productFilters = new ProductPropertyListDTO();
             var data = await _productRepository.GetProductColorList();
-            productFilters.Colors=data.ToList();
+            productFilters.Colors = data.ToList();
             //productFilters.CollectionList = (await _productRepository.GetSubcategoryList());
             var shapes = (await _productRepository.GetShapeList());
-            productFilters.Shapes=shapes.ToList();
+            productFilters.Shapes = shapes.ToList();
             var priceDT = await _productRepository.GetProductPriceRangeData();
             productFilters.FromPrice = priceDT.MinPrice;
             productFilters.ToPrice = priceDT.MaxPrice;

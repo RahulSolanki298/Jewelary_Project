@@ -19,26 +19,57 @@ namespace Business.Repository
             _context = context;
         }
 
-        public async Task<IEnumerable<ProductPropertyDTO>> GetMainPropertyList() 
+        public async Task<IEnumerable<ProductPropertyDTO>> GetMainPropertyList()
         {
             var result = await (from pp in _context.ProductProperty
-                          select new ProductPropertyDTO
-                          {
-                              Id=pp.Id,
-                              Name=pp.Name,
-                              SymbolName=pp.SymbolName,
-                              Description=pp.Description,
-                              IconPath = pp.IconPath,
-                              DispOrder = pp.DisplayOrder,
-                              ParentId=pp.ParentId,
-                              IsActivated=pp.IsActive.Value
-                          }).Where(x=>x.IsActivated == true && x.ParentId == null).ToListAsync();
-            return result; 
+                                select new ProductPropertyDTO
+                                {
+                                    Id = pp.Id,
+                                    Name = pp.Name,
+                                    SymbolName = pp.SymbolName,
+                                    Description = pp.Description,
+                                    IconPath = pp.IconPath,
+                                    DispOrder = pp.DisplayOrder,
+                                    ParentId = pp.ParentId,
+                                    IsActive = pp.IsActive ?? false // Default to false if null
+                                }).Where(x => x.ParentId == null).ToListAsync();
+
+            return result;
+        }
+
+
+        public async Task<IEnumerable<ProductPropertyDTO>> GetPropertyItemsByName(string propertyName)
+        {
+
+            try
+            {
+                var propertyList = await (from prd in _context.ProductProperty
+                                    join main in _context.ProductProperty on prd.ParentId equals main.Id
+                                    where main.Name==propertyName
+                                    select new ProductPropertyDTO
+                                    {
+                                        Id = prd.Id,
+                                        Name = prd.Name,
+                                        Description = prd.Description,
+                                        SymbolName = prd.SymbolName,
+                                        IconPath = prd.IconPath,
+                                        ParentId = main.Id,
+                                        ParentProperty = "-"
+                                    }).ToListAsync();
+
+                return propertyList;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
 
         public async Task<IEnumerable<ProductProperty>> GetProductPropertyList() => await _context.ProductProperty.ToListAsync();
 
-        public async Task<ProductProperty> GetProductPropertyById(int Id) => await _context.ProductProperty.FirstOrDefaultAsync(x=>x.Id==Id);
+        public async Task<ProductProperty> GetProductPropertyById(int Id) => await _context.ProductProperty.FirstOrDefaultAsync(x => x.Id == Id);
 
         public async Task<bool> DeleteProductProperty(int Id)
         {
@@ -74,6 +105,9 @@ namespace Business.Repository
                     {
                         productDT.ParentId = productProperty.ParentId;
                     }
+                    productDT.IconPath = productProperty.IconPath;
+                    productDT.DisplayOrder = productProperty.DisplayOrder;
+                    productDT.IsActive = productProperty.IsActive;
 
                     _context.ProductProperty.Update(productDT);
                     _context.SaveChanges();
@@ -82,18 +116,9 @@ namespace Business.Repository
                 }
                 else
                 {
-                    var productDT = new ProductProperty();
-                    productDT.Name = productProperty.Name;
-                    productDT.Description = productProperty.Description;
-
-                    if (productProperty.ParentId != null)
-                    {
-                        productDT.ParentId = productProperty.ParentId;
-                        
-                    }
-                    await _context.ProductProperty.AddAsync(productDT);
+                    await _context.ProductProperty.AddAsync(productProperty);
                     await _context.SaveChangesAsync();
-                    return productDT;
+                    return productProperty;
                 }
             }
             catch (Exception ex)
@@ -108,22 +133,22 @@ namespace Business.Repository
             try
             {
 
-            
-            var colors = await (from prd in _context.ProductProperty
-                                join met in _context.ProductProperty on prd.ParentId equals met.Id
-                                where prd.IsActive==true && met.Name==SD.Metal
-                                select new ProductPropertyDTO
-                                {
-                                    Id = prd.Id,
-                                    Name = prd.Name,
-                                    Description = prd.Description,
-                                    SymbolName = prd.SymbolName,
-                                    IconPath = prd.IconPath,
-                                    ParentId = met.Id,
-                                    ParentProperty = "-"
-                                }).ToListAsync();
 
-            return colors;
+                var colors = await (from prd in _context.ProductProperty
+                                    join met in _context.ProductProperty on prd.ParentId equals met.Id
+                                    where prd.IsActive == true && met.Name == SD.Metal
+                                    select new ProductPropertyDTO
+                                    {
+                                        Id = prd.Id,
+                                        Name = prd.Name,
+                                        Description = prd.Description,
+                                        SymbolName = prd.SymbolName,
+                                        IconPath = prd.IconPath,
+                                        ParentId = met.Id,
+                                        ParentProperty = "-"
+                                    }).ToListAsync();
+
+                return colors;
 
             }
             catch (Exception ex)
@@ -137,7 +162,7 @@ namespace Business.Repository
         {
             var colors = await (from prd in _context.ProductProperty
                                 join met in _context.ProductProperty on prd.ParentId equals met.Id
-                                where prd.IsActive==true && prd.Name==SD.CaratSize
+                                where prd.IsActive == true && prd.Name == SD.CaratSize
                                 select new ProductPropertyDTO
                                 {
                                     Id = prd.Id,
@@ -182,11 +207,11 @@ namespace Business.Repository
         public async Task<IEnumerable<ProductCollectionDTO>> GetCategories()
         {
             var collections = await (from prd in _context.ProductCollections
-                                    select new ProductCollectionDTO
-                                    {
-                                        Id = prd.Id,
-                                        CollectionName = prd.CollectionName,
-                                    }).ToListAsync();
+                                     select new ProductCollectionDTO
+                                     {
+                                         Id = prd.Id,
+                                         CollectionName = prd.CollectionName,
+                                     }).ToListAsync();
 
             return collections;
         }
@@ -205,7 +230,7 @@ namespace Business.Repository
 
         public async Task<IEnumerable<ProductPropertyDTO>> GetProductShapeList()
         {
-            
+
             try
             {
                 var colors = await (from prd in _context.ProductProperty
@@ -232,6 +257,61 @@ namespace Business.Repository
             }
         }
 
+        public async Task<IEnumerable<ProductPriceDTO>> GetProductPrices()
+        {
+
+            try
+            {
+                var ProdctPrices = await (from prdPrice in _context.ProductPrices
+                                    join prd in _context.Product on prdPrice.ProductId equals prd.Id.ToString()
+                                    where prd.IsActivated == true && prd.UploadStatus == SD.Activated
+                                    select new ProductPriceDTO
+                                    {
+                                        Id = prdPrice.Id,
+                                        KaratId=prd.KaratId,
+                                        ProductId=prd.Id.ToString(),
+                                        ProductPrice=prdPrice.ProductPrice
+                                    }).ToListAsync();
+
+                return ProdctPrices;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<ProductPropertyDTO>> GetKaratList()
+        {
+            try
+            {
+
+
+                var colors = await (from prd in _context.ProductProperty
+                                    join krt in _context.ProductProperty on prd.ParentId equals krt.Id
+                                    where prd.IsActive == true && krt.Name == "Karat"
+                                    select new ProductPropertyDTO
+                                    {
+                                        Id = prd.Id,
+                                        Name = prd.Name,
+                                        Description = prd.Description,
+                                        SymbolName = prd.SymbolName,
+                                        IconPath = prd.IconPath,
+                                        ParentId = krt.Id,
+                                        ParentProperty = "-"
+                                    }).ToListAsync();
+
+                return colors;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
 
         public async Task<PriceRanges> GetPriceRangeAsync()
         {

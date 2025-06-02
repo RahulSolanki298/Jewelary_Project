@@ -15,6 +15,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
+using IFormFile = Microsoft.AspNetCore.Http.IFormFile;
 
 namespace APIs.Controllers
 {
@@ -185,7 +186,7 @@ namespace APIs.Controllers
         }
 
 
-         [HttpPost("BulkProductCollectionImagesUpload")]
+        [HttpPost("BulkProductCollectionImagesUpload")]
         [RequestFormLimits(MultipartBodyLengthLimit = 5368709120)]
         [RequestSizeLimit(5368709120)]
         public async Task<IActionResult> UploadProductCollectionImages([FromForm] IFormFile zipFile)

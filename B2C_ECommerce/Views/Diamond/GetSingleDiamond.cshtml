@@ -1,4 +1,6 @@
 ﻿@model Models.DiamondData
+@using Common;
+
 @{
     ViewData["Title"] = "GetSingleDiamond";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -65,7 +67,7 @@
                                 </div>
                                 <hr />
 
-                                <div class="ratings d-flex">
+                                @*<div class="ratings d-flex">
                                     <span><i class="fa fa-star-o"></i></span>
                                     <span><i class="fa fa-star-o"></i></span>
                                     <span><i class="fa fa-star-o"></i></span>
@@ -74,14 +76,14 @@
                                     <div class="pro-review">
                                         <span>1 Reviews</span>
                                     </div>
-                                </div>
+                                </div>*@
                                 <br />
                                 <div class="manufacturer-name">
                                     <h5>Short Description</h5>
                                 </div>
                                 <br />
 
-                                <div class="pro-desc">
+                                @*<div class="pro-desc">
 
                                     <p>
                                         Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
@@ -89,10 +91,21 @@
                                         voluptua. Phasellus id nisi quis justo tempus mollis sed et dui. In hac
                                         habitasse platea dictumst.
                                     </p>
+                                </div>*@
+                                <div class="d-flex">
+                                    <div class="action_link">
+                                        @* <a class="btn btn-cart2" href="#">Add to cart</a> *@
+                                        <button class="btn btn-cart2" id="btnAdd2Cart" data-diamondId="@Model.Id">Add to cart</button>
+                                    </div>
+                                    <div class="useful-links mb-0" style="margin-left:10px;">
+                                        <a href="#" id="AddToWishList" data-diamondId="@Model.Id">
+                                            <img src="@SD.ShapeImgUrl/assets/img/Heart-Unchecked.png" class="img-fluid heart-unchecked" style="width:25px;height:25px;" />
+                                            <img src="@SD.ShapeImgUrl/assets/img/Heart-Checked.png" class="img-fluid heart-checked" style="width:25px;height:25px;display:none;" />
+                                            wishlist
+                                        </a>
+                                    </div>
                                 </div>
-                                <div class="action_link">
-                                    <a class="btn btn-cart2" href="#">Add to cart</a>
-                                </div>
+                                
                                 @*<div class="quantity-cart-box d-flex align-items-center">
                                         <h6 class="option-title">qty:</h6>
                                         <div class="quantity">
@@ -128,10 +141,7 @@
                                             </li>
                                         </ul>
                                     </div>*@
-                                <div class="useful-links">
-                                    <a href="#" data-bs-toggle="tooltip" title="Compare"><i class="pe-7s-refresh-2"></i>compare</a>
-                                    <a href="#" data-bs-toggle="tooltip" title="Wishlist"><i class="pe-7s-like"></i>wishlist</a>
-                                </div>
+                                
                                 <div class="like-icon">
                                     <a class="facebook" href="#"><i class="fa fa-facebook"></i>like</a>
                                     <a class="twitter" href="#"><i class="fa fa-twitter"></i>tweet</a>
@@ -144,7 +154,7 @@
                 </div>
                 <!-- product details inner end -->
                 <!-- product details reviews start -->
-                <div class="product-details-reviews padding-top-0 padding-bottom-20">
+                <div class="product-details-reviews padding-top-20 padding-bottom-20">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="product-review-info">
@@ -162,7 +172,7 @@
                                 <div class="tab-content reviews-tab">
                                     <div class="tab-pane fade show active" id="tab_one">
                                         <div class="tab-one">
-                                            <p>
+                                            @*<p>
                                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam
                                                 fringilla augue nec est tristique auctor. Ipsum metus feugiat
                                                 sem, quis fermentum turpis eros eget velit. Donec ac tempus
@@ -173,19 +183,48 @@
                                                 ligula euismod eget. Pellentesque habitant morbi tristique
                                                 senectus et netus et malesuada fames ac turpis egestas. Nam
                                                 erat mi, rutrum at sollicitudin rhoncus
-                                            </p>
+                                            </p>*@
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="tab_two">
                                         <table class="table table-bordered">
                                             <tbody>
+
                                                 <tr>
-                                                    <td>color</td>
-                                                    <td>@Model.ColorName</td>
+                                                    <th>Shape :</th>
+                                                    <td>@Model.ShapeName</td>
+                                                    <th>Carat Weight :</th>
+                                                    <td>@Model.Carat</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>size</td>
-                                                    <td>@Model.Carat</td>
+                                                    <th>Color :</th>
+                                                    <td>@Model.ColorName</td>
+                                                    <th>Clarity :</th>
+                                                    <td>@Model.ClarityName</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Cut Grade :</th>
+                                                    <td>@Model.CutName</td>
+                                                    <th>Fluorescence :</th>
+                                                    <td>@Model.FluorName</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Depth :</th>
+                                                    <td>@Model.Depth %</td>
+                                                    <th>Table :</th>
+                                                    <td>@Model.Table %</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Polish :</th>
+                                                    <td>@Model.PolishName</td>
+                                                    <th>Symmetry :</th>
+                                                    <td>@Model.SymmetyName</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Certification :</th>
+                                                    <td>@Model.LabName</td>
+                                                    <th>Measurements :</th>
+                                                    <td>@Model.Measurement</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -310,6 +349,12 @@
 @section Scripts
 {
     <script>
+
+
+        $(function () {
+        updateWishlistUI();
+        });
+
         $(document).on("click", ".clsCertificate", function (e) {
             e.preventDefault();
 
@@ -326,7 +371,90 @@
             $("#dimCertiModal").modal("hide");
         });
 
+        $(document).on("click", "#AddToWishList", function (e) {
+            e.preventDefault();
 
+            let diamondId = $(this).data("diamondid");
+            let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+
+            if (wishlist.includes(diamondId)) {
+                wishlist = wishlist.filter(id => id !== diamondId);
+                localStorage.setItem("wishlist", JSON.stringify(wishlist));
+
+                 $(".heart-unchecked").show();
+                 $(".heart-checked").hide();
+
+                alert("Product has been removed from your wishlist.");
+            } else {
+                wishlist.push(diamondId);
+                localStorage.setItem("wishlist", JSON.stringify(wishlist));
+
+                 $(".heart-unchecked").hide();
+                 $(".heart-checked").show();
+
+                alert("Product has been added to your wishlist.");
+            }
+            getWishlistCounter();
+            updateWishlistUI();
+        });
+
+         $(document).on("click", "#btnAdd2Cart", function (e) {
+             debugger;
+            e.preventDefault();
+
+            let diamondId = $(this).data("diamondid");
+            let diamondcartlist = JSON.parse(localStorage.getItem("diamondCartlist")) || [];
+
+            if (diamondcartlist.includes(diamondId)) {
+                 diamondcartlist = diamondcartlist.filter(id => id !== diamondId);
+                 localStorage.setItem("diamondCartlist", JSON.stringify(diamondcartlist));
+                 
+                 alert("Product has been removed from your cartlist.");
+            } 
+            else 
+            {
+                 diamondcartlist.push(diamondId);
+                 localStorage.setItem("diamondCartlist", JSON.stringify(diamondcartlist));
+
+                 alert("Product has been added to your cartlist.");
+            }
+            getcartlistCounter();
+            updatecartlistUI();
+        });
+
+
+         function getWishlistCounter() {
+                let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+                $("#wishlistCounter").text(wishlist.length);
+         }
+
+        function updateWishlistUI() {
+            let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+
+
+            $('#AddToWishList').each(function () {
+                let diamondId = Number($(this).data("diamondid"));
+
+                if (wishlist.includes(diamondId)) {
+                    $(".heart-unchecked").hide();
+                    $(".heart-checked").show();
+                } else {
+                    $(".heart-unchecked").show();
+                    $(".heart-checked").hide();
+                }
+            });
+
+            
+        }
+
+        function getcartlistCounter() {
+                let cardlist = JSON.parse(localStorage.getItem("diamondCartlist")) || [];
+                $("#addtoCardCounter").text(cardlist.length);
+         }
+        
+         function updatecartlistUI() {
+            let cardlist = JSON.parse(localStorage.getItem("diamondCartlist")) || [];
+        }
 
     </script>
 }

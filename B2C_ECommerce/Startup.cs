@@ -59,7 +59,8 @@ namespace B2C_ECommerce
 
             services.AddHttpClient("API", client =>
             {
-                client.BaseAddress = new Uri(SD.BaseApiUrl);
+                client.BaseAddress = new Uri(SD.AdminPath);
+                //client.BaseAddress = new Uri(SD.BaseApiUrl);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
             });
 
@@ -68,6 +69,17 @@ namespace B2C_ECommerce
             services.AddScoped<IProductService, ProductService>();
 
             services.AddControllers();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader();
+                });
+            });
+
         }
 
         private void ConfigureRepositories(IServiceCollection services)
@@ -94,11 +106,14 @@ namespace B2C_ECommerce
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseCors("AllowAll");
+            
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

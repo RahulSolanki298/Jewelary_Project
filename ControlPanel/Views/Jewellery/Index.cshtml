@@ -1,14 +1,15 @@
-﻿@model List<Models.DiamondData>
-
+﻿
 <section class="section">
     <div class="row mb-2">
         <div class="col-lg-6">
             <h4>Jewelry List</h4>
         </div>
         <div class="col-lg-6">
-            @*<button class="btn btn-primary float-end" id="ExcelUpload">Upload Excel</button>*@
-            <a href="@Url.Action("UploadJewellery","Jewellery")" class="btn btn-theme float-end">Excel Upload</a>
+            <a href="@Url.Action("UploadJewellery","Jewellery")" class="btn btn-theme float-end m-2">Upload Multiple Products</a>
+
+            <a href="@Url.Action("UploadJewellery","Jewellery")" class="btn btn-theme float-end m-2">Add Jewellery </a>
         </div>
+
     </div>
     <div class="row">
         <div class="col-lg-12">
@@ -60,6 +61,13 @@
 
 </div>
 
+<div class="modal fade" id="showProgramCollection" tabindex="-1" data-bs-backdrop="false">
+
+
+</div>
+
+
+
 @section Scripts
 {
     <script>
@@ -69,6 +77,26 @@
             //$("#ExcelUpload").on("click",function(){
             //    $("#showFileUpload").modal("show");
             //});
+
+            $('#chkAllIds').on('change', function () {
+                var isChecked = $(this).is(':checked');
+                $('#ringTable .chkId').not(this).prop('checked', isChecked);
+                updateSelectedIds();
+            });
+
+            // Handle individual checkbox change
+            $('#jewelleryList').on('change', '.chkId:not(#chkAllIds)', function () {
+                var allChecked = $('#ringTable .chkId:not(#chkAllIds)').length ===
+                    $('#ringTable .chkId:not(#chkAllIds):checked').length;
+                $('#chkAllIds').prop('checked', allChecked);
+                updateSelectedIds();
+            });
+
+            $('#jewelleryList').on('change', '#chkAllIds', function () {
+                var isChecked = $(this).is(':checked');
+                $('#ringTable .chkId').not(this).prop('checked', isChecked);
+                updateSelectedIds();
+            });
 
             $('#uploadForm').on('submit', function (e) {
                 e.preventDefault();
@@ -93,7 +121,7 @@
                         $('#uploadBtn').prop('disabled', false).text('Upload');
 
                         // Inject response data into the modal
-                      
+
                     },
                     error: function (xhr) {
                         $('#loader').hide();
@@ -103,25 +131,73 @@
                 });
             });
 
+            $('#jewelleryList').on('click', '.dropdown-item', function (e) {
+                    e.preventDefault();
+
+                    var status = $(this).data('status');
+                    var productIds = $('#txtProductIds').val();
+
+                    if (!productIds) {
+                        alert('No product IDs selected.');
+                        return;
+                    }
+
+                var idsArray = productIds.split(',');
+
+                if (status == "Program" || status == "Collection") {
+
+                }
+                else
+                {
+                     $.ajax({
+                        url: '@Url.Action("ChangeStatus", "Jewellery")', // 🔁 Replace with your actual API endpoint
+                        method: 'POST',
+                        data: {
+                            pIds: idsArray,
+                            status: status
+                        },
+                         success: function (response) {
+                             debugger;
+                            //alert('Products updated to "' + status + '" successfully.');
+                            Swal.fire({
+                                title: 'Products updated to "' + status + '" successfully.',
+                                icon: "success",
+                                draggable: true
+                            });
+                             console.log(response);
+                             setTimeout(function () {
+                                 location.reload();
+                             }, 600);
+
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire({
+                                title: "An error occurred while updating products.",
+                                icon: "success",
+                                draggable: true
+                            });
+                            console.error(error);
+                        }
+                    });
+                }
+            });
 
         });
 
-        function getDiamondList()
-        {
-             $.ajax({
+        function getDiamondList() {
+            $.ajax({
                 url: '@Url.Action("GetJewellries", "Jewellery")',
                 type: 'GET',
-                success: function (result)
-                {
-                    $('#jewelleryList').html("");
-                    $('#jewelleryList').html(result);
+                success: function (result) {
+                        $('#jewelleryList').html("");
+                        $('#jewelleryList').html(result);
                 },
-                error: function (xhr, status, error)
-                {
-                    console.error('Error loading diamond list:', error);
+                error: function (xhr, status, error) {
+                    console.error('Error loading diamond list:', xhr.responseText, status, error);
                 }
             });
         }
+
 
         function checkAll()
         {
@@ -138,6 +214,19 @@
                     console.error('Error loading diamond list:', error);
                 }
             });
+        }
+
+        function updateSelectedIds() {
+            let selectedIds = getSelectedIds();
+            $('#txtProductIds').val(selectedIds.join(','));
+        }
+
+        function getSelectedIds() {
+            let ids = [];
+            $('#ringTable .chkId:not(#chkAllIds):checked').each(function () {
+                ids.push($(this).val());
+            });
+            return ids;
         }
     </script>
 }

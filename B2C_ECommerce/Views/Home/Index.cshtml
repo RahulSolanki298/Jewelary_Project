@@ -1,11 +1,17 @@
-﻿@{
+﻿@using Common;
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <section class="video-area">
     <div class="video-container">
-        <video autoplay="autoplay" loop="loop" muted="muted" playsinline preload="auto" class="bg-video">
+        <video id="desktop-video-banner" autoplay="autoplay" loop="loop" muted="muted" playsinline preload="auto" class="bg-video desktop-video">
             <source src="~/video/jewel-facet-banner.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <!--Mobile Video-->
+        <video id="desktop-video-phone" autoplay="autoplay" loop="loop" muted="muted" playsinline preload="auto" class="bg-video phone-video">
+            <source src="~/video/jewel-facet-banner-mobile.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
         <div class="video-overlay"></div>
@@ -20,7 +26,7 @@
 
         <div class="video-down-arrow">
             <a href="#section2">
-                <img src="~/assets/img/logo/_arrow.gif" alt="Scroll Down" style="height:100px;width:110px;">
+                <img src="~/assets/img/logo/_arrow.gif" alt="Scroll Down" class="scroll-down-image" style="">
             </a>
         </div>
     </div>
@@ -482,7 +488,7 @@
     <div class="hero-slider-active slick-arrow-style slick-arrow-style_hero slick-dot-style">
         
         <div class="hero-single-slide hero-overlay">
-            <div class="hero-slider-item bg-img" data-bg="/assets/img/collection-img/1.jpg">
+            <div class="hero-slider-item bg-img" data-bg="@SD.BaseApiUrl/assets/img/collection-img/1.jpg">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-12">
@@ -498,7 +504,7 @@
         </div>
        
         <div class="hero-single-slide hero-overlay">
-            <div class="hero-slider-item bg-img" data-bg="/assets/img/collection-img/2.jpg">
+            <div class="hero-slider-item bg-img" data-bg="@SD.BaseApiUrl/assets/img/collection-img/2.jpg">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-12">
@@ -514,7 +520,7 @@
         </div>
        
         <div class="hero-single-slide hero-overlay">
-            <div class="hero-slider-item bg-img" data-bg="/assets/img/collection-img/3.jpg">
+            <div class="hero-slider-item bg-img" data-bg="@SD.BaseApiUrl/assets/img/collection-img/3.jpg">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-12">
@@ -1080,6 +1086,51 @@
                 $("#divNecklaces").show();
 
             });
+
+            updateVideoDisplay();
+
+            $(window).resize(function () {
+                updateVideoDisplay();
+            });
+
+
+            function updateVideoDisplay() {
+                var desktopvideobanner = document.getElementById('desktop-video-banner');
+                var desktopvideophone = document.getElementById('desktop-video-phone');
+                
+                // Ensure the videos are muted to allow autoplay on mobile
+                desktopvideobanner.muted = true;
+                desktopvideophone.muted = true;
+                
+
+                // Play videos only if the element is available
+                if (desktopvideobanner) {
+                    desktopvideobanner.play();                    
+                }
+
+               
+                if (window.innerWidth <= 1040 && window.innerWidth >= 600) { // Tablet Video Display
+                    $('.desktop-video').show();
+                    $('.phone-video').hide();
+                    desktopvideobanner.play();                    
+                }
+                else if (window.innerWidth <= 600) { // Mobile Video Display
+                    $('.desktop-video').hide();
+                    $('.phone-video').show();
+
+                    
+                    if (desktopvideophone) {
+                        desktopvideophone.play();
+                    }
+                   
+                }
+                else { // Desktop Video Display
+                    $('.desktop-video').show();
+                    $('.phone-video').hide();
+                    desktopvideobanner.play();
+                }
+            }
+
         });
     </script>
 }

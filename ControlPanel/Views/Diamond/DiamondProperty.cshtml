@@ -1,0 +1,120 @@
+﻿@model IEnumerable<Models.DiamondPropertyDTO>
+@{
+    ViewData["Title"] = "Diamond Property";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int Index = 1;
+}
+
+@{
+    ViewBag.Title = "Diamond Properties";
+    var index = 1;
+}
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h4">Diamond Properties</h2>
+        <a class="btn btn-theme" href="@Url.Action("AddDiamondProperty", "Diamond")">
+            <i class="bi bi-plus-circle me-1"></i>
+
+            Create Property
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 col-md-12 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0" id="diamondProperty">
+                        <thead class="table-light text-center">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Activated</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            @if (Model != null && Model.Any(x => x.ParentId == null))
+                            {
+                                foreach (var item in Model.Where(x => x.ParentId == null))
+                                {
+                                    <tr class="clickable-row" data-propertyName="@item.Name">
+                                        <td>@(index++)</td>
+                                        <td>@item.Name</td>
+                                        <td>
+                                            @if (item.IsActivated)
+                                            {
+                                                <span class="badge bg-success">Yes</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">No</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <a class="" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="bi bi-three-dots-vertical"></i>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a class="dropdown-item" href="@Url.Action("AddDiamondProperty", "Diamond", new { pId = item.Id })">
+                                                            <i class="bi bi-pencil-square me-1"></i>Edit
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item text-danger" href="@Url.Action("DeleteDiamondProperty", "Diamond", new { pId = item.Id })">
+                                                            <i class="bi bi-trash me-1"></i>Delete
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">No properties found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-12" id="propertyDT">
+            <!-- Placeholder for additional property details or forms -->
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section Scripts{
+    <script>
+    $(document).ready(function () {
+        $('.clickable-row').on('click', function () {
+        var propertyName = $(this).data('propertyname'); // Ensure correct casing in data attribute
+
+        $.ajax({
+            url: '@Url.Action("DiamondPropertyItems", "Diamond")' + '?propertyName=' + encodeURIComponent(propertyName),
+            method: 'GET',
+            contentType: 'application/json',
+            success: function (data) {
+                $("#propertyDT").empty().html(data); // Clear and update content
+            },
+            error: function (xhr, status, error) {
+                console.error('API call failed:', error);
+            }
+        });
+    });
+});
+
+    </script>
+
+}

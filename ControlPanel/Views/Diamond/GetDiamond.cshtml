@@ -1,225 +1,203 @@
 ﻿@model Models.DiamondData
-
+@using Common
 @{
-    ViewData["Title"] = "GetDiamond";
+    //ViewData["Title"] = "Get Diamond";
 }
 
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="GetDiamond">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <input asp-for="Id" class="form-control" type="hidden" />
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col">
+            <h4 class="text-uppercase fw-bold border-bottom pb-2">@ViewBag.Title</h4>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-3">
+        <div class="col-12 col-xl-10">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-4">
+                    <form asp-action="GetDiamond">
+                        <div class="row gy-4">
+                            <!-- Left Column: Product Image & Certificate -->
+                            <div class="col-12 col-md-4 text-center">
+                                <div id="div360">
+                                    <iframe src="@Model.DiamondVideoPath"
+                                            class="w-100"
+                                            style="height: 400px; padding: 5px;"
+                                            frameborder="0"
+                                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                            allowfullscreen>
+                                    </iframe>
+                                </div>
+
+                                <div class="d-flex justify-content-center gap-3 mt-3">
+                                    <a href="@Model.Certificate" data-certi="@Model.Certificate" class="text-decoration-none text-dark clsCertificate">
+                                        @if (Model.LabName == "IGI")
+                                        {
+                                            <img src="@SD.ShapeImgUrl/assets/img/logo/IGI.png" style="width:150px;" class="blinking-image" />
+                                        }
+                                        else if (Model.LabName == "GIA")
+                                        {
+                                            <img src="@SD.ShapeImgUrl/assets/img/logo/GIA.png" style="width:150px;" class="blinking-image" />
+                                        }
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Right Column: Product Details -->
+                            <div class="col-12 col-md-8">
+                                <div class="row align-items-center mb-3">
+                                    <div class="col">
+                                        <div class="manufacturer-name">
+                                            <a href="#">@Model.LabShape</a>
+                                        </div>
+                                        <h3 class="product-name"> @Model.Carat @Model.ColorName @Model.ShapeName @Model.ClarityName @Model.LabName</h3>
+                                    </div>
+                                    <div class="col-auto text-end">
+                                        <a asp-action="Index" class="btn btn-outline-danger px-4">Back to List</a>
+                                    </div>
+                                </div>
+
+                                <div class="row gy-3 gx-3">
+                                    <!-- Loop through each field in consistent layout -->
+                                    @* You can create a helper or partial to avoid repetition *@
+                                    <hr />
+                                    <h5>Diamond Details</h5>
+
+                                    <div class="col-12 col-sm-6 col-md-4">
+                                        <label class="form-label">Stone ID</label>
+                                        <input type="text" class="form-control" asp-for="StoneId" disabled />
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-4">
+                                        <label class="form-label">Step</label>
+                                        <input type="text" class="form-control" asp-for="Step" disabled />
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-4">
+                                        <label class="form-label">Type</label>
+                                        <input type="text" class="form-control" asp-for="TypeName" disabled />
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-4">
+                                        <label class="form-label">Measurement</label>
+                                        <input type="text" class="form-control" asp-for="Measurement" disabled />
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-4">
+                                        <label class="form-label">Shape</label>
+                                        <input type="text" class="form-control" asp-for="ShapeName" disabled />
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-4">
+                                        <label class="form-label">Carat</label>
+                                        <input type="text" class="form-control" asp-for="Carat" disabled />
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-4">
+                                        <label class="form-label">Color</label>
+                                        <input type="text" class="form-control" asp-for="ColorName" disabled />
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-4">
+                                        <label class="form-label">Clarity</label>
+                                        <input type="text" class="form-control" asp-for="ClarityName" disabled />
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-4">
+                                        <label class="form-label">Cut</label>
+                                        <input type="text" class="form-control" asp-for="CutName" disabled />
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-4">
+                                        <label class="form-label">Polish</label>
+                                        <input type="text" class="form-control" asp-for="PolishName" disabled />
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-4">
+                                        <label class="form-label">Symmetry</label>
+                                        <input type="text" class="form-control" asp-for="SymmetyName" disabled />
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-4">
+                                        <label class="form-label">Fluor</label>
+                                        <input type="text" class="form-control" asp-for="FluorName" disabled />
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-4">
+                                        <label class="form-label">RAP</label>
+                                        <input type="text" class="form-control" asp-for="RAP" disabled />
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-4">
+                                        <label class="form-label">Disc</label>
+                                        <input type="text" class="form-control" asp-for="Discount" disabled />
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-4">
+                                        <label class="form-label">Price</label>
+                                        <input type="text" class="form-control" asp-for="Price" disabled />
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-4">
+                                        <label class="form-label">Amount</label>
+                                        <input type="text" class="form-control" asp-for="Amount" disabled />
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-4">
+                                        <label class="form-label">Ratio</label>
+                                        <input type="text" class="form-control" asp-for="Ratio" disabled />
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-4">
+                                        <label class="form-label">Depth</label>
+                                        <input type="text" class="form-control" asp-for="Depth" disabled />
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-4">
+                                        <label class="form-label">Table</label>
+                                        <input type="text" class="form-control" asp-for="Table" disabled />
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-4">
+                                        <label class="form-label">Shade</label>
+                                        <input type="text" class="form-control" asp-for="Shade" disabled />
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-4">
+                                        <label class="form-label">Lab Shape</label>
+                                        <input type="text" class="form-control" asp-for="LabShape" disabled />
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-4">
+                                        <label class="form-label">Rap Amount</label>
+                                        <input type="text" class="form-control" asp-for="RapAmount" disabled />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="hidden" asp-for="Id" />
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="StoneId" class="control-label"></label>
-                <input asp-for="StoneId" class="form-control" />
-                <span asp-validation-for="StoneId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DNA" class="control-label"></label>
-                <input asp-for="DNA" class="form-control" />
-                <span asp-validation-for="DNA" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Step" class="control-label"></label>
-                <input asp-for="Step" class="form-control" />
-                <span asp-validation-for="Step" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TypeId" class="control-label"></label>
-                <input asp-for="TypeId" class="form-control" />
-                <span asp-validation-for="TypeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TypeName" class="control-label"></label>
-                <input asp-for="TypeName" class="form-control" />
-                <span asp-validation-for="TypeName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Measurement" class="control-label"></label>
-                <input asp-for="Measurement" class="form-control" />
-                <span asp-validation-for="Measurement" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LabShape" class="control-label"></label>
-                <input asp-for="LabShape" class="form-control" />
-                <span asp-validation-for="LabShape" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LabId" class="control-label"></label>
-                <input asp-for="LabId" class="form-control" />
-                <span asp-validation-for="LabId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LabName" class="control-label"></label>
-                <input asp-for="LabName" class="form-control" />
-                <span asp-validation-for="LabName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ShapeId" class="control-label"></label>
-                <input asp-for="ShapeId" class="form-control" />
-                <span asp-validation-for="ShapeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ShapeName" class="control-label"></label>
-                <input asp-for="ShapeName" class="form-control" />
-                <span asp-validation-for="ShapeName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RAP" class="control-label"></label>
-                <input asp-for="RAP" class="form-control" />
-                <span asp-validation-for="RAP" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RapAmount" class="control-label"></label>
-                <input asp-for="RapAmount" class="form-control" />
-                <span asp-validation-for="RapAmount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Carat" class="control-label"></label>
-                <input asp-for="Carat" class="form-control" />
-                <span asp-validation-for="Carat" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ClarityId" class="control-label"></label>
-                <input asp-for="ClarityId" class="form-control" />
-                <span asp-validation-for="ClarityId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ClarityName" class="control-label"></label>
-                <input asp-for="ClarityName" class="form-control" />
-                <span asp-validation-for="ClarityName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ColorId" class="control-label"></label>
-                <input asp-for="ColorId" class="form-control" />
-                <span asp-validation-for="ColorId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ColorName" class="control-label"></label>
-                <input asp-for="ColorName" class="form-control" />
-                <span asp-validation-for="ColorName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CutId" class="control-label"></label>
-                <input asp-for="CutId" class="form-control" />
-                <span asp-validation-for="CutId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CutName" class="control-label"></label>
-                <input asp-for="CutName" class="form-control" />
-                <span asp-validation-for="CutName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PolishId" class="control-label"></label>
-                <input asp-for="PolishId" class="form-control" />
-                <span asp-validation-for="PolishId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PolishName" class="control-label"></label>
-                <input asp-for="PolishName" class="form-control" />
-                <span asp-validation-for="PolishName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SymmetryId" class="control-label"></label>
-                <input asp-for="SymmetryId" class="form-control" />
-                <span asp-validation-for="SymmetryId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SymmetyName" class="control-label"></label>
-                <input asp-for="SymmetyName" class="form-control" />
-                <span asp-validation-for="SymmetyName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FluorId" class="control-label"></label>
-                <input asp-for="FluorId" class="form-control" />
-                <span asp-validation-for="FluorId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FluorName" class="control-label"></label>
-                <input asp-for="FluorName" class="form-control" />
-                <span asp-validation-for="FluorName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Table" class="control-label"></label>
-                <input asp-for="Table" class="form-control" />
-                <span asp-validation-for="Table" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Depth" class="control-label"></label>
-                <input asp-for="Depth" class="form-control" />
-                <span asp-validation-for="Depth" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Ratio" class="control-label"></label>
-                <input asp-for="Ratio" class="form-control" />
-                <span asp-validation-for="Ratio" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Quantity" class="control-label"></label>
-                <input asp-for="Quantity" class="form-control" />
-                <span asp-validation-for="Quantity" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Shade" class="control-label"></label>
-                <input asp-for="Shade" class="form-control" />
-                <span asp-validation-for="Shade" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Certificate" class="control-label"></label>
-                <input asp-for="Certificate" class="form-control" />
-                <span asp-validation-for="Certificate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Discount" class="control-label"></label>
-                <input asp-for="Discount" class="form-control" />
-                <span asp-validation-for="Discount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RatePct" class="control-label"></label>
-                <input asp-for="RatePct" class="form-control" />
-                <span asp-validation-for="RatePct" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Amount" class="control-label"></label>
-                <input asp-for="Amount" class="form-control" />
-                <span asp-validation-for="Amount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DiamondImagePath" class="control-label"></label>
-                <input asp-for="DiamondImagePath" class="form-control" />
-                <span asp-validation-for="DiamondImagePath" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DiamondVideoPath" class="control-label"></label>
-                <input asp-for="DiamondVideoPath" class="form-control" />
-                <span asp-validation-for="DiamondVideoPath" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IconPath" class="control-label"></label>
-                <input asp-for="IconPath" class="form-control" />
-                <span asp-validation-for="IconPath" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IsActivated" class="control-label"></label>
-                <input asp-for="IsActivated" class="form-control" />
-                <span asp-validation-for="IsActivated" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
+@section Scripts{
+    <script>
+        document.getElementById('btnDiamondImg').addEventListener('click', function () {
+            const div360 = document.getElementById('div360');
+            const diamondImg = document.getElementById('diamondImg');
+
+            if (div360.style.display === 'none') {
+                div360.style.display = 'block';
+                diamondImg.style.display = 'none';
+            } else {
+                div360.style.display = 'none';
+                diamondImg.style.display = 'block';
+            }
+        });
+    </script>
+}

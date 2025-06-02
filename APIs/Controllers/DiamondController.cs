@@ -86,76 +86,76 @@ namespace APIs.Controllers
             return Ok(response);
         }
 
-        [HttpPost("BulkDiamondUpload")]
-        public async Task<IActionResult> UploadDiamondWithExcelOrCsv(IFormFile file)
-        {
-            if (file == null || file.Length == 0)
-                return BadRequest("No file uploaded.");
+        //[HttpPost("BulkDiamondUpload")]
+        //public async Task<IActionResult> UploadDiamondWithExcelOrCsv(IFormFile file)
+        //{
+        //    if (file == null || file.Length == 0)
+        //        return BadRequest("No file uploaded.");
 
-            var extension = Path.GetExtension(file.FileName);
-            if (!extension.Equals(".xlsx", StringComparison.OrdinalIgnoreCase) &&
-                !extension.Equals(".csv", StringComparison.OrdinalIgnoreCase))
-            {
-                return BadRequest("Invalid file format. Please upload an Excel (.xlsx) or CSV (.csv) file.");
-            }
+        //    var extension = Path.GetExtension(file.FileName);
+        //    if (!extension.Equals(".xlsx", StringComparison.OrdinalIgnoreCase) &&
+        //        !extension.Equals(".csv", StringComparison.OrdinalIgnoreCase))
+        //    {
+        //        return BadRequest("Invalid file format. Please upload an Excel (.xlsx) or CSV (.csv) file.");
+        //    }
 
-            try
-            {
-                List<Diamond> diamondsDTList = new();
+        //    try
+        //    {
+        //        List<Diamond> diamondsDTList = new();
 
-                using var stream = new MemoryStream();
-                await file.CopyToAsync(stream);
-                stream.Position = 0;
-                var history = new DiamondFileUploadHistory();
-                history.Title = "Add File Upload";
-                history.UploadedDate = DateTime.Now;
-                history.IsSuccess = 1;
-                int dId = await _diamondRepository.AddDiamondFileUploadedHistory(history);
+        //        using var stream = new MemoryStream();
+        //        await file.CopyToAsync(stream);
+        //        stream.Position = 0;
+        //        var history = new DiamondFileUploadHistory();
+        //        history.Title = "Add File Upload";
+        //        history.UploadedDate = DateTime.Now;
+        //        history.IsSuccess = 1;
+        //        int dId = await _diamondRepository.AddDiamondFileUploadedHistory(history);
 
-                if (extension.Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
-                {
-                    // Excel Processing
-                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-                    using var package = new ExcelPackage(stream);
-                    var worksheet = package.Workbook.Worksheets.FirstOrDefault();
+        //        if (extension.Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
+        //        {
+        //            // Excel Processing
+        //            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+        //            using var package = new ExcelPackage(stream);
+        //            var worksheet = package.Workbook.Worksheets.FirstOrDefault();
 
-                    if (worksheet == null)
-                        return BadRequest("The Excel file is empty.");
+        //            if (worksheet == null)
+        //                return BadRequest("The Excel file is empty.");
 
-                    int rowCount = worksheet.Dimension.Rows;
+        //            int rowCount = worksheet.Dimension.Rows;
 
-                    for (int row = 6; row <= rowCount; row++)
-                    {
-                        var diamond = await ParseExcelDiamondRowAsync(worksheet, row);
-                        diamondsDTList.Add(diamond);
-                    }
-                }
-                else if (extension.Equals(".csv", StringComparison.OrdinalIgnoreCase))
-                {
-                    // CSV Processing
-                    using var reader = new StreamReader(stream);
-                    using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+        //            for (int row = 6; row <= rowCount; row++)
+        //            {
+        //                var diamond = await ParseExcelDiamondRowAsync(worksheet, row);
+        //                diamondsDTList.Add(diamond);
+        //            }
+        //        }
+        //        else if (extension.Equals(".csv", StringComparison.OrdinalIgnoreCase))
+        //        {
+        //            // CSV Processing
+        //            using var reader = new StreamReader(stream);
+        //            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
-                    var records = csv.GetRecords<dynamic>().ToList();
-                    int rowIndex = 6; // Assuming headers end before row 6
+        //            var records = csv.GetRecords<dynamic>().ToList();
+        //            int rowIndex = 6; // Assuming headers end before row 6
 
-                    foreach (var record in records.Skip(rowIndex - 1))
-                    {
-                        var rowDict = (IDictionary<string, object>)record;
-                        var diamond = await ParseCSVDiamondRowAsync(rowDict);
-                        diamondsDTList.Add(diamond);
-                    }
-                }
+        //            foreach (var record in records.Skip(rowIndex - 1))
+        //            {
+        //                var rowDict = (IDictionary<string, object>)record;
+        //                var diamond = await ParseCSVDiamondRowAsync(rowDict);
+        //                diamondsDTList.Add(diamond);
+        //            }
+        //        }
 
-                string jsonData = JsonConvert.SerializeObject(diamondsDTList);
-                var result = await _diamondRepository.BulkInsertDiamondsAsync(jsonData, dId);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
+        //        string jsonData = JsonConvert.SerializeObject(diamondsDTList);
+        //        var result = await _diamondRepository.BulkInsertDiamondsAsync(jsonData, dId);
+        //        return Ok(result);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"Internal server error: {ex.Message}");
+        //    }
+        //}
 
         private async Task<Diamond> ParseExcelDiamondRowAsync(ExcelWorksheet worksheet, int row)
         {
