@@ -94,7 +94,8 @@
                                 </div>*@
                                 <div class="d-flex">
                                     <div class="action_link">
-                                        <a class="btn btn-cart2" href="#">Add to cart</a>
+                                        @* <a class="btn btn-cart2" href="#">Add to cart</a> *@
+                                        <button class="btn btn-cart2" id="btnAdd2Cart" data-diamondId="@Model.Id">Add to cart</button>
                                     </div>
                                     <div class="useful-links mb-0" style="margin-left:10px;">
                                         <a href="#" id="AddToWishList" data-diamondId="@Model.Id">
@@ -397,6 +398,30 @@
             updateWishlistUI();
         });
 
+         $(document).on("click", "#btnAdd2Cart", function (e) {
+             debugger;
+            e.preventDefault();
+
+            let diamondId = $(this).data("diamondid");
+            let diamondcartlist = JSON.parse(localStorage.getItem("diamondCartlist")) || [];
+
+            if (diamondcartlist.includes(diamondId)) {
+                 diamondcartlist = diamondcartlist.filter(id => id !== diamondId);
+                 localStorage.setItem("diamondCartlist", JSON.stringify(diamondcartlist));
+                 
+                 alert("Product has been removed from your cartlist.");
+            } 
+            else 
+            {
+                 diamondcartlist.push(diamondId);
+                 localStorage.setItem("diamondCartlist", JSON.stringify(diamondcartlist));
+
+                 alert("Product has been added to your cartlist.");
+            }
+            getcartlistCounter();
+            updatecartlistUI();
+        });
+
 
          function getWishlistCounter() {
                 let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
@@ -418,6 +443,17 @@
                     $(".heart-checked").hide();
                 }
             });
+
+            
+        }
+
+        function getcartlistCounter() {
+                let cardlist = JSON.parse(localStorage.getItem("diamondCartlist")) || [];
+                $("#addtoCardCounter").text(cardlist.length);
+         }
+        
+         function updatecartlistUI() {
+            let cardlist = JSON.parse(localStorage.getItem("diamondCartlist")) || [];
         }
 
     </script>

@@ -22,7 +22,7 @@ namespace ControlPanel.Controllers
         private readonly IOTPService _otpService;
 
         public AccountController(SignInManager<ApplicationUser> signInManager,
-            UserManager<ApplicationUser> userManager, 
+            UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
             IAccountRepository accountRepository,
             IOTPService oTPService)
@@ -37,7 +37,7 @@ namespace ControlPanel.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            var loginDt=new AdminLoginModel();
+            var loginDt = new AdminLoginModel();
             return View(loginDt);
         }
 
@@ -45,8 +45,10 @@ namespace ControlPanel.Controllers
         public async Task<IActionResult> Login(AdminLoginModel model)
         {
             if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Invalid username or password");
                 return View(model);
-
+            }
             var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, false, false);
 
             if (result.Succeeded)
@@ -84,14 +86,14 @@ namespace ControlPanel.Controllers
             }
 
             ModelState.AddModelError("", "Invalid login attempt.");
-            return RedirectToAction("Index");
+            return View(model);
         }
 
 
         [HttpGet]
         public IActionResult VerifyOtp()
         {
-            var dt=new VerifyOtpModel();
+            var dt = new VerifyOtpModel();
             return View(dt);
         }
 

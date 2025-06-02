@@ -1,0 +1,141 @@
+﻿@model IEnumerable<Models.ProductDTO>
+@using Common
+@using DataAccess.Entities
+@{
+    string defaultImage = string.Empty;
+    var secImg = string.Empty;
+    var priImg = string.Empty;
+    var vdoUrl = string.Empty;
+    <link rel="stylesheet" href="~/css/bootstrap-select.css">
+
+    List<ProductStyles> productStyles=new List<ProductStyles>();
+    productStyles = @ViewBag.StyleList;
+}
+
+
+<div class="modal-content">
+    <div class="modal-header">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="rings-tab" data-bs-toggle="tab" href="#ringList" role="tab" aria-controls="ringList" aria-selected="true">Rings <span class="badge badge-light bg-dark ml-2 ringcount">@Model.Where(x => x.CategoryName == @SD.Rings && x.UploadStatus == SD.Activated).GroupBy(x => x.VenderStyle).Count()</span></a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="bands-tab" data-bs-toggle="tab" href="#bandList" role="tab" aria-controls="bandList" aria-selected="false">Bands <span class="badge badge-light bg-dark ml-2 ringcount">@Model.Where(x => x.CategoryName == @SD.Bands && x.UploadStatus == SD.Activated).GroupBy(x => x.VenderStyle).Count()</span></a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="earrings-tab" data-bs-toggle="tab" href="#earringList" role="tab" aria-controls="earringList" aria-selected="false">Earrings <span class="badge badge-light bg-dark ml-2 ringcount">@Model.Where(x => x.CategoryName == @SD.Earrings && x.UploadStatus == SD.Activated).GroupBy(x => x.VenderStyle).Count()</span></a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="pendant-tab" data-bs-toggle="tab" tabindex="-1" href="#pendantList" role="tab" aria-controls="pandantList" aria-disabled="false">Pendant <span class="badge badge-light bg-dark ml-2 ringcount"> @Model.Where(x => x.CategoryName == @SD.Pendants && x.UploadStatus == SD.Activated).GroupBy(x => x.VenderStyle).Count()</span></a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="bracelets-tab" data-bs-toggle="tab" tabindex="-1" href="#braceletsList" role="tab" aria-controls="braceletList" aria-disabled="false">Bracelet <span class="badge badge-light bg-dark ml-2 ringcount"> @Model.Where(x => x.CategoryName == @SD.Bracelets && x.UploadStatus == SD.Activated).GroupBy(x => x.VenderStyle).Count()</span></a>
+            </li>
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="ringList" role="tabpanel" aria-labelledby="rings-tab">
+                <div class="container py-4">
+                    @if (Model?.Any(x => x.CategoryName == SD.Rings) == true)
+                    {
+                        var ringProducts = Model.Where(x => x.CategoryName == SD.Rings);
+
+                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+                            @foreach (var item in ringProducts)
+                            {
+                                var validImages = item.ProductImageVideos
+                                .Where(x => !string.IsNullOrEmpty(x.ImageUrl) && x.ImageUrl != "-")
+                                .ToList();
+
+                                priImg = validImages.FirstOrDefault()?.ImageUrl;
+                                secImg = validImages.Count > 1 ? validImages.LastOrDefault()?.ImageUrl : priImg;
+
+                                <div class="col">
+                                    <div class="card h-100 shadow-sm border-0 position-relative hover-shadow">
+                                        <!-- Checkbox in corner -->
+                                        <div class="form-check position-absolute top-0 start-0 m-2 z-1">
+                                            <input class="form-check-input chkId" type="checkbox" value="@item.Id" id="ringCheckbox_@item.Id">
+                                        </div>
+
+                                        <!-- Product Image -->
+                                        <a href="@Url.Action("ProductDetails", "Products", new { id = item.Id })">
+                                            <img src="@($"{SD.ImgUrl}/{priImg}")" class="card-img-top img-fluid rounded-top" alt="@item.Title" style="height: 150px; object-fit: cover;">
+                                        </a>
+
+                                        <!-- Card Body -->
+                                        <div class="card-body bg-light-subtle">
+                                            <h6 class="card-title text-truncate mb-1">
+                                                <a href="@Url.Action("ProductDetails", "Products", new { id = item.Id })" class="text-dark text-decoration-none">@item.Title</a>
+                                            </h6>
+                                            <p class="card-text text-primary fw-semibold mb-2">$@item.Price USD</p>
+
+                                            <!-- Carat Sizes -->
+                                            <div class="mb-2">
+                                                <span>
+                                                    Carat:
+                                                    @foreach (var carat in item.CaratSizes)
+                                                    {
+
+                                                        <a href="javascript:void(0)" class="badge text-dark @(carat.Name == item.CenterCaratName ? "fw-bold border-primary" : "")"
+                                                           caratId="@carat.Id" productId="@item.Sku">@carat.Name</a>
+                                                    }
+                                                </span>
+                                            </div>
+
+                                            <!-- Shapes -->
+                                            <div>
+                                                <strong>
+                                                    Shape:@foreach (var shape in item.Shapes)
+                                                    {
+                                                        <img src="@($"{SD.ShapeImgUrl}{shape.IconPath}")" alt="@shape.Name" width="24" height="24" title="@shape.Name" />
+                                                    }
+                                                </strong>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center mt-4">
+                            <p class="text-muted">No rings found.</p>
+                        </div>
+                    }
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-6">
+                    <select class="form-control"
+                            id="styleList">
+                        @foreach (var item in productStyles)
+                        {
+                            <option value="@item.Id">@item.StyleName</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-6">
+                    <button class="btn btn-theme" id="btnAddInProgram">Add In Programs</button>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+

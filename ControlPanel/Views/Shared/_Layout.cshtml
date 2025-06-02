@@ -631,6 +631,7 @@
 
     <main id="main" class="main">
         @await Html.PartialAsync("_Notification")
+        @Html.Partial("_Loading")
 
         @RenderBody()
     </main>
@@ -652,6 +653,24 @@
     <script src="https://cdn.tiny.cloud/1/3l8g87ya8w9troc7u7hi2060g8v9wlu46xivtaz7yaurnsg5/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script>
+        function showLoader() {
+            document.getElementById('loader-wrapper').style.display = 'block';
+        }
+
+        function hideLoader() {
+            document.getElementById('loader-wrapper').style.display = 'none';
+        }
+
+        $(window).on('beforeunload',function(){
+            showLoader();
+        });
+
+        $(document).on('submit', 'form', function () {
+            showLoader();
+        });
+        
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 
 </body>
