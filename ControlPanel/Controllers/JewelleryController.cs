@@ -12,6 +12,8 @@ using Newtonsoft.Json;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
+using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -780,14 +782,11 @@ namespace ControlPanel.Controllers
                                 await section.Body.CopyToAsync(targetStream);
                             }
 
-                            List<DataAccess.Entities.Product> prdDesignDT = new();
-                            var prdDT = new ProductImages();
-
                             using (ZipArchive archive = ZipFile.OpenRead(zipPath))
                             {
                                 foreach (ZipArchiveEntry entry in archive.Entries)
                                 {
-                                    if (entry.FullName.EndsWith("/") || string.IsNullOrEmpty(entry.Name)) continue; // skip folders
+                                    if (entry.FullName.EndsWith("/") || string.IsNullOrEmpty(entry.Name)) continue;
 
                                     if (entry.Name.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
                                         entry.Name.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
@@ -800,46 +799,76 @@ namespace ControlPanel.Controllers
                                         var metalId = await _productRepository.GetMetalId(styleName.ColorName);
                                         if (metalId == 0) continue;
 
-                                        prdDesignDT = await _productRepository.GetProductDataByDesignNo(styleName.DesignNo, metalId);
+                                        var prdDesignDT = await _productRepository.GetProductDataByDesignNo(styleName.DesignNo, metalId);
                                         if (prdDesignDT.Count == 0) continue;
+
+                                        string folderPath = Path.Combine(extractedFolder, styleName.DesignNo);
+                                        Directory.CreateDirectory(folderPath);
+
+                                        string destinationPath = Path.Combine(folderPath, entry.Name);
+                                        entry.ExtractToFile(destinationPath, overwrite: true);
+
+                                        string relativePath = Path.Combine("UploadedFiles", "Collections", styleName.DesignNo, entry.Name).Replace("\\", "/");
 
                                         foreach (var pro in prdDesignDT)
                                         {
-                                            prdDT = new ProductImages
+                                            var prdDT = new ProductImages
                                             {
                                                 ProductId = pro.Id.ToString(),
                                                 MetalId = metalId,
                                                 Sku = styleName.DesignNo,
-                                                ShapeId = pro.ShapeId
+                                                ShapeId = pro.ShapeId,
+                                                ImageIndexNumber = styleName.Index,
+                                                IsDefault = (styleName.Index == 1)
                                             };
-
-                                            string folderPath = Path.Combine(extractedFolder, styleName.DesignNo);
-                                            Directory.CreateDirectory(folderPath);
-
-                                            string destinationPath = Path.Combine(folderPath, entry.Name);
-                                            entry.ExtractToFile(destinationPath, overwrite: true);
-
-                                            string relativePath = Path.Combine("UploadedFiles", "Collections", styleName.DesignNo, entry.Name)
-                                                                    .Replace("\\", "/");
-
-                                            int pId = await _productRepository.SaveImageVideoPath(relativePath);
 
                                             if (entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
                                             {
-                                                prdDT.VideoId = pId;
+                                                prdDT.VideoId = await _productRepository.SaveImageVideoPath(relativePath);
                                             }
                                             else
                                             {
-                                                if (styleName.Index == 1)
+                                                // Save original (Lg)
+                                                int lgId = await _productRepository.SaveImageVideoPath(relativePath);
+                                                prdDT.ImageLgId = lgId;
+
+                                                using (var stream = entry.Open())
+                                                using (var ms = new MemoryStream())
                                                 {
-                                                    prdDT.ImageLgId = pId;
-                                                    prdDT.IsDefault = true;
+                                                    await stream.CopyToAsync(ms);
+                                                    ms.Position = 0;
+
+                                                    using var originalImage = Image.FromStream(ms);
+
+                                                    var sizes = new Dictionary<string, Size>
+                                                    {
+                                                        { "Md", new Size(500, 500) },
+                                                        { "Sm", new Size(200, 200) }
+                                                    };
+
+                                                    foreach (var size in sizes)
+                                                    {
+                                                        string resizedName = $"{Path.GetFileNameWithoutExtension(entry.Name)}_{size.Key}{Path.GetExtension(entry.Name)}";
+                                                        string resizedPath = Path.Combine(folderPath, resizedName);
+
+                                                        ResizeAndSaveImage(originalImage, resizedPath, size.Value);
+
+                                                        string resizedRelativePath = Path.Combine("UploadedFiles", "Collections", styleName.DesignNo, resizedName)
+                                                                                        .Replace("\\", "/");
+
+                                                        int resizedId = await _productRepository.SaveImageVideoPath(resizedRelativePath);
+
+                                                        switch (size.Key)
+                                                        {
+                                                            case "Md":
+                                                                prdDT.ImageMdId = resizedId;
+                                                                break;
+                                                            case "Sm":
+                                                                prdDT.ImageSmId = resizedId;
+                                                                break;
+                                                        }
+                                                    }
                                                 }
-                                                else
-                                                {
-                                                    prdDT.ImageLgId = pId;
-                                                }
-                                                prdDT.ImageIndexNumber = styleName.Index;
                                             }
 
                                             await _productRepository.SaveImageVideoAsync(prdDT);
@@ -848,16 +877,15 @@ namespace ControlPanel.Controllers
                                 }
                             }
 
-                            System.IO.File.Delete(zipPath); // Clean up zip
-                            return RedirectToAction("ThankYouForUploaded");
+                            System.IO.File.Delete(zipPath); // Clean up
                         }
                     }
 
                     section = await reader.ReadNextSectionAsync();
                 }
 
-                //return Json("No valid section found in upload.");
-                return RedirectToAction("Index");
+                return RedirectToAction("ThankYouForUploaded");
+
             }
             catch (Exception ex)
             {
@@ -865,10 +893,11 @@ namespace ControlPanel.Controllers
             }
         }
 
+
         [HttpPost]
         [RequestFormLimits(MultipartBodyLengthLimit = 5368709120)]
         [RequestSizeLimit(5368709120)]
-        public async Task<IActionResult> UploadProductImagesFromFolder(List<IFormFile> folderUpload)
+        public async Task<IActionResult> UploadProductImagesFromFolder([FromForm] List<IFormFile> folderUpload)
         {
             try
             {
@@ -879,7 +908,7 @@ namespace ControlPanel.Controllers
                 {
                     var fileName = Path.GetFileName(file.FileName);
                     var styleName = _productRepository.ExtractStyleName(fileName);
-                    if (styleName == null) continue;
+                    if (styleName.ColorName == null && styleName.DesignNo == null) continue;
 
                     var metalId = await _productRepository.GetMetalId(styleName.ColorName);
                     if (metalId == 0) continue;
@@ -897,38 +926,107 @@ namespace ControlPanel.Controllers
                             ShapeId = pro.ShapeId
                         };
 
-                        string destFolder = Path.Combine(_env.WebRootPath, "UploadedFiles", "Collections", styleName.DesignNo);
-                        Directory.CreateDirectory(destFolder);
-
-                        string destPath = Path.Combine(destFolder, fileName);
-                        using var stream = new FileStream(destPath, FileMode.Create);
-                        await file.CopyToAsync(stream);
-
-                        string relativePath = Path.Combine("UploadedFiles", "Collections", styleName.DesignNo, fileName).Replace("\\", "/");
-                        int pId = await _productRepository.SaveImageVideoPath(relativePath);
+                        string baseFolder = Path.Combine(_env.WebRootPath, "UploadedFiles", "Collections", styleName.DesignNo);
+                        Directory.CreateDirectory(baseFolder);
 
                         if (fileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
                         {
-                            prdDT.VideoId = pId;
+                            string destPath = Path.Combine(baseFolder, fileName);
+                            using var stream = new FileStream(destPath, FileMode.Create);
+                            await file.CopyToAsync(stream);
+
+                            string relativePath = Path.Combine("UploadedFiles", "Collections", styleName.DesignNo, fileName).Replace("\\", "/");
+                            prdDT.VideoId = await _productRepository.SaveImageVideoPath(relativePath);
                         }
                         else
                         {
-                            prdDT.ImageLgId = pId;
-                            prdDT.IsDefault = styleName.Index == 1;
-                            prdDT.ImageIndexNumber = styleName.Index;
+                            using var ms = new MemoryStream();
+                            await file.CopyToAsync(ms);
+                            ms.Position = 0;
+
+                            // Save original (Lg) from memory stream
+                            string lgFileName = $"{Path.GetFileNameWithoutExtension(fileName)}_Lg{Path.GetExtension(fileName)}";
+                            string lgPath = Path.Combine(baseFolder, lgFileName);
+                            await using (var fs = new FileStream(lgPath, FileMode.Create))
+                            {
+                                ms.Position = 0; // Reset position before writing
+                                await ms.CopyToAsync(fs);
+                            }
+
+                            string lgRelativePath = Path.Combine("UploadedFiles", "Collections", styleName.DesignNo, lgFileName).Replace("\\", "/");
+                            prdDT.ImageLgId = await _productRepository.SaveImageVideoPath(lgRelativePath);
+
+                            // Now reuse for resizing
+                            ms.Position = 0;
+                            using var originalImage = Image.FromStream(ms);
+
+                            var sizes = new Dictionary<string, Size>
+                            {
+                                { "Md", new Size(500, 500) },
+                                { "Sm", new Size(200, 200) }
+                            };
+
+                            foreach (var size in sizes)
+                            {
+                                string resizedFileName = $"{Path.GetFileNameWithoutExtension(fileName)}_{size.Key}{Path.GetExtension(fileName)}";
+                                string resizedPath = Path.Combine(baseFolder, resizedFileName);
+                                ResizeAndSaveImage(originalImage, resizedPath, size.Value);
+
+                                string relativePath = Path.Combine("UploadedFiles", "Collections", styleName.DesignNo, resizedFileName).Replace("\\", "/");
+                                int fileId = await _productRepository.SaveImageVideoPath(relativePath);
+
+                                switch (size.Key)
+                                {
+                                    case "Md":
+                                        prdDT.ImageMdId = fileId;
+                                        break;
+                                    case "Sm":
+                                        prdDT.ImageSmId = fileId;
+                                        break;
+                                }
+                            }
+
+
                         }
 
                         await _productRepository.SaveImageVideoAsync(prdDT);
                     }
                 }
 
-                return Json("Files processed and uploaded successfully.");
+                return RedirectToAction("ThankYouForUploaded");
             }
             catch (Exception ex)
             {
+
                 return Json(500, $"An error occurred: {ex.Message}");
             }
         }
+
+        private void ResizeAndSaveImage(Image originalImage, string outputPath, Size targetSize)
+        {
+            int width, height;
+            float ratio = Math.Min((float)targetSize.Width / originalImage.Width, (float)targetSize.Height / originalImage.Height);
+            width = (int)(originalImage.Width * ratio);
+            height = (int)(originalImage.Height * ratio);
+
+            using var resized = new Bitmap(targetSize.Width, targetSize.Height);
+            using (var g = Graphics.FromImage(resized))
+            {
+                g.Clear(Color.White); // Optional: background color
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+
+                // Draw image centered
+                int x = (targetSize.Width - width) / 2;
+                int y = (targetSize.Height - height) / 2;
+                g.DrawImage(originalImage, x, y, width, height);
+            }
+
+            resized.Save(outputPath, ImageFormat.Jpeg);
+        }
+
+
 
         [HttpGet]
         public IActionResult ThankYouForUploaded()

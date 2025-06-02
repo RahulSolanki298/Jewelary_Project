@@ -567,13 +567,15 @@
                                                 </div>
 
                                                 <div class="mb-3" id="divFolderDT" style="display: none;">
-                                                    <form id="uploadForm" asp-controller="Jewellery" asp-action="UploadProductImagesFromFolder" method="post" enctype="multipart/form-data">
+                                                    <form id="uploadForm2" asp-controller="Jewellery" asp-action="UploadProductImagesFromFolder" method="post" enctype="multipart/form-data">
                                                         <label for="folderUpload" class="form-label">Select Folder</label>
                                                         <input type="file" class="form-control form-control-lg" id="folderUpload" webkitdirectory directory multiple>
-                                                        <div class="form-text">Select Folder Path</div>
+                                                        @* <div class="form-text">Select Folder Path</div> *@
 
                                                         <div class="row justify-content-center">
-                                                            
+                                                            <div id="loader" style="display:none;">
+                                                                <span class="spinner-border text-primary" role="status"></span> Uploading...
+                                                            </div>
                                                             <div class="col-auto">
                                                                 <button class="btn btn-theme w-100" type="submit" id="btnFolderImgSave">Upload Folder</button>
                                                             </div>

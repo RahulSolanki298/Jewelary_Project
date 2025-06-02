@@ -37,7 +37,6 @@
         $(document).ready(function () {
 
             $('#uploadForm').on('submit', function (e) {
-                debugger;
                 e.preventDefault();
 
                 let form = $(this)[0];
@@ -391,7 +390,6 @@
                 });
             });
 
-
             $('#ImportProductList').on('change', "#chkFile", function () {
                 $('#divZipDT').toggle(this.checked);
                 if (this.checked) {
@@ -413,7 +411,6 @@
                 $('#chkFile, #chkFolder').prop('checked', false);
                 $('#divZipDT, #divFolderDT').hide();
             });
-
 
             $('#ImportProductList').on("click", "#btnFileImgSave", function (e) {
                     e.preventDefault();
@@ -481,12 +478,10 @@
                     });
                 });
 
-
-
-           $('#ImportProductList').on("click", "#btnFolderImgSave", function (e) {
+            $('#ImportProductList').on("click", "#btnFolderImgSave", function (e) {
                 e.preventDefault();
-
-                var files = $('#folderInput')[0].files;
+                showLoader();
+                var files = $('#folderUpload')[0].files;
                 if (files.length === 0) {
                     alert("Please select a folder.");
                     return;
@@ -497,7 +492,8 @@
 
                 var formData = new FormData();
                 for (var i = 0; i < files.length; i++) {
-                    formData.append("files", files[i]);
+                    formData.append("folderUpload", files[i]);
+
                 }
 
                 $.ajax({
@@ -508,19 +504,18 @@
                     contentType: false,
                     success: function (response) {
                         $("#response").html("Upload successful: " + response);
+                        hideLoader();
                     },
                     error: function (xhr) {
                         $("#response").html("Upload failed: " + xhr.responseText);
+                        hideLoader();
                     },
                     complete: function () {
+                        hideLoader();
                         $button.prop('disabled', false); // re-enable the button after request finishes
                     }
                 });
             });
-
-
-
-
 
             $("#ImportProductList").on("click", "#btnEditRings", function () {
                 var isReadonly = $("#ringTable .product-input").first().prop("disabled");
@@ -538,7 +533,6 @@
                 }
             });
 
-
             $("#ImportProductList").on("click", "#btnEditBands", function () {
                 var isReadonly = $("#bandTable .product-input").first().prop("disabled");
 
@@ -554,7 +548,6 @@
                     $(this).text("Edit Bands");
                 }
             });
-
 
             $("#ImportProductList").on("click", "#btnEditEarring", function () {
                 var isReadonly = $("#EarringTable .product-input").first().prop("disabled");
@@ -572,7 +565,6 @@
                 }
             });
 
-
             $("#ImportProductList").on("click", "#btnEditPendant", function () {
                 var isReadonly = $("#PendantTable .product-input").first().prop("disabled");
 
@@ -588,7 +580,6 @@
                     $(this).text("Edit Pendant");
                 }
             });
-
 
             $("#ImportProductList").on("click", "#btnEditBracelets", function () {
                 var isReadonly = $("#BraceletsTable .product-input").first().prop("disabled");
@@ -606,8 +597,7 @@
                 }
             });
 
-
-        $('#ImportProductList').on('submit','#uploadForm', function (e) {
+            $('#ImportProductList').on('submit','#uploadForm', function (e) {
             e.preventDefault();
 
             var formData = new FormData(this);
@@ -650,8 +640,35 @@
             });
         });
 
+            $('#ImportProductList').on('submit',"#uploadForm2" ,function (e) {
+            e.preventDefault();
 
+            var formData = new FormData();
+            var files = $('#folderUpload')[0].files;
 
+            if (files.length === 0) {
+                $('#status').text("Please select a folder with files.");
+                return;
+            }
+
+            for (var i = 0; i < files.length; i++) {
+                formData.append('folderUpload', files[i]);
+            }
+
+            $.ajax({
+                url: '@Url.Action("UploadProductImagesFromFolder", "Jewellery")', // Replace with your actual controller route
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    $('#status').html(`<span style="color:green;">${response}</span>`);
+                },
+                error: function (xhr) {
+                    $('#status').html(`<span style="color:red;">Error: ${xhr.responseText}</span>`);
+                }
+            });
+        });
 
         });
 

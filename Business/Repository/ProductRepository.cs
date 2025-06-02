@@ -662,7 +662,7 @@ namespace Business.Repository
 
                 foreach (var image in productImages)
                 {
-                    var imageUrl = _context.FileManager.FirstOrDefault(x => x.Id == image.ImageLgId)?.FileUrl ?? "-";
+                    var imageUrl = _context.FileManager.FirstOrDefault(x => x.Id == image.ImageMdId)?.FileUrl ?? "-";
                     var videoUrl = _context.FileManager.FirstOrDefault(x => x.Id == image.VideoId)?.FileUrl ?? "-";
 
                     var imageVideo = new ProductImageAndVideoDTO
@@ -865,6 +865,8 @@ namespace Business.Repository
                 var imgDT = new ProductImages();
                 imgDT.ProductId = ImgVdoData.ProductId;
                 imgDT.ImageLgId = ImgVdoData.ImageLgId ?? null;
+                imgDT.ImageSmId = ImgVdoData.ImageSmId ?? null;
+                imgDT.ImageMdId = ImgVdoData.ImageMdId ?? null;
                 imgDT.VideoId = ImgVdoData.VideoId ?? null;
                 imgDT.MetalId = ImgVdoData.MetalId;
                 imgDT.Sku = ImgVdoData.Sku;
@@ -1169,6 +1171,7 @@ namespace Business.Repository
 
             if (parts.Length < 3)
             {
+                return new FileSplitDTO();
                 throw new ArgumentException("Filename format is invalid. Expected format: DESIGNNO-COLORCODE");
             }
 
@@ -1333,9 +1336,9 @@ namespace Business.Repository
                 string imageUrl = "-";
                 string videoUrl = "-";
 
-                if (image.ImageLgId.HasValue)
+                if (image.ImageMdId.HasValue)
                 {
-                    imageUrl = _context.FileManager.FirstOrDefault(x => x.Id == image.ImageLgId.Value)?.FileUrl ?? "-";
+                    imageUrl = _context.FileManager.FirstOrDefault(x => x.Id == image.ImageMdId.Value)?.FileUrl ?? "-";
                 }
                 else if (image.VideoId.HasValue)
                 {
@@ -1500,7 +1503,7 @@ namespace Business.Repository
 
             foreach (var image in productImages)
             {
-                var imageUrl = _context.FileManager.FirstOrDefault(x => x.Id == image.ImageLgId)?.FileUrl ?? "-";
+                var imageUrl = _context.FileManager.FirstOrDefault(x => x.Id == image.ImageMdId)?.FileUrl ?? "-";
                 var videoUrl = _context.FileManager.FirstOrDefault(x => x.Id == image.VideoId)?.FileUrl ?? "-";
 
                 var imageVideo = new ProductImageAndVideoDTO
@@ -1840,7 +1843,7 @@ namespace Business.Repository
 
                 foreach (var image in productImages)
                 {
-                    var imageUrl = _context.FileManager.FirstOrDefault(x => x.Id == image.ImageLgId)?.FileUrl ?? "-";
+                    var imageUrl = _context.FileManager.FirstOrDefault(x => x.Id == image.ImageMdId)?.FileUrl ?? "-";
                     var videoUrl = _context.FileManager.FirstOrDefault(x => x.Id == image.VideoId)?.FileUrl ?? "-";
 
                     var imageVideo = new ProductImageAndVideoDTO
