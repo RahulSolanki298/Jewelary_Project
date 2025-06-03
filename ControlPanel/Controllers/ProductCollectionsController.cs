@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace ControlPanel.Controllers
 {
@@ -8,9 +9,19 @@ namespace ControlPanel.Controllers
         {
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> Index()
+        //{
+        //    var result = await _productStyles.GetProductStyles();
+        //    return View(result);
+        //}
+
+        //GetProductStyleItemsList
+        //[HttpGet]
+        //public async Task<IActionResult> GetProductStyleItems()
+        //{
+        //    var result = await _productStyles.GetProductStyleItemsList();
+        //    return PartialView("_ProductStyleItemList", result);
+        //}
     }
 }

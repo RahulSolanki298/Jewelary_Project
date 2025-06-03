@@ -25,6 +25,8 @@ namespace Business.Repository.IRepository
 
         Task<bool> BulkInsertDiamondHistoryAsync(List<Diamond> data);
 
-        Task<DiamondHistory> GetDiamondByStoneId(string stoneId);
+        Task<Diamond> GetDiamondByStoneId(string stoneId);
+
+        Task<IEnumerable<DiamondData>> GetPendingDiamondList();
     }
 }

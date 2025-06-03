@@ -291,7 +291,6 @@ namespace Business.Repository
             }
         }
 
-
         public async Task<bool> AddOrUpdateBulkProductStyle(BulkUpdateStatusRequest data)
         {
             try

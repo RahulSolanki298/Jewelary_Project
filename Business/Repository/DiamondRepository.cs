@@ -82,11 +82,11 @@ namespace Business.Repository
             }
         }
 
-        public async Task<DiamondHistory> GetDiamondByStoneId(string stoneId)
+        public async Task<Diamond> GetDiamondByStoneId(string stoneId)
         {
             try
             {
-                var diamonds = await _context.DiamondHistory.Where(x => x.StoneId == stoneId).FirstOrDefaultAsync();
+                var diamonds = await _context.Diamonds.Where(x => x.StoneId == stoneId).FirstOrDefaultAsync();
 
                 return diamonds;
             }
@@ -258,6 +258,23 @@ namespace Business.Repository
             catch (Exception)
             {
                 return 0;
+            }
+        }
+
+
+        public async Task<IEnumerable<DiamondData>> GetPendingDiamondList()
+        {
+            try
+            {
+                var diamonds = await _context.DiamondData
+                    .FromSqlRaw("EXEC SP_PendingDiamonds")
+                    .ToListAsync();
+
+                return diamonds;
+            }
+            catch (Exception ex)
+            {
+                throw;
             }
         }
     }

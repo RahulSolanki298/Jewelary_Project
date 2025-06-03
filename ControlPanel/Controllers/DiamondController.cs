@@ -98,8 +98,8 @@ namespace ControlPanel.Controllers
 
                 // Step 3: Parse data
                 var diamondsList = extension == ".xlsx"
-                    ? await ParseExcelDiamondsAsync(memoryStream)
-                    : await ParseCsvDiamondsAsync(memoryStream);
+                    ? await ParseExcelDiamondsAsync(memoryStream, userId)
+                    : await ParseCsvDiamondsAsync(memoryStream, userId);
 
                 if (diamondsList == null || diamondsList.Count == 0)
                 {
@@ -128,18 +128,18 @@ namespace ControlPanel.Controllers
             }
         }
 
-        private async Task<List<DiamondHistory>> ParseCsvDiamondsAsync(Stream stream)
+        private async Task<List<Diamond>> ParseCsvDiamondsAsync(Stream stream, string userId)
         {
             using var reader = new StreamReader(stream);
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
             var records = csv.GetRecords<dynamic>().ToList();
 
-            var diamonds = new List<DiamondHistory>();
+            var diamonds = new List<Diamond>();
 
             foreach (var record in records.Skip(5)) // Skip header rows (assumed 1–5)
             {
                 var rowDict = (IDictionary<string, object>)record;
-                var diamond = await ParseCSVDiamondRowAsync(rowDict);
+                var diamond = await ParseCSVDiamondRowAsync(rowDict, userId);
                 if (diamond != null)
                     diamonds.Add(diamond);
             }
@@ -147,7 +147,7 @@ namespace ControlPanel.Controllers
             return diamonds;
         }
 
-        private async Task<List<DiamondHistory>> ParseExcelDiamondsAsync(Stream stream)
+        private async Task<List<Diamond>> ParseExcelDiamondsAsync(Stream stream, string userId)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
@@ -155,14 +155,14 @@ namespace ControlPanel.Controllers
             var worksheet = package.Workbook.Worksheets.FirstOrDefault();
 
             if (worksheet == null || worksheet.Dimension == null)
-                return new List<DiamondHistory>();
+                return new List<Diamond>();
 
             int rowCount = worksheet.Dimension.Rows;
-            var diamonds = new List<DiamondHistory>();
+            var diamonds = new List<Diamond>();
 
             for (int row = 6; row <= rowCount; row++) // Start from row 6
             {
-                var diamond = await ParseExcelDiamondRowAsync(worksheet, row);
+                var diamond = await ParseExcelDiamondRowAsync(worksheet, row, userId);
                 if (diamond != null)
                     diamonds.Add(diamond);
             }
@@ -289,7 +289,7 @@ namespace ControlPanel.Controllers
             return RedirectToAction("DiamondProperty");
         }
 
-        private async Task<DiamondHistory> ParseExcelDiamondRowAsync(ExcelWorksheet worksheet, int row)
+        private async Task<Diamond> ParseExcelDiamondRowAsync(ExcelWorksheet worksheet, int row, string userId)
         {
             var Video_NewVal = GetExcelHyperlink(worksheet.Cells[row, 26]);
             var DNA_NewVal = GetExcelHyperlink(worksheet.Cells[row, 3]);
@@ -315,7 +315,7 @@ namespace ControlPanel.Controllers
                 return IsExist;
             }
 
-            return new DiamondHistory
+            return new Diamond
             {
                 StoneId = stoneId,
                 DNA = DNA_NewVal,
@@ -346,13 +346,14 @@ namespace ControlPanel.Controllers
                 Certificate = Certi_NewVal,
                 IsActivated = false,
                 UploadStatus = SD.Pending,
-                UpdatedDate = DateTime.Now
-
+                UpdatedDate = DateTime.Now,
+                UpdatedBy = userId,
+                CreatedBy = userId
             };
         }
 
 
-        private async Task<DiamondHistory> ParseCSVDiamondRowAsync(IDictionary<string, object> row)
+        private async Task<Diamond> ParseCSVDiamondRowAsync(IDictionary<string, object> row, string userId)
         {
             string GetVal(string key) => row.ContainsKey(key) ? row[key]?.ToString() : null;
 
@@ -366,7 +367,7 @@ namespace ControlPanel.Controllers
             int symmId = await _diamondPPTY.GetDiamondPropertyId(GetVal("Symmetry"), SD.Symmetry);
             int fluorId = await _diamondPPTY.GetDiamondPropertyId(GetVal("Fluorescence"), SD.Fluor);
 
-            return new DiamondHistory
+            return new Diamond
             {
                 StoneId = GetVal("StoneId"),
                 DNA = GetVal("DNA"),
@@ -396,9 +397,11 @@ namespace ControlPanel.Controllers
                 DiamondVideoPath = GetVal("Video"),
                 Certificate = GetVal("Certificate"),
                 IsActivated = false,
+                CreatedDate = DateTime.Now,
                 UpdatedDate = DateTime.Now,
                 UploadStatus = SD.Pending,
-
+                UpdatedBy = userId,
+                CreatedBy = userId
             };
         }
 
@@ -467,6 +470,36 @@ namespace ControlPanel.Controllers
             });
 
 
+        }
+
+        public IActionResult DiamondVerification()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDiamondVerificationList()
+        {
+            bool status = false;
+            string strResult = "";
+            string strMessage = "Data Not Found";
+
+            var data = await _diamondRepository.GetPendingDiamondList();
+            if (data != null)
+            {
+                status = true;
+                strMessage = "";
+                strResult = JsonConvert.SerializeObject(data);
+            }
+            return Json(new
+            {
+                Data = new
+                {
+                    status = status,
+                    result = strResult,
+                    message = strMessage
+                }
+            });
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DataAccess.Entities;
+using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace Business.Repository.IRepository
     {
         Task<List<ProductCollections>> GetProductCollections();
         Task<ProductCollections> GetProductCollectionById(int id);
+        Task<IEnumerable<ProductDTO>> GetProductCollectionItemsList();
     }
 }
