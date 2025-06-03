@@ -1,14 +1,18 @@
 ﻿@model List<Models.ProductPropertyDTO>
+@{
+    int index = 1;
+}
 
-<table class="table" id="diamondPropertyItems">
-    <thead>
+<table class="table table-hover table-bordered mb-0" id="diamondPropertyItems">
+    <thead class="table-light text-center">
         <tr>
             <th scope="col">#</th>
             <th scope="col">Name</th>
             <th scope="col">Symbol</th>
-            <th scope="col">Activated</th>
-            <th scope="col">Icon Path</th>
-            <th scope="col">Index</th>
+            <th scope="col">Status</th>
+            <th scope="col">Synonyms</th>
+            <th scope="col">Icon.Path</th>
+            <th scope="col">Display.Order</th>
             <th scope="col">Action</th>
         </tr>
     </thead>
@@ -19,7 +23,7 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td scope="col"></td>
+                    <td scope="col">@(index++)</td>
                     <td scope="col">
                         @item.Name
                     </td>
@@ -27,13 +31,14 @@
                     <td scope="col">
                         @if (item.IsActive)
                         {
-                            <span class="badge bg-success">Yes</span>
+                            <span class="badge bg-success">Active</span>
                         }
                         else
                         {
-                            <span class="badge bg-secondary">No</span>
+                            <span class="badge bg-secondary">Draft</span>
                         }
                     </td>
+                    <td scope="col">@item.Synonyms</td>
                     <td scope="col">@item.IconPath</td>
                     <td scope="col">@item.DispOrder</td>
                     <td scope="col">

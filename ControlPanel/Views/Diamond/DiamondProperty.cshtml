@@ -1,21 +1,15 @@
 ﻿@model IEnumerable<Models.DiamondPropertyDTO>
 @{
-    ViewData["Title"] = "Diamond Property";
     Layout = "~/Views/Shared/_Layout.cshtml";
     int Index = 1;
 }
 
-@{
-    ViewBag.Title = "Diamond Properties";
-    var index = 1;
-}
-
 <div class="container-fluid mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="h4">Diamond Properties</h2>
+        <h2 class="h4"><b>Diamond Parameter Master</b></h2>
         <a class="btn btn-theme" href="@Url.Action("AddDiamondProperty", "Diamond")">
             <i class="bi bi-plus-circle me-1"></i>
-            Create Property
+            Add New
         </a>
     </div>
 
@@ -23,12 +17,12 @@
         <div class="col-lg-6 col-md-12 mb-4">
             <div class="card shadow-sm">
                 <div class="card-body p-0">
-                    <table class="table table-hover mb-0" id="diamondProperty">
+                    <table class="table table-hover table-bordered mb-0" id="diamondProperty">
                         <thead class="table-light text-center">
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Name</th>
-                                <th scope="col">Activated</th>
+                                <th scope="col">Status</th>
                                 <th scope="col">Action</th>
                             </tr>
                         </thead>
@@ -38,16 +32,16 @@
                                 foreach (var item in Model.Where(x => x.ParentId == null))
                                 {
                                     <tr class="clickable-row" data-propertyName="@item.Name">
-                                        <td>@(index++)</td>
+                                        <td>@(Index++)</td>
                                         <td>@item.Name</td>
                                         <td>
                                             @if (item.IsActivated)
                                             {
-                                                <span class="badge bg-success">Yes</span>
+                                                <span class="badge bg-success">Active</span>
                                             }
                                             else
                                             {
-                                                <span class="badge bg-secondary">No</span>
+                                                <span class="badge bg-secondary">Draft</span>
                                             }
                                         </td>
                                         <td>

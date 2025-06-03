@@ -133,7 +133,7 @@ namespace Business.Repository
                     .FromSqlRaw("EXEC InsertDiamondsFromJson @JsonData, @HistoryId", jsonParam, historyIdParam)
                     .ToListAsync();
 
-                return result;
+                return result.ToList();
             }
             catch (Exception ex)
             {

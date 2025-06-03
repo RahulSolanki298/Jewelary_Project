@@ -8,7 +8,7 @@
 <section class="section">
     <div class="row mb-2">
         <div class="col-lg-6">
-            <h4>Request List</h4>
+            <h4><b>Hold Product (Category Wise)</b></h4>
         </div>
         <div class="col-lg-6">
             <div class="btn-group dropup float-end">
@@ -39,17 +39,17 @@
                 <a class="nav-link" id="earrings-tab" data-bs-toggle="tab" href="#earringList" role="tab" aria-controls="earringList" aria-selected="false">Earrings</a>
             </li>
             <li class="nav-item" role="presentation">
-                <a class="nav-link" id="pendant-tab" data-bs-toggle="tab" tabindex="-1" href="#pendantList" role="tab" aria-controls="pandantList" aria-disabled="false">Pendant List</a>
+                <a class="nav-link" id="pendant-tab" data-bs-toggle="tab" tabindex="-1" href="#pendantList" role="tab" aria-controls="pandantList" aria-disabled="false">Pendant</a>
             </li>
             <li class="nav-item" role="presentation">
-                <a class="nav-link" id="bracelets-tab" data-bs-toggle="tab" tabindex="-1" href="#braceletsList" role="tab" aria-controls="braceletList" aria-disabled="false">Bracelet List</a>
+                <a class="nav-link" id="bracelets-tab" data-bs-toggle="tab" tabindex="-1" href="#braceletsList" role="tab" aria-controls="braceletList" aria-disabled="false">Bracelet</a>
             </li>
         </ul>
     </div>
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="ringList" role="tabpanel" aria-labelledby="rings-tab">
-            <table class="table RequestedListTable" id="ringTable">
-                <thead>
+            <table class="table table-hover table-bordered mb-0 RequestedListTable" id="ringTable">
+                <thead class="table-light">
                     <tr>
                         <th scope="col"><input type="checkbox" class="chkId" id="chkRingsIds" /></th>
                         <th scope="col">Image</th>
@@ -107,8 +107,8 @@
             </table>
         </div>
         <div class="tab-pane fade" id="bandList" role="tabpanel" aria-labelledby="bands-tab">
-            <table class="table RequestedListTable" id="bandTable">
-                <thead>
+            <table class="table table-hover table-bordered mb-0 RequestedListTable" id="bandTable">
+                <thead class="table-light ">
                     <tr>
                         <th scope="col"><input type="checkbox" class="chkId" id="chkBandIds" /></th>
                         <th scope="col">
@@ -168,8 +168,8 @@
             </table>
         </div>
         <div class="tab-pane fade" id="earringList" role="tabpanel" aria-labelledby="earrings-tab">
-            <table class="table RequestedListTable" id="EarringTable">
-                <thead>
+            <table class="table table-hover table-bordered mb-0 RequestedListTable" id="EarringTable">
+                <thead class="table-light ">
                     <tr>
                         <th scope="col"><input type="checkbox" class="chkId" id="chkEarringIds" /></th>
                         <th scope="col">
@@ -234,8 +234,8 @@
             </table>
         </div>
         <div class="tab-pane fade" id="pendantList" role="tabpanel" aria-labelledby="pandant-tab">
-            <table class="table RequestedListTable" id="PendantTable">
-                <thead>
+            <table class="table table-hover table-bordered mb-0 RequestedListTable" id="PendantTable">
+                <thead class="table-light ">
                     <tr>
                         <th scope="col"><input type="checkbox" class="chkId" id="chkPendantIds" /></th>
                         <th scope="col">
@@ -296,8 +296,8 @@
             </table>
         </div>
         <div class="tab-pane fade RequestedListTable" id="braceletsList" role="tabpanel" aria-labelledby="bracelets-tab">
-            <table class="table" id="BraceletsTable">
-                <thead>
+            <table class="table table-hover table-bordered mb-0 RequestedListTable" id="BraceletsTable">
+                <thead class="table-light ">
                     <tr>
                         <th scope="col"><input type="checkbox" class="chkId" id="chkBraceletIds" /></th>
                         <th scope="col">
@@ -401,7 +401,7 @@
     // Show confirmation dialog
     Swal.fire({
         title: 'Are you sure?',
-        text: `You are about to change the status to "${status}". This action cannot be undone.`,
+        text: `Do Want to change status for Product? Product Status : "${status}".`,
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Yes, update it!',

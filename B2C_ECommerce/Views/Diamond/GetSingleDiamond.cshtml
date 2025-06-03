@@ -24,7 +24,7 @@
                                     else if (Model.DiamondVideoPath != null)
                                     {
                                         <iframe src="@Model.DiamondVideoPath"
-                                                style="width:100%; height:600px; padding:5px 5px;"
+                                                style="width:100%; height:420px; padding:5px 5px;"
                                                 frameborder="0"
                                                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                                                 allowfullscreen>
@@ -39,10 +39,10 @@
                         </div>
                         <div class="col-lg-7">
                             <div class="product-details-des">
-                                <div class="manufacturer-name">
+                                @* <div class="manufacturer-name">
                                     <a href="#">@Model.LabShape</a>
-                                </div>
-                                <h3 class="product-name"> @Model.Carat @Model.ColorName @Model.ShapeName @Model.ClarityName @Model.LabName</h3>
+                                </div> *@
+                                <h3 class="product-name"> @Model.Carat Carat @Model.ShapeName Shaped @Model.ColorName  @Model.ClarityName @Model.LabName</h3>
                                 <p style="font-size:medium;"> ( @Model.CutName ) Cut | ( @Model.ColorName ) Color | ( @Model.ClarityName ) Clarity</p>
 
                                 <div class="certi-details-box">
@@ -60,7 +60,7 @@
                                 </div>
 
                                 <div class="price-box">
-                                    <p style="font-size:x-large;">
+                                    <p style="font-size:22px;font-weight:bold;">
                                         $ @Model.Price
                                     </p>
                                     @*<span class="price-old"><del>@Model.Amount</del></span>*@
@@ -77,21 +77,17 @@
                                         <span>1 Reviews</span>
                                     </div>
                                 </div>*@
-                                <br />
+                                
                                 <div class="manufacturer-name">
                                     <h5>Short Description</h5>
                                 </div>
-                                <br />
 
-                                @*<div class="pro-desc">
+                                <div class="pro-desc">
 
                                     <p>
-                                        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
-                                        eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
-                                        voluptua. Phasellus id nisi quis justo tempus mollis sed et dui. In hac
-                                        habitasse platea dictumst.
+                                        This <b>@Model.Carat</b> carat <b>@Model.ShapeName</b> shaped lab grown diamond has <b>@Model.ColorName</b> color, <b>@Model.ClarityName</b> clarity, <b>@Model.CutName</b> cut and is certified by <b>@Model.LabName</b>.
                                     </p>
-                                </div>*@
+                                </div>
                                 <div class="d-flex">
                                     <div class="action_link">
                                         @* <a class="btn btn-cart2" href="#">Add to cart</a> *@
@@ -172,18 +168,10 @@
                                 <div class="tab-content reviews-tab">
                                     <div class="tab-pane fade show active" id="tab_one">
                                         <div class="tab-one">
-                                            @*<p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam
-                                                fringilla augue nec est tristique auctor. Ipsum metus feugiat
-                                                sem, quis fermentum turpis eros eget velit. Donec ac tempus
-                                                ante. Fusce ultricies massa massa. Fusce aliquam, purus eget
-                                                sagittis vulputate, sapien libero hendrerit est, sed commodo
-                                                augue nisi non neque.Cras neque metus, consequat et blandit et,
-                                                luctus a nunc. Etiam gravida vehicula tellus, in imperdiet
-                                                ligula euismod eget. Pellentesque habitant morbi tristique
-                                                senectus et netus et malesuada fames ac turpis egestas. Nam
-                                                erat mi, rutrum at sollicitudin rhoncus
-                                            </p>*@
+                                            <p>
+                                                                                        This <b>@Model.Carat</b> carat <b>@Model.ShapeName</b> shaped lab grown diamond has <b>@Model.ColorName</b> color, <b>@Model.ClarityName</b> clarity, <b>@Model.CutName</b> cut and is certified by <b>@Model.LabName</b>.
+
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="tab_two">

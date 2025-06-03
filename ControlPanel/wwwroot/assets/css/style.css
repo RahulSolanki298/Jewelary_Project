@@ -1350,3 +1350,78 @@ h6 {
         transform: translate(-50%, -50%) rotate(360deg);
     }
 }
+
+.blinkingTextRed {
+    animation: 1.5s infinite blinkingRed;
+    font-weight: 600
+}
+
+@keyframes blinkingRed {
+    0%,100%,49% {
+        color: #de3e4d
+    }
+
+    60%,99% {
+        color: transparent
+    }
+}
+
+.blinkingTextGreen {
+    animation: 1.5s infinite blinkingGreen;
+    font-weight: 600
+}
+
+@keyframes blinkingGreen {
+    0%,100%,49% {
+        color: #53bf26
+    }
+
+    60%,99% {
+        color: transparent
+    }
+}
+
+.blinkingTextBlue {
+    animation: 1.5s infinite blinkingBlue;
+    font-weight: 600
+}
+
+@keyframes blinkingBlue {
+    0%,100%,49% {
+        color: #3625f2
+    }
+
+    60%,99% {
+        color: transparent
+    }
+}
+
+.blinkingTextBlack {
+    animation: 1.5s infinite blinkingBlack;
+    font-weight: 600
+}
+
+@keyframes blinkingBlack {
+    0%,100%,49% {
+        color: #2c323f
+    }
+
+    60%,99% {
+        color: transparent
+    }
+}
+
+.blinkingTextYellow {
+    animation: 1.5s infinite blinkingYellow;
+    font-weight: 800
+}
+
+@keyframes blinkingYellow {
+    0%,100%,49% {
+        color: #ebcb26
+    }
+
+    60%,99% {
+        color: transparent
+    }
+}

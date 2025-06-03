@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Product Styles";
+
+    bool isChecked = Model.IsActivated.HasValue && Model.IsActivated.Value;
 }
 
 <div class="container-fluid mt-4">
@@ -16,27 +18,26 @@
                 <div class="card-body p-4">
                     <div class="row">
                         <div class="col-lg-10 col-md-10 col-sm-8">
-                            <form asp-action="GetCategory" enctype="multipart/form-data">
+                            <form asp-action="UpsertStyle" method="post" enctype="multipart/form-data">
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <input asp-for="Id" type="hidden" />
+
                                 <div class="form-group mb-3">
-                                    <input asp-for="Id" class="form-control" type="hidden" />
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label asp-for="StyleName" class="control-label"></label>
+                                    <label asp-for="StyleName"></label>
                                     <input asp-for="StyleName" class="form-control" />
                                     <span asp-validation-for="StyleName" class="text-danger"></span>
                                 </div>
-                                @*<div class="form-group mb-3">
-                                    <label asp-for="ImageFile" class="control-label">Style Image</label>
+
+                                <div class="form-group mb-3">
+                                    <label class="control-label">Style Image</label>
                                     <input asp-for="ImageFile" class="form-control" type="file" />
                                     <span asp-validation-for="ImageFile" class="text-danger"></span>
+                                </div>
 
-                                </div>*@
-
-                                <div class="form-group form-check mb-3">
-                                    <label class="form-check-label">
-                                        <input class="form-check-input" asp-for="IsActivated" /> @Html.DisplayNameFor(model => model.IsActivated)
-                                    </label>
+                                <div class="form-check mb-3">
+                                    <input type="hidden" name="IsActivated" value="false" />
+                                    <input type="checkbox" asp-for="IsActivated" class="form-check-input" />
+                                    <label asp-for="IsActivated" class="form-check-label">Is Activated</label>
                                 </div>
 
                                 <div class="form-check mb-3">
@@ -44,6 +45,7 @@
                                     <a href="@Url.Action("Index","Category")" class="btn btn-danger mt-2">Back to Category</a>
                                 </div>
                             </form>
+
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-4">
                             <div>

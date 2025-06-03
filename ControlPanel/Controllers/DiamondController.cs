@@ -197,9 +197,10 @@ namespace ControlPanel.Controllers
         {
             var data = new DiamondProperty();
             ViewBag.ParentDrp = _diamondPPTY.GetAllAsync().Result.Where(x => x.ParentId == null).ToList();
-
+            ViewBag.Title = "Create Diamond Parameter";
             if (pId.HasValue && pId > 0)
             {
+                ViewBag.Title = "Edit Diamond Parameter";
                 data = await _diamondPPTY.GetDiamondPropertyByIdAsync(pId.Value);
 
                 return View(data);
