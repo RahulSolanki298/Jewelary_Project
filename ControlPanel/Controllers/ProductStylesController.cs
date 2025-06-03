@@ -7,6 +7,7 @@ using Models;
 using System.Linq;
 using System;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace ControlPanel.Controllers
 {
@@ -68,7 +69,7 @@ namespace ControlPanel.Controllers
         }
 
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> UpsertStyle(int? styleId = 0)
         {
             var result = new ProductStyleDTO();
@@ -94,23 +95,43 @@ namespace ControlPanel.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpsertStyle(ProductStyleDTO productStyles)
         {
             if (ModelState.IsValid)
             {
+                if (productStyles.ImageFile != null && productStyles.ImageFile.Length > 0)
+                {
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "styles");
+                    Directory.CreateDirectory(uploadsFolder); // Ensure folder exists
+
+                    var uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(productStyles.ImageFile.FileName);
+                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await productStyles.ImageFile.CopyToAsync(stream);
+                    }
+
+                    // Save just the file name or relative path for DB
+                    productStyles.StyleImage = Path.Combine("images", "styles", uniqueFileName);
+                }
+
                 var result = await _productStyles.SaveProductStyle(productStyles);
                 if (result != true)
                 {
                     TempData["Status"] = "Error";
-                    TempData["Message"] = "Product Style has been failed";
+                    TempData["Message"] = "Product Style has failed to save.";
                     return RedirectToAction("Index");
                 }
+
                 TempData["Status"] = "Success";
-                TempData["Message"] = "Product Style Save Sucessfully..";
+                TempData["Message"] = "Product Style saved successfully.";
                 return RedirectToAction("Index");
             }
 
             return View(productStyles);
         }
+
     }
 }

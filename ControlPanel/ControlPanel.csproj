@@ -10,6 +10,7 @@
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
 	<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="5.0.17" />
+	<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
 	<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.17" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.17">
 	  <PrivateAssets>all</PrivateAssets>
