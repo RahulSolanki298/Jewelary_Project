@@ -65,14 +65,6 @@
                                                 {
                                                     <li data-thumb="@($"{SD.ImgUrl}/{item.ImageUrl}")">
                                                        
-                                                        @* <a href="@($"{SD.ImgUrl}/{item.ImageUrl}")"
-                                                           data-fancybox="gallery"
-                                                           data-caption="Product Image"
-                                                           data-thumb="@($"{SD.ImgUrl}/{item.ImageUrl}")"
-                                                           data-zoomable="true">
-                                                            <img  src="@($"{SD.ImgUrl}/{item.ImageUrl}")" class="img-zoom" />
-                                                        </a> *@
-                                                       
                                                         <a>
                                                             <img src="@($"{SD.ImgUrl}/{item.ImageUrl}")" class="zoom-images" />
                                                         </a>
@@ -81,12 +73,7 @@
                                                 }
                                                 else if (!string.IsNullOrEmpty(item.VideoUrl) && item.VideoUrl != "-")
                                                 {
-                                                    <li data-thumb="@SD.ImgUrl/assets/img/video/video-icon.svg">
-                                                        @* <a href="@($"{SD.ImgUrl}/{item.VideoUrl}")" data-fancybox="gallery" data-caption="Product Video">
-                                                            <video autoplay="autoplay" loop="loop" muted="muted" playsinline preload="auto" style="max-width: 100%;">
-                                                                <source src="@($"{SD.ImgUrl}/{item.VideoUrl}")" type="video/mp4" />
-                                                            </video>
-                                                        </a> *@
+                                                    <li data-thumb="@SD.ShapeImgUrl/assets/img/video/video-icon.svg">
                                                         <a>
                                                             <video autoplay="autoplay" loop="loop" muted="muted" playsinline preload="auto" style="max-width: 100%;">
                                                                 <source src="@($"{SD.ImgUrl}/{item.VideoUrl}")" type="video/mp4" />
@@ -671,7 +658,7 @@
                 thumbItem: 5,
                 galleryMargin: 10,
                 thumbMargin: 10,
-                //vertical: true,
+                vertical: true,
                 vertical: !isMobileOrTablet,
                 onSliderLoad: function () {
                    
@@ -701,6 +688,7 @@
         });
 
         function GetProductByColorId(productId, colorId) {
+            debugger;
             $.ajax({
                 url: '@Url.Action("ProductDetailsByColorId", "Products")',
                 data: {
@@ -710,6 +698,7 @@
                 type: 'GET',
                 dataType: 'json'
             }).done(function (response) {
+                debugger;
                 const baseUrl = '@SD.ImgUrl'.replace(/\\/g, '/');
 
                 $(".product-name").text(response.title);
@@ -720,7 +709,7 @@
                 const images = (response.productImageVideos || []).filter(x => x.imageUrl && x.imageUrl !== "-");
 
                 let sliderHtml = "";
-
+                
                 images.forEach((image, index) => {
                     const imgUrl = baseUrl + '/' + image.imageUrl.replace(/\\/g, '/');
                     const altText = response.colorName + " - Image " + (index + 1);
@@ -741,9 +730,9 @@
                 videos.forEach((vdo, index) => {
                     const vdoUrl = baseUrl + '/' + vdo.videoUrl.replace(/\\/g, '/');
                     const altText = response.colorName + " - Image " + (index + 1);
-
+                    
                     sliderHtml += `
-                        <li data-thumb="@SD.ImgUrl/assets/img/video/video-icon.svg">                           
+                        <li data-thumb="@SD.ShapeImgUrl/assets/img/video/video-icon.svg">
                             <a>
                                 <video autoplay="autoplay" loop="loop" muted="muted" playsinline preload="auto" style="max-width: 100%;">
                                                                 <source src="${vdoUrl}" type="video/mp4">

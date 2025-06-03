@@ -101,7 +101,6 @@ namespace B2C_ECommerce.Services
             var productQuery = await (
                   from product in _context.Product
                   where product.IsActivated && product.Id.ToString() == productId
-                  join evt in _context.EventSites on product.EventId equals evt.Id
                   join cat in _context.Category on product.CategoryId equals cat.Id
 
                   join colorProp in _context.ProductProperty on product.ColorId equals colorProp.Id into colorGroup
@@ -122,9 +121,7 @@ namespace B2C_ECommerce.Services
                   select new ProductDTO
                   {
                       Id = product.Id,
-                      Title = evt.EventName,
-                      EventName = evt.EventName,
-                      EventId = product.EventId,
+                      Title = product.Title,
                       BandWidth = product.BandWidth,
                       Length = product.Length,
                       CaratName = product.Carat,
@@ -516,7 +513,6 @@ namespace B2C_ECommerce.Services
         private async Task<IEnumerable<ProductDTO>> GetProductStyleList()
         {
             var products = await (from product in _context.Product
-                                  join evt in _context.EventSites on product.EventId equals evt.Id
                                   join krt in _context.ProductProperty on product.KaratId equals krt.Id
                                   join cat in _context.Category on product.CategoryId equals cat.Id
                                   join color in _context.ProductProperty on product.ColorId equals color.Id into colorGroup
@@ -532,7 +528,6 @@ namespace B2C_ECommerce.Services
                                       Id = product.Id,
                                       Title = product.Title,
                                       EventId = product.EventId,
-                                      EventName = evt.EventName,
                                       BandWidth = product.BandWidth,
                                       Length = product.Length,
                                       CaratName = product.Carat,

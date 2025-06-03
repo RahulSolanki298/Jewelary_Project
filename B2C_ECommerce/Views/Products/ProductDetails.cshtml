@@ -7,40 +7,38 @@
 
     <style>
 
-    #lightSliderVertical li 
-    {
+        #lightSliderVertical li {
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 400px; /* adjust as needed */
+            height: 500px; /* adjust as needed */
             width: 100%;
             overflow: hidden;
             background-color: #f8f8f8; /* optional, helps visualize spacing */
-    }
+        }
 
-     #lightSliderVertical li img,
-     #lightSliderVertical li video {
-         max-height: 100%;
-         max-width: 100%;
-         object-fit: contain;
-         display: block;
-     }
+            #lightSliderVertical li img,
+            #lightSliderVertical li video {
+                max-height: 100%;
+                max-width: 100%;
+                object-fit: contain;
+                display: block;
+            }
 
-    .metalHide {
+        .metalHide {
             color: black;
             font-size: 16px;
             font-weight: normal;
             border: none;
         }
 
-    .metalShow {
+        .metalShow {
             color: black;
             font-size: 16px;
             font-weight: bold;
             border: 1px solid black;
             display: block;
         }
-
     </style>
 }
 
@@ -70,12 +68,12 @@
                                                     <li data-thumb="@($"{SD.ImgUrl}/{item.ImageUrl}")">
 
                                                         @* <a href="@($"{SD.ImgUrl}/{item.ImageUrl}")"
-                               data-fancybox="gallery"
-                               data-caption="Product Image"
-                               data-thumb="@($"{SD.ImgUrl}/{item.ImageUrl}")"
-                               data-zoomable="true">
-                                <img  src="@($"{SD.ImgUrl}/{item.ImageUrl}")" class="img-zoom" />
-                            </a> *@
+                                                               data-fancybox="gallery"
+                                                               data-caption="Product Image"
+                                                               data-thumb="@($"{SD.ImgUrl}/{item.ImageUrl}")"
+                                                               data-zoomable="true">
+                                                                <img  src="@($"{SD.ImgUrl}/{item.ImageUrl}")" class="img-zoom" />
+                                                            </a> *@
 
                                                         <a>
                                                             <img src="@($"{SD.ImgUrl}/{item.ImageUrl}")" class="zoom-images" />
@@ -85,12 +83,12 @@
                                                 }
                                                 else if (!string.IsNullOrEmpty(item.VideoUrl) && item.VideoUrl != "-")
                                                 {
-                                                    <li data-thumb="@SD.ImgUrl/assets/img/video/video-icon.svg">
+                                                    <li data-thumb="@SD.ShapeImgUrl/assets/img/video/video-icon.svg">
                                                         @* <a href="@($"{SD.ImgUrl}/{item.VideoUrl}")" data-fancybox="gallery" data-caption="Product Video">
-                                <video autoplay="autoplay" loop="loop" muted="muted" playsinline preload="auto" style="max-width: 100%;">
-                                    <source src="@($"{SD.ImgUrl}/{item.VideoUrl}")" type="video/mp4" />
-                                </video>
-                            </a> *@
+                                                                <video autoplay="autoplay" loop="loop" muted="muted" playsinline preload="auto" style="max-width: 100%;">
+                                                                    <source src="@($"{SD.ImgUrl}/{item.VideoUrl}")" type="video/mp4" />
+                                                                </video>
+                                                            </a> *@
                                                         <a>
                                                             <video autoplay="autoplay" loop="loop" muted="muted" playsinline preload="auto" style="max-width: 100%;">
                                                                 <source src="@($"{SD.ImgUrl}/{item.VideoUrl}")" type="video/mp4" />
@@ -108,8 +106,8 @@
                         <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6  col-sm-12">
                             <div class="product-details-des">
                                 @*<h3 class="product-name">@Model.ShapeName @Model.BandWidth @Model.Length @Model.Sku</h3>*@
-                                <h3 class="product-name">@(Model.Title != null ? Model.Title : Model.EventName) </h3>
-                                <span class="text-black-50">@Model.Karat @Model.ColorName @Model.ProductType @Model.CenterCaratName</span>
+                                <h3 class="product-name">@Model.Title </h3>
+                                <span class="text-black-50">@Model.Karat @*@Model.ColorName @Model.ProductType*@ @Model.CenterCaratName</span>
 
                                 <div class="price-box  d-flex">
                                     <span class="price-regular" style="font-size: x-large; font-family: Castoro serif; ">$@Model.Price USD</span>
@@ -264,12 +262,12 @@
                                                     <td>
                                                         @foreach (var item in Model.Metals)
                                                         {
-                                                            <span> @item.Name</span>
+                                                            <span>@item.Name,  </span>
                                                         }
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td>size :</td>
+                                                    <td>Carat Weight :</td>
                                                     <td>
                                                         @foreach (var item in Model.CaratSizes)
                                                         {
@@ -654,18 +652,17 @@
     </div>
 </section>
 
-@section Scripts {        
+@section Scripts {
     <script src="~/assets/js/plugins/lightslider.js"></script>
-    
+
     <script>
-        
+
         let vSlider;
         let resizeTimeout;
         function initializeSlider() {
             if (vSlider) vSlider.destroy();
 
             const isMobileOrTablet = window.innerWidth <= 768; // You can adjust the breakpoint
-
 
             vSlider = $("#lightSliderVertical").lightSlider({
                 gallery: true,
@@ -675,14 +672,13 @@
                 thumbItem: 5,
                 galleryMargin: 10,
                 thumbMargin: 10,
-                //vertical: true,
-                vertical: !isMobileOrTablet,
+                vertical: false,  // Ensure horizontal slider
                 onSliderLoad: function () {
-                   
-
+                    // Any additional functionality on load
                 }
             });
         }
+
         var selectedproductId = JSON.parse(localStorage.getItem('productIds')) || [];
 
 
@@ -756,11 +752,11 @@
 
                     sliderHtml += `
                         <li data-thumb="${imgUrl}">
-                           
+
                             <a>
                                 <img src="${imgUrl}" alt="${altText}" class="zoom-images" />
                             </a>
-                          
+
                         </li>`;
                 });
 
@@ -772,7 +768,7 @@
                     const altText = response.colorName + " - Image " + (index + 1);
 
                     sliderHtml += `
-                        <li data-thumb="@SD.ImgUrl/assets/img/video/video-icon.svg">                           
+                        <li data-thumb="@SD.ShapeImgUrl/assets/img/video/video-icon.svg">
                             <a>
                                 <video autoplay="autoplay" loop="loop" muted="muted" playsinline preload="auto" style="max-width: 100%;">
                                                                 <source src="${vdoUrl}" type="video/mp4">
@@ -791,125 +787,125 @@
 
 
 
-   @*  <script>
-        $(function () {
-          var zoomed = false;
-          var isDragging = false;
-          var lastX, lastY;
-          var posX = 0, posY = 0;
+    @*  <script>
+            $(function () {
+              var zoomed = false;
+              var isDragging = false;
+              var lastX, lastY;
+              var posX = 0, posY = 0;
 
-          var $img = $('.zoom-images');
+              var $img = $('.zoom-images');
 
-          $img.on('click', function (e) {
-              debugger;
-            if (!zoomed) {
-              zoomed = true;
-              $(this).css('cursor', 'grab');
-              $(this).css('transform', 'scale(2)');
-            } else {
-              zoomed = false;
-              $(this).css('cursor', 'zoom-in');
-              $(this).css({
-                transform: 'scale(1)',
-                top: 0,
-                left: 0
-              });
-              posX = posY = 0;
-            }
-          });
-
-          $img.on('mousedown', function (e) {
-            if (!zoomed) return;
-            isDragging = true;
-            lastX = e.pageX;
-            lastY = e.pageY;
-            $(this).css('cursor', 'grabbing');
-          });
-
-          $(document).on('mousemove', function (e) {
-            if (isDragging && zoomed) {
-              var dx = e.pageX - lastX;
-              var dy = e.pageY - lastY;
-
-              posX += dx;
-              posY += dy;
-
-              $img.css({
-                top: posY + 'px',
-                left: posX + 'px'
+              $img.on('click', function (e) {
+                  debugger;
+                if (!zoomed) {
+                  zoomed = true;
+                  $(this).css('cursor', 'grab');
+                  $(this).css('transform', 'scale(2)');
+                } else {
+                  zoomed = false;
+                  $(this).css('cursor', 'zoom-in');
+                  $(this).css({
+                    transform: 'scale(1)',
+                    top: 0,
+                    left: 0
+                  });
+                  posX = posY = 0;
+                }
               });
 
-              lastX = e.pageX;
-              lastY = e.pageY;
-            }
-          });
+              $img.on('mousedown', function (e) {
+                if (!zoomed) return;
+                isDragging = true;
+                lastX = e.pageX;
+                lastY = e.pageY;
+                $(this).css('cursor', 'grabbing');
+              });
 
-          $(document).on('mouseup', function () {
-            if (zoomed) {
-              isDragging = false;
-              $img.css('cursor', 'grab');
-            }
-          });
-        });
-    </script> *@
+              $(document).on('mousemove', function (e) {
+                if (isDragging && zoomed) {
+                  var dx = e.pageX - lastX;
+                  var dy = e.pageY - lastY;
+
+                  posX += dx;
+                  posY += dy;
+
+                  $img.css({
+                    top: posY + 'px',
+                    left: posX + 'px'
+                  });
+
+                  lastX = e.pageX;
+                  lastY = e.pageY;
+                }
+              });
+
+              $(document).on('mouseup', function () {
+                if (zoomed) {
+                  isDragging = false;
+                  $img.css('cursor', 'grab');
+                }
+              });
+            });
+        </script> *@
 
     <script>
         $(function () {
-          var zoomed = false;
-          var isDragging = false;
-          var lastX, lastY;
-          var posX = 0, posY = 0;
+            var zoomed = false;
+            var isDragging = false;
+            var lastX, lastY;
+            var posX = 0, posY = 0;
 
-          // Use event delegation
-          $(document).on('click', '.zoom-images', function (e) {
-            if (!zoomed) {
-              zoomed = true;
-              $(this).css('cursor', 'grab');
-              $(this).css('transform', 'scale(2)');
-            } else {
-              zoomed = false;
-              $(this).css('cursor', 'zoom-in');
-              $(this).css({
-                transform: 'scale(1)',
-                top: 0,
-                left: 0
-              });
-              posX = posY = 0;
-            }
-          });
+            // Use event delegation
+            $(document).on('click', '.zoom-images', function (e) {
+                if (!zoomed) {
+                    zoomed = true;
+                    $(this).css('cursor', 'grab');
+                    $(this).css('transform', 'scale(2)');
+                } else {
+                    zoomed = false;
+                    $(this).css('cursor', 'zoom-in');
+                    $(this).css({
+                        transform: 'scale(1)',
+                        top: 0,
+                        left: 0
+                    });
+                    posX = posY = 0;
+                }
+            });
 
-          $(document).on('mousedown', '.zoom-images', function (e) {
-            if (!zoomed) return;
-            isDragging = true;
-            lastX = e.pageX;
-            lastY = e.pageY;
-            $(this).css('cursor', 'grabbing');
-          });
+            $(document).on('mousedown', '.zoom-images', function (e) {
+                if (!zoomed) return;
+                isDragging = true;
+                lastX = e.pageX;
+                lastY = e.pageY;
+                $(this).css('cursor', 'grabbing');
+            });
 
-          $(document).on('mousemove', function (e) {
-            if (isDragging && zoomed) {
-              var dx = e.pageX - lastX;
-              var dy = e.pageY - lastY;
+            $(document).on('mousemove', function (e) {
+                if (isDragging && zoomed) {
+                    var dx = e.pageX - lastX;
+                    var dy = e.pageY - lastY;
 
-              posX += dx;
-              posY += dy;
+                    posX += dx;
+                    posY += dy;
 
-              $('.zoom-images').css({
-                top: posY + 'px',
-                left: posX + 'px'
-              });
+                    $('.zoom-images').css({
+                        top: posY + 'px',
+                        left: posX + 'px'
+                    });
 
-              lastX = e.pageX;
-              lastY = e.pageY;
-            }
-          });
+                    lastX = e.pageX;
+                    lastY = e.pageY;
+                }
+            });
 
-          $(document).on('mouseup', function () {
-            if (zoomed) {
-              isDragging = false;
-              $('.zoom-images').css('cursor', 'grab');
-            }
-          });
+            $(document).on('mouseup', function () {
+                if (zoomed) {
+                    isDragging = false;
+                    $('.zoom-images').css('cursor', 'grab');
+                }
+            });
         });
     </script>
 

@@ -473,6 +473,7 @@ namespace ControlPanel.Controllers
 
         }
 
+        [HttpGet]
         public IActionResult DiamondVerification()
         {
             return View();

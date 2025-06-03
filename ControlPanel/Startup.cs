@@ -32,11 +32,12 @@ namespace ControlPanel
         public void ConfigureServices(IServiceCollection services)
         {
             // Database context
+            ConfigureFormOptions(services);
             services.AddDbContext<ApplicationDBContext>(options =>
             options.UseSqlServer(
-        Configuration.GetConnectionString("DefaultConnection"),
-        sqlServerOptions => sqlServerOptions.EnableRetryOnFailure()
-    ));
+                Configuration.GetConnectionString("DefaultConnection"),
+                sqlServerOptions => sqlServerOptions.EnableRetryOnFailure()
+            ));
 
             services.AddSession(options =>
             {
@@ -73,7 +74,6 @@ namespace ControlPanel
                     options.SlidingExpiration = true;
                 });
 
-            ConfigureFormOptions(services);
 
             // Authorization support
             services.AddAuthorization();
@@ -91,27 +91,27 @@ namespace ControlPanel
 
         private void ConfigureFormOptions(IServiceCollection services)
         {
-            services.Configure<IISServerOptions>(options =>
-            {
-                options.MaxRequestBodySize = 10737418240L; // 10 GB
-            });
-
+            // Configure Kestrel limits
             services.Configure<KestrelServerOptions>(options =>
             {
-                options.Limits.MaxRequestBodySize = 10737418240L; // 10 GB
+                options.Limits.MaxRequestBodySize = 10L * 1024 * 1024 * 1024; // 10 GB
             });
 
+            // Configure IIS limits
+            services.Configure<IISServerOptions>(options =>
+            {
+                options.MaxRequestBodySize = 10L * 1024 * 1024 * 1024; // 10 GB
+            });
+
+            // Configure form upload limits
             services.Configure<FormOptions>(options =>
             {
                 options.ValueLengthLimit = int.MaxValue;
-                options.MultipartBodyLengthLimit = 10737418240L; // 10 GB
+                options.MultipartBodyLengthLimit = 10L * 1024 * 1024 * 1024; // 10 GB
                 options.MemoryBufferThreshold = int.MaxValue;
             });
-
-
-           
-
         }
+
 
         // Configure HTTP request pipeline
         public void Configure(IApplicationBuilder app,
