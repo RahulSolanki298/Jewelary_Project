@@ -9,7 +9,7 @@
 <section class="section">
     <div class="row mb-2">
         <div class="col-lg-6">
-            <h4>Deactived Product List</h4>
+            <h4><b>Deactived Product (Category Wise)</b></h4>
         </div>
         <div class="col-lg-6">
             <div class="btn-group dropup float-end">
@@ -49,7 +49,7 @@
     </div>
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="ringList" role="tabpanel" aria-labelledby="rings-tab">
-            <table class="table" id="ringTable">
+            <table class="table table-hover table-bordered mb-0" id="ringTable">
                 <thead>
                     <tr>
                         <th scope="col"><input type="checkbox" class="chkId" id="chkRingsIds" /></th>
@@ -108,8 +108,8 @@
             </table>
         </div>
         <div class="tab-pane fade" id="bandList" role="tabpanel" aria-labelledby="bands-tab">
-            <table class="table" id="bandTable">
-                <thead>
+            <table class="table table-hover table-bordered mb-0" id="bandTable">
+                <thead class="table-light ">
                     <tr>
                         <th scope="col"><input type="checkbox" class="chkId" id="chkBandIds" /></th>
                         <th scope="col">
@@ -168,8 +168,8 @@
             </table>
         </div>
         <div class="tab-pane fade" id="earringList" role="tabpanel" aria-labelledby="earrings-tab">
-            <table class="table" id="EarringTable">
-                <thead>
+            <table class="table table-hover table-bordered mb-0" id="EarringTable">
+                <thead class="table-light ">
                     <tr>
                         <th scope="col"><input type="checkbox" class="chkId" id="chkEarringIds" /></th>
                         <th scope="col">
@@ -233,8 +233,8 @@
             </table>
         </div>
         <div class="tab-pane fade" id="pendantList" role="tabpanel" aria-labelledby="pandant-tab">
-            <table class="table" id="PendantTable">
-                <thead>
+            <table class="table table-hover table-bordered mb-0" id="PendantTable">
+                <thead class="table-light ">
                     <tr>
                         <th scope="col"><input type="checkbox" class="chkId" id="chkPendantIds" /></th>
                         <th scope="col">
@@ -294,8 +294,8 @@
             </table>
         </div>
         <div class="tab-pane fade" id="braceletsList" role="tabpanel" aria-labelledby="bracelets-tab">
-            <table class="table" id="BraceletsTable">
-                <thead>
+            <table class="table table-hover table-bordered mb-0" id="BraceletsTable">
+                <thead class="table-light ">
                     <tr>
                         <th scope="col"><input type="checkbox" class="chkId" id="chkBraceletIds" /></th>
                         <th scope="col">
@@ -416,29 +416,63 @@
                 const productIds = $('#txtProductIds').val();
 
                 if (!productIds) {
-                    alert('No product IDs selected.');
+                     Swal.fire({
+                        icon: 'warning',
+                        title: 'No items selected',
+                        text: 'Please select at least one product to update the status.',
+                    });
                     return;
                 }
 
                 const idsArray = productIds.split(',');
-
-                $.ajax({
-                    url: '@Url.Action("ChangeStatus", "Jewellery")',
-                    method: 'POST',
-                    data: {
-                        pIds: idsArray,
-                        status: status
-                    },
-                    success: function (response) {
-                        alert(`Products updated to "${status}" successfully.`);
-                        console.log(response);
-                        location.reload();
-                    },
-                    error: function (xhr, status, error) {
-                        alert('An error occurred while updating products.');
-                        console.error(error);
-                    }
+                    Swal.fire({
+                    title: 'Are you sure?',
+                    text: `Do Want to change status for Product? Product Status : "${status}".`,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, update it!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                        if (result.isConfirmed) {
+                                $.ajax({
+                                        url: '@Url.Action("ChangeStatus", "Jewellery")',
+                                        method: 'POST',
+                                        data: {
+                                            pIds: idsArray,
+                                            status: status
+                                        },
+                                        success: function (response) {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Updated',
+                                                text: `Products updated to "${status}" successfully.`,
+                                                timer: 2000,
+                                                showConfirmButton: false
+                                            }).then(() => {
+                                                location.reload();
+                                                console.log(response);
+                                            });
+                                        },
+                                        error: function (xhr, status, error) {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Error',
+                                                text: 'An error occurred while updating the products.',
+                                            });
+                                            console.error(error);
+                                        }
+                                    });
+                        
+                        
+                        }
                 });
+
+
+
+
+
+
+                
             });
 
             // ID Getters & Updaters

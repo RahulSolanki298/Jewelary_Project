@@ -18,6 +18,8 @@
 
         public int DispOrder { get; set; }
 
+        public string Synonyms { get; set; }
+
         public bool IsActive { get; set; }
 
     }
