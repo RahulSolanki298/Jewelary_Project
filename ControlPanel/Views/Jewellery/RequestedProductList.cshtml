@@ -64,10 +64,10 @@
                         <th scope="col">Weight</th>
                         <th scope="col">Karat</th>
                         <th scope="col">Price</th>
-                        <th scope="col">Accent Stone Shape</th>
-                        <th scope="col">MM Size</th>
-                        <th scope="col">Dia Wt</th>
-                        <th scope="col">No Of Stones</th>
+                        <th scope="col">Accent.Stone.Shape</th>
+                        <th scope="col">MM.Size</th>
+                        <th scope="col">Dia.Wt</th>
+                        <th scope="col">No.Of.Stones</th>
                         <th scope="col">Grades</th>
                     </tr>
                 </thead>
@@ -137,14 +137,14 @@
                         <th scope="col">Weight</th>
                         <th scope="col">Karat</th>
                         <th scope="col">CTW</th>
-                        <th scope="col">Center Shape</th>
-                        <th scope="col">Center Carat</th>
+                        <th scope="col">Center.Shape</th>
+                        <th scope="col">Center.Carat</th>
                         <th scope="col">Metal(Color)</th>
                         <th scope="col">Price</th>
-                        <th scope="col">Accent Stone Shape</th>
-                        <th scope="col">MM Size</th>
-                        <th scope="col">Dia Wt</th>
-                        <th scope="col">No Of Stones</th>
+                        <th scope="col">Accent.Stone.Shape</th>
+                        <th scope="col">MM.Size</th>
+                        <th scope="col">Dia.Wt</th>
+                        <th scope="col">No.Of.Stones</th>
                         <th scope="col">Grades</th>
                     </tr>
                 </thead>
@@ -220,13 +220,13 @@
                         <th scope="col">Weight</th>
                         <th scope="col">Karat</th>
                         <th scope="col">CTW</th>
-                        <th scope="col">Accent Stone Shape</th>
-                        <th scope="col">MM Size</th>
-                        <th scope="col">Dia Wt</th>
-                        <th scope="col">No of Stones</th>
+                        <th scope="col">Accent.Stone.Shape</th>
+                        <th scope="col">MM.Size</th>
+                        <th scope="col">Dia.Wt</th>
+                        <th scope="col">No.Of.Stones</th>
                         <th scope="col">Grades</th>
-                        <th scope="col">Diamond Type</th>
-                        <th scope="col">Wholesale Cost</th>
+                        <th scope="col">Diamond.Type</th>
+                        <th scope="col">Wholesale.Cost</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -304,10 +304,10 @@
                         <th scope="col">Weight</th>
                         <th scope="col">Karat</th>
                         <th scope="col">CTW</th>
-                        <th scope="col">Accent Stone Shape</th>
-                        <th scope="col">MM Size</th>
-                        <th scope="col">Dia Wt</th>
-                        <th scope="col">No of Stones</th>
+                        <th scope="col">Accent.Stone.Shape</th>
+                        <th scope="col">MM.Size</th>
+                        <th scope="col">Dia.Wt</th>
+                        <th scope="col">No.Of.Stones</th>
                         <th scope="col">Grades</th>
                         <th scope="col">Diamond Type</th>
                         <th scope="col">Wholesale Cost</th>
@@ -316,7 +316,7 @@
                 <tbody>
                     @if (Model != null)
                     {
-                        foreach (var item in Model.Where(x => x.CategoryName == SD.Earrings))
+                        foreach (var item in Model.Where(x => x.CategoryName == SD.Pendants))
                         {
                             defaultImage = string.Empty;
                             if (item.ProductImageVideos.Any())
@@ -400,7 +400,7 @@
                 <tbody>
                     @if (Model != null)
                     {
-                        foreach (var item in Model.Where(x => x.CategoryName == SD.Earrings))
+                        foreach (var item in Model.Where(x => x.CategoryName == SD.Bracelets))
                         {
                             defaultImage = string.Empty;
                             if (item.ProductImageVideos.Any())

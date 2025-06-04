@@ -32,7 +32,7 @@ namespace ControlPanel
         public void ConfigureServices(IServiceCollection services)
         {
             // Database context
-            //ConfigureFormOptions(services);
+            ConfigureFormOptions(services);
             services.AddDbContext<ApplicationDBContext>(options =>
             options.UseSqlServer(
                 Configuration.GetConnectionString("DefaultConnection"),

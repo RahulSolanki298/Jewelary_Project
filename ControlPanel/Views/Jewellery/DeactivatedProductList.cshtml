@@ -316,7 +316,7 @@
                 <tbody>
                     @if (Model != null)
                     {
-                        foreach (var item in Model.Where(x => x.CategoryName == SD.Earrings))
+                        foreach (var item in Model.Where(x => x.CategoryName == SD.Pendants))
                         {
                             defaultImage = string.Empty;
                             if (item.ProductImageVideos.Any())
@@ -400,7 +400,7 @@
                 <tbody>
                     @if (Model != null)
                     {
-                        foreach (var item in Model.Where(x => x.CategoryName == SD.Earrings))
+                        foreach (var item in Model.Where(x => x.CategoryName == SD.Bangle))
                         {
                             defaultImage = string.Empty;
                             if (item.ProductImageVideos.Any())
