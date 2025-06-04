@@ -1843,7 +1843,7 @@ namespace Business.Repository
 
                 foreach (var image in productImages)
                 {
-                    var imageUrl = _context.FileManager.FirstOrDefault(x => x.Id == image.ImageMdId)?.FileUrl ?? "-";
+                    var imageUrl = _context.FileManager.FirstOrDefault(x => x.Id == image.ImageSmId)?.FileUrl ?? "-";
                     var videoUrl = _context.FileManager.FirstOrDefault(x => x.Id == image.VideoId)?.FileUrl ?? "-";
 
                     var imageVideo = new ProductImageAndVideoDTO
