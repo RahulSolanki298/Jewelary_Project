@@ -1098,6 +1098,13 @@
         $(function () {
             showModal();
 
+            
+
+            $("#closeButton").click(function(){
+                $("#modalPopup").modal("hide");
+            });
+
+
             $("#btnRingsTab").click(function () {
                 $("#divEarrings").hide();
                 $("#divBracelets").hide();
