@@ -332,9 +332,19 @@
                         </div>
                         <div class="mobile-menu-toggler">
                             <div class="mini-cart-wrap">
+                                <a href="@Url.Action("Index","Account")">
+                                    <i class="pe-7s-user"></i>
+                                </a>
+                                <a href="@Url.Action("Index","Wishlist")">
+                                    <i class="pe-7s-like"></i>
+                                    <div class="notification" id="wishlistMobileCounter">0</div>
+                                </a>
+                                <a href="#" class="minicart-btn">
+                                    <i class="pe-7s-cart"></i>
+                                    <div class="notification" id="addtoCardMobileCounter">0</div>
+                                </a>
                                 <a href="#">
-                                    <i class="pe-7s-shopbag"></i>
-                                    <div class="notification">0</div>
+                                    <i class="pe-7s-phone"></i>
                                 </a>
                             </div>
                             <button class="mobile-menu-btn">
@@ -449,16 +459,7 @@
                                             <li><a href="#"><img src="~/assets/img/icon/platinum-new.svg" style="width:30px;" /> Platinum</a></li>
                                         </ul>
                                     </li>
-                                    @* <li>
-                                        <a href="#">
-                                            <img src="~/assets/img/banner/img1-static-menu.jpg" alt="">
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <img src="~/assets/img/banner/img2-static-menu.jpg" alt="">
-                                        </a>
-                                    </li> *@
+                                    
                                 </ul>
                             </li>
                             <li class="menu-item-has-children ">
@@ -523,11 +524,7 @@
                                             <li><a href="#">Cufflinks</a></li>
                                         </ul>
                                     </li>
-                                    @* <li>
-                                        <a href="#">
-                                            <img src="~/assets/img/banner/ring-banner.jpeg" alt="" />
-                                        </a>
-                                    </li> *@
+                                    
                                 </ul>
                             </li>
                             <li class="menu-item-has-children ">
@@ -536,23 +533,19 @@
                                     <li class="mega-title menu-item-has-children">
                                         <a href="#">Shop by Shape</a>
                                         <ul class="dropdown">
-                                            <li><a href="#"><img src="~/assets/img/diamond-svg/Princess.svg" style="width:30px;"> Princess</a></li>
-                                            <li><a href="#"><img src="~/assets/img/diamond-svg/Round.svg" style="width:30px;"> Round</a></li>
-                                            <li><a href="#"><img src="~/assets/img/diamond-svg/Radiant.svg" style="width:30px;"> Radiant-Cut</a></li>
-                                            <li><a href="#"><img src="~/assets/img/diamond-svg/Emerald.svg" style="width:30px;"> Emerald</a></li>
-                                            <li><a href="#"><img src="~/assets/img/diamond-svg/Oval.svg" style="width:30px;"> Oval</a></li>
-                                            <li><a href="#"><img src="~/assets/img/diamond-svg/Cushion.svg" style="width:30px;"> CushionLong</a></li>
-                                            <li><a href="#"><img src="~/assets/img/diamond-svg/Heart.svg" style="width:30px;"> Heart</a></li>
-                                            <li><a href="#"><img src="~/assets/img/diamond-svg/Marquise.svg" style="width:30px;"> Marquise</a></li>
-                                            <li><a href="#"><img src="~/assets/img/diamond-svg/Square Emerald.svg" style="width:30px;"> Sq.Emerald</a></li>
-                                            <li><a href="#"><img src="~/assets/img/diamond-svg/Asscher.svg" style="width:30px;"> Asscher</a></li>
+                                            <li><a href="@Url.Action("Index","Diamond",new { shapeId=457})"><img src="~/assets/img/diamond-svg/Princess.svg" style="width:30px;"> Princess</a></li>
+                                            <li><a href="@Url.Action("Index","Diamond",new { shapeId=456})"><img src="~/assets/img/diamond-svg/Round.svg" style="width:30px;"> Round</a></li>
+                                            <li><a href="@Url.Action("Index","Diamond",new { shapeId=464})"><img src="~/assets/img/diamond-svg/Radiant.svg" style="width:30px;"> Radiant-Cut</a></li>
+                                            <li><a href="@Url.Action("Index","Diamond",new { shapeId=463})"><img src="~/assets/img/diamond-svg/Emerald.svg" style="width:30px;"> Emerald</a></li>
+                                            <li><a href="@Url.Action("Index","Diamond",new { shapeId=461})"><img src="~/assets/img/diamond-svg/Oval.svg" style="width:30px;"> Oval</a></li>
+                                            <li><a href="@Url.Action("Index","Diamond",new { shapeId=462})"><img src="~/assets/img/diamond-svg/Cushion.svg" style="width:30px;"> CushionLong</a></li>
+                                            <li><a href="@Url.Action("Index","Diamond",new { shapeId=460})"><img src="~/assets/img/diamond-svg/Heart.svg" style="width:30px;"> Heart</a></li>
+                                            <li><a href="@Url.Action("Index","Diamond",new { shapeId=458})"><img src="~/assets/img/diamond-svg/Marquise.svg" style="width:30px;"> Marquise</a></li>
+                                            <li><a href="@Url.Action("Index","Diamond",new { shapeId=465})"><img src="~/assets/img/diamond-svg/Square Emerald.svg" style="width:30px;"> Sq.Emerald</a></li>
+                                            @* <li><a href="#"><img src="~/assets/img/diamond-svg/Asscher.svg" style="width:30px;"> Asscher</a></li> *@
                                         </ul>
                                     </li>
-                                    @* <li>
-                                        <a href="#">
-                                            <img src="~/assets/img/banner/img1-static-menu.jpg" alt="">
-                                        </a>
-                                    </li> *@
+                                    
                                 </ul>
                             </li>
                             <li><a href="#">Custom</a></li>
@@ -566,7 +559,7 @@
                 </div>
                 <!-- mobile menu end -->
 
-                <div class="mobile-settings">
+                @* <div class="mobile-settings">
                     <ul class="nav">
                         <li>
                             <div class="dropdown mobile-top-dropdown">
@@ -594,7 +587,7 @@
                             </div>
                         </li>
                     </ul>
-                </div>
+                </div> *@
 
                 <!-- offcanvas widget area start -->
                @*  <div class="offcanvas-widget-area">

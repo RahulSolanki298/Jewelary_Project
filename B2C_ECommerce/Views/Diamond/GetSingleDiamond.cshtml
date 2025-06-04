@@ -77,7 +77,7 @@
                                         <span>1 Reviews</span>
                                     </div>
                                 </div>*@
-                                
+
                                 <div class="manufacturer-name">
                                     <h5>Short Description</h5>
                                 </div>
@@ -101,7 +101,7 @@
                                         </a>
                                     </div>
                                 </div>
-                                
+
                                 @*<div class="quantity-cart-box d-flex align-items-center">
                                         <h6 class="option-title">qty:</h6>
                                         <div class="quantity">
@@ -137,7 +137,7 @@
                                             </li>
                                         </ul>
                                     </div>*@
-                                
+
                                 <div class="like-icon">
                                     <a class="facebook" href="#"><i class="fa fa-facebook"></i>like</a>
                                     <a class="twitter" href="#"><i class="fa fa-twitter"></i>tweet</a>
@@ -159,7 +159,7 @@
                                         <a class="active" data-bs-toggle="tab" href="#tab_one">description</a>
                                     </li>
                                     <li>
-                                        <a data-bs-toggle="tab" href="#tab_two">information</a>
+                                        <a data-bs-toggle="tab" href="#tab_two">Diamond Information</a>
                                     </li>
                                     <li>
                                         <a data-bs-toggle="tab" href="#tab_three">reviews (1)</a>
@@ -169,53 +169,57 @@
                                     <div class="tab-pane fade show active" id="tab_one">
                                         <div class="tab-one">
                                             <p>
-                                                                                        This <b>@Model.Carat</b> carat <b>@Model.ShapeName</b> shaped lab grown diamond has <b>@Model.ColorName</b> color, <b>@Model.ClarityName</b> clarity, <b>@Model.CutName</b> cut and is certified by <b>@Model.LabName</b>.
+                                                This <b>@Model.Carat</b> carat <b>@Model.ShapeName</b> shaped lab grown diamond has <b>@Model.ColorName</b> color, <b>@Model.ClarityName</b> clarity, <b>@Model.CutName</b> cut and is certified by <b>@Model.LabName</b>.
 
                                             </p>
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="tab_two">
-                                        <table class="table table-bordered">
-                                            <tbody>
+                                        <div class="row">
+                                            <div class="col-xl-12 p-1">
+                                                <table class="table table-bordered table-responsive">
+                                                    <tbody>
 
-                                                <tr>
-                                                    <th>Shape :</th>
-                                                    <td>@Model.ShapeName</td>
-                                                    <th>Carat Weight :</th>
-                                                    <td>@Model.Carat</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Color :</th>
-                                                    <td>@Model.ColorName</td>
-                                                    <th>Clarity :</th>
-                                                    <td>@Model.ClarityName</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Cut Grade :</th>
-                                                    <td>@Model.CutName</td>
-                                                    <th>Fluorescence :</th>
-                                                    <td>@Model.FluorName</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Depth :</th>
-                                                    <td>@Model.Depth %</td>
-                                                    <th>Table :</th>
-                                                    <td>@Model.Table %</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Polish :</th>
-                                                    <td>@Model.PolishName</td>
-                                                    <th>Symmetry :</th>
-                                                    <td>@Model.SymmetyName</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Certification :</th>
-                                                    <td>@Model.LabName</td>
-                                                    <th>Measurements :</th>
-                                                    <td>@Model.Measurement</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                                        <tr>
+                                                            <th>Shape :</th>
+                                                            <td>@Model.ShapeName</td>
+                                                            <th>Carat Weight :</th>
+                                                            <td>@Model.Carat</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Color :</th>
+                                                            <td>@Model.ColorName</td>
+                                                            <th>Clarity :</th>
+                                                            <td>@Model.ClarityName</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Cut Grade :</th>
+                                                            <td>@Model.CutName</td>
+                                                            <th>Fluorescence :</th>
+                                                            <td>@Model.FluorName</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Depth :</th>
+                                                            <td>@Model.Depth %</td>
+                                                            <th>Table :</th>
+                                                            <td>@Model.Table %</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Polish :</th>
+                                                            <td>@Model.PolishName</td>
+                                                            <th>Symmetry :</th>
+                                                            <td>@Model.SymmetyName</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Certification :</th>
+                                                            <td>@Model.LabName</td>
+                                                            <th>Measurements :</th>
+                                                            <td>@Model.Measurement</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="tab-pane fade" id="tab_three">
                                         <form action="#" class="review-form">
@@ -396,10 +400,10 @@
             if (diamondcartlist.includes(diamondId)) {
                  diamondcartlist = diamondcartlist.filter(id => id !== diamondId);
                  localStorage.setItem("diamondCartlist", JSON.stringify(diamondcartlist));
-                 
+
                  alert("Product has been removed from your cartlist.");
-            } 
-            else 
+            }
+            else
             {
                  diamondcartlist.push(diamondId);
                  localStorage.setItem("diamondCartlist", JSON.stringify(diamondcartlist));
@@ -414,6 +418,7 @@
          function getWishlistCounter() {
                 let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
                 $("#wishlistCounter").text(wishlist.length);
+                $("#wishlistMobileCounter").text(wishlist.length);
          }
 
         function updateWishlistUI() {
@@ -432,14 +437,15 @@
                 }
             });
 
-            
+
         }
 
         function getcartlistCounter() {
                 let cardlist = JSON.parse(localStorage.getItem("diamondCartlist")) || [];
                 $("#addtoCardCounter").text(cardlist.length);
+                $("#addtoCardMobileCounter").text(daiamondCard.length);
          }
-        
+
          function updatecartlistUI() {
             let cardlist = JSON.parse(localStorage.getItem("diamondCartlist")) || [];
         }

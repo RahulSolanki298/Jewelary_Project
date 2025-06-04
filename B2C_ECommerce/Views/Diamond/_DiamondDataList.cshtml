@@ -67,15 +67,15 @@
                     <td>@item.SymmetyName</td>
                     <td>@item.Depth</td>
                     <td>@item.Price</td>
-                    <td><input type="checkbox" style="width:20px;height:20px;" diamondId="@item.Id" /></td>
+                    <td><input type="checkbox" style="width:20px;height:20px;" diamondId="@item.Id" title="Compare" /></td>
                     <td>
-                        <a class="wishlist-toggle" data-diamondId="@item.Id">
+                        <a class="wishlist-toggle" data-diamondId="@item.Id" title="Wish">
                             <img src="@SD.ShapeImgUrl/assets/img/Heart-Unchecked.png" class="img-fluid heart-unchecked" style="width:25px;height:25px;" />
                             <img src="@SD.ShapeImgUrl/assets/img/Heart-Checked.png" class="img-fluid heart-checked" style="width:25px;height:25px;display:none;" />
                         </a>
                     </td>
                     <td>
-                        <a class="btn btn-sm btn-dark rounded-pill" href="@Url.Action("GetSingleDiamond","Diamond",new { diamondId= item.Id})">
+                        <a class="btn btn-sm btn-dark rounded-pill" title="Diamond Details" href="@Url.Action("GetSingleDiamond","Diamond",new { diamondId= item.Id})">
                             Details
                         </a>
                     </td>

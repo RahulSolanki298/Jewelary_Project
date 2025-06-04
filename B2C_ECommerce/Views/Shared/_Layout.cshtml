@@ -220,22 +220,19 @@
         $(document).ready(function () {
             getWishlistCounter();
             getAddToCardCounter();
-            showModal();
-
-            $("#closeButton").click(function(){
-                $("#modalPopup").modal("hide");
-            });
-
+           
         });
         function getWishlistCounter()
         {
             let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
             $("#wishlistCounter").text(wishlist.length);
+            $("#wishlistMobileCounter").text(wishlist.length);
         }
 
         function getAddToCardCounter() {
             let daiamondCard = JSON.parse(localStorage.getItem("diamondCartlist")) || [];
             $("#addtoCardCounter").text(daiamondCard.length);
+            $("#addtoCardMobileCounter").text(daiamondCard.length);
         }
 
         
