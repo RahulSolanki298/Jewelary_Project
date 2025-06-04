@@ -52,18 +52,23 @@
             <table class="table table-hover table-bordered mb-0" id="ringTable">
                 <thead>
                     <tr>
-                        <th scope="col"><input type="checkbox" class="chkId" id="chkRingsIds" /></th>
+                        <th scope="col"><input type="checkbox" class="chkId" id="chkAllIds" /></th>
                         <th scope="col">Image</th>
                         <th scope="col">Status</th>
                         <th scope="col">Title</th>
                         <th scope="col">Vendor</th>
                         <th scope="col">Style</th>
-                        <th scope="col">Color</th>
+                        <th scope="col">Metal(Color)</th>
                         <th scope="col">Length</th>
                         <th scope="col">Band Width</th>
                         <th scope="col">Weight</th>
                         <th scope="col">Karat</th>
                         <th scope="col">Price</th>
+                        <th scope="col">Accent Stone Shape</th>
+                        <th scope="col">MM Size</th>
+                        <th scope="col">Dia Wt</th>
+                        <th scope="col">No Of Stones</th>
+                        <th scope="col">Grades</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -86,6 +91,7 @@
                                 <td scope="col">
                                     <h5>@item.Title</h5>
                                     <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
+                                    <p>@item.Description</p>
                                 </td>
                                 <td scope="col">@item.VenderName</td>
                                 <td scope="col">@item.Sku</td>
@@ -95,6 +101,11 @@
                                 <td scope="col">@item.GoldWeight</td>
                                 <td scope="col">@item.Karat</td>
                                 <td scope="col">@item.Price</td>
+                                <td scope="col">@item.AccentStoneShapeName</td>
+                                <td scope="col">@item.MMSize</td>
+                                <td scope="col">@item.DiaWT</td>
+                                <td scope="col">@item.NoOfStones</td>
+                                <td scope="col">@item.Grades</td>
                             </tr>
                         }
                     }
@@ -109,9 +120,9 @@
         </div>
         <div class="tab-pane fade" id="bandList" role="tabpanel" aria-labelledby="bands-tab">
             <table class="table table-hover table-bordered mb-0" id="bandTable">
-                <thead class="table-light ">
+                <thead>
                     <tr>
-                        <th scope="col"><input type="checkbox" class="chkId" id="chkBandIds" /></th>
+                        <th scope="col"><input type="checkbox" class="chkId" id="chkAllIds" /></th>
                         <th scope="col">
                             Image
                         </th>
@@ -124,8 +135,17 @@
                         <th scope="col">Style</th>
                         <th scope="col">Band Width</th>
                         <th scope="col">Weight</th>
-                        <td scope="col">Karat</td>
-                        <td scope="col">Price</td>
+                        <th scope="col">Karat</th>
+                        <th scope="col">CTW</th>
+                        <th scope="col">Center Shape</th>
+                        <th scope="col">Center Carat</th>
+                        <th scope="col">Metal(Color)</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Accent Stone Shape</th>
+                        <th scope="col">MM Size</th>
+                        <th scope="col">Dia Wt</th>
+                        <th scope="col">No Of Stones</th>
+                        <th scope="col">Grades</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -133,8 +153,9 @@
                     {
                         @foreach (var item in Model.Where(x => x.CategoryName == SD.Bands))
                         {
-                            if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
+                            if (item.ProductImageVideos.Any())
                             {
+                                defaultImage = string.Empty;
                                 defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
                             }
                             <tr>
@@ -146,14 +167,23 @@
                                 <td scope="col">
                                     <h5>@item.Title</h5>
                                     <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
+                                    <p>@item.Description</p>
                                 </td>
                                 <td scope="col">@item.VenderName</td>
                                 <td scope="col">@item.ColorName</td>
                                 <td scope="col">@item.Sku</td>
                                 <td scope="col">@item.BandWidth</td>
                                 <td scope="col">@item.GoldWeight</td>
-                                <td scope="col">@item.Karat</td>
+                                <td scope="col">@item.CTW</td>
+                                <td scope="col">@item.CenterShapeName</td>
+                                <td scope="col">@item.CenterCaratName</td>
+                                <td scope="col">@item.ColorName</td>
                                 <td scope="col">@item.Price</td>
+                                <th scope="col">@item.AccentStoneShapeName</th>
+                                <th scope="col">@item.MMSize</th>
+                                <th scope="col">@item.DiaWT</th>
+                                <th scope="col">@item.NoOfStones</th>
+                                <th scope="col">@item.Grades</th>
 
                             </tr>
                         }
@@ -169,9 +199,9 @@
         </div>
         <div class="tab-pane fade" id="earringList" role="tabpanel" aria-labelledby="earrings-tab">
             <table class="table table-hover table-bordered mb-0" id="EarringTable">
-                <thead class="table-light ">
+                <thead>
                     <tr>
-                        <th scope="col"><input type="checkbox" class="chkId" id="chkEarringIds" /></th>
+                        <th scope="col">#</th>
                         <th scope="col">
                             Image
                         </th>
@@ -182,23 +212,32 @@
                         <th scope="col">Vendor</th>
                         <th scope="col">Color</th>
                         <th scope="col">Style</th>
-                        <th scope="col">Diameter</th>
+                        <th scope="col">Band Width</th>
                         <th scope="col">Weight</th>
-                        <th scope="col">CTW</th>
                         <th scope="col">Karat</th>
                         <th scope="col">Price</th>
-
+                        <th scope="col">Diameter</th>
+                        <th scope="col">Weight</th>
+                        <th scope="col">Karat</th>
+                        <th scope="col">CTW</th>
+                        <th scope="col">Accent Stone Shape</th>
+                        <th scope="col">MM Size</th>
+                        <th scope="col">Dia Wt</th>
+                        <th scope="col">No of Stones</th>
+                        <th scope="col">Grades</th>
+                        <th scope="col">Diamond Type</th>
+                        <th scope="col">Wholesale Cost</th>
                     </tr>
                 </thead>
-                <tbody>
                 <tbody>
                     @if (Model != null)
                     {
                         foreach (var item in Model.Where(x => x.CategoryName == SD.Earrings))
                         {
                             defaultImage = string.Empty;
-                            if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
+                            if (item.ProductImageVideos.Any())
                             {
+                                defaultImage = string.Empty;
                                 defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
                             }
                             <tr>
@@ -212,11 +251,21 @@
                                 <td>@item.VenderName</td>
                                 <td>@item.ColorName</td>
                                 <td>@item.Sku</td>
-                                <td>@item.Diameter</td>
+                                <td>@item.BandWidth</td>
                                 <td>@item.GoldWeight</td>
-                                <td>@item.CTW</td>
                                 <td>@item.Karat</td>
                                 <td>@item.Price</td>
+                                <td>@item.Diameter</td>
+                                <td>@item.Weights</td>
+                                <td>@item.Karat</td>
+                                <td>@item.CTW</td>
+                                <td>@item.AccentStoneShapeName</td>
+                                <td>@item.MMSize</td>
+                                <td>@item.DiaWT</td>
+                                <td>@item.NoOfStones</td>
+                                <td>@item.Grades</td>
+                                <td>@item.ProductType</td>
+                                <td>@item.WholesaleCost</td>
                             </tr>
                         }
                     }
@@ -234,9 +283,9 @@
         </div>
         <div class="tab-pane fade" id="pendantList" role="tabpanel" aria-labelledby="pandant-tab">
             <table class="table table-hover table-bordered mb-0" id="PendantTable">
-                <thead class="table-light ">
+                <thead>
                     <tr>
-                        <th scope="col"><input type="checkbox" class="chkId" id="chkPendantIds" /></th>
+                        <th scope="col"><input type="checkbox" class="chkId" id="chkAllIds" /></th>
                         <th scope="col">
                             Image
                         </th>
@@ -247,57 +296,80 @@
                         <th scope="col">Vendor</th>
                         <th scope="col">Color</th>
                         <th scope="col">Style</th>
-                        <th scope="col">Length</th>
+                        <th scope="col">Band Width</th>
                         <th scope="col">Weight</th>
                         <th scope="col">Karat</th>
                         <th scope="col">Price</th>
+                        <th scope="col">Diameter</th>
+                        <th scope="col">Weight</th>
+                        <th scope="col">Karat</th>
+                        <th scope="col">CTW</th>
+                        <th scope="col">Accent Stone Shape</th>
+                        <th scope="col">MM Size</th>
+                        <th scope="col">Dia Wt</th>
+                        <th scope="col">No of Stones</th>
+                        <th scope="col">Grades</th>
+                        <th scope="col">Diamond Type</th>
+                        <th scope="col">Wholesale Cost</th>
                     </tr>
                 </thead>
                 <tbody>
                     @if (Model != null)
                     {
-
-                        @foreach (var item in Model.Where(x => x.CategoryName == SD.Pendants))
+                        foreach (var item in Model.Where(x => x.CategoryName == SD.Earrings))
                         {
                             defaultImage = string.Empty;
-                            if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
+                            if (item.ProductImageVideos.Any())
                             {
+                                defaultImage = string.Empty;
                                 defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
                             }
                             <tr>
-                                <td scope="col"><input type="checkbox" class="chkId" /></td>
-                                <td scope="col">
-                                    <img src="@SD.ImgUrl/@defaultImage" style="height:100px;" />
-                                </td>
+                                <td><input type="checkbox" class="chkId" value="@item.Id" /></td>
+                                <td><img src="@SD.ImgUrl/@defaultImage" style="height:100px;" /></td>
                                 <td scope="col">@item.UploadStatus</td>
-                                <td scope="col">
+                                <td>
                                     <h5>@item.Title</h5>
                                     <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
                                 </td>
-                                <td scope="col">@item.VenderName</td>
-                                <td scope="col">@item.ColorName</td>
-                                <td scope="col">@item.VenderStyle</td>
-                                <td scope="col">@item.Length</td>
-                                <td scope="col">@item.GoldWeight</td>
-                                <td scope="col">@item.Karat</td>
-                                <td scope="col">@item.Price</td>
+                                <td>@item.VenderName</td>
+                                <td>@item.ColorName</td>
+                                <td>@item.Sku</td>
+                                <td>@item.BandWidth</td>
+                                <td>@item.GoldWeight</td>
+                                <td>@item.Karat</td>
+                                <td>@item.Price</td>
+                                <td>@item.Diameter</td>
+                                <td>@item.Weights</td>
+                                <td>@item.Karat</td>
+                                <td>@item.CTW</td>
+                                <td>@item.AccentStoneShapeName</td>
+                                <td>@item.MMSize</td>
+                                <td>@item.DiaWT</td>
+                                <td>@item.NoOfStones</td>
+                                <td>@item.Grades</td>
+                                <td>@item.ProductType</td>
+                                <td>@item.WholesaleCost</td>
                             </tr>
                         }
                     }
                     else
                     {
                         <tr>
-                            <td colspan="12"> No data found</td>
+
+                            <td colspan="12">No data found</td>
+
                         </tr>
                     }
                 </tbody>
+
             </table>
         </div>
         <div class="tab-pane fade" id="braceletsList" role="tabpanel" aria-labelledby="bracelets-tab">
             <table class="table table-hover table-bordered mb-0" id="BraceletsTable">
-                <thead class="table-light ">
+                <thead>
                     <tr>
-                        <th scope="col"><input type="checkbox" class="chkId" id="chkBraceletIds" /></th>
+                        <th scope="col"><input type="checkbox" class="chkId" id="chkAllIds" /></th>
                         <th scope="col">
                             Image
                         </th>
@@ -306,53 +378,75 @@
                             Title
                         </th>
                         <th scope="col">Vendor</th>
+                        <th scope="col">Color</th>
                         <th scope="col">Style</th>
-                        <th scope="col">Length</th>
                         <th scope="col">Band Width</th>
                         <th scope="col">Weight</th>
                         <th scope="col">Karat</th>
                         <th scope="col">Price</th>
-
+                        <th scope="col">Diameter</th>
+                        <th scope="col">Weight</th>
+                        <th scope="col">Karat</th>
+                        <th scope="col">CTW</th>
+                        <th scope="col">Accent Stone Shape</th>
+                        <th scope="col">MM Size</th>
+                        <th scope="col">Dia Wt</th>
+                        <th scope="col">No of Stones</th>
+                        <th scope="col">Grades</th>
+                        <th scope="col">Diamond Type</th>
+                        <th scope="col">Wholesale Cost</th>
                     </tr>
                 </thead>
                 <tbody>
                     @if (Model != null)
                     {
-
-                        @foreach (var item in Model.Where(x => x.CategoryName == SD.Bracelets))
+                        foreach (var item in Model.Where(x => x.CategoryName == SD.Earrings))
                         {
                             defaultImage = string.Empty;
-                            if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
+                            if (item.ProductImageVideos.Any())
                             {
+                                defaultImage = string.Empty;
                                 defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
                             }
                             <tr>
-                                <td scope="col"><input type="checkbox" class="chkId" /></td>
-                                <td scope="col">
-                                    <img src="@SD.ImgUrl/@defaultImage" style="height:100px;" />
-                                </td>
-                                <th scope="col">@item.UploadStatus</th>
-                                <td scope="col">
+                                <td><input type="checkbox" class="chkId" value="@item.Id" /></td>
+                                <td><img src="@SD.ImgUrl/@defaultImage" style="height:100px;" /></td>
+                                <td scope="col">@item.UploadStatus</td>
+                                <td>
                                     <h5>@item.Title</h5>
                                     <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
                                 </td>
-                                <td scope="col">@item.VenderName</td>
-                                <td scope="col">@item.Sku</td>
-                                <td scope="col">@item.Length</td>
-                                <td scope="col">@item.BandWidth</td>
-                                <td scope="col">@item.GoldWeight</td>
-                                <td scope="col">@item.Karat</td>
-                                <td scope="col">@item.Price</td>
+                                <td>@item.VenderName</td>
+                                <td>@item.ColorName</td>
+                                <td>@item.Sku</td>
+                                <td>@item.BandWidth</td>
+                                <td>@item.GoldWeight</td>
+                                <td>@item.Karat</td>
+                                <td>@item.Price</td>
+                                <td>@item.Diameter</td>
+                                <td>@item.Weights</td>
+                                <td>@item.Karat</td>
+                                <td>@item.CTW</td>
+                                <td>@item.AccentStoneShapeName</td>
+                                <td>@item.MMSize</td>
+                                <td>@item.DiaWT</td>
+                                <td>@item.NoOfStones</td>
+                                <td>@item.Grades</td>
+                                <td>@item.ProductType</td>
+                                <td>@item.WholesaleCost</td>
                             </tr>
                         }
                     }
                     else
                     {
                         <tr>
-                            <td colspan="12"> No data found</td>
+
+                            <td colspan="12">No data found</td>
+
                         </tr>
                     }
                 </tbody>
+
             </table>
         </div>
     </div>

@@ -479,11 +479,13 @@
                         error: function (xhr, status, error) {
                             console.error("Upload error:", xhr.responseText);
                             $("#btnFileImgSave").removeAttr("disabled");
+
                             Swal.fire({
-                                title: "Upload Failed",
+                                title: 'Error!',
                                 text: xhr.responseText || "An error occurred during upload.",
-                                icon: "error"
-                            });
+                                icon: 'error',
+                                confirmButtonText: 'Cool'
+                            })
                         },
                         complete: function () {
                             $button.prop('disabled', false);  // Re-enable the button
