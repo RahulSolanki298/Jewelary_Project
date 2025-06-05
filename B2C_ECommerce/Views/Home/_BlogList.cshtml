@@ -1,0 +1,43 @@
+﻿@model List<DataAccess.Entities.Blogs>
+@using Common;
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="section-title text-center">
+                <h2 class="title text-uppercase text-theme-color-font mb-2">latest blogs</h2>
+                <p class="sub-title">There are latest blog posts</p>
+                <center>
+                    <img src="~/assets/img/Title Line.png" />
+                </center>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="active-blog-carousel-active slick-row-10 slick-arrow-style">
+
+                @foreach (var item in Model)
+                {
+                    <div class="blog-post-item">
+                        <figure class="blog-thumb">
+                            <a href="#">
+                                <img src="@SD.ImgUrl@item.BlogImage" alt="blog image">
+                            </a>
+                        </figure>
+                        <div class="blog-content">
+                            <div class="blog-meta">
+                                <p>@item.BlogDate | <a href="#">@item.Title</a></p>
+                            </div>
+                            <h5 class="blog-title">
+                                <a href="#">@item.Description</a>
+                            </h5>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

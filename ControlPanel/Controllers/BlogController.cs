@@ -1,7 +1,11 @@
 ﻿using Business.Repository.IRepository;
 using DataAccess.Entities;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace ControlPanel.Controllers
@@ -9,9 +13,13 @@ namespace ControlPanel.Controllers
     public class BlogController : Controller
     {
         public readonly IBlogRepository _blogRepository;
-        public BlogController(IBlogRepository blogRepository)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public readonly ILogEntryRepository _logEntryRepository;
+        public BlogController(IBlogRepository blogRepository, ILogEntryRepository logEntryRepository, UserManager<ApplicationUser> userManager)
         {
             _blogRepository = blogRepository;
+            _logEntryRepository = logEntryRepository;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -55,10 +63,71 @@ namespace ControlPanel.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveBlog(Blogs blog)
+        public async Task<IActionResult> GetBlogById(Blogs blog)
         {
-            var result = await _blogRepository.SaveBlogAsync(blog);
-            return View(result);
+            var userId = HttpContext.Session.GetString("UserId");
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (!ModelState.IsValid)
+            {
+                TempData["Status"] = "Fail";
+                TempData["Message"] = "Invalid blog data submitted.";
+                return View(blog);
+            }
+
+            try
+            {
+                if (blog.ImageFile != null && blog.ImageFile.Length > 0)
+                {
+                    // Set unique file name
+                    var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(blog.ImageFile.FileName)}";
+                    var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
+
+                    if (!Directory.Exists(uploads))
+                        Directory.CreateDirectory(uploads);
+
+                    var filePath = Path.Combine(uploads, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await blog.ImageFile.CopyToAsync(stream);
+                    }
+
+                    blog.BlogImage = $"/uploads/{fileName}"; // Save path for display
+                }
+                blog.BlogDate = DateTime.Now;
+                var result = await _blogRepository.SaveBlogAsync(blog);
+
+                if (result != null)
+                {
+                    TempData["Status"] = "Success";
+                    TempData["Message"] = "Blog has been saved successfully.";
+                    return RedirectToAction("Index");
+                }
+
+                TempData["Status"] = "Fail";
+                TempData["Message"] = "Blog could not be saved.";
+                return View(blog);
+            }
+            catch (Exception ex)
+            {
+                TempData["Status"] = "Error";
+                TempData["Message"] = "An error occurred while saving the blog.";
+
+                await _logEntryRepository.SaveLogEntry(new LogEntry
+                {
+                    LogDate = DateTime.Now,
+                    TableName = "Blogs",
+                    ActionType = "Blog->GetBlogById",
+                    LogMessage = ex.Message,
+                    LogLevel = ex.StackTrace,
+                    UserName = user?.FirstName + " " + user?.LastName
+                });
+
+                return View(blog);
+            }
         }
+
+
     }
 }

@@ -74,31 +74,31 @@
                             defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
                         }
 
-                <tr>
-                    <td scope="col"><input type="checkbox" class="chkId" value="@item.Id" /></td>
-                    <td scope="col">
-                        <img src="@SD.ImgUrl/@defaultImage" style="height:100px;" />
-                    </td>
-                    <td scope="col">@item.UploadStatus</td>
-                    <td scope="col">
-                        <h5>@item.Title</h5>
-                        <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
-                        <p>@item.Description</p>
-                    </td>
-                    <td scope="col">@item.VenderName</td>
-                    <td scope="col">@item.Sku</td>
-                    <td scope="col">@item.ColorName</td>
-                    <td scope="col">@item.Length</td>
-                    <td scope="col">@item.BandWidth</td>
-                    <td scope="col">@item.GoldWeight</td>
-                    <td scope="col">@item.Karat</td>
-                    <td scope="col">@item.Price</td>
-                    <td scope="col">@item.AccentStoneShapeName</td>
-                    <td scope="col">@item.MMSize</td>
-                    <td scope="col">@item.DiaWT</td>
-                    <td scope="col">@item.NoOfStones</td>
-                    <td scope="col">@item.Grades</td>
-                </tr>
+                        <tr>
+                            <td scope="col"><input type="checkbox" class="chkId" value="@item.Id" /></td>
+                            <td scope="col">
+                                <img src="@SD.ImgUrl/@defaultImage" style="height:100px;" />
+                            </td>
+                            <td scope="col">@item.UploadStatus</td>
+                            <td scope="col">
+                                <h5>@item.Title</h5>
+                                <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
+                                <p>@item.Description</p>
+                            </td>
+                            <td scope="col">@item.VenderName</td>
+                            <td scope="col">@item.Sku</td>
+                            <td scope="col">@item.ColorName</td>
+                            <td scope="col">@item.Length</td>
+                            <td scope="col">@item.BandWidth</td>
+                            <td scope="col">@item.GoldWeight</td>
+                            <td scope="col">@item.Karat</td>
+                            <td scope="col">@item.Price</td>
+                            <td scope="col">@item.AccentStoneShapeName</td>
+                            <td scope="col">@item.MMSize</td>
+                            <td scope="col">@item.DiaWT</td>
+                            <td scope="col">@item.NoOfStones</td>
+                            <td scope="col">@item.Grades</td>
+                        </tr>
                     }
                 }
                 else
@@ -138,6 +138,9 @@
                     <th scope="col">Dia Wt</th>
                     <th scope="col">No Of Stones</th>
                     <th scope="col">Grades</th>
+                    <th scope="col">Certification</th>
+                    <th scope="col">Subcategory</th>
+                    <th scope="col">DiamondType</th>
                 </tr>
             </thead>
             <tbody>
@@ -150,34 +153,35 @@
                             defaultImage = string.Empty;
                             defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
                         }
-                <tr>
-                    <td scope="col"><input type="checkbox" class="chkId" value="@item.Id" /></td>
-                    <td scope="col">
-                        <img src="@SD.ImgUrl/@defaultImage" style="height:100px;" />
-                    </td>
-                    <td scope="col">@item.UploadStatus</td>
-                    <td scope="col">
-                        <h5>@item.Title</h5>
-                        <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
-                        <p>@item.Description</p>
-                    </td>
-                    <td scope="col">@item.VenderName</td>
-                    <td scope="col">@item.ColorName</td>
-                    <td scope="col">@item.Sku</td>
-                    <td scope="col">@item.BandWidth</td>
-                    <td scope="col">@item.GoldWeight</td>
-                    <td scope="col">@item.CTW</td>
-                    <td scope="col">@item.CenterShapeName</td>
-                    <td scope="col">@item.CenterCaratName</td>
-                    <td scope="col">@item.ColorName</td>
-                    <td scope="col">@item.Price</td>
-                    <th scope="col">@item.AccentStoneShapeName</th>
-                    <th scope="col">@item.MMSize</th>
-                    <th scope="col">@item.DiaWT</th>
-                    <th scope="col">@item.NoOfStones</th>
-                    <th scope="col">@item.Grades</th>
+                        <tr>
+                            <td scope="col"><input type="checkbox" class="chkId" value="@item.Id" /></td>
+                            <td scope="col">
+                                <img src="@SD.ImgUrl/@defaultImage" style="height:100px;" />
+                            </td>
+                            <td scope="col">@item.UploadStatus</td>
+                            <td scope="col">
+                                <h5>@item.Title</h5>
+                                <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
+                                <p>@item.Description</p>
+                            </td>
+                            <td scope="col">@item.VenderName</td>
+                            <td scope="col">@item.ColorName</td>
+                            <td scope="col">@item.Sku</td>
+                            <td scope="col">@item.BandWidth</td>
+                            <td scope="col">@item.GoldWeight</td>
+                            <td scope="col">@item.Karat</td>
+                            <td scope="col">@item.CTW</td>
+                            <td scope="col">@item.CenterShapeName</td>
+                            <td scope="col">@item.CenterCaratName</td>
+                            <td scope="col">@item.ColorName</td>
+                            <td scope="col">@item.Price</td>
+                            <th scope="col">@item.AccentStoneShapeName</th>
+                            <th scope="col">@item.MMSize</th>
+                            <th scope="col">@item.DiaWT</th>
+                            <th scope="col">@item.NoOfStones</th>
+                            <th scope="col">@item.Grades</th>
 
-                </tr>
+                        </tr>
                     }
                 }
                 else
@@ -232,33 +236,33 @@
                             defaultImage = string.Empty;
                             defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
                         }
-                <tr>
-                    <td><input type="checkbox" class="chkId" value="@item.Id" /></td>
-                    <td><img src="@SD.ImgUrl/@defaultImage" style="height:100px;" /></td>
-                    <td scope="col">@item.UploadStatus</td>
-                    <td>
-                        <h5>@item.Title</h5>
-                        <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
-                    </td>
-                    <td>@item.VenderName</td>
-                    <td>@item.ColorName</td>
-                    <td>@item.Sku</td>
-                    <td>@item.BandWidth</td>
-                    <td>@item.GoldWeight</td>
-                    <td>@item.Karat</td>
-                    <td>@item.Price</td>
-                    <td>@item.Diameter</td>
-                    <td>@item.Weights</td>
-                    <td>@item.Karat</td>
-                    <td>@item.CTW</td>
-                    <td>@item.AccentStoneShapeName</td>
-                    <td>@item.MMSize</td>
-                    <td>@item.DiaWT</td>
-                    <td>@item.NoOfStones</td>
-                    <td>@item.Grades</td>
-                    <td>@item.ProductType</td>
-                    <td>@item.WholesaleCost</td>
-                </tr>
+                        <tr>
+                            <td><input type="checkbox" class="chkId" value="@item.Id" /></td>
+                            <td><img src="@SD.ImgUrl/@defaultImage" style="height:100px;" /></td>
+                            <td scope="col">@item.UploadStatus</td>
+                            <td>
+                                <h5>@item.Title</h5>
+                                <p>@item.Grades @item.CTW @item.CenterShapeName @item.CategoryName</p>
+                            </td>
+                            <td>@item.VenderName</td>
+                            <td>@item.ColorName</td>
+                            <td>@item.Sku</td>
+                            <td>@item.BandWidth</td>
+                            <td>@item.GoldWeight</td>
+                            <td>@item.Karat</td>
+                            <td>@item.Price</td>
+                            <td>@item.Diameter</td>
+                            <td>@item.Weights</td>
+                            <td>@item.Karat</td>
+                            <td>@item.CTW</td>
+                            <td>@item.AccentStoneShapeName</td>
+                            <td>@item.MMSize</td>
+                            <td>@item.DiaWT</td>
+                            <td>@item.NoOfStones</td>
+                            <td>@item.Grades</td>
+                            <td>@item.ProductType</td>
+                            <td>@item.WholesaleCost</td>
+                        </tr>
                     }
                 }
                 else

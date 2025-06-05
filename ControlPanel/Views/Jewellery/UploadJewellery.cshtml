@@ -5,11 +5,11 @@
         <h2 class="mb-3 text-dark">Add Product</h2>
         @if (TempData["UploadSuccess"] != null)
         {
-        <div class="alert alert-success">@TempData["UploadSuccess"]</div>
+            <div class="alert alert-success">@TempData["UploadSuccess"]</div>
         }
         @if (TempData["UploadError"] != null)
         {
-        <div class="alert alert-danger">@TempData["UploadError"]</div>
+            <div class="alert alert-danger">@TempData["UploadError"]</div>
         }
 
 
@@ -82,7 +82,7 @@
 
                     let product = {
                         Title: row.find('input[name="Title"]').val(),
-                        Sku: row.find('input[name="Sku"]').val(),
+                        Sku: row.find('input[name="VenderStyle"]').val(),
                         CategoryName: row.find('input[name="CategoryName"]').val(),
                         VenderName: row.find('input[name="VenderName"]').val(),
                         VenderStyle: row.find('input[name="VenderStyle"]').val(),
@@ -103,7 +103,8 @@
                         Price: row.find('input[name="Price"]').val(),
                         WholesaleCost: row.find('input[name="WholesaleCost"]').val(),
                         Karat: row.find('input[name="Karat"]').val(),
-                        Description: row.find('textarea[name="Description"]').val()
+                        Description: row.find('textarea[name="Description"]').val(),
+                        Diameter: row.find('input[name="Diameter"]').val(),
                     };
 
                     productDTO.push(product);
@@ -148,7 +149,7 @@
 
                     let product = {
                         Title: row.find('input[name="Title"]').val(),
-                        Sku: row.find('input[name="Sku"]').val(),
+                        Sku: row.find('input[name="VenderStyle"]').val(),
                         CategoryName: row.find('input[name="CategoryName"]').val(),
                         VenderName: row.find('input[name="VenderName"]').val(),
                         VenderStyle: row.find('input[name="VenderStyle"]').val(),
@@ -169,7 +170,8 @@
                         Price: row.find('input[name="Price"]').val(),
                         WholesaleCost: row.find('input[name="WholesaleCost"]').val(),
                         Karat: row.find('input[name="Karat"]').val(),
-                        Description: row.find('textarea[name="Description"]').val()
+                        Description: row.find('textarea[name="Description"]').val(),
+                        Diameter: row.find('input[name="Diameter"]').val(),
                     };
 
                     productDTO.push(product);
@@ -215,7 +217,7 @@
 
                     let product = {
                         Title: row.find('input[name="Title"]').val(),
-                        Sku: row.find('input[name="Sku"]').val(),
+                        Sku: row.find('input[name="VenderStyle"]').val(),
                         CategoryName: row.find('input[name="CategoryName"]').val(),
                         VenderName: row.find('input[name="VenderName"]').val(),
                         VenderStyle: row.find('input[name="VenderStyle"]').val(),
@@ -236,7 +238,9 @@
                         Price: row.find('input[name="Price"]').val(),
                         WholesaleCost: row.find('input[name="WholesaleCost"]').val(),
                         Karat: row.find('input[name="Karat"]').val(),
-                        Description: row.find('textarea[name="Description"]').val()
+                        Description: row.find('textarea[name="Description"]').val(),
+                        Diameter: row.find('input[name="Diameter"]').val(),
+
                     };
 
                     productDTO.push(product);
@@ -282,7 +286,7 @@
 
                     let product = {
                         Title: row.find('input[name="Title"]').val(),
-                        Sku: row.find('input[name="Sku"]').val(),
+                        Sku: row.find('input[name="VenderStyle"]').val(),
                         CategoryName: row.find('input[name="CategoryName"]').val(),
                         VenderName: row.find('input[name="VenderName"]').val(),
                         VenderStyle: row.find('input[name="VenderStyle"]').val(),
@@ -303,7 +307,9 @@
                         Price: row.find('input[name="Price"]').val(),
                         WholesaleCost: row.find('input[name="WholesaleCost"]').val(),
                         Karat: row.find('input[name="Karat"]').val(),
-                        Description: row.find('textarea[name="Description"]').val()
+                        Description: row.find('textarea[name="Description"]').val(),
+                        Diameter: row.find('input[name="Diameter"]').val(),
+
                     };
 
                     productDTO.push(product);
@@ -349,7 +355,7 @@
 
                     let product = {
                         Title: row.find('input[name="Title"]').val(),
-                        Sku: row.find('input[name="Sku"]').val(),
+                        Sku: row.find('input[name="VenderStyle"]').val(),
                         CategoryName: row.find('input[name="CategoryName"]').val(),
                         VenderName: row.find('input[name="VenderName"]').val(),
                         VenderStyle: row.find('input[name="VenderStyle"]').val(),
@@ -370,7 +376,9 @@
                         Price: row.find('input[name="Price"]').val(),
                         WholesaleCost: row.find('input[name="WholesaleCost"]').val(),
                         Karat: row.find('input[name="Karat"]').val(),
-                        Description: row.find('textarea[name="Description"]').val()
+                        Description: row.find('textarea[name="Description"]').val(),
+                        Diameter: row.find('input[name="Diameter"]').val(),
+
                     };
 
                     productDTO.push(product);

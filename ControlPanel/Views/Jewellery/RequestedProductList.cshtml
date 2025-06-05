@@ -82,10 +82,20 @@
                                 defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
                             }
 
+                            //string description = @item.Description ?? "";
+                            //string[] words = description.Split(' ');
+                            //string shortDescription = words.Length > 60
+                            //    ? string.Join(" ", words.Take(60)) + "..."
+                            //    : description;
+
                             <tr>
-                                <td scope="col"><input type="checkbox" class="chkId" value="@item.Id" /></td>
                                 <td scope="col">
-                                    <img src="@SD.ImgUrl/@defaultImage" style="height:100px;" />
+                                    <input type="checkbox" class="chkId" value="@item.Id" />
+                                </td>
+                                <td scope="col">
+                                    <a>
+                                        <img src="@SD.ImgUrl/@defaultImage" style="height:100px;" />
+                                    </a>
                                 </td>
                                 <td scope="col">@item.UploadStatus</td>
                                 <td scope="col">

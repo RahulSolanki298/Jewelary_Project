@@ -17,7 +17,7 @@
                 <div class="card-body p-4">
                     <div class="row">
                         <div class="col-lg-10 col-md-10 col-sm-8">
-                            <form asp-action="SaveBlog" method="post" enctype="multipart/form-data">
+                            <form asp-action="GetBlogById" method="post" enctype="multipart/form-data">
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                 <div class="form-group mb-3">
                                     <input asp-for="Id" class="form-control" type="hidden" />
@@ -29,15 +29,14 @@
                                 </div>
                                 <div class="form-group mb-3">
                                     <label asp-for="Description" class="control-label"></label>
-                                    <textarea asp-for="Description" class="form-control border-0 shadow"></textarea>
+                                    <textarea asp-for="Description" class="form-control"></textarea>
                                     <span asp-validation-for="Description" class="text-danger"></span>
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    <label class="control-label">Blog Image</label>
-                                    <input asp-for="BlogImage" class="form-control" type="file" />
-                                    <span asp-validation-for="BlogImage" class="text-danger"></span>
-
+                                    <label for="ImageFile" class="form-label">Upload Blog Image</label>
+                                    <input type="file" asp-for="ImageFile" class="form-control" />
+                                    <div class="form-text">Recommended image size: 951 x 475 pixels</div>
                                 </div>
 
                                 <div class="form-check mb-3">
@@ -60,6 +59,13 @@
                             </div>
                         </div>
                     </div>
+
+                    @*<div class="row">
+                        <div class="col-lg-10 col-md-10 col-sm-8">
+                            <h4>Note :</h4>
+                            <p class="mb-0">Please upload images with dimensions <strong>951 x 475 pixels</strong> for optimal display.</p>
+                        </div>
+                    </div>*@
                 </div>
             </div>
         </div>
@@ -68,12 +74,12 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            $('#Description').summernote({
-                height: 400,
-                minHeight: null,
-                maxHeight: null,
-                focus: true
-            });
+            //$('#Description').summernote({
+            //    height: 400,
+            //    minHeight: null,
+            //    maxHeight: null,
+            //    focus: true
+            //});
         });
 
         function previewImage(event) {

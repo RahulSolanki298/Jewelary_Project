@@ -861,113 +861,8 @@
     </div>
 </section>
 
-<section class="latest-blog-area padding-top-40 padding-bottom-40">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <!-- section title start -->
-                <div class="section-title text-center">
-                    <h2 class="title text-uppercase text-theme-color-font mb-2">latest blogs</h2>
-                    <p class="sub-title">There are latest blog posts</p>
-                    <center>
-                        <img src="~/assets/img/Title Line.png" />
-                    </center>
-                </div>
-                <!-- section title start -->
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="blog-carousel-active slick-row-10 slick-arrow-style">
-                    <!-- blog post item start -->
-                    <div class="blog-post-item">
-                        <figure class="blog-thumb">
-                            <a href="#">
-                                <img src="~/assets/img/blog/blog-img1.jpg" alt="blog image">
-                            </a>
-                        </figure>
-                        <div class="blog-content">
-                            <div class="blog-meta">
-                                <p>25/03/2019 | <a href="#">Corano</a></p>
-                            </div>
-                            <h5 class="blog-title">
-                                <a href="#">Celebrity Daughter Opens Up About Having Her Eye Color Changed</a>
-                            </h5>
-                        </div>
-                    </div>
-                    <!-- blog post item end -->
-                    <!-- blog post item start -->
-                    <div class="blog-post-item">
-                        <figure class="blog-thumb">
-                            <a href="#">
-                                <img src="~/assets/img/blog/blog-img2.jpg" alt="blog image">
-                            </a>
-                        </figure>
-                        <div class="blog-content">
-                            <div class="blog-meta">
-                                <p>25/03/2019 | <a href="#">Corano</a></p>
-                            </div>
-                            <h5 class="blog-title">
-                                <a href="#">Children Left Home Alone For 4 Days In TV series Experiment</a>
-                            </h5>
-                        </div>
-                    </div>
-                    <!-- blog post item end -->
-                    <!-- blog post item start -->
-                    <div class="blog-post-item">
-                        <figure class="blog-thumb">
-                            <a href="#">
-                                <img src="~/assets/img/blog/blog-img3.jpg" alt="blog image">
-                            </a>
-                        </figure>
-                        <div class="blog-content">
-                            <div class="blog-meta">
-                                <p>25/03/2019 | <a href="#">Corano</a></p>
-                            </div>
-                            <h5 class="blog-title">
-                                <a href="#">Lotto Winner Offering Up Money To Any Man That Will Date Her</a>
-                            </h5>
-                        </div>
-                    </div>
-                    <!-- blog post item end -->
-                    <!-- blog post item start -->
-                    <div class="blog-post-item">
-                        <figure class="blog-thumb">
-                            <a href="#">
-                                <img src="~/assets/img/blog/blog-img4.jpg" alt="blog image">
-                            </a>
-                        </figure>
-                        <div class="blog-content">
-                            <div class="blog-meta">
-                                <p>25/03/2019 | <a href="#">Corano</a></p>
-                            </div>
-                            <h5 class="blog-title">
-                                <a href="#">People are Willing Lie When Comes Money, According to Research</a>
-                            </h5>
-                        </div>
-                    </div>
-                    <!-- blog post item end -->
-                    <!-- blog post item start -->
-                    <div class="blog-post-item">
-                        <figure class="blog-thumb">
-                            <a href="#">
-                                <img src="~/assets/img/blog/blog-img5.jpg" alt="blog image">
-                            </a>
-                        </figure>
-                        <div class="blog-content">
-                            <div class="blog-meta">
-                                <p>25/03/2019 | <a href="#">Corano</a></p>
-                            </div>
-                            <h5 class="blog-title">
-                                <a href="#">romantic Love Stories Of Hollywood’s Biggest Celebrities</a>
-                            </h5>
-                        </div>
-                    </div>
-                    <!-- blog post item end -->
-                </div>
-            </div>
-        </div>
-    </div>
+<section class="latest-blog-area padding-top-40 padding-bottom-40" id="blogList">
+    
 </section>
 
 
@@ -1097,8 +992,8 @@
     <script>
         $(function () {
             showModal();
+           blogList();
 
-            
 
             $("#closeButton").click(function(){
                 $("#modalPopup").modal("hide");
@@ -1144,32 +1039,32 @@
             function updateVideoDisplay() {
                 var desktopvideobanner = document.getElementById('desktop-video-banner');
                 var desktopvideophone = document.getElementById('desktop-video-phone');
-                
+
                 // Ensure the videos are muted to allow autoplay on mobile
                 desktopvideobanner.muted = true;
                 desktopvideophone.muted = true;
-                
+
 
                 // Play videos only if the element is available
                 if (desktopvideobanner) {
-                    desktopvideobanner.play();                    
+                    desktopvideobanner.play();
                 }
 
-               
+
                 if (window.innerWidth <= 1040 && window.innerWidth >= 600) { // Tablet Video Display
                     $('.desktop-video').show();
                     $('.phone-video').hide();
-                    desktopvideobanner.play();                    
+                    desktopvideobanner.play();
                 }
                 else if (window.innerWidth <= 600) { // Mobile Video Display
                     $('.desktop-video').hide();
                     $('.phone-video').show();
 
-                    
+
                     if (desktopvideophone) {
                         desktopvideophone.play();
                     }
-                   
+
                 }
                 else { // Desktop Video Display
                     $('.desktop-video').show();
@@ -1178,12 +1073,51 @@
                 }
             }
 
+
         });
 
         function showModal() {
             setTimeout(function () {
                 $("#modalPopup").modal("show");
             }, 400);
+        }
+
+        function blogList()
+        {
+            $.ajax({
+               url: '@Url.Action("GetBlogList", "Home")',
+                type: 'Get',
+                success: function (data) {
+                    $('#blogList').html('');
+                    $('#blogList').html(data);
+
+
+                    $('.active-blog-carousel-active').slick({
+                        autoplay: true,
+                        speed: 1000,
+                        slidesToShow: 3,
+                        adaptiveHeight: true,
+                        prevArrow: '<button type="button" class="slick-prev"><i class="pe-7s-angle-left"></i></button>',
+                        nextArrow: '<button type="button" class="slick-next"><i class="pe-7s-angle-right"></i></button>',
+                        responsive: [{
+                            breakpoint: 992,
+                            settings: {
+                                slidesToShow: 2
+                            }
+                        },
+                        {
+                            breakpoint: 768,
+                            settings: {
+                                arrows: false,
+                                slidesToShow: 1
+                            }
+                        }]
+                    });
+                },
+                error: function (error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
         }
     </script>
 }

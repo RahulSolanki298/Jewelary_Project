@@ -41,16 +41,16 @@
             <div class="col-12">
                 <div class="tab-content" id="myTabContent">
                     @*<div class="container" style="display:none;">
-                        <button class="btn btn-sm btn-danger text-end">Delete</button>
-                        <button class="btn btn-sm btn-success">Hold</button>
-                    </div>*@
+            <button class="btn btn-sm btn-danger text-end">Delete</button>
+            <button class="btn btn-sm btn-success">Hold</button>
+        </div>*@
 
 
                     <div class="tab-pane fade show active" id="ringList" role="tabpanel" aria-labelledby="rings-tab">
                         <div class="row">
                             <div class="col-12">
                                 <div class="">
-                                    <div class="container mt-2">
+                                    <div class="container mt-2 mb-2">
                                         <div class="row">
                                             <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 offset-xxl-9 offset-xl-9 offset-lg-9 offset-md-8 ">
                                                 <button class="btn btn-theme" id="btnSaveRings">Save Rings</button>
@@ -60,31 +60,32 @@
                                     </div>
                                     <div class="row">
                                         <div class="table-responsive" style="max-height:600px !important">
-                                            <table class="table" id="ringTable">
+                                            <table class="table table-bordered table-sm" id="ringTable">
                                                 <thead class="thead-light" style="position:sticky;top:0">
                                                     <tr>
                                                         <th scope="col">#</th>
-                                                        <th scope="col">Title</th>
-                                                        <th scope="col">Sku</th>
                                                         <th scope="col">Category</th>
+                                                        <th scope="col">Title</th>
                                                         <th scope="col">Vender</th>
-                                                        <th scope="col">Vendor Style</th>
+                                                        <th scope="col">Vender.Style</th>
+                                                        <th scope="col">Diameter</th>
                                                         <th scope="col">Length</th>
-                                                        <th scope="col">Band Width</th>
+                                                        <th scope="col">Band.Width</th>
                                                         <th scope="col">Weight</th>
-                                                        <th scope="col">CTV</th>
-                                                        <th scope="col">Center Shape</th>
-                                                        <th scope="col">Center Carat</th>
+                                                        <th scope="col">CTW</th>
+                                                        <th scope="col">Center.Shape</th>
+                                                        <th scope="col">Center.Carat</th>
                                                         <th scope="col">Certification</th>
                                                         <th scope="col">Metal</th>
-                                                        <th scope="col">Accent Stone Shape</th>
-                                                        <th scope="col">MM Size</th>
-                                                        <th scope="col">Dia Wt</th>
-                                                        <th scope="col">No Of Stones</th>
+                                                        <th scope="col">Other</th>
+                                                        <th scope="col">Accent.Stone.Shape</th>
+                                                        <th scope="col">MM.Size</th>
+                                                        <th scope="col">Dia.Wt</th>
+                                                        <th scope="col">No.Of.Stones</th>
                                                         <th scope="col">Grades</th>
-                                                        <th scope="col">Diamond Type</th>
+                                                        <th scope="col">Diamond.Type</th>
                                                         <th scope="col">Price</th>
-                                                        <th scope="col">Wholesale Cost</th>
+                                                        <th scope="col">Wholesale.Cost</th>
                                                         <th scope="col">karat</th>
                                                         <th scope="col">Description</th>
 
@@ -98,13 +99,13 @@
 
                                                             <tr>
                                                                 <td scope="col">@(x++)</td>
+                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="CategoryName" asp-for="@item.CategoryName" style="width:90px;" /></td>
                                                                 <td scope="col">
                                                                     <input type="text" class="product-input form-control" asp-for="@item.Title" disabled name="Title" value="@item.Title" style="width:200px;" />
                                                                 </td>
-                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="Sku" asp-for="@item.Sku" style="width: 120px;" /></td>
-                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="CategoryName" asp-for="@item.CategoryName" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="VenderName" asp-for="@item.VenderName" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="VenderStyle" asp-for="@item.VenderStyle" style="width: 120px;" /></td>
+                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="Diameter" asp-for="@item.Diameter" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="Length" asp-for="@item.Length" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="BandWidth" asp-for="@item.BandWidth" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="GoldWeight" asp-for="@item.GoldWeight" style="width:90px;" /></td>
@@ -113,8 +114,9 @@
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="CenterCaratName" asp-for="@item.CenterCaratName" style="width:70px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="Certificate" asp-for="@item.Certificate" style="width:130px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="ColorName" asp-for="@item.ColorName" style="width:70px;" /></td>
+                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="Other" value="-" style="width:70px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="AccentStoneShapeName" asp-for="@item.AccentStoneShapeName" style="width:120px;" /></td>
-                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="MMSize" asp-for="@item.MMSize" style="width:80px;" /></td>
+                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="MMSize" asp-for="@item.MMSize" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="DiaWT" asp-for="@item.DiaWT" style="width:70px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="NoOfStones" asp-for="@item.NoOfStones" style="width:70px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="Grades" asp-for="@item.Grades" style="width:70px;" /></td>
@@ -129,7 +131,7 @@
                                                     else
                                                     {
                                                         <tr>
-                                                            <td colspan="12"> No data found</td>
+                                                            <td colspan="25"> No data found</td>
                                                         </tr>
                                                     }
                                                 </tbody>
@@ -144,7 +146,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="">
-                                    <div class="container mt-2">
+                                    <div class="container mt-2 mb-2">
                                         <div class="row">
                                             <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 offset-xxl-9 offset-xl-9 offset-lg-9 offset-md-8 ">
                                                 <button class="btn btn-theme" id="btnSaveBands">Save Bands</button>
@@ -156,31 +158,32 @@
 
                                     <div class="row">
                                         <div class="table-responsive" style="max-height:600px !important">
-                                            <table class="table" id="bandTable">
+                                            <table class="table table-bordered table-sm" id="bandTable">
                                                 <thead class="thead-light" style="position:sticky;top:0">
                                                     <tr>
                                                         <th scope="col">#</th>
-                                                        <th scope="col">Title</th>
-                                                        <th scope="col">Sku</th>
                                                         <th scope="col">Category</th>
+                                                        <th scope="col">Title</th>
                                                         <th scope="col">Vender</th>
-                                                        <th scope="col">Vendor Style</th>
+                                                        <th scope="col">Vender.Style</th>
+                                                        <th scope="col">Diameter</th>
                                                         <th scope="col">Length</th>
-                                                        <th scope="col">Band Width</th>
+                                                        <th scope="col">Band.Width</th>
                                                         <th scope="col">Weight</th>
-                                                        <th scope="col">CTV</th>
-                                                        <th scope="col">Center Shape</th>
-                                                        <th scope="col">Center Carat</th>
+                                                        <th scope="col">CTW</th>
+                                                        <th scope="col">Center.Shape</th>
+                                                        <th scope="col">Center.Carat</th>
                                                         <th scope="col">Certification</th>
                                                         <th scope="col">Metal</th>
-                                                        <th scope="col">Accent Stone Shape</th>
-                                                        <th scope="col">MM Size</th>
-                                                        <th scope="col">Dia Wt</th>
-                                                        <th scope="col">No Of Stones</th>
+                                                        <th scope="col">Other</th>
+                                                        <th scope="col">Accent.Stone.Shape</th>
+                                                        <th scope="col">MM.Size</th>
+                                                        <th scope="col">Dia.Wt</th>
+                                                        <th scope="col">No.Of.Stones</th>
                                                         <th scope="col">Grades</th>
-                                                        <th scope="col">Diamond Type</th>
+                                                        <th scope="col">Diamond.Type</th>
                                                         <th scope="col">Price</th>
-                                                        <th scope="col">Wholesale Cost</th>
+                                                        <th scope="col">Wholesale.Cost</th>
                                                         <th scope="col">karat</th>
                                                         <th scope="col">Description</th>
 
@@ -195,13 +198,13 @@
 
                                                             <tr>
                                                                 <td scope="col">@(x++)</td>
+                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="CategoryName" asp-for="@item.CategoryName" style="width:90px;" /></td>
                                                                 <td scope="col">
                                                                     <input type="text" class="product-input form-control" asp-for="@item.Title" disabled name="Title" value="@item.Title" style="width:200px;" />
                                                                 </td>
-                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="Sku" asp-for="@item.Sku" style="width: 120px;" /></td>
-                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="CategoryName" asp-for="@item.CategoryName" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="VenderName" asp-for="@item.VenderName" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="VenderStyle" asp-for="@item.VenderStyle" style="width: 120px;" /></td>
+                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="Diameter" asp-for="@item.Diameter" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="Length" asp-for="@item.Length" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="BandWidth" asp-for="@item.BandWidth" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="GoldWeight" asp-for="@item.GoldWeight" style="width:90px;" /></td>
@@ -210,8 +213,9 @@
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="CenterCaratName" asp-for="@item.CenterCaratName" style="width:70px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="Certificate" asp-for="@item.Certificate" style="width:130px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="ColorName" asp-for="@item.ColorName" style="width:70px;" /></td>
+                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="Other" value="-" style="width:70px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="AccentStoneShapeName" asp-for="@item.AccentStoneShapeName" style="width:120px;" /></td>
-                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="MMSize" asp-for="@item.MMSize" style="width:80px;" /></td>
+                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="MMSize" asp-for="@item.MMSize" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="DiaWT" asp-for="@item.DiaWT" style="width:70px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="NoOfStones" asp-for="@item.NoOfStones" style="width:70px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="Grades" asp-for="@item.Grades" style="width:70px;" /></td>
@@ -226,7 +230,7 @@
                                                     else
                                                     {
                                                         <tr>
-                                                            <td colspan="12"> No data found</td>
+                                                            <td colspan="25"> No data found</td>
                                                         </tr>
                                                     }
                                                 </tbody>
@@ -243,41 +247,43 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="">
-                                    <div class="row">
-                                        <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 offset-xxl-9 offset-xl-9 offset-lg-9 offset-md-8 ">
-                                            <button class="btn btn-theme" id="btnSaveEarring">Save Earring</button>
-                                            <button class="btn btn-theme" id="btnEditEarring">Edit Earring</button>
+                                    <div class="container mt-2 mb-2">
+                                        <div class="row">
+                                            <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 offset-xxl-9 offset-xl-9 offset-lg-9 offset-md-8 ">
+                                                <button class="btn btn-theme" id="btnSaveEarring">Save Earring</button>
+                                                <button class="btn btn-theme" id="btnEditEarring">Edit Earring</button>
+                                            </div>
                                         </div>
                                     </div>
 
-
                                     <div class="row">
                                         <div class="table-responsive" style="max-height:600px !important">
-                                            <table class="table" id="EarringTable">
+                                            <table class="table table-bordered table-sm" id="EarringTable">
                                                 <thead class="thead-light" style="position:sticky;top:0">
                                                     <tr>
                                                         <th scope="col">#</th>
-                                                        <th scope="col">Title</th>
-                                                        <th scope="col">Sku</th>
                                                         <th scope="col">Category</th>
+                                                        <th scope="col">Title</th>
                                                         <th scope="col">Vender</th>
-                                                        <th scope="col">Vendor Style</th>
+                                                        <th scope="col">Vender.Style</th>
+                                                        <th scope="col">Diameter</th>
                                                         <th scope="col">Length</th>
-                                                        <th scope="col">Band Width</th>
+                                                        <th scope="col">Band.Width</th>
                                                         <th scope="col">Weight</th>
-                                                        <th scope="col">CTV</th>
-                                                        <th scope="col">Center Shape</th>
-                                                        <th scope="col">Center Carat</th>
+                                                        <th scope="col">CTW</th>
+                                                        <th scope="col">Center.Shape</th>
+                                                        <th scope="col">Center.Carat</th>
                                                         <th scope="col">Certification</th>
                                                         <th scope="col">Metal</th>
-                                                        <th scope="col">Accent Stone Shape</th>
-                                                        <th scope="col">MM Size</th>
-                                                        <th scope="col">Dia Wt</th>
-                                                        <th scope="col">No Of Stones</th>
+                                                        <th scope="col">Other</th>
+                                                        <th scope="col">Accent.Stone.Shape</th>
+                                                        <th scope="col">MM.Size</th>
+                                                        <th scope="col">Dia.Wt</th>
+                                                        <th scope="col">No.Of.Stones</th>
                                                         <th scope="col">Grades</th>
-                                                        <th scope="col">Diamond Type</th>
+                                                        <th scope="col">Diamond.Type</th>
                                                         <th scope="col">Price</th>
-                                                        <th scope="col">Wholesale Cost</th>
+                                                        <th scope="col">Wholesale.Cost</th>
                                                         <th scope="col">karat</th>
                                                         <th scope="col">Description</th>
 
@@ -292,13 +298,13 @@
 
                                                             <tr>
                                                                 <td scope="col">@(x++)</td>
+                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="CategoryName" asp-for="@item.CategoryName" style="width:90px;" /></td>
                                                                 <td scope="col">
                                                                     <input type="text" class="product-input form-control" asp-for="@item.Title" disabled name="Title" value="@item.Title" style="width:200px;" />
                                                                 </td>
-                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="Sku" asp-for="@item.Sku" style="width: 120px;" /></td>
-                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="CategoryName" asp-for="@item.CategoryName" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="VenderName" asp-for="@item.VenderName" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="VenderStyle" asp-for="@item.VenderStyle" style="width: 120px;" /></td>
+                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="Diameter" asp-for="@item.Diameter" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="Length" asp-for="@item.Length" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="BandWidth" asp-for="@item.BandWidth" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="GoldWeight" asp-for="@item.GoldWeight" style="width:90px;" /></td>
@@ -307,8 +313,9 @@
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="CenterCaratName" asp-for="@item.CenterCaratName" style="width:70px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="Certificate" asp-for="@item.Certificate" style="width:130px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="ColorName" asp-for="@item.ColorName" style="width:70px;" /></td>
+                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="Other" value="-" style="width:70px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="AccentStoneShapeName" asp-for="@item.AccentStoneShapeName" style="width:120px;" /></td>
-                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="MMSize" asp-for="@item.MMSize" style="width:80px;" /></td>
+                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="MMSize" asp-for="@item.MMSize" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="DiaWT" asp-for="@item.DiaWT" style="width:70px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="NoOfStones" asp-for="@item.NoOfStones" style="width:70px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="Grades" asp-for="@item.Grades" style="width:70px;" /></td>
@@ -323,7 +330,7 @@
                                                     else
                                                     {
                                                         <tr>
-                                                            <td colspan="12"> No data found</td>
+                                                            <td colspan="25"> No data found</td>
                                                         </tr>
                                                     }
                                                 </tbody>
@@ -340,7 +347,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="">
-                                    <div class="container mt-2">
+                                    <div class="container mt-2 mb-2">
                                         <div class="row">
                                             <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 offset-xxl-9 offset-xl-9 offset-lg-9 offset-md-8 ">
                                                 <button class="btn btn-theme" id="btnSavePendant">Save Pendant</button>
@@ -351,31 +358,32 @@
                                     </div>
                                     <div class="row">
                                         <div class="table-responsive" style="max-height:600px !important">
-                                            <table class="table" id="PendantTable">
+                                            <table class="table table-bordered table-sm" id="PendantTable">
                                                 <thead class="thead-light" style="position:sticky;top:0">
                                                     <tr>
                                                         <th scope="col">#</th>
-                                                        <th scope="col">Title</th>
-                                                        <th scope="col">Sku</th>
                                                         <th scope="col">Category</th>
+                                                        <th scope="col">Title</th>
                                                         <th scope="col">Vender</th>
-                                                        <th scope="col">Vendor Style</th>
+                                                        <th scope="col">Vender.Style</th>
+                                                        <th scope="col">Diameter</th>
                                                         <th scope="col">Length</th>
-                                                        <th scope="col">Band Width</th>
+                                                        <th scope="col">Band.Width</th>
                                                         <th scope="col">Weight</th>
-                                                        <th scope="col">CTV</th>
-                                                        <th scope="col">Center Shape</th>
-                                                        <th scope="col">Center Carat</th>
+                                                        <th scope="col">CTW</th>
+                                                        <th scope="col">Center.Shape</th>
+                                                        <th scope="col">Center.Carat</th>
                                                         <th scope="col">Certification</th>
                                                         <th scope="col">Metal</th>
-                                                        <th scope="col">Accent Stone Shape</th>
-                                                        <th scope="col">MM Size</th>
-                                                        <th scope="col">Dia Wt</th>
-                                                        <th scope="col">No Of Stones</th>
+                                                        <th scope="col">Other</th>
+                                                        <th scope="col">Accent.Stone.Shape</th>
+                                                        <th scope="col">MM.Size</th>
+                                                        <th scope="col">Dia.Wt</th>
+                                                        <th scope="col">No.Of.Stones</th>
                                                         <th scope="col">Grades</th>
-                                                        <th scope="col">Diamond Type</th>
+                                                        <th scope="col">Diamond.Type</th>
                                                         <th scope="col">Price</th>
-                                                        <th scope="col">Wholesale Cost</th>
+                                                        <th scope="col">Wholesale.Cost</th>
                                                         <th scope="col">karat</th>
                                                         <th scope="col">Description</th>
 
@@ -390,13 +398,13 @@
 
                                                             <tr>
                                                                 <td scope="col">@(x++)</td>
+                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="CategoryName" asp-for="@item.CategoryName" style="width:90px;" /></td>
                                                                 <td scope="col">
                                                                     <input type="text" class="product-input form-control" asp-for="@item.Title" disabled name="Title" value="@item.Title" style="width:200px;" />
                                                                 </td>
-                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="Sku" asp-for="@item.Sku" style="width: 120px;" /></td>
-                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="CategoryName" asp-for="@item.CategoryName" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="VenderName" asp-for="@item.VenderName" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="VenderStyle" asp-for="@item.VenderStyle" style="width: 120px;" /></td>
+                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="Diameter" asp-for="@item.Diameter" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="Length" asp-for="@item.Length" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="BandWidth" asp-for="@item.BandWidth" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="GoldWeight" asp-for="@item.GoldWeight" style="width:90px;" /></td>
@@ -405,8 +413,9 @@
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="CenterCaratName" asp-for="@item.CenterCaratName" style="width:70px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="Certificate" asp-for="@item.Certificate" style="width:130px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="ColorName" asp-for="@item.ColorName" style="width:70px;" /></td>
+                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="Other" value="-" style="width:70px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="AccentStoneShapeName" asp-for="@item.AccentStoneShapeName" style="width:120px;" /></td>
-                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="MMSize" asp-for="@item.MMSize" style="width:80px;" /></td>
+                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="MMSize" asp-for="@item.MMSize" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="DiaWT" asp-for="@item.DiaWT" style="width:70px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="NoOfStones" asp-for="@item.NoOfStones" style="width:70px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="Grades" asp-for="@item.Grades" style="width:70px;" /></td>
@@ -421,7 +430,7 @@
                                                     else
                                                     {
                                                         <tr>
-                                                            <td colspan="12"> No data found</td>
+                                                            <td colspan="25"> No data found</td>
                                                         </tr>
                                                     }
                                                 </tbody>
@@ -440,7 +449,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="">
-                                    <div class="container mt-2">
+                                    <div class="container mt-2 mb-2">
                                         <div class="row">
                                             <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 offset-xxl-9 offset-xl-9 offset-lg-9 offset-md-8 ">
                                                 <button class="btn btn-theme" id="btnSaveBracelets">Save Bracelets</button>
@@ -450,31 +459,32 @@
                                     </div>
                                     <div class="row">
                                         <div class="table-responsive" style="max-height:600px !important">
-                                            <table class="table" id="BraceletsTable">
+                                            <table class="table table-bordered table-sm" id="BraceletsTable">
                                                 <thead class="thead-light" style="position:sticky;top:0">
                                                     <tr>
                                                         <th scope="col">#</th>
-                                                        <th scope="col">Title</th>
-                                                        <th scope="col">Sku</th>
                                                         <th scope="col">Category</th>
+                                                        <th scope="col">Title</th>
                                                         <th scope="col">Vender</th>
-                                                        <th scope="col">Vendor Style</th>
+                                                        <th scope="col">Vender.Style</th>
+                                                        <th scope="col">Diameter</th>
                                                         <th scope="col">Length</th>
-                                                        <th scope="col">Band Width</th>
+                                                        <th scope="col">Band.Width</th>
                                                         <th scope="col">Weight</th>
-                                                        <th scope="col">CTV</th>
-                                                        <th scope="col">Center Shape</th>
-                                                        <th scope="col">Center Carat</th>
+                                                        <th scope="col">CTW</th>
+                                                        <th scope="col">Center.Shape</th>
+                                                        <th scope="col">Center.Carat</th>
                                                         <th scope="col">Certification</th>
                                                         <th scope="col">Metal</th>
-                                                        <th scope="col">Accent Stone Shape</th>
-                                                        <th scope="col">MM Size</th>
-                                                        <th scope="col">Dia Wt</th>
-                                                        <th scope="col">No Of Stones</th>
+                                                        <th scope="col">Other</th>
+                                                        <th scope="col">Accent.Stone.Shape</th>
+                                                        <th scope="col">MM.Size</th>
+                                                        <th scope="col">Dia.Wt</th>
+                                                        <th scope="col">No.Of.Stones</th>
                                                         <th scope="col">Grades</th>
-                                                        <th scope="col">Diamond Type</th>
+                                                        <th scope="col">Diamond.Type</th>
                                                         <th scope="col">Price</th>
-                                                        <th scope="col">Wholesale Cost</th>
+                                                        <th scope="col">Wholesale.Cost</th>
                                                         <th scope="col">karat</th>
                                                         <th scope="col">Description</th>
 
@@ -489,13 +499,13 @@
 
                                                             <tr>
                                                                 <td scope="col">@(x++)</td>
+                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="CategoryName" asp-for="@item.CategoryName" style="width:90px;" /></td>
                                                                 <td scope="col">
                                                                     <input type="text" class="product-input form-control" asp-for="@item.Title" disabled name="Title" value="@item.Title" style="width:200px;" />
                                                                 </td>
-                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="Sku" asp-for="@item.Sku" style="width: 120px;" /></td>
-                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="CategoryName" asp-for="@item.CategoryName" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="VenderName" asp-for="@item.VenderName" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="VenderStyle" asp-for="@item.VenderStyle" style="width: 120px;" /></td>
+                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="Diameter" asp-for="@item.Diameter" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="Length" asp-for="@item.Length" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="BandWidth" asp-for="@item.BandWidth" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="GoldWeight" asp-for="@item.GoldWeight" style="width:90px;" /></td>
@@ -504,8 +514,9 @@
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="CenterCaratName" asp-for="@item.CenterCaratName" style="width:70px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="Certificate" asp-for="@item.Certificate" style="width:130px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="ColorName" asp-for="@item.ColorName" style="width:70px;" /></td>
+                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="Other" value="-" style="width:70px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="AccentStoneShapeName" asp-for="@item.AccentStoneShapeName" style="width:120px;" /></td>
-                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="MMSize" asp-for="@item.MMSize" style="width:80px;" /></td>
+                                                                <td scope="col"><input type="text" disabled class="product-input form-control" name="MMSize" asp-for="@item.MMSize" style="width:90px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="DiaWT" asp-for="@item.DiaWT" style="width:70px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="NoOfStones" asp-for="@item.NoOfStones" style="width:70px;" /></td>
                                                                 <td scope="col"><input type="text" disabled class="product-input form-control" name="Grades" asp-for="@item.Grades" style="width:70px;" /></td>
@@ -520,7 +531,7 @@
                                                     else
                                                     {
                                                         <tr>
-                                                            <td colspan="12"> No data found</td>
+                                                            <td colspan="25"> No data found</td>
                                                         </tr>
                                                     }
                                                 </tbody>

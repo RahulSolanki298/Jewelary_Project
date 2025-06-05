@@ -67,14 +67,6 @@
                                                 {
                                                     <li data-thumb="@($"{SD.ImgUrl}/{item.ImageUrl}")">
 
-                                                        @* <a href="@($"{SD.ImgUrl}/{item.ImageUrl}")"
-                                                               data-fancybox="gallery"
-                                                               data-caption="Product Image"
-                                                               data-thumb="@($"{SD.ImgUrl}/{item.ImageUrl}")"
-                                                               data-zoomable="true">
-                                                                <img  src="@($"{SD.ImgUrl}/{item.ImageUrl}")" class="img-zoom" />
-                                                            </a> *@
-
                                                         <a>
                                                             <img src="@($"{SD.ImgUrl}/{item.ImageUrl}")" class="zoom-images" />
                                                         </a>
@@ -84,11 +76,6 @@
                                                 else if (!string.IsNullOrEmpty(item.VideoUrl) && item.VideoUrl != "-")
                                                 {
                                                     <li data-thumb="@SD.ShapeImgUrl/assets/img/video/video-icon.svg">
-                                                        @* <a href="@($"{SD.ImgUrl}/{item.VideoUrl}")" data-fancybox="gallery" data-caption="Product Video">
-                                                                <video autoplay="autoplay" loop="loop" muted="muted" playsinline preload="auto" style="max-width: 100%;">
-                                                                    <source src="@($"{SD.ImgUrl}/{item.VideoUrl}")" type="video/mp4" />
-                                                                </video>
-                                                            </a> *@
                                                         <a>
                                                             <video autoplay="autoplay" loop="loop" muted="muted" playsinline preload="auto" style="max-width: 100%;">
                                                                 <source src="@($"{SD.ImgUrl}/{item.VideoUrl}")" type="video/mp4" />
@@ -154,13 +141,13 @@
                                 <div class="pt-4">
                                     <h5 class="offer-text"><strong>Carat Weight :</strong> @Model.CaratName</h5>
                                     @*<ul class="size-categories-details">
-                                            @foreach (var item in Model.CaratSizes)
-                                            {
-                                                <li>
-                                                    <a class="text-black-50" href="#" >@item.Name</a>
-                                                </li>
-                                            }
-                                        </ul>*@
+                @foreach (var item in Model.CaratSizes)
+                {
+                    <li>
+                        <a class="text-black-50" href="#" >@item.Name</a>
+                    </li>
+                }
+            </ul>*@
                                     <div class="product-countdown">
 
                                         @foreach (var item in Model.CaratSizes)
@@ -182,7 +169,24 @@
                                         <a class="btn btn-cart2" href="#">Add to cart</a>
                                     </div>
                                 </div>
-
+                                <div class="pro-size">
+                                    <h6 class="option-title">size :</h6>
+                                    <select class="nice-select">
+                                        <option>15</option>
+                                        <option>16</option>
+                                        <option>17</option>
+                                        <option>18</option>
+                                        <option>19</option>
+                                        <option>20</option>
+                                        <option>21</option>
+                                        <option>22</option>
+                                        <option>23</option>
+                                        <option>24</option>
+                                        <option>25</option>
+                                        <option>26</option>
+                                        <option>27</option>
+                                    </select>
+                                </div>
 
 
                                 <div class="useful-links">
@@ -724,6 +728,13 @@
                 // Optional: Update a UI element or badge count
             });
         });
+
+        function getWishlistCounter() {
+            let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+            let productWishlist = JSON.parse(localStorage.getItem("ProductWishlist")) || [];
+            $("#wishlistCounter").text(wishlist.length + productWishlist.length);
+            $("#wishlistMobileCounter").text(wishlist.length + productWishlist.length);
+        }
 
         function GetProductByColorId(productId, colorId) {
             $.ajax({

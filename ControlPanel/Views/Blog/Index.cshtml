@@ -1,4 +1,5 @@
-﻿@{
+﻿@using Common;
+@{
     <link href="~/jqxcontent/jqwidgets/styles/jqx.base.css" rel="stylesheet" />
     <link href="~/jqxcontent/jqwidgets/styles/jqx.fluent.css" rel="stylesheet" />
 
@@ -58,7 +59,7 @@
     <script src="~/jqxcontent/jqwidgets/jqxgrid.grouping.js"></script>
 
     @* JQX Widgets *@
-    <script>
+<script>
         var resultData = [];
         var source;
         $(document).ready(function () {
@@ -85,10 +86,10 @@
 
                 var targetclass = args.originalEvent.target.classList[1];
 
-                @*if (dataField == 'action') {
+                if (dataField == 'action') {
                     let data = $("#divDetails").jqxGrid('getrowdata', rowBoundIndex);
-                    window.location.href = `@Url.Action("GetDiamond", "Diamond")?diamondId=${data.Id}`;
-                }*@
+                    window.location.href = `@Url.Action("GetBlogById", "Blog")?id=${data.Id}`;
+                }
 
             });
 
@@ -123,7 +124,7 @@
                         var action = function (row, columnfield, value, defaulthtml, columnproperties, rowdata) {
                             return '<button title="" class="btn btn-dark btn-sm" style="margin:1px 15px;"><i class="bi bi-layout-text-window-reverse"></i></button>';
                         };
-
+                        const imgBaseUrl = '@SD.ImgUrl';
                         $("#divDetails").jqxGrid(
                         {
                             width: "100%",
@@ -139,7 +140,7 @@
                             filterable: true,
                             editable: false,
                             showstatusbar: true,
-                            rowsheight: 30,
+                            rowsheight: 40,
                             columns: [
                                 {
                                     text: '#', sortable: false, filterable: false, editable: false,
@@ -161,10 +162,28 @@
                                         cellsrenderer: action,
                                         width: 60
                                 },
-                                { text: 'Stone ID', pinned: true, datafield: 'StoneId', style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
-
+                                {
+                                    text: 'Image',
+                                    datafield: 'BlogImage',
+                                    style: blackstyle,
+                                    width: 200,
+                                    align: 'center',
+                                    cellsalign: 'center',
+                                    filterable: false,
+                                    sortable: false,
+                                    cellsrenderer: function (row, column, value) {
+                                        if (value) {
+                                            return `<div style="text-align:center; padding:4px;">
+                                                           <img src="${imgBaseUrl}${value}" alt="Blog Image" style="width:60px; height:40px;" />
+                                                    </div>`;
+                                        } else {
+                                            return `<div style="text-align:center; padding:4px;">No Image</div>`;
+                                        }
+                                    }
+                                },
+                                { text: 'Title', pinned: true, datafield: 'Title', style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+                                { text: 'Description', pinned: true, datafield: 'Description', style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
                                 { text: 'Id', datafield: 'Id', hidden: true, style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
-                                //{ text: 'IsActivated',datafield: 'IsActivated',hidden:true, style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
 
                             ],
                         });
@@ -193,5 +212,5 @@
             });
         }
 
-    </script>
+</script>
 }

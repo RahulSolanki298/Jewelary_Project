@@ -414,12 +414,12 @@
             updatecartlistUI();
         });
 
-
-         function getWishlistCounter() {
-                let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
-                $("#wishlistCounter").text(wishlist.length);
-                $("#wishlistMobileCounter").text(wishlist.length);
-         }
+        function getWishlistCounter() {
+            let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+            let productWishlist = JSON.parse(localStorage.getItem("ProductWishlist")) || [];
+            $("#wishlistCounter").text(wishlist.length + productWishlist.length);
+            $("#wishlistMobileCounter").text(wishlist.length + productWishlist.length);
+        }
 
         function updateWishlistUI() {
             let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
@@ -443,7 +443,8 @@
         function getcartlistCounter() {
                 let cardlist = JSON.parse(localStorage.getItem("diamondCartlist")) || [];
                 $("#addtoCardCounter").text(cardlist.length);
-                $("#addtoCardMobileCounter").text(daiamondCard.length);
+            $("#addtoCardMobileCounter").text(daiamondCard.length);
+
          }
 
          function updatecartlistUI() {

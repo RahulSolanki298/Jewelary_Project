@@ -19,6 +19,7 @@ namespace DataAccess.Entities
         public decimal Price { get; set; }
         public int Quantity { get; set; } = 0;
         public string ProductType { get; set; } // Diamond, Gold
+        public string DiamondType { get; set; } // Diamond, Gold
         public string Occasion { get; set; }
         public string Remarks { get; set; }
         public string Package { get; set; }
