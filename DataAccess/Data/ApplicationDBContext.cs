@@ -91,6 +91,8 @@ namespace DataAccess.Data
 
         public DbSet<ProductStyleItems> ProductStyleItems { get; set; }
 
+        public DbSet<Blogs> Blogs { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
