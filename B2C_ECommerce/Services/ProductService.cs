@@ -1,11 +1,14 @@
 ﻿using B2C_ECommerce.IServices;
 using Common;
 using DataAccess.Data;
+using DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -141,7 +144,11 @@ namespace B2C_ECommerce.Services
                       Sku = product.Sku,
                       UnitPrice = product.UnitPrice,
                       Price = product.Price,
-                      IsActivated = product.IsActivated
+                      IsActivated = product.IsActivated,
+                      GoldWeight=product.GoldWeight,
+                      CenterCaratName=size.Name,
+                      Grades=product.Grades,
+                      Certificate=product.Certificate,
                   }
               ).AsNoTracking().FirstOrDefaultAsync();
 
@@ -216,6 +223,10 @@ namespace B2C_ECommerce.Services
                 Shapes = shapes,
                 BandWidth = firstProduct.BandWidth,
                 Length = firstProduct.Length,
+                GoldWeight = firstProduct.GoldWeight,
+               
+                Grades = firstProduct.Grades,
+                Certificate = firstProduct.Certificate,
                 ProductImageVideos = new List<ProductImageAndVideoDTO>() // Initialize to avoid null reference
             };
 
