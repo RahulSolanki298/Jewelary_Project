@@ -488,48 +488,48 @@
                 return;
             }
 
-    // Show confirmation dialog
-    Swal.fire({
-        title: 'Are you sure?',
-        text: `Do Want to change status for Product? Product Status : "${status}".`,
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, update it!',
-        cancelButtonText: 'Cancel'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            let idsArray = productIds.split(',');
+            // Show confirmation dialog
+            Swal.fire({
+                title: 'Are you sure?',
+                text: `Do Want to change status for Product? Product Status : "${status}".`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, update it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let idsArray = productIds.split(',');
 
-            $.ajax({
-                url: '@Url.Action("ChangeStatus", "Jewellery")',
-                method: 'POST',
-                data: {
-                    pIds: idsArray,
-                    status: status
-                },
-                success: function (response) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Updated',
-                        text: `Products updated to "${status}" successfully.`,
-                        timer: 2000,
-                        showConfirmButton: false
-                    }).then(() => {
-                        location.reload();
+                    $.ajax({
+                        url: '@Url.Action("ChangeStatus", "Jewellery")',
+                        method: 'POST',
+                        data: {
+                            pIds: idsArray,
+                            status: status
+                        },
+                        success: function (response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Updated',
+                                text: `Products updated to "${status}" successfully.`,
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                location.reload();
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'An error occurred while updating the products.',
+                            });
+                            console.error(error);
+                        }
                     });
-                },
-                error: function (xhr, status, error) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'An error occurred while updating the products.',
-                    });
-                    console.error(error);
                 }
             });
-        }
-    });
-});
+        });
 
 
         // Utility: Update hidden input with selected IDs from active tab
