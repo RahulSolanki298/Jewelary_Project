@@ -28,6 +28,20 @@
                                     <span asp-validation-for="Title" class="text-danger"></span>
                                 </div>
                                 <div class="form-group mb-3">
+                                    <label asp-for="BlogCategory" class="control-label"></label>
+                                    <select asp-for="BlogCategory" class="form-control">
+                                        <option value="PROPOSALS & WEDDINGS">PROPOSALS & WEDDINGS</option>
+                                        <option value="DIAMONDS & EDUCATION">DIAMONDS & EDUCATION</option>
+                                        <option value="TRENDS & INSPIRATION">TRENDS & INSPIRATION</option>
+                                        <option value="FASHION & LIFESTYLE">FASHION & LIFESTYLE</option>
+                                    </select>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label asp-for="ShortDescription" class="control-label"></label>
+                                    <textarea asp-for="ShortDescription" class="form-control"></textarea>
+                                    <span asp-validation-for="ShortDescription" class="text-danger"></span>
+                                </div>
+                                <div class="form-group mb-3">
                                     <label asp-for="Description" class="control-label"></label>
                                     <textarea asp-for="Description" class="form-control"></textarea>
                                     <span asp-validation-for="Description" class="text-danger"></span>
@@ -37,6 +51,16 @@
                                     <label for="ImageFile" class="form-label">Upload Blog Image</label>
                                     <input type="file" asp-for="ImageFile" class="form-control" />
                                     <div class="form-text">Recommended image size: 951 x 475 pixels</div>
+                                </div>
+
+                                <div class="form-check  mb-3">
+                                    <input asp-for="IsActive" class="form-check-input" />
+                                    <label asp-for="IsActive" class="form-check-label">Is Activated</label>
+                                </div>
+
+                                <div class="form-check  mb-3">
+                                    <input asp-for="IsDisplayHome" class="form-check-input" />
+                                    <label asp-for="IsDisplayHome" class="form-check-label">Is Display Home</label>
                                 </div>
 
                                 <div class="form-check mb-3">
@@ -74,12 +98,12 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            //$('#Description').summernote({
-            //    height: 400,
-            //    minHeight: null,
-            //    maxHeight: null,
-            //    focus: true
-            //});
+            $('#Description').summernote({
+                height: 400,
+                minHeight: null,
+                maxHeight: null,
+                focus: true
+            });
         });
 
         function previewImage(event) {

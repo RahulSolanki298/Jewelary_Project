@@ -4,6 +4,7 @@ using DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Business.Repository
@@ -14,6 +15,18 @@ namespace Business.Repository
         public BlogRepository(ApplicationDBContext context) => _context = context;
         public async Task<Blogs> GetBlogById(int id) => await _context.Blogs.FindAsync(id);
         public async Task<List<Blogs>> GetBlogList() => await _context.Blogs.ToListAsync();
+        public async Task<List<string>> GetBlogCategoryList()
+        {
+            var categories = await _context.Blogs
+                .Where(b => b.IsActive) // Ensure the blog is active
+                .Select(b => b.BlogCategory) // Select the BlogCategory field
+                .Distinct() // Remove duplicates
+                .OrderBy(b => b) // Optional: Order categories alphabetically
+                .ToListAsync(); // Execute the query asynchronously
+
+            return categories;
+        }
+
         public async Task<Blogs> SaveBlogAsync(Blogs blogs)
         {
             try
@@ -23,8 +36,16 @@ namespace Business.Repository
                     var data = await _context.Blogs.FindAsync(blogs.Id);
                     data.Title = blogs.Title;
                     data.Description = blogs.Description;
-                    data.BlogImage = blogs.BlogImage;
-                    
+                    data.IsActive = blogs.IsActive;
+                    data.IsDisplayHome = blogs.IsDisplayHome;
+                    data.ShortDescription = blogs.ShortDescription;
+                    data.BlogCategory = blogs.BlogCategory;
+
+                    if (blogs.BlogImage != null)
+                    {
+                        data.BlogImage = blogs.BlogImage;
+                    }
+
                     _context.Blogs.Update(data);
                     await _context.SaveChangesAsync();
                 }

@@ -13,5 +13,7 @@ namespace Business.Repository.IRepository
         Task<Blogs> SaveBlogAsync(Blogs blogs);
 
         Task<bool> RemoveBlog(int id);
+
+        Task<List<string>> GetBlogCategoryList();
     }
 }

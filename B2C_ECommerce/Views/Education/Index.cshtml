@@ -1,0 +1,133 @@
+﻿@model List<string>
+
+<div class="blog-main-wrapper section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 order-2 order-lg-1">
+                <aside class="blog-sidebar-wrapper">
+                    <div class="blog-sidebar">
+                        <h5 class="title">search</h5>
+                        <div class="sidebar-serch-form">
+                            <form action="#">
+                                <input type="text" class="search-field" placeholder="search here">
+                                <button type="submit" class="search-btn"><i class="fa fa-search"></i></button>
+                            </form>
+                        </div>
+                    </div> <!-- single sidebar end -->
+                    <div class="blog-sidebar">
+                        <h5 class="title">categories</h5>
+                        <ul class="blog-archive blog-category">
+                            @foreach (var item in Model)
+                            {
+                                <li><a href="#">@item</a></li>
+
+                            }
+                        </ul>
+                    </div> <!-- single sidebar end -->
+                    <div class="blog-sidebar">
+                        <h5 class="title">Blog Archives</h5>
+                        <ul class="blog-archive">
+                            <li><a href="#">January (10)</a></li>
+                            <li><a href="#">February (08)</a></li>
+                            <li><a href="#">March (07)</a></li>
+                            <li><a href="#">April (14)</a></li>
+                            <li><a href="#">May (10)</a></li>
+                        </ul>
+                    </div> <!-- single sidebar end -->
+                    <div class="blog-sidebar">
+                        <h5 class="title">recent post</h5>
+                        <div class="recent-post">
+                            <div class="recent-post-item">
+                                <figure class="product-thumb">
+                                    <a href="blog-details.html">
+                                        <img src="assets/img/blog/blog-img1.jpg" alt="blog image">
+                                    </a>
+                                </figure>
+                                <div class="recent-post-description">
+                                    <div class="product-name">
+                                        <h6><a href="blog-details.html">Auctor gravida enim</a></h6>
+                                        <p>march 10 2019</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="recent-post-item">
+                                <figure class="product-thumb">
+                                    <a href="blog-details.html">
+                                        <img src="assets/img/blog/blog-img2.jpg" alt="blog image">
+                                    </a>
+                                </figure>
+                                <div class="recent-post-description">
+                                    <div class="product-name">
+                                        <h6><a href="blog-details.html">gravida auctor dnim</a></h6>
+                                        <p>march 18 2019</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="recent-post-item">
+                                <figure class="product-thumb">
+                                    <a href="blog-details.html">
+                                        <img src="assets/img/blog/blog-img3.jpg" alt="blog image">
+                                    </a>
+                                </figure>
+                                <div class="recent-post-description">
+                                    <div class="product-name">
+                                        <h6><a href="blog-details.html">enim auctor gravida</a></h6>
+                                        <p>march 14 2019</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- single sidebar end -->
+                    <div class="blog-sidebar">
+                        <h5 class="title">Tags</h5>
+                        <ul class="blog-tags">
+                            <li><a href="#">camera</a></li>
+                            <li><a href="#">computer</a></li>
+                            <li><a href="#">bag</a></li>
+                            <li><a href="#">watch</a></li>
+                            <li><a href="#">smartphone</a></li>
+                            <li><a href="#">shoes</a></li>
+                        </ul>
+                    </div> <!-- single sidebar end -->
+                </aside>
+            </div>
+            <div class="col-lg-9 order-1 order-lg-2">
+                <div class="blog-item-wrapper blog-list-inner" id="blogContainer">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{ 
+    <script>
+        $(document).ready(function () {
+
+
+
+        });
+
+        function GetBlogList() {
+               $.ajax({
+                            url: '@Url.Action("GetDiamondsByIds", "Diamond")',
+                            type: 'GET',
+                            data: {
+                                diamondIds: selectedDiamonds.join(',')
+                            },
+                            success: function (data) {
+                                console.log(data);
+                                $("#diamondComparisonContent").html('');
+                                $("#diamondComparisonContent").html(data);
+                                $("#compareDiamondsModal").modal("show");
+                            },
+                            error: function (error) {
+                                console.error('Error fetching data:', error);
+                            }
+                        });
+
+        }
+
+    </script>
+}

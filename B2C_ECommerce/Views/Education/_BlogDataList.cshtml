@@ -1,0 +1,39 @@
+﻿@model List<DataAccess.Entities.Blogs>
+@using Common
+<div class="row mbn-30">
+    @foreach (var item in Model)
+	{
+    <div class="col-12">
+        <!-- blog post item start -->
+        <div class="blog-post-item mb-30">
+            <figure class="blog-thumb">
+                <a href="blog-details.html">
+                    <img src="@SD.ImgUrl/@item.BlogImage" alt="blog image">
+                </a>
+            </figure>
+            <div class="blog-content">
+                <h4 class="blog-title">
+                    <a href="blog-details.html">@item.Title</a>
+                </h4>
+                <div class="blog-meta">
+                    <p>10/04/2019 | <a href="#">@item.Title</a></p>
+                </div>
+                <p>@item.ShortDescription</p>
+                <a class="blog-read-more" href="blog-details.html">Read More...</a>
+            </div>
+        </div>
+        <!-- blog post item end -->
+    </div>
+	}
+    
+</div>
+
+<div class="paginatoin-area text-center">
+    <ul class="pagination-box">
+        <li><a class="previous" href="#"><i class="pe-7s-angle-left"></i></a></li>
+        <li class="active"><a href="#">1</a></li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a class="next" href="#"><i class="pe-7s-angle-right"></i></a></li>
+    </ul>
+</div>
