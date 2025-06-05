@@ -527,6 +527,8 @@ namespace Business.Repository
                                   from clarity in clarityGroup.DefaultIfEmpty()
                                   join size in _context.ProductProperty on product.CenterCaratId equals size.Id into sizeGroup
                                   from size in sizeGroup.DefaultIfEmpty()
+                                  join ashape in _context.ProductProperty on product.AccentStoneShapeId equals ashape.Id into ashapeGroup
+                                  from ashape in ashapeGroup.DefaultIfEmpty()
                                   where product.UploadStatus == SD.Activated
                                   select new ProductDTO
                                   {
@@ -564,7 +566,15 @@ namespace Business.Repository
                                       UploadStatus = product.UploadStatus,
                                       WholesaleCost = product.WholesaleCost,
                                       ProductDate = product.ProductDate,
-                                      MMSize = product.MMSize
+                                      MMSize = product.MMSize,
+
+                                      Diameter = product.Diameter,
+                                      CTW = product.CTW,
+                                      Certificate = product.Certificate,
+                                      DiaWT = product.DiaWT,
+                                      NoOfStones = product.NoOfStones,
+                                      AccentStoneShapeName = ashape.Name,
+                                      AccentStoneShapeId = product.AccentStoneShapeId,
                                   }).OrderBy(x => x.Sku).ToListAsync();
 
             //var groupedProducts = products.GroupBy(p => p.Sku);
@@ -655,6 +665,11 @@ namespace Business.Repository
                     DiaWT = firstProduct.DiaWT,
                     CTW = firstProduct.CTW,
                     UploadStatus = firstProduct.UploadStatus,
+
+                    Certificate = firstProduct.Certificate,
+                    NoOfStones = firstProduct.NoOfStones,
+                    AccentStoneShapeName = firstProduct.AccentStoneShapeName,
+                    AccentStoneShapeId = firstProduct.AccentStoneShapeId,
                 };
 
                 // Step 4: Get the product images for the first product
@@ -1700,6 +1715,10 @@ namespace Business.Repository
                 from clarity in clarityGroup.DefaultIfEmpty()
                 join size in _context.ProductProperty on product.CenterCaratId equals size.Id into sizeGroup
                 from size in sizeGroup.DefaultIfEmpty()
+
+                join ashape in _context.ProductProperty on product.AccentStoneShapeId equals ashape.Id into ashapeGroup
+                from ashape in ashapeGroup.DefaultIfEmpty()
+
                 where product.UploadStatus == SD.Pending
                 select new ProductDTO
                 {
@@ -1735,7 +1754,16 @@ namespace Business.Repository
                     KaratId = krt != null ? krt.Id : (int?)null,
                     Karat = krt.Name,
                     UploadStatus = product.UploadStatus,
-                    ProductDate = product.UpdatedDate
+                    ProductDate = product.UpdatedDate,
+                    Diameter=product.Diameter,
+                    CTW=product.CTW,
+                    Certificate=product.Certificate,
+                    WholesaleCost=product.WholesaleCost,
+                    MMSize=product.MMSize,
+                    DiaWT=product.DiaWT,
+                    NoOfStones=product.NoOfStones,
+                    AccentStoneShapeName=ashape.Name,
+                    AccentStoneShapeId=product.AccentStoneShapeId,
                 })
             .OrderByDescending(x => x.Sku)
             .ToListAsync();
@@ -1779,18 +1807,18 @@ namespace Business.Repository
                                         IsActive = col.IsActive.HasValue ? col.IsActive.Value : false
                                     }).Distinct().ToListAsync();
 
-                var prices = await (from pr in _context.ProductPrices
-                                    join prod in _context.Product on pr.ProductId equals prod.Id.ToString()
-                                    join kt in _context.ProductProperty on pr.ProductId equals kt.ParentId.ToString()
-                                    where pr.ProductId == firstProduct.Id.ToString()
-                                    select new ProductPriceDTO
-                                    {
-                                        Id = pr.Id,
-                                        KaratName = kt.Name,
-                                        ProductId = prod.Id.ToString(),
-                                        ProductPrice = prod.Price,
-                                        KaratId = pr.KaratId
-                                    }).Distinct().ToListAsync();
+                //var prices = await (from pr in _context.ProductPrices
+                //                    join prod in _context.Product on pr.ProductId equals prod.Id.ToString()
+                //                    join kt in _context.ProductProperty on pr.ProductId equals kt.ParentId.ToString()
+                //                    where pr.ProductId == firstProduct.Id.ToString()
+                //                    select new ProductPriceDTO
+                //                    {
+                //                        Id = pr.Id,
+                //                        KaratName = kt.Name,
+                //                        ProductId = prod.Id.ToString(),
+                //                        ProductPrice = prod.Price,
+                //                        KaratId = pr.KaratId
+                //                    }).Distinct().ToListAsync();
 
                 var productDTO = new ProductDTO
                 {
@@ -1831,9 +1859,17 @@ namespace Business.Repository
                     VenderName = firstProduct.VenderName,
                     WholesaleCost = firstProduct.WholesaleCost,
                     ProductImageVideos = new List<ProductImageAndVideoDTO>(),
-                    Prices = prices,
+                    Prices = firstProduct.Prices,
                     UploadStatus = firstProduct.UploadStatus,
                     IsReadyforShip = firstProduct.IsReadyforShip,
+
+                    Diameter = firstProduct.Diameter,
+                    CTW = firstProduct.CTW,
+                    Certificate = firstProduct.Certificate,
+                    DiaWT = firstProduct.DiaWT,
+                    NoOfStones = firstProduct.NoOfStones,
+                    AccentStoneShapeName = firstProduct.AccentStoneShapeName,
+                    AccentStoneShapeId = firstProduct.AccentStoneShapeId,
                 };
 
                 //  await _context.ProductPrices.Where(x => x.ProductId == firstProduct.Id.ToString()).ToListAsync();
@@ -1867,7 +1903,7 @@ namespace Business.Repository
         public async Task<IEnumerable<ProductDTO>> GetProductHoldList()
         {
             var products = await (from product in _context.Product
-                                  join evt in _context.EventSites on product.EventId equals evt.Id
+                                  
                                   join krt in _context.ProductProperty on product.KaratId equals krt.Id
                                   join cat in _context.Category on product.CategoryId equals cat.Id
                                   join color in _context.ProductProperty on product.ColorId equals color.Id into colorGroup
@@ -1878,14 +1914,16 @@ namespace Business.Repository
                                   from clarity in clarityGroup.DefaultIfEmpty()
                                   join size in _context.ProductProperty on product.CenterCaratId equals size.Id into sizeGroup
                                   from size in sizeGroup.DefaultIfEmpty()
+                                  join ashape in _context.ProductProperty on product.AccentStoneShapeId equals ashape.Id into ashapeGroup
+                                  from ashape in ashapeGroup.DefaultIfEmpty()
                                   where product.UploadStatus == SD.Hold
                                   select new ProductDTO
                                   {
                                       Id = product.Id,
-                                      Title = evt.EventName,
+                                      Title = product.Title,
                                       UploadStatus = product.UploadStatus,
                                       EventId = product.EventId,
-                                      EventName = evt.EventName,
+                                      EventName = product.Title,
                                       BandWidth = product.BandWidth,
                                       Length = product.Length,
                                       CaratName = product.Carat,
@@ -1915,7 +1953,17 @@ namespace Business.Repository
                                       CenterCaratName = size.Name,
                                       Quantity = product.Quantity,
                                       KaratId = krt != null ? krt.Id : (int?)null,
-                                      Karat = krt.Name
+                                      Karat = krt.Name,
+                                     
+                                      Diameter = product.Diameter,
+                                      CTW = product.CTW,
+                                      Certificate = product.Certificate,
+                                      WholesaleCost = product.WholesaleCost,
+                                      MMSize = product.MMSize,
+                                      DiaWT = product.DiaWT,
+                                      NoOfStones = product.NoOfStones,
+                                      AccentStoneShapeName = ashape.Name,
+                                      AccentStoneShapeId = product.AccentStoneShapeId,
                                   }).OrderBy(x => x.Sku).ToListAsync();
 
             return products;
@@ -1924,7 +1972,6 @@ namespace Business.Repository
         public async Task<IEnumerable<ProductDTO>> GetProductDeActivatedList()
         {
             var products = await (from product in _context.Product
-                                  join evt in _context.EventSites on product.EventId equals evt.Id
                                   join krt in _context.ProductProperty on product.KaratId equals krt.Id
                                   join cat in _context.Category on product.CategoryId equals cat.Id
                                   join color in _context.ProductProperty on product.ColorId equals color.Id into colorGroup
@@ -1935,14 +1982,16 @@ namespace Business.Repository
                                   from clarity in clarityGroup.DefaultIfEmpty()
                                   join size in _context.ProductProperty on product.CenterCaratId equals size.Id into sizeGroup
                                   from size in sizeGroup.DefaultIfEmpty()
+                                  join ashape in _context.ProductProperty on product.AccentStoneShapeId equals ashape.Id into ashapeGroup
+                                  from ashape in ashapeGroup.DefaultIfEmpty()
                                   where product.UploadStatus == SD.DeActived
                                   select new ProductDTO
                                   {
                                       Id = product.Id,
-                                      Title = evt.EventName,
+                                      Title = product.Title,
                                       UploadStatus = product.UploadStatus,
                                       EventId = product.EventId,
-                                      EventName = evt.EventName,
+                                      EventName = product.Title,
                                       BandWidth = product.BandWidth,
                                       Length = product.Length,
                                       CaratName = product.Carat,
@@ -1972,7 +2021,17 @@ namespace Business.Repository
                                       CenterCaratName = size.Name,
                                       Quantity = product.Quantity,
                                       KaratId = krt != null ? krt.Id : (int?)null,
-                                      Karat = krt.Name
+                                      Karat = krt.Name,
+
+                                      Diameter = product.Diameter,
+                                      CTW = product.CTW,
+                                      Certificate = product.Certificate,
+                                      WholesaleCost = product.WholesaleCost,
+                                      MMSize = product.MMSize,
+                                      DiaWT = product.DiaWT,
+                                      NoOfStones = product.NoOfStones,
+                                      AccentStoneShapeName = ashape.Name,
+                                      AccentStoneShapeId = product.AccentStoneShapeId,
                                   }).OrderBy(x => x.Sku).ToListAsync();
 
             return products;
