@@ -169,6 +169,7 @@ namespace ControlPanel.Controllers
                     CenterCaratName = worksheet.Cells[row, 14].Text,
                     Certificate = worksheet.Cells[row, 15].Text,
                     ColorName = worksheet.Cells[row, 16].Text,
+                    StyleName = worksheet.Cells[row, 17].Text,
                     AccentStoneShapeName = worksheet.Cells[row, 18].Text,
                     MMSize = worksheet.Cells[row, 19].Text,
                     DiaWT = decimal.TryParse(worksheet.Cells[row, 20].Text, out var diaWt) ? diaWt : (decimal?)null,
@@ -203,6 +204,7 @@ namespace ControlPanel.Controllers
                     product.CenterShapeName = string.IsNullOrWhiteSpace(product.CenterShapeName) ? tempProducts.CenterShapeName : product.CenterShapeName;
                     product.CenterCaratName = string.IsNullOrWhiteSpace(product.CenterCaratName) ? tempProducts.CenterCaratName : product.CenterCaratName;
                     product.Certificate = string.IsNullOrWhiteSpace(product.Certificate) ? tempProducts.Certificate : product.Certificate;
+                    product.StyleName = string.IsNullOrWhiteSpace(product.StyleName) ? tempProducts.StyleName : product.StyleName;
                     product.ColorName = string.IsNullOrWhiteSpace(product.ColorName) ? tempProducts.ColorName : product.ColorName;
                     product.AccentStoneShapeName = string.IsNullOrWhiteSpace(product.AccentStoneShapeName) ? tempProducts.AccentStoneShapeName : product.AccentStoneShapeName;
                     product.MMSize = string.IsNullOrWhiteSpace(product.MMSize) ? tempProducts.MMSize : product.MMSize;
