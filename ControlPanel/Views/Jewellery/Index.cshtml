@@ -1,4 +1,4 @@
-﻿
+﻿@using Common
 <section class="section">
     <div class="row mb-2">
         <div class="col-lg-6">
@@ -69,7 +69,9 @@
 
 </div>
 
+<div class="modal fade" id="modalImages" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
 
+</div>
 
 @section Scripts
 {
@@ -189,6 +191,54 @@
                 }
             });
 
+
+            $("#modalImages").on("click", ".popupImgs", function () {
+              debugger;
+               const id = $(this).attr("id");
+
+                $.ajax({
+                    url: `@Url.Action("UpdateJewelryProductImageById", "Jewellery")?id=${id}`,
+                    type: "GET",
+                    success: function (data) {
+                        console.log(data.imageUrl);
+                        if (data.imageUrl && data.imageUrl !== "-") {
+                            $("#mainImg").attr("src", '@SD.ImgUrl/' + data.imageUrl).show();
+                            $("#mainVideo").hide();
+                        }
+                        else if (data.videoUrl && data.videoUrl !== "-") {
+                            $("#videoUrl").attr("src", '@SD.ImgUrl/' + data.videoUrl);
+                            $("#mainImg").hide();
+                            $("#mainVideo").show()[0].load();  // reload video
+                        }
+                        else {
+                            $("#mainImg").attr("src", "/assets/img/no-image.png").show();
+                            $("#mainVideo").hide();
+                        }
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error fetching images:", error);
+                    }
+                });
+            });
+
+            $("#jewelleryList").on("click", ".showImgs", function (e) {
+            const productId = $(this).data("productid");
+
+            $.ajax({
+                url: `@Url.Action("JewelryProductImages", "Jewellery")?productId=${productId}`,
+                type: "GET",
+                success: function (data) {
+                    // Assuming you have a modal or container to show the images
+                    $("#modalImages").html(data);
+                    $("#modalImages").modal("show");
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching images:", error);
+                }
+            });
+        });
+
         });
 
         function getDiamondList() {
@@ -235,5 +285,7 @@
             });
             return ids;
         }
+
+
     </script>
 }

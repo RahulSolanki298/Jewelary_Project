@@ -1,0 +1,80 @@
+﻿@model List<Models.ProductImageAndVideoDTO>
+@using Common
+@{
+    var defaultImg = Model.Where(x => x.IsDefault == true && x.ImageUrl != "-").FirstOrDefault();
+    var defaultVdo = Model.Where(x => x.VideoUrl != "-").FirstOrDefault();
+}
+<div class="modal-dialog modal-fullscreen-md-down modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header btn-theme text-light">
+            <h5 class="modal-title" id="exampleModalToggleLabel">Images and Video Manager</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            @*<input type="checkbox" id="chkDefault" />*@
+            <div class="img-responsive">
+                @*@if (defaultImg != null && defaultImg.ImageUrl != "-")
+        {
+            <center><img src="@SD.ImgUrl/@defaultImg.ImageUrl" class="img-fluid" id="mainImg" /></center>
+        }
+        else if (defaultVdo != null && defaultVdo.VideoUrl != "-")
+        {
+            <center>
+                <video autoplay="autoplay" loop="loop" muted="muted"  playsinline preload="auto" style="max-width: 100%;">
+                    <source src="@($"{SD.ImgUrl}/{defaultVdo.VideoUrl}")" id="videoUrl" type="video/mp4" />
+                </video>
+            </center>
+        }
+        else
+        {
+            <center><img src="~/assets/img/no-image.png" class="img-fluid" id="mainImg" /></center>
+        }*@
+                <center>
+                    <img src="@((defaultImg != null && defaultImg.ImageUrl != "-") ? $"{SD.ImgUrl}/{defaultImg.ImageUrl}" : "/assets/img/no-image.png")"
+                         class="img-fluid" id="mainImg" style="display:@((defaultImg != null && defaultImg.ImageUrl != "-") ? "block" : "none");" />
+
+                    <video autoplay loop muted playsinline preload="auto" style="max-width: 100%; display:none;" id="mainVideo">
+                        <source src="@((defaultVdo != null && defaultVdo.VideoUrl != "-") ? $"{SD.ImgUrl}/{defaultVdo.VideoUrl}" : "")" type="video/mp4" id="videoUrl" />
+                    </video>
+                </center>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="image-row">
+                @if (Model != null && Model.Count > 0)
+                {
+                    foreach (var imgVdo in Model)
+                    {
+                        if (!string.IsNullOrEmpty(imgVdo.ImageUrl) && imgVdo.ImageUrl != "-")
+                        {
+                            @if (imgVdo.IsDefault == true)
+                            {
+                                <a class="popupImgs border-danger" Id="@imgVdo.Id">
+                                    <img src="@SD.ImgUrl/@imgVdo.ImageUrl" alt="Image" class="thumb-img" />
+                                </a>
+                            }
+                            else
+                            {
+                                <a class="popupImgs" Id="@imgVdo.Id">
+                                    <img src="@SD.ImgUrl/@imgVdo.ImageUrl" alt="Image" class="thumb-img" />
+                                </a>
+                            }
+                        }
+                        else if (!string.IsNullOrEmpty(imgVdo.VideoUrl) && imgVdo.VideoUrl != "-")
+                        {
+                            <a class="popupImgs" Id="@imgVdo.Id">
+                                <img src="@SD.ImgUrl/assets/img/video-icon.svg" alt="Video" class="thumb-img" />
+                            </a>
+                        }
+                        else
+                        {
+                            <a>
+                                <img src="@SD.ImgUrl/assets/img/no-image.png" alt="No image" class="thumb-img" />
+                            </a>
+                        }
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

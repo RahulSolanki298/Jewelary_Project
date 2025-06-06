@@ -3,6 +3,47 @@
 @{
     string defaultImage = string.Empty;
 }
+<style>
+    .card-deck {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 5px; /* Optional: space between images */
+        max-width: 250px; /* Limit width, allow scrolling */
+    }
+
+        .card-deck .card {
+            flex: 0 0 auto;
+            border: none;
+            background: transparent;
+            padding: 0;
+        }
+
+        .card-deck img.card-img-top {
+            height: 60px; /* Keep height small */
+            width: auto;
+            object-fit: contain;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+    .image-row {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 5px;
+        max-width: 500px; /* Adjust as needed */
+    }
+
+    .thumb-img {
+        height: 60px;
+        width: auto;
+        object-fit: contain;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+</style>
+
 
 <div class="row mb-2">
     <div class="col-lg-12 col-md-10">
@@ -42,7 +83,7 @@
 
 <div class="tab-content" id="myTabContent">
     <div class="tab-pane fade show active" id="ringList" role="tabpanel" aria-labelledby="rings-tab">
-        
+
         <table class="table table-hover table-bordered mb-0 table-responsive" id="ringTable">
             <thead>
                 <tr>
@@ -77,17 +118,35 @@
 
                     @foreach (var item in Model.Where(x => x.CategoryName == SD.Rings))
                     {
-                        if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
-                        {
-                            defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
-                        }
-
                         <tr>
                             <td scope="col"><input type="checkbox" class="chkId" value="@item.Id" /></td>
                             <td scope="col">
-                                <a>
-                                    <img src="@SD.ImgUrl/@defaultImage" style="height:100px;" />
-                                </a>
+                                <div class="image-row">
+                                    @if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
+                                    {
+                                        foreach (var imgVdo in item.ProductImageVideos)
+                                        {
+                                            if (!string.IsNullOrEmpty(imgVdo.ImageUrl) && imgVdo.ImageUrl != "-")
+                                            {
+                                                <a class="showImgs" data-productid="@item.Id">
+                                                    <img src="@SD.ImgUrl/@imgVdo.ImageUrl" alt="Image" class="thumb-img" />
+                                                </a>
+                                            }
+                                            else if (!string.IsNullOrEmpty(imgVdo.VideoUrl) && imgVdo.VideoUrl != "-")
+                                            {
+                                                <a class="showImgs" data-productid="@item.Id">
+                                                    <img src="@SD.ImgUrl/assets/img/video-icon.svg" alt="Video" class="thumb-img" />
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a>
+                                                    <img src="@SD.ImgUrl/assets/img/no-image.png" alt="No image" class="thumb-img" />
+                                                </a>
+                                            }
+                                        }
+                                    }
+                                </div>
                             </td>
                             <td scope="col">@item.UploadStatus</td>
                             <td scope="col">
@@ -124,7 +183,7 @@
                 }
             </tbody>
         </table>
-          
+
     </div>
     <div class="tab-pane fade" id="bandList" role="tabpanel" aria-labelledby="bands-tab">
         <table class="table table-hover table-bordered mb-0 table-responsive" id="bandTable">
@@ -160,17 +219,35 @@
                 {
                     @foreach (var item in Model.Where(x => x.CategoryName == SD.Bands))
                     {
-                        defaultImage = string.Empty;
-                        if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
-                        {
-                            defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
-                        }
                         <tr>
                             <td scope="col"><input type="checkbox" class="chkId" value="@item.Id" /></td>
                             <td scope="col">
-                                <a>
-                                    <img src="@SD.ImgUrl/@defaultImage" style="height:100px;" />
-                                </a>
+                                <div class="image-row">
+                                    @if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
+                                    {
+                                        foreach (var imgVdo in item.ProductImageVideos)
+                                        {
+                                            if (!string.IsNullOrEmpty(imgVdo.ImageUrl) && imgVdo.ImageUrl != "-")
+                                            {
+                                                <a class="showImgs" data-productid="@item.Id">
+                                                    <img src="@SD.ImgUrl/@imgVdo.ImageUrl" alt="Image" class="thumb-img" />
+                                                </a>
+                                            }
+                                            else if (!string.IsNullOrEmpty(imgVdo.VideoUrl) && imgVdo.VideoUrl != "-")
+                                            {
+                                                <a class="showImgs" data-productid="@item.Id">
+                                                    <img src="@SD.ImgUrl/assets/img/video-icon.svg" alt="Video" class="thumb-img" />
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a>
+                                                    <img src="@SD.ImgUrl/assets/img/no-image.png" alt="No image" class="thumb-img" />
+                                                </a>
+                                            }
+                                        }
+                                    }
+                                </div>
                             </td>
                             <td scope="col">@item.UploadStatus</td>
                             <td scope="col">
@@ -243,17 +320,36 @@
                 {
                     foreach (var item in Model.Where(x => x.CategoryName == SD.Earrings))
                     {
-                        defaultImage = string.Empty;
-                        if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
-                        {
-                            defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
-                        }
+
                         <tr>
                             <td><input type="checkbox" class="chkId" value="@item.Id" /></td>
                             <td scope="col">
-                                <a>
-                                    <img src="@SD.ImgUrl/@defaultImage" style="height:100px;" />
-                                </a>
+                                <div class="image-row">
+                                    @if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
+                                    {
+                                        foreach (var imgVdo in item.ProductImageVideos)
+                                        {
+                                            if (!string.IsNullOrEmpty(imgVdo.ImageUrl) && imgVdo.ImageUrl != "-")
+                                            {
+                                                <a class="showImgs" data-productid="@item.Id">
+                                                    <img src="@SD.ImgUrl/@imgVdo.ImageUrl" alt="Image" class="thumb-img" />
+                                                </a>
+                                            }
+                                            else if (!string.IsNullOrEmpty(imgVdo.VideoUrl) && imgVdo.VideoUrl != "-")
+                                            {
+                                                <a class="showImgs" data-productid="@item.Id">
+                                                    <img src="@SD.ImgUrl/assets/img/video-icon.svg" alt="Video" class="thumb-img" />
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a>
+                                                    <img src="@SD.ImgUrl/assets/img/no-image.png" alt="No image" class="thumb-img" />
+                                                </a>
+                                            }
+                                        }
+                                    }
+                                </div>
                             </td>
                             <td scope="col">@item.UploadStatus</td>
                             <td scope="col">
@@ -328,17 +424,36 @@
                 {
                     foreach (var item in Model.Where(x => x.CategoryName == SD.Pendants))
                     {
-                        defaultImage = string.Empty;
-                        if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
-                        {
-                            defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
-                        }
+
                         <tr>
                             <td><input type="checkbox" class="chkId" value="@item.Id" /></td>
                             <td scope="col">
-                                <a>
-                                    <img src="@SD.ImgUrl/@defaultImage" style="height:100px;" />
-                                </a>
+                                <div class="image-row">
+                                    @if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
+                                    {
+                                        foreach (var imgVdo in item.ProductImageVideos)
+                                        {
+                                            if (!string.IsNullOrEmpty(imgVdo.ImageUrl) && imgVdo.ImageUrl != "-")
+                                            {
+                                                <a class="showImgs" data-productid="@item.Id">
+                                                    <img src="@SD.ImgUrl/@imgVdo.ImageUrl" alt="Image" class="thumb-img" />
+                                                </a>
+                                            }
+                                            else if (!string.IsNullOrEmpty(imgVdo.VideoUrl) && imgVdo.VideoUrl != "-")
+                                            {
+                                                <a class="showImgs" data-productid="@item.Id">
+                                                    <img src="@SD.ImgUrl/assets/img/video-icon.svg" alt="Video" class="thumb-img" />
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a>
+                                                    <img src="@SD.ImgUrl/assets/img/no-image.png" alt="No image" class="thumb-img" />
+                                                </a>
+                                            }
+                                        }
+                                    }
+                                </div>
                             </td>
                             <td scope="col">@item.UploadStatus</td>
                             <td scope="col">
@@ -413,17 +528,36 @@
                 {
                     foreach (var item in Model.Where(x => x.CategoryName == SD.Bracelets))
                     {
-                        defaultImage = string.Empty;
-                        if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
-                        {
-                            defaultImage = item.ProductImageVideos.FirstOrDefault().ImageUrl;
-                        }
+
                         <tr>
                             <td><input type="checkbox" class="chkId" value="@item.Id" /></td>
                             <td scope="col">
-                                <a>
-                                    <img src="@SD.ImgUrl/@defaultImage" style="height:100px;" />
-                                </a>
+                                <div class="image-row">
+                                    @if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
+                                    {
+                                        foreach (var imgVdo in item.ProductImageVideos)
+                                        {
+                                            if (!string.IsNullOrEmpty(imgVdo.ImageUrl) && imgVdo.ImageUrl != "-")
+                                            {
+                                                <a class="showImgs" data-productid="@item.Id">
+                                                    <img src="@SD.ImgUrl/@imgVdo.ImageUrl" alt="Image" class="thumb-img" />
+                                                </a>
+                                            }
+                                            else if (!string.IsNullOrEmpty(imgVdo.VideoUrl) && imgVdo.VideoUrl != "-")
+                                            {
+                                                <a class="showImgs" data-productid="@item.Id">
+                                                    <img src="@SD.ImgUrl/assets/img/video-icon.svg" alt="Video" class="thumb-img" />
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a>
+                                                    <img src="@SD.ImgUrl/assets/img/no-image.png" alt="No image" class="thumb-img" />
+                                                </a>
+                                            }
+                                        }
+                                    }
+                                </div>
                             </td>
                             <td scope="col">@item.UploadStatus</td>
                             <td scope="col">

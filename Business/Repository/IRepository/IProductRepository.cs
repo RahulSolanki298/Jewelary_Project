@@ -64,5 +64,9 @@ namespace Business.Repository.IRepository
 
         Task<bool> UpdateProductStatus(string[] productIds, string status);
 
+        Task<List<ProductImageAndVideoDTO>> GetProductImagesVideos(string productId);
+
+        Task<ProductImageAndVideoDTO> GetProductImagesVideoById(int id);
+
     }
 }

@@ -26,13 +26,13 @@ namespace APIs.Controllers
         private readonly IProductRepository _productRepository;
         private readonly IProductPropertyRepository _productPropertyRepository;
         private readonly IWebHostEnvironment _env;
-        public ProductController(IProductRepository productRepository, 
+        public ProductController(IProductRepository productRepository,
             IProductPropertyRepository productPropertyRepository,
             IWebHostEnvironment env)
         {
             _productRepository = productRepository;
             _productPropertyRepository = productPropertyRepository;
-            _env=env;
+            _env = env;
         }
 
         #region Useful APIS
@@ -221,7 +221,7 @@ namespace APIs.Controllers
                             entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
                         {
                             var styleName = _productRepository.ExtractStyleName(entry.Name);
-                            if (styleName == null) continue;  
+                            if (styleName == null) continue;
 
                             var metalId = await _productRepository.GetMetalId(styleName.ColorName);
                             if (metalId == 0) continue;
@@ -367,14 +367,17 @@ namespace APIs.Controllers
         public async Task<IActionResult> ExcelUpload(IFormFile file)
         {
             List<ProductDTO> ProductUpload = new List<ProductDTO>();
-
-            if (file == null || file.Length == 0)
-                return BadRequest("No file uploaded.");
-
-            if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
-                return BadRequest("Invalid file format. Please upload an Excel (.xlsx) file.");
+            List<ProductDTO> ringProducts = new List<ProductDTO>();
+            List<ProductDTO> weddings = new List<ProductDTO>();
+            List<ProductDTO> pendants = new List<ProductDTO>();
+            List<ProductDTO> earrings = new List<ProductDTO>();
+            List<ProductDTO> bracelets = new List<ProductDTO>();
 
             using var stream = new MemoryStream();
+
+
+            if (file == null || file.Length == 0) return BadRequest("No file uploaded.");
+            if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase)) return BadRequest("Invalid file format. Please upload an Excel (.xlsx) file.");
             await file.CopyToAsync(stream);
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -382,32 +385,11 @@ namespace APIs.Controllers
 
             foreach (var wkSheet in package.Workbook.Worksheets)
             {
-
-                if (wkSheet.Name.Trim().ToLower() == "engagement rings")
-                {
-                    var ringProducts = ProcessRingData(wkSheet);
-                    ProductUpload.AddRange(ringProducts);
-                }
-                else if (wkSheet.Name.Trim().ToLower() == "wedding bands")
-                {
-                    var weddings = ProcessBandsData(wkSheet);
-                    ProductUpload.AddRange(weddings);
-                }
-                else if (wkSheet.Name.Trim().ToLower() == "earrings")
-                {
-                    var weddings = ProcessEarringsData(wkSheet);
-                    ProductUpload.AddRange(weddings);
-                }
-                else if (wkSheet.Name.Trim().ToLower() == "pendants")
-                {
-                    var weddings = ProcessPendantsData(wkSheet);
-                    ProductUpload.AddRange(weddings);
-                }
-                else if (wkSheet.Name.Trim().ToLower() == "bracelets")
-                {
-                    var weddings = ProcessBraceletsData(wkSheet);
-                    ProductUpload.AddRange(weddings);
-                }
+                if (wkSheet.Name.Trim().ToLower() == "engagement rings") { ringProducts = ProcessRingData(wkSheet); ProductUpload.AddRange(ringProducts); }
+                else if (wkSheet.Name.Trim().ToLower() == "wedding bands") { weddings = ProcessBandsData(wkSheet); ProductUpload.AddRange(weddings); }
+                else if (wkSheet.Name.Trim().ToLower() == "earrings") { earrings = ProcessEarringsData(wkSheet); ProductUpload.AddRange(earrings); }
+                else if (wkSheet.Name.Trim().ToLower() == "pendants") { pendants = ProcessPendantsData(wkSheet); ProductUpload.AddRange(pendants); }
+                else if (wkSheet.Name.Trim().ToLower() == "bracelets") { bracelets = ProcessBraceletsData(wkSheet); ProductUpload.AddRange(bracelets); }
             }
 
             return Ok(ProductUpload);
@@ -561,7 +543,7 @@ namespace APIs.Controllers
                 query = query.Where(p => Convert.ToDecimal(p.CenterCaratName) <= filters.ToCarat.Value);
             }
 
-            if (filters.categories != null  && filters.categories.Length > 0 && filters.categories[0] != null)
+            if (filters.categories != null && filters.categories.Length > 0 && filters.categories[0] != null)
             {
                 query = query.Where(p => filters.categories.Contains(p.CategoryName));
             }
@@ -992,7 +974,6 @@ namespace APIs.Controllers
                 product = new ProductDTO
                 {
                     CategoryName = SD.Rings,
-                    EventName = worksheet.Cells[row, 5].Text,
                     Title = worksheet.Cells[row, 5].Text,
                     VenderName = worksheet.Cells[row, 6].Text,
                     VenderStyle = worksheet.Cells[row, 7].Text,
@@ -1288,7 +1269,7 @@ namespace APIs.Controllers
 
             return products;
         }
-        
+
         private List<ProductDTO> ProcessBraceletsData(ExcelWorksheet worksheet)
         {
             var newProductList = new List<ProductDTO>();
@@ -1540,7 +1521,7 @@ namespace APIs.Controllers
                     AccentStoneShapeName = baseProduct.AccentStoneShapeName,
                     Description = baseProduct.Description,
                     IsReadyforShip = baseProduct.IsReadyforShip,
-                    WholesaleCost=baseProduct.WholesaleCost,
+                    WholesaleCost = baseProduct.WholesaleCost,
                     Diameter = baseProduct.Diameter
                 });
             }

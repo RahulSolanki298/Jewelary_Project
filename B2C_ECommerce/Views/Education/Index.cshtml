@@ -19,7 +19,7 @@
                         <ul class="blog-archive blog-category">
                             @foreach (var item in Model)
                             {
-                                <li><a href="#">@item</a></li>
+                                <li><a>@item</a></li>
 
                             }
                         </ul>
@@ -104,28 +104,24 @@
 @section Scripts{ 
     <script>
         $(document).ready(function () {
-
+            GetBlogList();
 
 
         });
 
         function GetBlogList() {
                $.ajax({
-                            url: '@Url.Action("GetDiamondsByIds", "Diamond")',
-                            type: 'GET',
-                            data: {
-                                diamondIds: selectedDiamonds.join(',')
-                            },
-                            success: function (data) {
-                                console.log(data);
-                                $("#diamondComparisonContent").html('');
-                                $("#diamondComparisonContent").html(data);
-                                $("#compareDiamondsModal").modal("show");
-                            },
-                            error: function (error) {
-                                console.error('Error fetching data:', error);
-                            }
-                        });
+                   url: '@Url.Action("BlogCategory", "Education")',
+                   type: 'GET',
+                   success: function (data) {
+                       console.log(data);
+                       $("#blogContainer").html('');
+                       $("#blogContainer").html(data);
+                   },
+                   error: function (error) {
+                       console.error('Error fetching data:', error);
+                   }
+               });
 
         }
 

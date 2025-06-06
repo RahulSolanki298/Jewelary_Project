@@ -113,6 +113,11 @@ namespace ControlPanel.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveAllProduct(string productsJson)
         {
+            List<ProductDTO> ringProducts = new List<ProductDTO>();
+            List<ProductDTO> weddings = new List<ProductDTO>();
+            List<ProductDTO> earrings = new List<ProductDTO>();
+            List<ProductDTO> pendants = new List<ProductDTO>();
+            List<ProductDTO> bracelets = new List<ProductDTO>();
             if (string.IsNullOrEmpty(productsJson))
             {
                 return Json("Product Doesn't Found");
@@ -126,35 +131,13 @@ namespace ControlPanel.Controllers
 
             foreach (var wkSheet in categoryList)
             {
-
-                if (wkSheet.CategoryName.Trim().ToLower() == "rings")
-                {
-                    var ringProducts = products.Where(x => x.CategoryName == "Rings").ToList();
-                    await _productRepository.SaveNewProductList(ringProducts, "Rings");
-                }
-                else if (wkSheet.CategoryName.Trim().ToLower() == "bands")
-                {
-                    var weddings = products.Where(x => x.CategoryName == "Bands").ToList();
-                    await _productRepository.SaveNewProductList(weddings, "Bands");
-                }
-                else if (wkSheet.CategoryName.Trim().ToLower() == "earrings")
-                {
-                    var weddings = products.Where(x => x.CategoryName == "Earrings").ToList();
-                    await _productRepository.SaveEarringsList(weddings, "Earrings");
-                }
-                else if (wkSheet.CategoryName.Trim().ToLower() == "pendants")
-                {
-                    var weddings = products.Where(x => x.CategoryName == "Pendants").ToList();
-                    await _productRepository.SaveEarringsList(weddings, "Pendants"); // Hypothetical method
-                }
-                else if (wkSheet.CategoryName.Trim().ToLower() == "bracelets")
-                {
-                    var weddings = products.Where(x => x.CategoryName == "Bracelets").ToList();
-                    await _productRepository.SaveEarringsList(weddings, "Bracelets"); // Hypothetical method
-                }
+                if (wkSheet.CategoryName.Trim().ToLower() == "rings") {  ringProducts = products.Where(x => x.CategoryName == "Rings").ToList(); await _productRepository.SaveNewProductList(ringProducts, "Rings");}
+                else if (wkSheet.CategoryName.Trim().ToLower() == "bands") { weddings = products.Where(x => x.CategoryName == "Bands").ToList(); await _productRepository.SaveNewProductList(weddings, "Bands");}
+                else if (wkSheet.CategoryName.Trim().ToLower() == "earrings") {earrings = products.Where(x => x.CategoryName == "Earrings").ToList(); await _productRepository.SaveEarringsList(weddings, "Earrings");}
+                else if (wkSheet.CategoryName.Trim().ToLower() == "pendants") { pendants = products.Where(x => x.CategoryName == "Pendants").ToList(); await _productRepository.SaveEarringsList(weddings, "Pendants");}
+                else if (wkSheet.CategoryName.Trim().ToLower() == "bracelets"){ bracelets = products.Where(x => x.CategoryName == "Bracelets").ToList();await _productRepository.SaveEarringsList(weddings, "Bracelets");}
             }
-
-            return Json("Data Uploaded Successfully.");
+            return Json("AI transforms data migration Successfully.");
         }
 
 
@@ -173,7 +156,6 @@ namespace ControlPanel.Controllers
                 product = new ProductDTO
                 {
                     CategoryName = SD.Rings,
-                    EventName = worksheet.Cells[row, 5].Text,
                     Title = worksheet.Cells[row, 5].Text,
                     VenderName = worksheet.Cells[row, 6].Text,
                     VenderStyle = worksheet.Cells[row, 7].Text,
@@ -200,7 +182,7 @@ namespace ControlPanel.Controllers
                     IsReadyforShip = !string.IsNullOrWhiteSpace(worksheet.Cells[row, 1].Text) && worksheet.Cells[row, 1].Text == SD.ReadyToPdp ? true : false,
                 };
 
-                if (!string.IsNullOrWhiteSpace(product.EventName) && !string.IsNullOrWhiteSpace(product.VenderName) && !string.IsNullOrWhiteSpace(product.VenderStyle) && !string.IsNullOrWhiteSpace(product.Sku))
+                if (!string.IsNullOrWhiteSpace(product.Title) && !string.IsNullOrWhiteSpace(product.VenderName) && !string.IsNullOrWhiteSpace(product.VenderStyle) && !string.IsNullOrWhiteSpace(product.Sku))
                 {
                     tempProducts = new ProductDTO();
                     tempProducts = product;
@@ -210,8 +192,7 @@ namespace ControlPanel.Controllers
                 else
                 {
                     product.CategoryName = SD.Rings;
-                    product.EventName = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
-                    product.Title = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
+                    product.Title = string.IsNullOrWhiteSpace(product.Title) ? tempProducts.Title : product.Title;
                     product.VenderName = string.IsNullOrWhiteSpace(product.VenderName) ? tempProducts.VenderName : product.VenderName;
                     product.VenderStyle = string.IsNullOrWhiteSpace(product.VenderStyle) ? tempProducts.VenderStyle : product.VenderStyle;
                     product.Sku = string.IsNullOrWhiteSpace(product.Sku) ? tempProducts.Sku : product.Sku;
@@ -232,7 +213,7 @@ namespace ControlPanel.Controllers
                     product.Price = product.Price == 0 ? tempProducts.Price : product.Price;
                     product.UnitPrice = product.Price == 0 ? tempProducts.UnitPrice : product.UnitPrice;
                     product.Description = string.IsNullOrWhiteSpace(product.Description) ? tempProducts.Description : product.Description;
-                    product.WholesaleCost = product.WholesaleCost > 0 ? tempProducts.WholesaleCost : product.WholesaleCost;
+                    product.WholesaleCost = string.IsNullOrWhiteSpace(product.WholesaleCost.ToString()) ? tempProducts.WholesaleCost : product.WholesaleCost;
                     product.IsReadyforShip = product.IsReadyforShip != true ? tempProducts.IsReadyforShip : product.IsReadyforShip;
                     products.Add(product);
                     newProductList = CreateRingVariantsFromColor(product);
@@ -257,7 +238,6 @@ namespace ControlPanel.Controllers
                 {
                     CategoryName = SD.Bands,
                     Title = worksheet.Cells[row, 5].Text,
-                    EventName = worksheet.Cells[row, 5].Text,
                     VenderName = worksheet.Cells[row, 6].Text,
                     VenderStyle = worksheet.Cells[row, 7].Text,
                     Sku = worksheet.Cells[row, 7].Text,
@@ -282,7 +262,7 @@ namespace ControlPanel.Controllers
                     IsReadyforShip = string.IsNullOrWhiteSpace(worksheet.Cells[row, 1].Text) && worksheet.Cells[row, 1].Text == SD.ReadyToPdp ? true : false,
                 };
 
-                if (!string.IsNullOrWhiteSpace(product.EventName) && !string.IsNullOrWhiteSpace(product.VenderName) && !string.IsNullOrWhiteSpace(product.VenderStyle) && !string.IsNullOrWhiteSpace(product.Sku))
+                if (!string.IsNullOrWhiteSpace(product.Title) && !string.IsNullOrWhiteSpace(product.VenderName) && !string.IsNullOrWhiteSpace(product.VenderStyle) && !string.IsNullOrWhiteSpace(product.Sku))
                 {
                     tempProducts = new ProductDTO();
                     tempProducts = product;
@@ -292,8 +272,7 @@ namespace ControlPanel.Controllers
                 else
                 {
                     product.CategoryName = SD.Bands;
-                    product.EventName = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
-                    product.Title = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
+                    product.Title = string.IsNullOrWhiteSpace(product.Title) ? tempProducts.Title : product.Title;
                     product.VenderName = string.IsNullOrWhiteSpace(product.VenderName) ? tempProducts.VenderName : product.VenderName;
                     product.VenderStyle = string.IsNullOrWhiteSpace(product.VenderStyle) ? tempProducts.VenderStyle : product.VenderStyle;
                     product.Sku = string.IsNullOrWhiteSpace(product.Sku) ? tempProducts.Sku : product.Sku;
@@ -305,7 +284,7 @@ namespace ControlPanel.Controllers
                     product.MMSize = string.IsNullOrWhiteSpace(product.MMSize) ? tempProducts.MMSize : product.MMSize;
                     product.DiaWT = product.DiaWT == 0 ? tempProducts.DiaWT : product.DiaWT;
                     product.NoOfStones = product.NoOfStones == 0 ? tempProducts.NoOfStones : product.NoOfStones;
-                    product.Grades = string.IsNullOrWhiteSpace(product.Grades) ? tempProducts.Sku : product.Grades;
+                    product.Grades = string.IsNullOrWhiteSpace(product.Grades) ? tempProducts.Grades : product.Grades;
                     product.ProductType = string.IsNullOrWhiteSpace(product.ProductType) ? tempProducts.ProductType : product.ProductType;
                     product.Price = product.Price == 0 ? tempProducts.Price : product.Price;
                     product.UnitPrice = product.Price == 0 ? tempProducts.UnitPrice : product.UnitPrice;
@@ -336,7 +315,6 @@ namespace ControlPanel.Controllers
                 {
                     CategoryName = SD.Earrings,
                     Title = worksheet.Cells[row, 5].Text,
-                    EventName = worksheet.Cells[row, 5].Text,
                     VenderName = worksheet.Cells[row, 6].Text,
                     VenderStyle = worksheet.Cells[row, 7].Text,
                     Sku = worksheet.Cells[row, 7].Text,
@@ -357,7 +335,7 @@ namespace ControlPanel.Controllers
                     IsReadyforShip = !string.IsNullOrWhiteSpace(worksheet.Cells[row, 1].Text) && worksheet.Cells[row, 1].Text == SD.ReadyToPdp ? true : false,
                 };
 
-                if (!string.IsNullOrWhiteSpace(product.EventName) && !string.IsNullOrWhiteSpace(product.VenderName) && !string.IsNullOrWhiteSpace(product.VenderStyle) && !string.IsNullOrWhiteSpace(product.Sku))
+                if (!string.IsNullOrWhiteSpace(product.Title) && !string.IsNullOrWhiteSpace(product.VenderName) && !string.IsNullOrWhiteSpace(product.VenderStyle) && !string.IsNullOrWhiteSpace(product.Sku))
                 {
                     tempProducts = new ProductDTO();
                     tempProducts = product;
@@ -368,7 +346,6 @@ namespace ControlPanel.Controllers
                 {
                     product.CategoryName = SD.Earrings;
                     product.Diameter = string.IsNullOrWhiteSpace(product.Diameter) ? tempProducts.Diameter : product.Diameter;
-                    product.EventName = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
                     product.Title = string.IsNullOrWhiteSpace(product.Title) ? tempProducts.Title : product.Title;
                     product.VenderName = string.IsNullOrWhiteSpace(product.VenderName) ? tempProducts.VenderName : product.VenderName;
                     product.VenderStyle = string.IsNullOrWhiteSpace(product.VenderStyle) ? tempProducts.VenderStyle : product.VenderStyle;
@@ -412,7 +389,6 @@ namespace ControlPanel.Controllers
                 {
                     CategoryName = SD.Pendants,
                     Title = worksheet.Cells[row, 5].Text,
-                    EventName = worksheet.Cells[row, 5].Text,
                     VenderName = worksheet.Cells[row, 6].Text,
                     VenderStyle = worksheet.Cells[row, 7].Text,
                     Sku = worksheet.Cells[row, 7].Text,
@@ -433,7 +409,7 @@ namespace ControlPanel.Controllers
                     IsReadyforShip = !string.IsNullOrWhiteSpace(worksheet.Cells[row, 1].Text) && worksheet.Cells[row, 1].Text == SD.ReadyToPdp ? true : false
                 };
 
-                if (!string.IsNullOrWhiteSpace(product.EventName) && !string.IsNullOrWhiteSpace(product.VenderName) && !string.IsNullOrWhiteSpace(product.VenderStyle) && !string.IsNullOrWhiteSpace(product.Sku))
+                if (!string.IsNullOrWhiteSpace(product.Title) && !string.IsNullOrWhiteSpace(product.VenderName) && !string.IsNullOrWhiteSpace(product.VenderStyle) && !string.IsNullOrWhiteSpace(product.Sku))
                 {
                     tempProducts = new ProductDTO();
                     tempProducts = product;
@@ -443,7 +419,6 @@ namespace ControlPanel.Controllers
                 else
                 {
                     product.CategoryName = SD.Pendants;
-                    product.EventName = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
                     product.Title = string.IsNullOrWhiteSpace(product.Title) ? tempProducts.Title : product.Title;
                     product.VenderName = string.IsNullOrWhiteSpace(product.VenderName) ? tempProducts.VenderName : product.VenderName;
                     product.VenderStyle = string.IsNullOrWhiteSpace(product.VenderStyle) ? tempProducts.VenderStyle : product.VenderStyle;
@@ -486,7 +461,6 @@ namespace ControlPanel.Controllers
                 {
                     CategoryName = SD.Bracelets,
                     Title = worksheet.Cells[row, 5].Text,
-                    EventName = worksheet.Cells[row, 5].Text,
                     VenderName = worksheet.Cells[row, 6].Text,
                     VenderStyle = worksheet.Cells[row, 7].Text,
                     Sku = worksheet.Cells[row, 7].Text,
@@ -507,7 +481,7 @@ namespace ControlPanel.Controllers
                     IsReadyforShip = !string.IsNullOrWhiteSpace(worksheet.Cells[row, 1].Text) && worksheet.Cells[row, 1].Text == SD.ReadyToPdp ? true : false
                 };
 
-                if (!string.IsNullOrWhiteSpace(product.EventName) && !string.IsNullOrWhiteSpace(product.VenderName) && !string.IsNullOrWhiteSpace(product.VenderStyle) && !string.IsNullOrWhiteSpace(product.Sku))
+                if (!string.IsNullOrWhiteSpace(product.Title) && !string.IsNullOrWhiteSpace(product.VenderName) && !string.IsNullOrWhiteSpace(product.VenderStyle) && !string.IsNullOrWhiteSpace(product.Sku))
                 {
                     tempProducts = new ProductDTO();
                     tempProducts = product;
@@ -517,8 +491,7 @@ namespace ControlPanel.Controllers
                 else
                 {
                     product.CategoryName = SD.Bracelets;
-                    product.EventName = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
-                    product.Title = string.IsNullOrWhiteSpace(product.EventName) ? tempProducts.EventName : product.EventName;
+                    product.Title = string.IsNullOrWhiteSpace(product.Title) ? tempProducts.Title : product.Title;
                     product.VenderName = string.IsNullOrWhiteSpace(product.VenderName) ? tempProducts.VenderName : product.VenderName;
                     product.VenderStyle = string.IsNullOrWhiteSpace(product.VenderStyle) ? tempProducts.VenderStyle : product.VenderStyle;
                     product.Sku = string.IsNullOrWhiteSpace(product.Sku) ? tempProducts.Sku : product.Sku;
@@ -600,6 +573,20 @@ namespace ControlPanel.Controllers
         {
             var jewelryPropertyList = await _productPropertyRepository.GetPropertyItemsByName(propertyName);
             return PartialView("~/Views/Jewellery/_ProductPropertyItems.cshtml", jewelryPropertyList);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> JewelryProductImages(string productId)
+        {
+            var jewelryImgList = await _productRepository.GetProductImagesVideos(productId);
+            return PartialView("~/Views/Jewellery/_ImagesDisplayModal.cshtml", jewelryImgList);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UpdateJewelryProductImageById(int id)
+        {
+            var jewelryImgList = await _productRepository.GetProductImagesVideoById(id);
+            return Json(jewelryImgList);
         }
 
 
@@ -738,10 +725,8 @@ namespace ControlPanel.Controllers
                     UnitPrice = baseProduct.UnitPrice,
                     ColorName = metal.Trim(),
                     Karat = karat,
-                    ProductType = productType,
+                    ProductType = baseProduct.ProductType,
                     MMSize = baseProduct.MMSize,
-                    IsActivated = true,
-                    EventName = baseProduct.EventName,
                     Certificate = baseProduct.Certificate,
                     AccentStoneShapeName = baseProduct.AccentStoneShapeName,
                     Description = baseProduct.Description,
@@ -885,7 +870,7 @@ namespace ControlPanel.Controllers
                     section = await reader.ReadNextSectionAsync();
                 }
 
-                return Json("Images and Videoes have been uploaded successfully.");
+                return Json("AI transforms Images and Videoes migration successfully.");
 
             }
             catch (Exception ex)

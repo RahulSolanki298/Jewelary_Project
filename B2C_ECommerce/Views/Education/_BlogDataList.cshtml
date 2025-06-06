@@ -1,34 +1,42 @@
 ﻿@model List<DataAccess.Entities.Blogs>
 @using Common
+
 <div class="row mbn-30">
-    @foreach (var item in Model)
-	{
-    <div class="col-12">
-        <!-- blog post item start -->
-        <div class="blog-post-item mb-30">
-            <figure class="blog-thumb">
-                <a href="blog-details.html">
-                    <img src="@SD.ImgUrl/@item.BlogImage" alt="blog image">
-                </a>
-            </figure>
-            <div class="blog-content">
-                <h4 class="blog-title">
-                    <a href="blog-details.html">@item.Title</a>
-                </h4>
-                <div class="blog-meta">
-                    <p>10/04/2019 | <a href="#">@item.Title</a></p>
+    @if (Model != null && Model.Any())
+    {
+        foreach (var blog in Model)
+        {
+            <div class="col-12">
+                <div class="blog-post-item mb-30">
+                    <figure class="blog-thumb">
+                        <a href="blog-details.html">
+                            <img src="@($"{SD.ImgUrl}/{blog.BlogImage}")" alt="blog image">
+                        </a>
+                    </figure>
+                    <div class="blog-content">
+                        <h4 class="blog-title">
+                            <a href="blog-details.html">@blog.Title</a>
+                        </h4>
+                        <div class="blog-meta">
+                            <p>@blog.BlogDate?.ToString("MMMM dd, yyyy") | <a href="#">@blog.Title</a></p>
+                        </div>
+                        <p>@blog.ShortDescription</p>
+                        <a class="blog-read-more" href="blog-details.html">Read More...</a>
+                    </div>
                 </div>
-                <p>@item.ShortDescription</p>
-                <a class="blog-read-more" href="blog-details.html">Read More...</a>
             </div>
+        }
+    }
+    else
+    {
+        <div class="col-12">
+            <p>No blog posts found.</p>
         </div>
-        <!-- blog post item end -->
-    </div>
-	}
-    
+    }
 </div>
 
-<div class="paginatoin-area text-center">
+<!-- Pagination (placeholder static pagination, ideally should be dynamic) -->
+<div class="pagination-area text-center">
     <ul class="pagination-box">
         <li><a class="previous" href="#"><i class="pe-7s-angle-left"></i></a></li>
         <li class="active"><a href="#">1</a></li>
