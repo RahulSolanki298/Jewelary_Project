@@ -133,9 +133,9 @@ namespace ControlPanel.Controllers
             {
                 if (wkSheet.CategoryName.Trim().ToLower() == "rings") {  ringProducts = products.Where(x => x.CategoryName == "Rings").ToList(); await _productRepository.SaveNewProductList(ringProducts, "Rings");}
                 else if (wkSheet.CategoryName.Trim().ToLower() == "bands") { weddings = products.Where(x => x.CategoryName == "Bands").ToList(); await _productRepository.SaveNewProductList(weddings, "Bands");}
-                else if (wkSheet.CategoryName.Trim().ToLower() == "earrings") {earrings = products.Where(x => x.CategoryName == "Earrings").ToList(); await _productRepository.SaveEarringsList(weddings, "Earrings");}
-                else if (wkSheet.CategoryName.Trim().ToLower() == "pendants") { pendants = products.Where(x => x.CategoryName == "Pendants").ToList(); await _productRepository.SaveEarringsList(weddings, "Pendants");}
-                else if (wkSheet.CategoryName.Trim().ToLower() == "bracelets"){ bracelets = products.Where(x => x.CategoryName == "Bracelets").ToList();await _productRepository.SaveEarringsList(weddings, "Bracelets");}
+                else if (wkSheet.CategoryName.Trim().ToLower() == "earrings") {earrings = products.Where(x => x.CategoryName == "Earrings").ToList(); await _productRepository.SaveEarringsList(earrings, "Earrings");}
+                else if (wkSheet.CategoryName.Trim().ToLower() == "pendants") { pendants = products.Where(x => x.CategoryName == "Pendants").ToList(); await _productRepository.SaveEarringsList(pendants, "Pendants");}
+                else if (wkSheet.CategoryName.Trim().ToLower() == "bracelets"){ bracelets = products.Where(x => x.CategoryName == "Bracelets").ToList();await _productRepository.SaveEarringsList(bracelets, "Bracelets");}
             }
             return Json("AI transforms data migration Successfully.");
         }
@@ -746,6 +746,21 @@ namespace ControlPanel.Controllers
         {
             try
             {
+                string fileName = string.Empty; int metalId = 0;
+                string extractedFolder= string.Empty;
+                string zipPath = string.Empty;
+                string folderPath = string.Empty;
+                var styleName = new FileSplitDTO();
+                var prdDesignDT =new  List<Product>();
+                string destinationPath = string.Empty;
+                string relativePath = string.Empty;
+                var prdDT = new ProductImages();
+                var sizes = new Dictionary<string, Size>();
+                string resizedName = string.Empty;
+                string resizedPath=string.Empty;
+                string resizedRelativePath = string.Empty;
+                int resizedId = 0;
+
                 var boundary = HeaderUtilities.RemoveQuotes(MediaTypeHeaderValue.Parse(Request.ContentType).Boundary).Value;
                 var reader = new MultipartReader(boundary, Request.Body);
                 var section = await reader.ReadNextSectionAsync();
@@ -760,11 +775,11 @@ namespace ControlPanel.Controllers
                         if (contentDisposition.DispositionType == "form-data" &&
                             !string.IsNullOrEmpty(contentDisposition.FileName.Value))
                         {
-                            string fileName = contentDisposition.FileName.Value.Trim('"');
-                            string extractedFolder = Path.Combine(_env.WebRootPath, "UploadedFiles", "Collections");
+                            fileName = contentDisposition.FileName.Value.Trim('"');
+                            extractedFolder = Path.Combine(_env.WebRootPath, "UploadedFiles", "Collections");
                             Directory.CreateDirectory(extractedFolder);
 
-                            string zipPath = Path.Combine(extractedFolder, fileName);
+                            zipPath = Path.Combine(extractedFolder, fileName);
                             await using (var targetStream = System.IO.File.Create(zipPath))
                             {
                                 await section.Body.CopyToAsync(targetStream);
@@ -781,26 +796,26 @@ namespace ControlPanel.Controllers
                                         entry.Name.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
                                         entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        var styleName = _productRepository.ExtractStyleName(entry.Name);
+                                        styleName = _productRepository.ExtractStyleName(entry.Name);
                                         if (styleName == null) continue;
 
-                                        var metalId = await _productRepository.GetMetalId(styleName.ColorName);
+                                         metalId = await _productRepository.GetMetalId(styleName.ColorName);
                                         if (metalId == 0) continue;
 
-                                        var prdDesignDT = await _productRepository.GetProductDataByDesignNo(styleName.DesignNo, metalId);
+                                        prdDesignDT = await _productRepository.GetProductDataByDesignNo(styleName.DesignNo, metalId);
                                         if (prdDesignDT.Count == 0) continue;
 
-                                        string folderPath = Path.Combine(extractedFolder, styleName.DesignNo);
+                                        folderPath = Path.Combine(extractedFolder, styleName.DesignNo);
                                         Directory.CreateDirectory(folderPath);
 
-                                        string destinationPath = Path.Combine(folderPath, entry.Name);
+                                        destinationPath = Path.Combine(folderPath, entry.Name);
                                         entry.ExtractToFile(destinationPath, overwrite: true);
 
-                                        string relativePath = Path.Combine("UploadedFiles", "Collections", styleName.DesignNo, entry.Name).Replace("\\", "/");
+                                        relativePath = Path.Combine("UploadedFiles", "Collections", styleName.DesignNo, entry.Name).Replace("\\", "/");
 
                                         foreach (var pro in prdDesignDT)
                                         {
-                                            var prdDT = new ProductImages
+                                            prdDT = new ProductImages
                                             {
                                                 ProductId = pro.Id.ToString(),
                                                 MetalId = metalId,
@@ -828,7 +843,7 @@ namespace ControlPanel.Controllers
 
                                                     using var originalImage = Image.FromStream(ms);
 
-                                                    var sizes = new Dictionary<string, Size>
+                                                    sizes = new Dictionary<string, Size>
                                                     {
                                                         { "Md", new Size(500, 500) },
                                                         { "Sm", new Size(200, 200) }
@@ -836,15 +851,15 @@ namespace ControlPanel.Controllers
 
                                                     foreach (var size in sizes)
                                                     {
-                                                        string resizedName = $"{Path.GetFileNameWithoutExtension(entry.Name)}_{size.Key}{Path.GetExtension(entry.Name)}";
-                                                        string resizedPath = Path.Combine(folderPath, resizedName);
+                                                        resizedName = $"{Path.GetFileNameWithoutExtension(entry.Name)}_{size.Key}{Path.GetExtension(entry.Name)}";
+                                                        resizedPath = Path.Combine(folderPath, resizedName);
 
                                                         ResizeAndSaveImage(originalImage, resizedPath, size.Value);
 
-                                                        string resizedRelativePath = Path.Combine("UploadedFiles", "Collections", styleName.DesignNo, resizedName)
+                                                        resizedRelativePath = Path.Combine("UploadedFiles", "Collections", styleName.DesignNo, resizedName)
                                                                                         .Replace("\\", "/");
 
-                                                        int resizedId = await _productRepository.SaveImageVideoPath(resizedRelativePath);
+                                                        resizedId = await _productRepository.SaveImageVideoPath(resizedRelativePath);
 
                                                         switch (size.Key)
                                                         {
