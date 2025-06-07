@@ -584,9 +584,13 @@
                                                         <input type="file" class="form-control form-control-lg" id="folderUpload" webkitdirectory directory multiple>
 
                                                         <div class="row justify-content-center">
-                                                            <div id="folderloader" style="display:none;">
-                                                                <span class="spinner-border text-primary" role="status"></span> Uploading...
+                                                            <div id="folderloader" style="display: none; text-align: center; margin-top: 20px;">
+                                                                <div class="spinner-border text-primary" role="status">
+                                                                    <span class="visually-hidden">Uploading...</span>
+                                                                </div>
+                                                                <p class="mt-2">Uploading, please wait...</p>
                                                             </div>
+
                                                             <div class="col-auto">
                                                                 <button class="btn btn-theme w-100" type="submit" id="btnFolderImgSave">Upload Folder</button>
                                                             </div>

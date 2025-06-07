@@ -904,14 +904,17 @@ namespace ControlPanel.Controllers
         {
             try
             {
+                var keyFile = Request.Form.Files["encryptionKey"]; // Should work now!
+
+                if (keyFile == null)
+                    return Json(new { success = false, message = "Encryption key is missing." });
+
+
+
                 if (folderUpload == null || folderUpload.Count == 0)
                     return Json(new { success = false, message = "No files uploaded." });
 
                 // Get the encryption key
-                var keyFile = Request.Form.Files["encryptionKey"];
-                if (keyFile == null)
-                    return Json(new { success = false, message = "Encryption key is missing." });
-
                 byte[] keyBytes;
                 using (var ms = new MemoryStream())
                 {
@@ -1080,6 +1083,20 @@ namespace ControlPanel.Controllers
         {
             return View();
         }
+
+
+        //public async Task<IActionResult> AddProductAndProperty(string sku)
+        //{
+        //    var product = new ProductDTO();
+        //    if (!string.IsNullOrEmpty(sku))
+        //    {
+        //        product = await _productRepository.GetProductByDesignNo(sku);
+        //    }
+        //    else
+        //    {
+
+        //    }
+        //}
 
     }
 }

@@ -1165,9 +1165,6 @@ namespace Business.Repository
 
                 return true;
 
-
-
-                return true;
             }
             catch (Exception ex)
             {

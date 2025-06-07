@@ -126,21 +126,31 @@ namespace Business.Repository
 
             try
             {
-                var jsonParam = new SqlParameter("@JsonData", jsonData);
-                var historyIdParam = new SqlParameter("@HistoryId", historyId);
+                var jsonParam = new SqlParameter("@JsonData", SqlDbType.NVarChar)
+                {
+                    Value = jsonData
+                };
 
-                var result = await _context.Diamonds
-                    .FromSqlRaw("EXEC InsertDiamondsFromJson @JsonData, @HistoryId", jsonParam, historyIdParam)
+                var historyIdParam = new SqlParameter("@HistoryId", SqlDbType.Int)
+                {
+                    Value = historyId
+                };
+
+                // Execute stored procedure
+                var diamonds = await _context.Diamonds
+                    .FromSqlRaw("EXEC [dbo].[InsertDiamondsFromJson] @JsonData, @HistoryId", jsonParam, historyIdParam)
                     .ToListAsync();
 
-                return result.ToList();
+                return diamonds;
             }
             catch (Exception ex)
             {
-                // Log exception
+                // Log or rethrow as needed
+                Console.Error.WriteLine(ex);
                 return new List<Diamond>();
             }
         }
+
 
         public async Task<bool> BulkInsertDiamondHistoryAsync(List<Diamond> data)
         {
@@ -180,8 +190,12 @@ namespace Business.Repository
                         Certificate = item.Certificate,
                         DiamondImagePath = item.DiamondImagePath,
                         DiamondVideoPath = item.DiamondVideoPath,
+                        UploadStatus=item.UploadStatus,
+                        UpdatedBy=item.UpdatedBy,
+                        UpdatedDate=item.UpdatedDate,
                         IsActivated = item.IsActivated,
-                        CreatedDate = DateTime.Now
+                        CreatedBy=item.CreatedBy,
+                        CreatedDate = item.CreatedDate
                     };
 
                     diamondHistories.Add(diamondHist);

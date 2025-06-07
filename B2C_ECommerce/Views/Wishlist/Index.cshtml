@@ -46,21 +46,42 @@
             $('#diamondComparisonContent').on('click', '.remove-from-wishlist', function (e) {
                 e.preventDefault();
 
-                if (!confirm('Are you sure you want to remove this item from your wishlist?')) {
-                    return; // Cancel the action if user clicks "Cancel"
-                }
+                const swalWithBootstrapButtons = Swal.mixin({
+                    //customClass: {
+                    //    confirmButton: "btn btn-success",
+                    //    cancelButton: "btn btn-danger"
+                    //},
+                    //buttonsStyling: false
+                });
+                swalWithBootstrapButtons.fire({
+                    title: "Are you sure?",
+                    text: "you want to remove this item from your wishlist?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, delete it!",
+                    cancelButtonText: "No",
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var productId = $(this).data('productid');
 
-                var productId = $(this).data('productid');
+                        var wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
 
-                var wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+                        wishlist = wishlist.filter(id => String(id) !== String(productId));
 
-                wishlist = wishlist.filter(id => String(id) !== String(productId));
+                        localStorage.setItem('wishlist', JSON.stringify(wishlist));
 
-                localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                        swalWithBootstrapButtons.fire({
+                            title: "Deleted!",
+                            text: "Product has been removed from wishlist!",
+                            icon: "success"
+                        });
+                        toastr.success("Product has been added to your wishlist.", "success");
+                        location.reload();
+                    } else {
 
-                alert('Item removed from wishlist!');
-
-                location.reload();
+                    }
+                });
             });
 
 
@@ -86,7 +107,7 @@
 
             }
             else {
-                alert("Please select at least one diamond to compare.");
+                //alert("Please select at least one diamond to compare.");
             }
 
         }

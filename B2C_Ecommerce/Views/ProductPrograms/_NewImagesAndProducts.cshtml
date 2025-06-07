@@ -7,6 +7,7 @@
 }
 @if (Model != null)
 {
+    <input type="hidden" value="@Model.Count()" id="hiddenProductCounter" />
     @foreach (var item in Model)
     {
         //vdoUrl = item.ProductImageVideos.Where(x => x.VideoUrl != null && x.VideoUrl != "-").FirstOrDefault()?.VideoUrl;

@@ -20,23 +20,25 @@
     <link rel="stylesheet" href="~/assets/css/hover.css" />
     <link rel="stylesheet" href="~/assets/css/style.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-    @*<environment include="Development">
-        <link rel="stylesheet" href="~/assets/css/vendor/bootstrap.min.css" />
-        <link rel="stylesheet" href="~/assets/css/vendor/pe-icon-7-stroke.css" />
-        <link rel="stylesheet" href="~/assets/css/vendor/font-awesome.min.css" />
-        <link rel="stylesheet" href="~/assets/css/plugins/slick.min.css" />
-        <link rel="stylesheet" href="~/assets/css/plugins/animate.css" />
-        <link rel="stylesheet" href="~/assets/css/plugins/nice-select.css" />
-        <link rel="stylesheet" href="~/assets/css/plugins/jqueryui.min.css" />
-        <link rel="stylesheet" href="~/assets/css/bootstrap-multiselect.css" />
-        <link rel="stylesheet" href="~/assets/css/hover.css" />
-        <link rel="stylesheet" href="~/assets/css/style.css" />
-        <link rel="stylesheet" href="~/css/site.css" />
-    </environment>
-    <environment exclude="Development">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
 
-        <link rel="stylesheet" href="~/assets/css/site.min.css" asp-append-version="true" />
-    </environment>*@
+    @*<environment include="Development">
+            <link rel="stylesheet" href="~/assets/css/vendor/bootstrap.min.css" />
+            <link rel="stylesheet" href="~/assets/css/vendor/pe-icon-7-stroke.css" />
+            <link rel="stylesheet" href="~/assets/css/vendor/font-awesome.min.css" />
+            <link rel="stylesheet" href="~/assets/css/plugins/slick.min.css" />
+            <link rel="stylesheet" href="~/assets/css/plugins/animate.css" />
+            <link rel="stylesheet" href="~/assets/css/plugins/nice-select.css" />
+            <link rel="stylesheet" href="~/assets/css/plugins/jqueryui.min.css" />
+            <link rel="stylesheet" href="~/assets/css/bootstrap-multiselect.css" />
+            <link rel="stylesheet" href="~/assets/css/hover.css" />
+            <link rel="stylesheet" href="~/assets/css/style.css" />
+            <link rel="stylesheet" href="~/css/site.css" />
+        </environment>
+        <environment exclude="Development">
+
+            <link rel="stylesheet" href="~/assets/css/site.min.css" asp-append-version="true" />
+        </environment>*@
     <style>
         .object-fit-cover {
             object-fit: cover;
@@ -56,7 +58,6 @@
                 font-size: 1rem;
                 line-height: 1.5;
             }
-
     </style>
 
 
@@ -185,7 +186,7 @@
 
     <!-- Centered Modal -->
     <!-- Modal -->
-    
+
 
 
 
@@ -205,9 +206,11 @@
     <script src="~/assets/js/plugins/google-map.js"></script>
     <script src="~/assets/js/bootstrap-multiselect.js"></script>
     <script src="~/assets/js/main.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     @*<environment include="Development">
-    </environment>*@
+        </environment>*@
     @*<environment exclude="Development">
             <script src="~/assets/js/site.min.js" asp-append-version="true"></script>
         </environment>*@
@@ -220,10 +223,9 @@
         $(document).ready(function () {
             getWishlistCounter();
             getAddToCardCounter();
-           
+
         });
-        function getWishlistCounter()
-        {
+        function getWishlistCounter() {
             let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
             $("#wishlistCounter").text(wishlist.length);
             $("#wishlistMobileCounter").text(wishlist.length);
@@ -235,7 +237,7 @@
             $("#addtoCardMobileCounter").text(daiamondCard.length);
         }
 
-        
+
     </script>
 
 

@@ -139,7 +139,8 @@
             // Initialize filters
             const getValue = id => $(id).val() || '';
             const getArrayValue = id => $(id).val() || [];
-        var selectedDiamonds = JSON.parse(localStorage.getItem('selectedDiamonds')) || [];
+            var selectedDiamonds = JSON.parse(localStorage.getItem('selectedDiamonds')) || [];
+            let suppressAutoLoad = false;
 
             var diamondFilters = {
                     Colors: getValue('#txtColorIds'),
@@ -289,7 +290,7 @@
                 });
 
                 $("#diamond-list-container").on("click", "#diamondTable .wishlist-toggle", function () {
-                    
+
                     let diamondId = $(this).data("diamondid");
                     let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
 
@@ -299,14 +300,18 @@
                         $(this).find(".heart-unchecked").show();
                         $(this).find(".heart-checked").hide();
 
-                        alert("Product has been removed from your wishlist.");
+                        
+                        toastr.warning("Product has been removed from your wishlist.");
 
                     } else {
                         wishlist.push(diamondId);
                         localStorage.setItem("wishlist", JSON.stringify(wishlist));
                         $(this).find(".heart-unchecked").hide();
                         $(this).find(".heart-checked").show();
-                        alert("Product has been added to your wishlist.");
+                        //alert("Product has been added to your wishlist.");
+
+
+                        toastr.success("Product has been added to your wishlist.");
 
                     }
 
@@ -322,7 +327,7 @@
                             url: '@Url.Action("GetDiamondsByIds", "Diamond")',
                             type: 'GET',
                             data: {
-                                diamondIds: selectedDiamonds.join(',') 
+                                diamondIds: selectedDiamonds.join(',')
                             },
                             success: function (data) {
                                 console.log(data);
@@ -338,7 +343,8 @@
                     }
                     else
                     {
-                        alert("Please select at least one diamond to compare.");
+                        //alert("Please select at least one diamond to compare.");
+                        toastr.warning("Please select at least one diamond to compare.");
                     }
 
 
@@ -375,10 +381,12 @@
                     if (!wishlist.includes(diamondId)) {
                         wishlist.push(diamondId); // Add
                         localStorage.setItem("wishlist", JSON.stringify(wishlist)); // Save
-                        alert("Added to wishlist!");
+                        //alert("Added to wishlist!");
+                        toastr.success("Product has been added to your wishlist.");
                         getWishlistCounter(); // Optional: Update UI
                     } else {
-                        alert("This diamond is already in your wishlist.");
+                        //alert("This diamond is already in your wishlist.");
+                        toastr.warning("Product already in your wishlist..");
                     }
                     updateWishlistUI();
                 });
@@ -455,30 +463,31 @@
                                 diamondFilters.Colors = $("#txtColorIds").val();
                                 console.log(diamondFilters.Colors);
 
-                                getDiamondDataList(diamondFilters, page, rangeVal);
+                                //getDiamondDataList(diamondFilters, page, rangeVal);
                             }
-                            // ,change: function (event, ui) {
-                            //     const startIndex = ui.values[0];
-                            //     const endIndex = ui.values[1];
+                            , change: function (event, ui) {
+                                if (suppressAutoLoad) return;
+                                 const startIndex = ui.values[0];
+                                 const endIndex = ui.values[1];
 
-                            //     const minColor = colorList[startIndex];
-                            //     const maxColor = colorList[endIndex];
+                                 const minColor = colorList[startIndex];
+                                 const maxColor = colorList[endIndex];
 
-                            //     $("#minColor").val(minColor.name);
-                            //     $("#maxColor").val(maxColor.name);
+                                 $("#minColor").val(minColor.name);
+                                 $("#maxColor").val(maxColor.name);
 
 
-                            //     const selectedColorIds = colorList
-                            //         .slice(startIndex, endIndex + 1)
-                            //         .map(item => item.id);
+                                 const selectedColorIds = colorList
+                                     .slice(startIndex, endIndex + 1)
+                                     .map(item => item.id);
 
-                            //     $("#txtColorIds").val(selectedColorIds.join(','));
+                                 $("#txtColorIds").val(selectedColorIds.join(','));
 
-                            //     diamondFilters.Colors = $("#txtColorIds").val();
-                            //     console.log(diamondFilters.Colors);
+                                 diamondFilters.Colors = $("#txtColorIds").val();
+                                 console.log(diamondFilters.Colors);
 
-                            //     getDiamondDataList(diamondFilters, page, rangeVal);
-                            // }
+                                 getDiamondDataList(diamondFilters, page, rangeVal);
+                             }
                         });
 
                     // Set initial values
@@ -538,31 +547,33 @@
                             console.log(diamondFilters.Cuts);
 
                             // Call filter
-                            getDiamondDataList(diamondFilters, page, rangeVal);
+                            //getDiamondDataList(diamondFilters, page, rangeVal);
                         }
-                        // ,change: function (event, ui) {
-                        //     const startIndex = ui.values[0];
-                        //     const endIndex = ui.values[1];
+                        , change: function (event, ui) {
+                            if (suppressAutoLoad) return;
 
-                        //     const minCut = cutList[startIndex];
-                        //     const maxCut = cutList[endIndex];
+                             const startindex = ui.values[0];
+                             const endindex = ui.values[1];
 
-                        //     $("#minCut").val(minCut.name);
-                        //     $("#maxCut").val(maxCut.name);
+                             const mincut = cutlist[startindex];
+                             const maxcut = cutlist[endindex];
 
-                        //     const selectedCutIds = cutList
-                        //         .slice(startIndex, endIndex + 1)
-                        //         .map(item => item.id);
+                             $("#mincut").val(mincut.name);
+                             $("#maxcut").val(maxcut.name);
 
-                        //     $("#txtCutIds").val(selectedCutIds.join(','));
+                             const selectedcutids = cutlist
+                                 .slice(startindex, endindex + 1)
+                                 .map(item => item.id);
 
-                        //     // Update filter object
-                        //     diamondFilters.Cuts = $("#txtCutIds").val();
-                        //     console.log(diamondFilters.Cuts);
+                             $("#txtcutids").val(selectedcutids.join(','));
 
-                        //     // Call filter
-                        //     getDiamondDataList(diamondFilters, page, rangeVal);
-                        // }
+                             // update filter object
+                             diamondfilters.cuts = $("#txtcutids").val();
+                             console.log(diamondfilters.cuts);
+
+                             // call filter
+                             getdiamonddatalist(diamondfilters, page, rangeval);
+                         }
                     });
 
                     $("#minCut").val(cutList[0].name);
@@ -620,29 +631,30 @@
                             diamondFilters.Clarities = $("#txtClarityIds").val();
                             console.log(diamondFilters.Clarities);
 
-                            getDiamondDataList(diamondFilters, page, rangeVal);
+                            //getDiamondDataList(diamondFilters, page, rangeVal);
                         }
-                        // ,change: function (event, ui) {
-                        //     const fromIndex = ui.values[0];
-                        //     const toIndex = ui.values[1];
+                        , change: function (event, ui) {
+                            if (suppressAutoLoad) return;
+                             const fromIndex = ui.values[0];
+                             const toIndex = ui.values[1];
 
-                        //     const fromClarity = clarityList[fromIndex];
-                        //     const toClarity = clarityList[toIndex];
+                             const fromClarity = clarityList[fromIndex];
+                             const toClarity = clarityList[toIndex];
 
-                        //     $("#minClarity").val(fromClarity.name);
-                        //     $("#maxClarity").val(toClarity.name);
+                             $("#minClarity").val(fromClarity.name);
+                             $("#maxClarity").val(toClarity.name);
 
-                        //     const selectedClarityIds = clarityList
-                        //         .slice(fromIndex, toIndex + 1)
-                        //         .map(item => item.id);
+                             const selectedClarityIds = clarityList
+                                 .slice(fromIndex, toIndex + 1)
+                                 .map(item => item.id);
 
-                        //     $("#txtClarityIds").val(selectedClarityIds.join(','));
+                             $("#txtClarityIds").val(selectedClarityIds.join(','));
 
-                        //     diamondFilters.Clarities = $("#txtClarityIds").val();
-                        //     console.log(diamondFilters.Clarities);
+                             diamondFilters.Clarities = $("#txtClarityIds").val();
+                             console.log(diamondFilters.Clarities);
 
-                        //     getDiamondDataList(diamondFilters, page, rangeVal);
-                        // }
+                             getDiamondDataList(diamondFilters, page, rangeVal);
+                         }
                     });
 
                     // Set initial display
@@ -701,27 +713,28 @@
                             $("#txtPolishIds").val(selectedPolishIds.join(','));
                             diamondFilters.Polish = $("#txtPolishIds").val();
 
-                            getDiamondDataList(diamondFilters, page, rangeVal);
+                            //getDiamondDataList(diamondFilters, page, rangeVal);
                         }
-                        // ,change: function (event, ui) {
-                        //     const fromIndex = ui.values[0];
-                        //     const toIndex = ui.values[1];
+                        , change: function (event, ui) {
+                            if (suppressAutoLoad) return;
+                             const fromIndex = ui.values[0];
+                             const toIndex = ui.values[1];
 
-                        //     const fromPolish = polishList[fromIndex];
-                        //     const toPolish = polishList[toIndex];
+                             const fromPolish = polishList[fromIndex];
+                             const toPolish = polishList[toIndex];
 
-                        //     $("#minPolish").val(fromPolish.name);
-                        //     $("#maxPolish").val(toPolish.name);
+                             $("#minPolish").val(fromPolish.name);
+                             $("#maxPolish").val(toPolish.name);
 
-                        //     const selectedPolishIds = polishList
-                        //         .slice(fromIndex, toIndex + 1)
-                        //         .map(item => item.id);
+                             const selectedPolishIds = polishList
+                                 .slice(fromIndex, toIndex + 1)
+                                 .map(item => item.id);
 
-                        //     $("#txtPolishIds").val(selectedPolishIds.join(','));
-                        //     diamondFilters.Polish = $("#txtPolishIds").val();
+                             $("#txtPolishIds").val(selectedPolishIds.join(','));
+                             diamondFilters.Polish = $("#txtPolishIds").val();
 
-                        //     getDiamondDataList(diamondFilters, page, rangeVal);
-                        // }
+                             getDiamondDataList(diamondFilters, page, rangeVal);
+                         }
                     });
 
                     // Set initial values
@@ -755,11 +768,9 @@
 
                     const maxValue = response.maxValue;
 
-                    const $slider = $("#TablePer-slider");
-                    if ($slider.data('initialized')) return; // Prevent re-initialization
-                    $slider.data('initialized', true); // Mark slider as initialized
 
-                    $slider.slider({
+
+                    $("#TablePer-slider").slider({
                       range: true,
                       min: 0,
                       max: maxValue,
@@ -772,17 +783,18 @@
                         diamondFilters.FromTable = ui.values[0];
                         diamondFilters.ToTable = ui.values[1];
 
-                       getDiamondDataList(diamondFilters, page, rangeVal);
+                      // getDiamondDataList(diamondFilters, page, rangeVal);
                       }
-                      // ,change: function (event, ui) {
-                      //   $("#minTablePer").val(ui.values[0]);
-                      //   $("#maxTablePer").val(ui.values[1]);
+                        , change: function (event, ui) {
+                            if (suppressAutoLoad) return;
+                         $("#minTablePer").val(ui.values[0]);
+                         $("#maxTablePer").val(ui.values[1]);
 
-                      //   diamondFilters.FromTable = ui.values[0];
-                      //   diamondFilters.ToTable = ui.values[1];
+                         diamondFilters.FromTable = ui.values[0];
+                         diamondFilters.ToTable = ui.values[1];
 
-                      //   getDiamondDataList(diamondFilters, page, rangeVal);
-                      // }
+                         getDiamondDataList(diamondFilters, page, rangeVal);
+                       }
                     });
 
                     $("#minTablePer").val(0);
@@ -828,18 +840,19 @@
                                 diamondFilters.FromDepth = ui.values[0];
                                 diamondFilters.ToDepth = ui.values[1];
 
-                                getDiamondDataList(diamondFilters, page, rangeVal);
+                                //getDiamondDataList(diamondFilters, page, rangeVal);
                               }
-                              // ,change: function (event, ui) {
-                              //   // Update the min and max price input fields dynamically
-                              //       $("#minDepthPer").val(ui.values[0]);
-                              //       $("#maxDepthPer").val(ui.values[1]);
+                                , change: function (event, ui) {
+                                    if (suppressAutoLoad) return;
+                                 // Update the min and max price input fields dynamically
+                                     $("#minDepthPer").val(ui.values[0]);
+                                     $("#maxDepthPer").val(ui.values[1]);
 
-                              //   diamondFilters.FromDepth = ui.values[0];
-                              //   diamondFilters.ToDepth = ui.values[1];
+                                 diamondFilters.FromDepth = ui.values[0];
+                                 diamondFilters.ToDepth = ui.values[1];
 
-                              //   getDiamondDataList(diamondFilters, page, rangeVal);
-                              // }
+                                 getDiamondDataList(diamondFilters, page, rangeVal);
+                               }
                             });
 
                         // Set initial values for the price input fields
@@ -847,7 +860,7 @@
                         $("#maxDepthPer").val(maxValue);
                         diamondFilters.FromDepth = $("#minDepthPer").val();
                         diamondFilters.ToDepth = $("#maxDepthPer").val();
-                        getDiamondDataList(diamondFilters, page, rangeVal);
+                        //getDiamondDataList(diamondFilters, page, rangeVal);
 
                     } catch (error) {
                         // Handle any errors during the API request or slider setup
@@ -892,17 +905,18 @@
                             diamondFilters.FromRatio = ui.values[0];
                             diamondFilters.ToRatio = ui.values[1];
 
-                            getDiamondDataList(diamondFilters, page, rangeVal);
+                            //getDiamondDataList(diamondFilters, page, rangeVal);
                         }
-                        // ,change: function (event, ui) {
-                        //     $("#minLWRatio").val(ui.values[0]);
-                        //     $("#maxLWRatio").val(ui.values[1]);
+                        , change: function (event, ui) {
+                            if (suppressAutoLoad) return;
+                             $("#minLWRatio").val(ui.values[0]);
+                             $("#maxLWRatio").val(ui.values[1]);
 
-                        //     diamondFilters.FromRatio = ui.values[0];
-                        //     diamondFilters.ToRatio = ui.values[1];
+                             diamondFilters.FromRatio = ui.values[0];
+                             diamondFilters.ToRatio = ui.values[1];
 
-                        //     getDiamondDataList(diamondFilters, page, rangeVal);
-                        // }
+                             getDiamondDataList(diamondFilters, page, rangeVal);
+                         }
                     });
 
                 } catch (error) {
@@ -957,27 +971,28 @@
                             $("#txtFluorIds").val(selectedFluorIds.join(','));
                             diamondFilters.Fluor= $("#txtFluorIds").val();
 
-                            getDiamondDataList(diamondFilters, page, rangeVal);
+                            //getDiamondDataList(diamondFilters, page, rangeVal);
                         }
-                        // ,change: function (event, ui) {
-                        //     const fromIndex = ui.values[0];
-                        //     const toIndex = ui.values[1];
+                        , change: function (event, ui) {
+                            if (suppressAutoLoad) return;
+                             const fromIndex = ui.values[0];
+                             const toIndex = ui.values[1];
 
-                        //     const fromFluor = fluorList[fromIndex];
-                        //     const toFluor = fluorList[toIndex];
+                             const fromFluor = fluorList[fromIndex];
+                             const toFluor = fluorList[toIndex];
 
-                        //     $("#minFluor").val(fromFluor.name);
-                        //     $("#maxFluor").val(toFluor.name);
+                             $("#minFluor").val(fromFluor.name);
+                             $("#maxFluor").val(toFluor.name);
 
-                        //     const selectedFluorIds = fluorList
-                        //         .slice(fromIndex, toIndex + 1)
-                        //         .map(item => item.id);
+                             const selectedFluorIds = fluorList
+                                 .slice(fromIndex, toIndex + 1)
+                                 .map(item => item.id);
 
-                        //     $("#txtFluorIds").val(selectedFluorIds.join(','));
-                        //     diamondFilters.Fluor= $("#txtFluorIds").val();
+                             $("#txtFluorIds").val(selectedFluorIds.join(','));
+                             diamondFilters.Fluor= $("#txtFluorIds").val();
 
-                        //     getDiamondDataList(diamondFilters, page, rangeVal);
-                        // }
+                             getDiamondDataList(diamondFilters, page, rangeVal);
+                         }
                     });
 
                     // Set initial values
@@ -1037,27 +1052,28 @@
                             $("#txtSymmetryIds").val(selectedSymmetryIds.join(','));
                             diamondFilters.Symmeties = selectedSymmetryIds.join(',');
 
-                           getDiamondDataList(diamondFilters, page, rangeVal);
+                           //getDiamondDataList(diamondFilters, page, rangeVal);
                         }
-                        // ,change: function (event, ui) {
-                        //     const fromIndex = ui.values[0];
-                        //     const toIndex = ui.values[1];
+                        , change: function (event, ui) {
+                            if (suppressAutoLoad) return;
+                             const fromIndex = ui.values[0];
+                             const toIndex = ui.values[1];
 
-                        //     const fromSym = symmetryList[fromIndex];
-                        //     const toSym = symmetryList[toIndex];
+                             const fromSym = symmetryList[fromIndex];
+                             const toSym = symmetryList[toIndex];
 
-                        //     $("#minSymmetry").val(fromSym.name);
-                        //     $("#maxSymmetry").val(toSym.name);
+                             $("#minSymmetry").val(fromSym.name);
+                             $("#maxSymmetry").val(toSym.name);
 
-                        //     const selectedSymmetryIds = symmetryList
-                        //         .slice(fromIndex, toIndex + 1)
-                        //         .map(item => item.id);
+                             const selectedSymmetryIds = symmetryList
+                                 .slice(fromIndex, toIndex + 1)
+                                 .map(item => item.id);
 
-                        //     $("#txtSymmetryIds").val(selectedSymmetryIds.join(','));
-                        //     diamondFilters.Symmeties = selectedSymmetryIds.join(',');
+                             $("#txtSymmetryIds").val(selectedSymmetryIds.join(','));
+                             diamondFilters.Symmeties = selectedSymmetryIds.join(',');
 
-                        //     getDiamondDataList(diamondFilters, page, rangeVal);
-                        // }
+                             getDiamondDataList(diamondFilters, page, rangeVal);
+                         }
                     });
 
                     $("#minSymmetry").val(symmetryList[0].name);
@@ -1107,19 +1123,20 @@
                                     diamondFilters.FromPrice=ui.values[0];
                                     diamondFilters.ToPrice=ui.values[1];
 
-                                    getDiamondDataList(diamondFilters,page,rangeVal);
+                                   // getDiamondDataList(diamondFilters,page,rangeVal);
 
                                   }
-                                  // ,change: function (event, ui) {
-                                  //   $("#minPrice").val(ui.values[0]);
-                                  //   $("#maxPrice").val(ui.values[1]);
+                                    , change: function (event, ui) {
+                                        if (suppressAutoLoad) return;
+                                     $("#minPrice").val(ui.values[0]);
+                                     $("#maxPrice").val(ui.values[1]);
 
-                                  //   diamondFilters.FromPrice=ui.values[0];
-                                  //   diamondFilters.ToPrice=ui.values[1];
+                                     diamondFilters.FromPrice=ui.values[0];
+                                     diamondFilters.ToPrice=ui.values[1];
 
-                                  //   getDiamondDataList(diamondFilters,page,rangeVal);
+                                     getDiamondDataList(diamondFilters,page,rangeVal);
 
-                                  // }
+                                   }
                                 });
 
                                 // Set initial values for the price input fields
@@ -1218,14 +1235,27 @@
                                 selectedLabs.push('GIA', 'IGI');
                             }
                             diamondFilters.LabNames = selectedLabs;
-                            if (txtShape != null && txtShape != undefined && txtShape != "" && txtShape != '0') {
-                                if (!diamondFilters.Shapes.includes(txtShape))
-                                {
-                                    diamondFilters.Shapes.push(txtShape);
-                                }
-                                $(`.shape-btn[shapeId='${txtShape}']`).addClass('selected');
+                            //if (txtShape != null && txtShape != undefined && txtShape != "" && txtShape != '0') {
+                            //    if (!diamondFilters.Shapes.includes(txtShape))
+                            //    {
+                            //        diamondFilters.Shapes.push(txtShape);
+                            //    }
+                            //    $(`.shape-btn[shapeId='${txtShape}']`).addClass('selected');
 
+                            //}
+                            debugger
+                            const shapeId = txtShape?.toString(); // or parseInt(txtShape) depending on type of filter
+                            if (shapeId && shapeId !== '0') {
+                                debugger
+                                if (!diamondFilters.Shapes.includes(shapeId)) {
+                                    diamondFilters.Shapes.push(shapeId);
+                                }
+                                $(`.shape-btn[shapeId='${shapeId}']`).addClass('selected');
                             }
+                            console.log("txtShape:", txtShape);
+                            console.log("diamondFilters.Shapes:", diamondFilters.Shapes);
+
+
 
                             getDiamondDataList(diamondFilters, page, rangeVal);
                         } catch (error) {
@@ -1234,52 +1264,36 @@
                         hideLoader();
                     }
 
-        function ResetAllData()
-            {
-                var FilterPara = {
-                    Colors: getValue('#txtColorIds'),
-                    FromCarat: getValue('#minCarat'),
-                    ToCarat: getValue('#maxCarat'),
-                    Shapes: getArrayValue('#shapes') || [],
-                    Clarities: getValue('#txtClarityIds'),
-                    FromPrice: getValue('#minPrice'),
-                    ToPrice: getValue('#maxPrice'),
-                    Cuts: getValue('#txtCutIds'),
-                    FromRatio: getValue('#minLWRatio'),
-                    ToRatio: getValue('#maxLWRatio'),
-                    FromTable: getValue('#minTablePer'),
-                    ToTable: getValue('#maxTablePer'),
-                    FromDepth: getValue('#minDepthPer'),
-                    ToDepth: getValue('#maxDepthPer'),
-                    Polish: getValue('#txtPolishIds'),
-                    Fluor: getValue('#txtFluorIds'),
-                    Symmeties: getValue('#txtSymmetyIds'),
-                    LabNames: getValue('#txtLabNames'),
-                };
-                FilterPara.Shapes = getArrayValue('#shapes') || [];
+        async function ResetAllData()
+        {
+            suppressAutoLoad = true; // start suppressing
 
-                GetShapeDesign();
-                GetCarat();
-                GetCutData();
-                GetColorData();
-                GetClarityData();
-                GetPriceData();
-                GetPolishData();
-                GetFluorData();
-                GetSymmetryData();
-                GetTableData();
-                GetDepthData();
-                GetRatioData();
-                if (selectedLabs.length === 0) {
-                    selectedLabs.push('GIA', 'IGI');
-                }
-                FilterPara.LabNames = selectedLabs;
-                diamondFilters = FilterPara;
+            $("#chkQuickShip").prop('checked', false);
+            $("#chkGIA").prop('checked', false);
+            $("#chkIGI").prop('checked', false);
+                selectedLabs = ['GIA', 'IGI'];
+                diamondFilters.Shapes = [];
+                await Promise.all([
+                    GetShapeDesign(),
+                    GetCarat(),
+                    GetCutData(),
+                    GetColorData(),
+                    GetClarityData(),
+                    GetPriceData(),
+                    GetPolishData(),
+                    GetFluorData(),
+                    GetSymmetryData(),
+                    GetTableData(),
+                    GetDepthData(),
+                    GetRatioData(),
+                ]);
+                diamondFilters.LabNames = selectedLabs;
+                suppressAutoLoad = false; // allow again
                 getDiamondDataList(diamondFilters, page, rangeVal);
             }
 
         function resetCheckBox() {
-           
+
                 $('#diamond-list-container').find("#diamondTable tbody input[type='checkbox']").each(function () {
                     let diamondId = $(this).attr('diamondId');
                     if (selectedDiamonds.includes(diamondId)) {
@@ -1293,7 +1307,7 @@
             }
 
         function resetSelectedCheckBox(id) {
-            
+
                 $('#diamond-list-container').find("#diamondTable tbody input[type='checkbox']").each(function () {
                     let diamondId = $(this).attr('diamondId');
                     if (id == diamondId) {
@@ -1311,7 +1325,7 @@
 
         function updateWishlistUI() {
             let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
-            
+
 
             $('#diamond-list-container #diamondTable tbody .wishlist-toggle').each(function () {
                 let diamondId = Number($(this).data("diamondid"));
@@ -1358,20 +1372,21 @@
                                         diamondFilters.FromCarat=ui.values[0];
                                         diamondFilters.ToCarat=ui.values[1];
 
-                                   getDiamondDataList(diamondFilters,page,rangeVal);
+                                   //getDiamondDataList(diamondFilters,page,rangeVal);
 
                                   }
-                                  
-                                  //  ,change: function (event, ui) {
-                                  //   $("#minCarat").val(ui.values[0]);
-                                  //   $("#maxCarat").val(ui.values[1]);
 
-                                  //       diamondFilters.FromCarat=ui.values[0];
-                                  //       diamondFilters.ToCarat=ui.values[1];
+                                    , change: function (event, ui) {
+                                        if (suppressAutoLoad) return;
+                                     $("#minCarat").val(ui.values[0]);
+                                     $("#maxCarat").val(ui.values[1]);
 
-                                  //   getDiamondDataList(diamondFilters,page,rangeVal);
+                                         diamondFilters.FromCarat=ui.values[0];
+                                         diamondFilters.ToCarat=ui.values[1];
 
-                                  // }
+                                     getDiamondDataList(diamondFilters,page,rangeVal);
+
+                                   }
                                 });
 
                                 // Set initial values for the price input fields

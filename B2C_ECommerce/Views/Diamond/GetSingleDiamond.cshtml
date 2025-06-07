@@ -376,7 +376,7 @@
                  $(".heart-unchecked").show();
                  $(".heart-checked").hide();
 
-                alert("Product has been removed from your wishlist.");
+                toastr.warning("Product has been removed from your wishlist.");
             } else {
                 wishlist.push(diamondId);
                 localStorage.setItem("wishlist", JSON.stringify(wishlist));
@@ -384,7 +384,8 @@
                  $(".heart-unchecked").hide();
                  $(".heart-checked").show();
 
-                alert("Product has been added to your wishlist.");
+                //alert("Product has been added to your wishlist.");
+                toastr.success("Product has been added to your wishlist.");
             }
             getWishlistCounter();
             updateWishlistUI();

@@ -17,6 +17,10 @@ namespace ControlPanel
                 {
                     try
                     {
+                        webBuilder.ConfigureKestrel(serverOptions =>
+                        {
+                            serverOptions.Limits.MaxRequestBodySize = 5L * 1024 * 1024 * 1024; // 5GB
+                        });
                         webBuilder.UseStartup<Startup>();
 
                     }
@@ -26,5 +30,6 @@ namespace ControlPanel
                         throw;
                     }
                 });
+
     }
 }

@@ -29,7 +29,7 @@ namespace B2C_ECommerce.Services
 
         public async Task<List<ProductDTO>> GetProductListByFilter(ProductFilters filters, int pageNumber = 1, int pageSize = 10)
         {
-                var products = await GetProductStyleList();
+           var products = await GetProductStyleList();
 
             var query = products.AsQueryable();
 
@@ -101,26 +101,25 @@ namespace B2C_ECommerce.Services
 
         public async Task<ProductDTO> GetProductByProductId(string productId)
         {
+            var imageVideo = new ProductImageAndVideoDTO();
+            string imageUrl = "-";
+            string videoUrl = "-";
+
             var productQuery = await (
                   from product in _context.Product
                   where product.IsActivated && product.Id.ToString() == productId
                   join cat in _context.Category on product.CategoryId equals cat.Id
-
+                  join karat in _context.ProductProperty on product.KaratId equals karat.Id
                   join colorProp in _context.ProductProperty on product.ColorId equals colorProp.Id into colorGroup
                   from color in colorGroup.DefaultIfEmpty()
-
                   join shapeProp in _context.ProductProperty on product.CenterShapeId equals shapeProp.Id into shapeGroup
                   from shape in shapeGroup.DefaultIfEmpty()
-
                   join ashapeProp in _context.ProductProperty on product.AccentStoneShapeId equals ashapeProp.Id into ashapeGroup
                   from ashape in ashapeGroup.DefaultIfEmpty()
-
                   join clarityProp in _context.ProductProperty on product.ClarityId equals clarityProp.Id into clarityGroup
                   from clarity in clarityGroup.DefaultIfEmpty()
-
                   join sizeProp in _context.ProductProperty on product.CenterCaratId equals sizeProp.Id into sizeGroup
                   from size in sizeGroup.DefaultIfEmpty()
-
                   select new ProductDTO
                   {
                       Id = product.Id,
@@ -149,20 +148,26 @@ namespace B2C_ECommerce.Services
                       CenterCaratName=size.Name,
                       Grades=product.Grades,
                       Certificate=product.Certificate,
+                      VenderName=product.Vendor,
+                      CTW=product.CTW,
+                      Diameter=product.Diameter,
+                      CenterCaratId=product.CenterCaratId,
+                      MMSize=product.MMSize,
+                      NoOfStones=product.NoOfStones,
+                      DiaWT=product.DiaWT,
+                      KaratId=product.KaratId,
+                      Karat=karat.Name
                   }
               ).AsNoTracking().FirstOrDefaultAsync();
 
-
-
             // Step 1: Group products by SKU
-
             var firstProduct = productQuery; // Get the first product from the group
 
             // Step 2: Get all related properties for each group
             var metals = await (from col in _context.ProductProperty
                                 join prod in _context.Product on col.Id equals prod.ColorId
                                 join colN in _context.ProductProperty on col.ParentId equals colN.Id
-                                where colN.Name == SD.Metal && prod.Sku == firstProduct.Sku
+                                where colN.Name == SD.Metal && prod.Sku == firstProduct.Sku && prod.IsActivated != false
                                 select new ProductPropertyDTO
                                 {
                                     Id = col.Id,
@@ -174,7 +179,7 @@ namespace B2C_ECommerce.Services
             var caratSizes = await (from col in _context.ProductProperty
                                     join prod in _context.Product on col.Id equals prod.CenterCaratId
                                     join colN in _context.ProductProperty on col.ParentId equals colN.Id
-                                    where colN.Name == SD.CaratSize && prod.Sku == firstProduct.Sku
+                                    where colN.Name == SD.CaratSize && prod.Sku == firstProduct.Sku && prod.IsActivated != false
                                     select new ProductPropertyDTO
                                     {
                                         Id = col.Id,
@@ -185,7 +190,7 @@ namespace B2C_ECommerce.Services
             var shapes = await (from col in _context.ProductProperty
                                 join prod in _context.Product on col.Id equals prod.CenterShapeId
                                 join colN in _context.ProductProperty on col.ParentId equals colN.Id
-                                where colN.Name == SD.Shape && prod.Sku == firstProduct.Sku
+                                where colN.Name == SD.Shape && prod.Sku == firstProduct.Sku && prod.IsActivated != false
                                 select new ProductPropertyDTO
                                 {
                                     Id = col.Id,
@@ -224,9 +229,18 @@ namespace B2C_ECommerce.Services
                 BandWidth = firstProduct.BandWidth,
                 Length = firstProduct.Length,
                 GoldWeight = firstProduct.GoldWeight,
-               
                 Grades = firstProduct.Grades,
                 Certificate = firstProduct.Certificate,
+                VenderName = firstProduct.VenderName,
+                CTW = firstProduct.CTW,
+                Diameter = firstProduct.Diameter,
+                MMSize = firstProduct.MMSize,
+                NoOfStones = firstProduct.NoOfStones,
+                DiaWT = firstProduct.DiaWT,
+                KaratId = firstProduct.KaratId,
+                Karat = firstProduct.Karat,
+                AccentStoneShapeId = firstProduct.AccentStoneShapeId,
+                AccentStoneShapeName = firstProduct.AccentStoneShapeName,
                 ProductImageVideos = new List<ProductImageAndVideoDTO>() // Initialize to avoid null reference
             };
 
@@ -235,19 +249,19 @@ namespace B2C_ECommerce.Services
 
             foreach (var image in productImages)
             {
-                string imageUrl = "-";
-                string videoUrl = "-";
-
                 if (image.ImageLgId.HasValue)
                 {
                     imageUrl = _context.FileManager.FirstOrDefault(x => x.Id == image.ImageLgId.Value)?.FileUrl ?? "-";
+                    videoUrl = "-";
                 }
+
                 else if (image.VideoId.HasValue)
                 {
                     videoUrl = _context.FileManager.FirstOrDefault(x => x.Id == image.VideoId.Value)?.FileUrl ?? "-";
+                    imageUrl = "-";
                 }
 
-                var imageVideo = new ProductImageAndVideoDTO
+                imageVideo = new ProductImageAndVideoDTO
                 {
                     ImageUrl = imageUrl,
                     VideoUrl = videoUrl
@@ -378,6 +392,8 @@ namespace B2C_ECommerce.Services
                                   from size in sizeGroup.DefaultIfEmpty()
                                   join kt in _context.ProductProperty on product.KaratId equals kt.Id into ktGroup
                                   from kt in ktGroup.DefaultIfEmpty()
+                                  join ashapeProp in _context.ProductProperty on product.AccentStoneShapeId equals ashapeProp.Id into ashapeGroup
+                                  from ashape in ashapeGroup.DefaultIfEmpty()
                                   where product.IsActivated != false && product.Sku == sku
                                   select new ProductDTO
                                   {
@@ -406,7 +422,18 @@ namespace B2C_ECommerce.Services
                                       Sku = product.Sku,
                                       ProductType = cat.ProductType,
                                       KaratId = product.KaratId,
-                                      Karat = kt != null ? kt.Name : null
+                                      Karat = kt != null ? kt.Name : null,
+                                      Grades = product.Grades,
+                                      Certificate = product.Certificate,
+                                      VenderName = product.Vendor,
+                                      CTW = product.CTW,
+                                      Diameter = product.Diameter,
+                                      MMSize = product.MMSize,
+                                      NoOfStones = product.NoOfStones,
+                                      DiaWT = product.DiaWT,
+                                      GoldWeight = product.GoldWeight,
+                                      AccentStoneShapeId = product.AccentStoneShapeId,
+                                      AccentStoneShapeName = ashape.Name,
                                   }).ToListAsync();
 
 
@@ -429,7 +456,7 @@ namespace B2C_ECommerce.Services
             var metals = await (from col in _context.ProductProperty
                                 join prod in _context.Product on col.Id equals prod.ColorId
                                 join colN in _context.ProductProperty on col.ParentId equals colN.Id
-                                where colN.Name == SD.Metal && prod.Sku == firstProduct.Sku
+                                where colN.Name == SD.Metal && prod.Sku == firstProduct.Sku && prod.IsActivated != false
                                 select new ProductPropertyDTO
                                 {
                                     Id = col.Id,
@@ -441,7 +468,7 @@ namespace B2C_ECommerce.Services
             var caratSizes = await (from col in _context.ProductProperty
                                     join prod in _context.Product on col.Id equals prod.CenterCaratId
                                     join colN in _context.ProductProperty on col.ParentId equals colN.Id
-                                    where colN.Name == SD.CaratSize && prod.Sku == firstProduct.Sku
+                                    where colN.Name == SD.CaratSize && prod.Sku == firstProduct.Sku && prod.IsActivated != false
                                     select new ProductPropertyDTO
                                     {
                                         Id = col.Id,
@@ -452,7 +479,7 @@ namespace B2C_ECommerce.Services
             var shapes = await (from col in _context.ProductProperty
                                 join prod in _context.Product on col.Id equals prod.CenterShapeId
                                 join colN in _context.ProductProperty on col.ParentId equals colN.Id
-                                where colN.Name == SD.Shape && prod.Sku == firstProduct.Sku
+                                where colN.Name == SD.Shape && prod.Sku == firstProduct.Sku && prod.IsActivated != false
                                 select new ProductPropertyDTO
                                 {
                                     Id = col.Id,
@@ -495,6 +522,17 @@ namespace B2C_ECommerce.Services
                 Length = firstProduct.Length,
                 KaratId = firstProduct.KaratId,
                 Karat = firstProduct.Karat,
+                Grades = firstProduct.Grades,
+                Certificate = firstProduct.Certificate,
+                VenderName = firstProduct.VenderName,
+                CTW = firstProduct.CTW,
+                Diameter = firstProduct.Diameter,
+                MMSize = firstProduct.MMSize,
+                NoOfStones = firstProduct.NoOfStones,
+                DiaWT = firstProduct.DiaWT,
+                GoldWeight=firstProduct.GoldWeight,
+                AccentStoneShapeId = firstProduct.AccentStoneShapeId,
+                AccentStoneShapeName = firstProduct.AccentStoneShapeName,
                 ProductImageVideos = new List<ProductImageAndVideoDTO>() // Initialize to avoid null reference
             };
 
@@ -582,7 +620,7 @@ namespace B2C_ECommerce.Services
                 var metals = await (from col in _context.ProductProperty
                                     join prod in _context.Product on col.Id equals prod.ColorId
                                     join colN in _context.ProductProperty on col.ParentId equals colN.Id
-                                    where colN.Name == SD.Metal && prod.Sku == firstProduct.Sku
+                                    where colN.Name == SD.Metal && prod.Sku == firstProduct.Sku && prod.IsActivated !=false
                                     select new ProductPropertyDTO
                                     {
                                         Id = col.Id,
@@ -594,7 +632,7 @@ namespace B2C_ECommerce.Services
                 var caratSizes = await (from col in _context.ProductProperty
                                         join prod in _context.Product on col.Id equals prod.CenterCaratId
                                         join colN in _context.ProductProperty on col.ParentId equals colN.Id
-                                        where colN.Name == SD.CaratSize && prod.Sku == firstProduct.Sku
+                                        where colN.Name == SD.CaratSize && prod.Sku == firstProduct.Sku && prod.IsActivated != false
                                         select new ProductPropertyDTO
                                         {
                                             Id = col.Id,
@@ -605,7 +643,7 @@ namespace B2C_ECommerce.Services
                 var shapes = await (from col in _context.ProductProperty
                                     join prod in _context.Product on col.Id equals prod.CenterShapeId
                                     join colN in _context.ProductProperty on col.ParentId equals colN.Id
-                                    where colN.Name == SD.Shape && prod.Sku == firstProduct.Sku
+                                    where colN.Name == SD.Shape && prod.Sku == firstProduct.Sku && prod.IsActivated != false
                                     select new ProductPropertyDTO
                                     {
                                         Id = col.Id,

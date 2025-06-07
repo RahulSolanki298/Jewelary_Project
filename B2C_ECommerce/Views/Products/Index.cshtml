@@ -558,7 +558,8 @@
                 success: function (data) {
                     $('#MyProductsImg').html('');
                     $('#MyProductsImg').html(data);
-                    $("#txtNoOfProducts").text("0");
+                  var counter=$("#MyProductsImg #hiddenProductCounter").text();
+                    $("#ProductFilters span#productCounter").text(counter);
                     hideLoader();
                 },
                 error: function (error) {

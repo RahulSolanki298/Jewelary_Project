@@ -662,83 +662,7 @@
 
             $('#ImportProductList').on('submit', "#uploadForm2", async function (e) {
                 e.preventDefault();
-
-                $('#folderloader').show();
-                $('#status').text("");
-                $("#btnFolderImgSave").prop('disabled', true);
-
-                const files = $('#folderUpload')[0].files;
-
-                if (files.length === 0) {
-                    $('#status').text("Please select a folder with files.");
-                    $('#folderloader').hide();
-                    $("#btnFolderImgSave").prop('disabled', false);
-                    return;
-                }
-
-                const formData = new FormData();
-
-                try {
-                    const key = await window.crypto.subtle.generateKey(
-                        { name: "AES-GCM", length: 256 },
-                        true,
-                        ["encrypt", "decrypt"]
-                    );
-
-                    for (let i = 0; i < files.length; i++) {
-                        const file = files[i];
-                        const arrayBuffer = await file.arrayBuffer();
-
-                        // Use random IV for each file
-                        const iv = window.crypto.getRandomValues(new Uint8Array(12));
-                        const encryptedData = await window.crypto.subtle.encrypt(
-                            { name: "AES-GCM", iv },
-                            key,
-                            arrayBuffer
-                        );
-
-                        // Convert encrypted data to Blob and append to FormData
-                        const encryptedBlob = new Blob([iv, new Uint8Array(encryptedData)], { type: "application/octet-stream" });
-                        formData.append('folderUpload', encryptedBlob, file.name + ".enc");
-                    }
-
-                    // Optional: Export the key and send to server if needed
-                    const exportedKey = await window.crypto.subtle.exportKey("raw", key);
-                    const keyBlob = new Blob([new Uint8Array(exportedKey)], { type: "application/octet-stream" });
-                    formData.append("encryptionKey", keyBlob);
-
-                    $.ajax({
-                        url: $('#uploadForm2').attr('action'),
-                        type: 'POST',
-                        data: formData,
-                        contentType: false,
-                        processData: false,
-                        success: function (response) {
-                            Swal.fire({
-                                title: "Product images and videos have been uploaded securely!",
-                                icon: "success"
-                            });
-                            $('#status').text("Upload successful.");
-                        },
-                        error: function (xhr) {
-                            $('#status').html(`<span style="color:red;">Error: ${xhr.responseText}</span>`);
-                            Swal.fire({
-                                title: "Secure upload failed!",
-                                icon: "error"
-                            });
-                        },
-                        complete: function () {
-                            $('#folderloader').hide();
-                            $("#btnFolderImgSave").prop('disabled', false);
-                        }
-                    });
-
-                } catch (err) {
-                    console.error("Encryption error:", err);
-                    $('#status').html(`<span style="color:red;">Encryption failed: ${err.message}</span>`);
-                    $('#folderloader').hide();
-                    $("#btnFolderImgSave").prop('disabled', false);
-                }
+                handleEncryptedUpload();
             });
 
         });
@@ -751,6 +675,99 @@
         function hideLoader() {
             $('#loader-overlay').hide();
         }
+
+
+        async function handleEncryptedUpload() {
+            try {
+                // Show loader and disable button
+                $('#folderloader').show();
+                $('#status').text("");
+                $("#btnFolderImgSave").prop('disabled', true);
+
+                const files = $('#folderUpload')[0]?.files;
+                if (!files || files.length === 0) {
+                    $('#status').text("Please select a folder with files.");
+                    $('#folderloader').hide();
+                    $("#btnFolderImgSave").prop('disabled', false);
+                    return;
+                }
+
+                const formData = new FormData();
+
+                // Generate AES-GCM Key
+                const key = await crypto.subtle.generateKey(
+                    { name: "AES-GCM", length: 256 },
+                    true,
+                    ["encrypt", "decrypt"]
+                );
+
+                // Encrypt and append each file
+                for (const file of files) {
+                    const arrayBuffer = await file.arrayBuffer();
+                    const iv = crypto.getRandomValues(new Uint8Array(12)); // 12 bytes IV for AES-GCM
+
+                    const encrypted = await crypto.subtle.encrypt(
+                        { name: "AES-GCM", iv },
+                        key,
+                        arrayBuffer
+                    );
+
+                    // Combine IV and encrypted data in one blob
+                    const encryptedBlob = new Blob([iv, new Uint8Array(encrypted)], {
+                        type: "application/octet-stream"
+                    });
+
+                    // Append encrypted file with original filename
+                    formData.append("folderUpload", encryptedBlob, file.name + ".enc");
+                }
+
+                // Export and append encryption key as a file
+                const rawKey = await crypto.subtle.exportKey("raw", key);
+                const keyBlob = new Blob([new Uint8Array(rawKey)], {
+                    type: "application/octet-stream"
+                });
+
+                // This is KEY: use a File object to guarantee it's treated as a file on server
+                const keyFile = new File([keyBlob], "encryptionKey.raw", {
+                    type: "application/octet-stream"
+                });
+                formData.append("encryptionKey", keyFile);
+
+                // Submit form via AJAX
+                const actionUrl = $('#uploadForm2').attr('action');
+
+                $.ajax({
+                    url: actionUrl,
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        Swal.fire({
+                            title: "Upload Successful!",
+                            text: "Product images/videos uploaded securely.",
+                            icon: "success"
+                        });
+                        $('#status').text("Upload completed successfully.");
+                    },
+                    error: function (xhr) {
+                        const errorMessage = xhr.responseText || "Unknown error.";
+                        $('#status').html(`<span class="text-danger">Error: ${errorMessage}</span>`);
+                        Swal.fire("Upload Failed", errorMessage, "error");
+                    },
+                    complete: function () {
+                        $('#folderloader').hide();
+                        $("#btnFolderImgSave").prop('disabled', false);
+                    }
+                });
+            } catch (err) {
+                console.error("Encryption error:", err);
+                $('#status').html(`<span class="text-danger">Encryption failed: ${err.message}</span>`);
+                $('#folderloader').hide();
+                $("#btnFolderImgSave").prop('disabled', false);
+            }
+        }
+
 
     </script>
 }
