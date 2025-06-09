@@ -1,4 +1,6 @@
-﻿namespace Models
+﻿using System;
+
+namespace Models
 {
     public class DiamondData
     {
@@ -42,6 +44,10 @@
         public string DiamondImagePath { get; set; }
         public string DiamondVideoPath { get; set; }
         public string IconPath { get; set; }
+        public string UploadedBy { get; set; }
+        public string UploadStatus { get; set; }
+        public string? UpdatedDate { get; set; }
+        public bool? IsSuccess { get; set; }
         public bool? IsActivated { get; set; } = false;
     }
 }

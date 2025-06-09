@@ -6,10 +6,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Graph.Models;
 using Newtonsoft.Json;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -133,13 +138,13 @@ namespace ControlPanel.Controllers
             using var reader = new StreamReader(stream);
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
             var records = csv.GetRecords<dynamic>().ToList();
-
+            var rowDict = (IDictionary<string, object>)records;
+            var diamond = new Diamond();
             var diamonds = new List<Diamond>();
 
             foreach (var record in records.Skip(5)) // Skip header rows (assumed 1–5)
             {
-                var rowDict = (IDictionary<string, object>)record;
-                var diamond = await ParseCSVDiamondRowAsync(rowDict, userId);
+                diamond = await ParseCSVDiamondRowAsync(rowDict, userId);
                 if (diamond != null)
                     diamonds.Add(diamond);
             }
@@ -159,10 +164,10 @@ namespace ControlPanel.Controllers
 
             int rowCount = worksheet.Dimension.Rows;
             var diamonds = new List<Diamond>();
-
+            var diamond=new Diamond();
             for (int row = 6; row <= rowCount; row++) // Start from row 6
             {
-                var diamond = await ParseExcelDiamondRowAsync(worksheet, row, userId);
+                diamond = await ParseExcelDiamondRowAsync(worksheet, row, userId);
                 if (diamond != null)
                     diamonds.Add(diamond);
             }
@@ -309,11 +314,131 @@ namespace ControlPanel.Controllers
 
             var stoneId = worksheet.Cells[row, 2].Text;
 
+            if (stoneId == null || colorId == 0 || shapeId == 0 || labId==0 || clarityId==0 || cutId == 0)
+            {
+                return new Diamond
+                {
+                    StoneId = stoneId,
+                    DNA = DNA_NewVal,
+                    Step = worksheet.Cells[row, 4].Text,
+                    TypeId = typeId > 0 ? typeId : null,
+                    LabId = labId > 0 ? labId : null,
+                    ShapeId = shapeId > 0 ? shapeId : null,
+                    Carat = Convert.ToDecimal(worksheet.Cells[row, 8].Text),
+                    ClarityId = clarityId > 0 ? clarityId : null,
+                    ColorId = colorId > 0 ? colorId : null,
+                    CutId = cutId > 0 ? cutId : null,
+                    PolishId = polishId > 0 ? polishId : null,
+                    SymmetryId = symmId > 0 ? symmId : null,
+                    FluorId = fluorId > 0 ? fluorId : null,
+                    RAP = Convert.ToDecimal(worksheet.Cells[row, 15].Text),
+                    Discount = Convert.ToDecimal(worksheet.Cells[row, 16].Text),
+                    Price = Convert.ToDecimal(worksheet.Cells[row, 17].Text),
+                    Amount = Convert.ToDecimal(worksheet.Cells[row, 18].Text),
+                    Measurement = worksheet.Cells[row, 19].Text,
+                    Ratio = Convert.ToDecimal(worksheet.Cells[row, 20].Text),
+                    Depth = Convert.ToDecimal(worksheet.Cells[row, 21].Text),
+                    Table = Convert.ToDecimal(worksheet.Cells[row, 22].Text),
+                    Shade = worksheet.Cells[row, 23].Text,
+                    LabShape = worksheet.Cells[row, 24].Text,
+                    RapAmount = Convert.ToDecimal(worksheet.Cells[row, 25].Text),
+                    DiamondImagePath = "-",
+                    DiamondVideoPath = Video_NewVal,
+                    Certificate = Certi_NewVal,
+                    IsActivated = false,
+                    IsSuccess = false,
+                    UploadStatus = SD.Pending,
+                    UpdatedDate = DateTime.Now,
+                    UpdatedBy = userId,
+                    CreatedBy = userId
+                };
+
+            }
+
+
+
             var IsExist = await _diamondRepository.GetDiamondByStoneId(stoneId);
 
             if (IsExist != null)
             {
-                return IsExist;
+                IsExist.StoneId = stoneId;
+                IsExist.DNA = DNA_NewVal;
+                IsExist.Step = worksheet.Cells[row, 4].Text;
+                IsExist.TypeId = typeId > 0 ? typeId : null;
+                IsExist.LabId = labId > 0 ? labId : null;
+                IsExist.ShapeId = shapeId > 0 ? shapeId : null;
+                IsExist.Carat = Convert.ToDecimal(worksheet.Cells[row, 8].Text);
+                IsExist.ClarityId = clarityId > 0 ? clarityId : null;
+                IsExist.ColorId = colorId > 0 ? colorId : null;
+                IsExist.CutId = cutId > 0 ? cutId : null;
+                IsExist.PolishId = polishId > 0 ? polishId : null;
+                IsExist.SymmetryId = symmId > 0 ? symmId : null;
+                IsExist.FluorId = fluorId > 0 ? fluorId : null;
+                IsExist.RAP = Convert.ToDecimal(worksheet.Cells[row, 15].Text);
+                IsExist.Discount = Convert.ToDecimal(worksheet.Cells[row, 16].Text);
+                IsExist.Price = Convert.ToDecimal(worksheet.Cells[row, 17].Text);
+                IsExist.Amount = Convert.ToDecimal(worksheet.Cells[row, 18].Text);
+                IsExist.Measurement = worksheet.Cells[row, 19].Text;
+                IsExist.Ratio = Convert.ToDecimal(worksheet.Cells[row, 20].Text);
+                IsExist.Depth = Convert.ToDecimal(worksheet.Cells[row, 21].Text);
+                IsExist.Table = Convert.ToDecimal(worksheet.Cells[row, 22].Text);
+                IsExist.Shade = worksheet.Cells[row, 23].Text;
+                IsExist.LabShape = worksheet.Cells[row, 24].Text;
+                IsExist.RapAmount = Convert.ToDecimal(worksheet.Cells[row, 25].Text);
+                IsExist.DiamondImagePath = "-";
+                IsExist.DiamondVideoPath = Video_NewVal;
+                IsExist.Certificate = Certi_NewVal;
+                IsExist.IsActivated = false;
+                IsExist.UpdatedDate = DateTime.Now;
+                IsExist.UpdatedBy = userId;
+                IsExist.IsSuccess = true;
+
+                await _diamondRepository.UpdateDiamondsStatus(IsExist);
+
+                var diamondHist = new DiamondHistory
+                {
+                    DiamondId = IsExist.Id,
+                    StoneId = IsExist.StoneId,
+                    DNA = IsExist.DNA,
+                    Step = IsExist.Step,
+                    TypeId = IsExist.TypeId,
+                    LabId = IsExist.LabId,
+                    ShapeId = IsExist.ShapeId,
+                    Carat = IsExist.Carat,
+                    ClarityId = IsExist.ClarityId,
+                    ColorId = IsExist.ColorId,
+                    CutId = IsExist.CutId,
+                    PolishId = IsExist.PolishId,
+                    SymmetryId = IsExist.SymmetryId,
+                    FluorId = IsExist.FluorId,
+                    RAP = IsExist.RAP,
+                    Discount = IsExist.Discount,
+                    Price = IsExist.Price,
+                    Amount = IsExist.Amount,
+                    Measurement = IsExist.Measurement,
+                    Ratio = IsExist.Ratio,
+                    Depth = IsExist.Depth,
+                    Table = IsExist.Table,
+                    Shade = IsExist.Shade,
+                    LabShape = IsExist.LabShape,
+                    RapAmount = IsExist.RapAmount,
+                    Certificate = IsExist.Certificate,
+                    DiamondImagePath = IsExist.DiamondImagePath,
+                    DiamondVideoPath = IsExist.DiamondVideoPath,
+                    UploadStatus = IsExist.UploadStatus,
+                    UpdatedBy = IsExist.UpdatedBy,
+                    UpdatedDate = IsExist.UpdatedDate,
+                    IsActivated = IsExist.IsActivated,
+                    CreatedBy = IsExist.CreatedBy,
+                    CreatedDate = IsExist.CreatedDate,
+                    IsSuccess = true,
+                };
+
+                await _diamondRepository.AddDiamondHistory(diamondHist);
+
+
+
+                return new Diamond();
             }
 
             return new Diamond
@@ -349,10 +474,10 @@ namespace ControlPanel.Controllers
                 UploadStatus = SD.Pending,
                 UpdatedDate = DateTime.Now,
                 UpdatedBy = userId,
-                CreatedBy = userId
+                CreatedBy = userId,
+                IsSuccess = true,
             };
         }
-
 
         private async Task<Diamond> ParseCSVDiamondRowAsync(IDictionary<string, object> row, string userId)
         {
@@ -367,6 +492,127 @@ namespace ControlPanel.Controllers
             int polishId = await _diamondPPTY.GetDiamondPropertyId(GetVal("Polish"), SD.Polish);
             int symmId = await _diamondPPTY.GetDiamondPropertyId(GetVal("Symmetry"), SD.Symmetry);
             int fluorId = await _diamondPPTY.GetDiamondPropertyId(GetVal("Fluorescence"), SD.Fluor);
+            var diamondHist = new DiamondHistory();
+            var DstoneId = GetVal("StoneId");
+
+            if (DstoneId == null || colorId == 0 || shapeId == 0 || labId == 0 || clarityId == 0 || cutId == 0)
+            {
+                return new Diamond
+                {
+                    StoneId = GetVal("StoneId"),
+                    DNA = GetVal("DNA"),
+                    Step = GetVal("Step"),
+                    TypeId = typeId > 0 ? typeId : null,
+                    LabId = labId > 0 ? labId : null,
+                    ShapeId = shapeId > 0 ? shapeId : null,
+                    Carat = Convert.ToDecimal(GetVal("Carat")),
+                    ClarityId = clarityId > 0 ? clarityId : null,
+                    ColorId = colorId > 0 ? colorId : null,
+                    CutId = cutId > 0 ? cutId : null,
+                    PolishId = polishId > 0 ? polishId : null,
+                    SymmetryId = symmId > 0 ? symmId : null,
+                    FluorId = fluorId > 0 ? fluorId : null,
+                    RAP = Convert.ToDecimal(GetVal("RAP")),
+                    Discount = Convert.ToDecimal(GetVal("Discount")),
+                    Price = Convert.ToDecimal(GetVal("Price")),
+                    Amount = Convert.ToDecimal(GetVal("Amount")),
+                    Measurement = GetVal("Measurement"),
+                    Ratio = Convert.ToDecimal(GetVal("Ratio")),
+                    Depth = Convert.ToDecimal(GetVal("Depth")),
+                    Table = Convert.ToDecimal(GetVal("Table")),
+                    Shade = GetVal("Shade"),
+                    LabShape = GetVal("LabShape"),
+                    RapAmount = Convert.ToDecimal(GetVal("RapAmount")),
+                    DiamondImagePath = "-",
+                    DiamondVideoPath = GetVal("Video"),
+                    Certificate = GetVal("Certificate"),
+                    IsActivated = false,
+                    UpdatedDate = DateTime.Now,
+                    UpdatedBy = userId,
+                    IsSuccess = false
+                };
+
+            }
+
+            var IsExist = await _diamondRepository.GetDiamondByStoneId(DstoneId);
+
+            if (IsExist != null)
+            {
+                IsExist.StoneId = GetVal("StoneId");
+                IsExist.DNA = GetVal("DNA");
+                IsExist.Step = GetVal("Step");
+                IsExist.TypeId = typeId > 0 ? typeId : null;
+                IsExist.LabId = labId > 0 ? labId : null;
+                IsExist.ShapeId = shapeId > 0 ? shapeId : null;
+                IsExist.Carat = Convert.ToDecimal(GetVal("Carat"));
+                IsExist.ClarityId = clarityId > 0 ? clarityId : null;
+                IsExist.ColorId = colorId > 0 ? colorId : null;
+                IsExist.CutId = cutId > 0 ? cutId : null;
+                IsExist.PolishId = polishId > 0 ? polishId : null;
+                IsExist.SymmetryId = symmId > 0 ? symmId : null;
+                IsExist.FluorId = fluorId > 0 ? fluorId : null;
+                IsExist.RAP = Convert.ToDecimal(GetVal("RAP"));
+                IsExist.Discount = Convert.ToDecimal(GetVal("Discount"));
+                IsExist.Price = Convert.ToDecimal(GetVal("Price"));
+                IsExist.Amount = Convert.ToDecimal(GetVal("Amount"));
+                IsExist.Measurement = GetVal("Measurement");
+                IsExist.Ratio = Convert.ToDecimal(GetVal("Ratio"));
+                IsExist.Depth = Convert.ToDecimal(GetVal("Depth"));
+                IsExist.Table = Convert.ToDecimal(GetVal("Table"));
+                IsExist.Shade = GetVal("Shade");
+                IsExist.LabShape = GetVal("LabShape");
+                IsExist.RapAmount = Convert.ToDecimal(GetVal("RapAmount"));
+                IsExist.DiamondImagePath = "-";
+                IsExist.DiamondVideoPath = GetVal("Video");
+                IsExist.Certificate = GetVal("Certificate");
+                IsExist.IsActivated = false;
+                IsExist.UpdatedDate = DateTime.Now;
+                IsExist.UpdatedBy = userId;
+                IsExist.IsSuccess = true;
+                await _diamondRepository.UpdateDiamondsStatus(IsExist);
+
+                diamondHist = new DiamondHistory
+                {
+                    DiamondId = IsExist.Id,
+                    StoneId = IsExist.StoneId,
+                    DNA = IsExist.DNA,
+                    Step = IsExist.Step,
+                    TypeId = IsExist.TypeId,
+                    LabId = IsExist.LabId,
+                    ShapeId = IsExist.ShapeId,
+                    Carat = IsExist.Carat,
+                    ClarityId = IsExist.ClarityId,
+                    ColorId = IsExist.ColorId,
+                    CutId = IsExist.CutId,
+                    PolishId = IsExist.PolishId,
+                    SymmetryId = IsExist.SymmetryId,
+                    FluorId = IsExist.FluorId,
+                    RAP = IsExist.RAP,
+                    Discount = IsExist.Discount,
+                    Price = IsExist.Price,
+                    Amount = IsExist.Amount,
+                    Measurement = IsExist.Measurement,
+                    Ratio = IsExist.Ratio,
+                    Depth = IsExist.Depth,
+                    Table = IsExist.Table,
+                    Shade = IsExist.Shade,
+                    LabShape = IsExist.LabShape,
+                    RapAmount = IsExist.RapAmount,
+                    Certificate = IsExist.Certificate,
+                    DiamondImagePath = IsExist.DiamondImagePath,
+                    DiamondVideoPath = IsExist.DiamondVideoPath,
+                    UploadStatus = IsExist.UploadStatus,
+                    UpdatedBy = IsExist.UpdatedBy,
+                    UpdatedDate = IsExist.UpdatedDate,
+                    IsActivated = IsExist.IsActivated,
+                    CreatedBy = IsExist.CreatedBy,
+                    CreatedDate = IsExist.CreatedDate
+                };
+
+                await _diamondRepository.AddDiamondHistory(diamondHist);
+
+                return new Diamond();
+            }
 
             return new Diamond
             {
@@ -402,10 +648,10 @@ namespace ControlPanel.Controllers
                 UpdatedDate = DateTime.Now,
                 UploadStatus = SD.Pending,
                 UpdatedBy = userId,
-                CreatedBy = userId
+                CreatedBy = userId,
+                IsSuccess = true
             };
         }
-
 
         public static string GetExcelHyperlink(ExcelRange cell)
         {
@@ -447,13 +693,13 @@ namespace ControlPanel.Controllers
         }
 
         [HttpGet]
-        public IActionResult getDiamondList()
+        public async Task<IActionResult> getDiamondList(string uploadStatus,bool isActive)
         {
             bool status = false;
             string strResult = "";
             string strMessage = "Data Not Found";
 
-            var data = _diamondRepository.GetDiamondList().Result;
+            var data = await _diamondRepository.GetDiamondListByStatus(uploadStatus,isActive);
             if (data != null)
             {
                 status = true;
@@ -469,12 +715,49 @@ namespace ControlPanel.Controllers
                     message = strMessage
                 }
             });
+        }
 
+        [HttpGet]
+        public async Task<IActionResult> getFailDiamondList(string uploadStatus, bool isActive)
+        {
+            bool status = false;
+            string strResult = "";
+            string strMessage = "Data Not Found";
 
+            var data = await _diamondRepository.GetDiamondListByStatus(uploadStatus, isActive);
+            if (data != null)
+            {
+                var failResponse= data.Where(x=>x.IsSuccess==false).ToList();
+                status = true;
+                strMessage = "";
+                strResult = JsonConvert.SerializeObject(failResponse);
+            }
+            return Json(new
+            {
+                failResponse = new
+                {
+                    status = status,
+                    result = strResult,
+                    message = strMessage
+                }
+            });
         }
 
         [HttpGet]
         public IActionResult DiamondVerification()
+        {
+            return View();
+        }
+
+        
+        [HttpGet]
+        public IActionResult DiamondHold()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult DeactivatedDiamond()
         {
             return View();
         }
@@ -502,6 +785,32 @@ namespace ControlPanel.Controllers
                     message = strMessage
                 }
             });
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeStatus(string[] stoneIds, string status)
+        {
+            var userId = HttpContext.Session.GetString("UserId");
+            var user = await _userManager.FindByIdAsync(userId);
+
+             if (stoneIds.Length > 0)
+            {
+               var response= await _diamondRepository.UpdateDiamondsStatus(stoneIds, userId, status);
+                if (response == true)
+                {
+                    return Json($"Diamonds status have been change successfully. status : {status}");
+                }
+                else
+                {
+                    return Json($"Diamonds status have been failed for change status. please try again.");
+                }
+            }
+            else
+            {
+                return Json($"Please select diamonds.");
+            }
+
         }
     }
 }

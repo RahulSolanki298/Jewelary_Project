@@ -171,6 +171,7 @@
         });
 
         function loadData() {
+           debugger;
             resultData = [];
             $('#divDetails').jqxGrid('clear');
 
@@ -179,7 +180,6 @@
                 url: "@Url.Action("getDiamondList", "Diamond")",
                 dataType: "json",
                 success: function (d) {
-                    debugger;
                     if (d.data.result.length > 0) {
                         resultData = JSON.parse(d.data.result);
                         source =

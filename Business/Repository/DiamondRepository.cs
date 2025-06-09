@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Business.Repository.IRepository;
+using Common;
 using DataAccess.Data;
 using DataAccess.Entities;
 using Microsoft.Data.SqlClient;
@@ -15,18 +16,12 @@ namespace Business.Repository
     public class DiamondRepository : IDiamondRepository
     {
         private readonly ApplicationDBContext _context;
-
-        public DiamondRepository(ApplicationDBContext context)
-        {
-            _context = context;
-        }
-
+        public DiamondRepository(ApplicationDBContext context) => _context = context;
         public async Task<DiamondAllDataDto> GetDiamondsAsync(DiamondFilters filters, int pageNumber, int pageSize)
         {
+            DiamondAllDataDto diamonData = new DiamondAllDataDto();
             try
             {
-                DiamondAllDataDto diamonData = new DiamondAllDataDto();
-                // Construct the SQL parameters
                 var parameters = new[]
                 {
                     new SqlParameter("@Shapes", SqlDbType.NVarChar) { Value = filters.Shapes != null && filters.Shapes.Any() ? string.Join(",", filters.Shapes) : (object)DBNull.Value },
@@ -52,11 +47,8 @@ namespace Business.Repository
                 diamonData.DiamondData = await _context.DiamondData
                     .FromSqlRaw("EXEC SP_GetDiamondDataBY_NEW_DiamondFilters @Shapes, @Colors, @FromCarat, @ToCarat, @FromPrice, @ToPrice, @Cuts, @Clarities, @FromRatio, @ToRatio, @FromTable, @ToTable, @FromDepth, @ToDepth, @Polish, @Fluor, @Symmeties,@LabNames", parameters)
                     .ToListAsync();
-
                 diamonData.DiamondCounter = diamonData.DiamondData.Count();
-
                 diamonData.DiamondData = diamonData.DiamondData.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-
                 return diamonData;
             }
             catch (Exception ex)
@@ -65,15 +57,11 @@ namespace Business.Repository
             }
         }
 
-
         public async Task<IEnumerable<DiamondData>> GetDiamondList()
         {
             try
             {
-                var diamonds = await _context.DiamondData
-                    .FromSqlRaw("EXEC SP_SelectAllDiamonds")
-                    .ToListAsync();
-
+                var diamonds = await _context.DiamondData.FromSqlRaw("EXEC SP_SelectAllDiamonds").ToListAsync();
                 return diamonds;
             }
             catch (Exception ex)
@@ -151,7 +139,6 @@ namespace Business.Repository
             }
         }
 
-
         public async Task<bool> BulkInsertDiamondHistoryAsync(List<Diamond> data)
         {
             try
@@ -190,11 +177,11 @@ namespace Business.Repository
                         Certificate = item.Certificate,
                         DiamondImagePath = item.DiamondImagePath,
                         DiamondVideoPath = item.DiamondVideoPath,
-                        UploadStatus=item.UploadStatus,
-                        UpdatedBy=item.UpdatedBy,
-                        UpdatedDate=item.UpdatedDate,
+                        UploadStatus = item.UploadStatus,
+                        UpdatedBy = item.UpdatedBy,
+                        UpdatedDate = item.UpdatedDate,
                         IsActivated = item.IsActivated,
-                        CreatedBy=item.CreatedBy,
+                        CreatedBy = item.CreatedBy,
                         CreatedDate = item.CreatedDate
                     };
 
@@ -275,7 +262,6 @@ namespace Business.Repository
             }
         }
 
-
         public async Task<IEnumerable<DiamondData>> GetPendingDiamondList()
         {
             try
@@ -291,5 +277,189 @@ namespace Business.Repository
                 throw;
             }
         }
+
+        public async Task<bool> UpdateDiamondsStatus(string[] stoneIds, string userId, string status)
+        {
+            try
+            {
+                var diamonds = new List<Diamond>();
+                var diamondHistorys = new List<DiamondHistory>();
+                var diamond = new Diamond();
+                var diamondHistory = new DiamondHistory();
+
+                for (int i = 0; i < stoneIds.Length; i++)
+                {
+                    diamond = new Diamond();
+                    diamond = await _context.Diamonds.Where(x => x.StoneId == stoneIds[i].ToString()).FirstOrDefaultAsync();
+                    if (diamond != null)
+                    {
+                        diamond.UploadStatus = status;
+                        diamond.UpdatedDate = DateTime.Now;
+                        diamond.UpdatedBy = userId;
+                        if (diamond.UploadStatus == SD.Active)
+                        {
+                            diamond.IsActivated = true;
+                        }
+                        else
+                        {
+                            diamond.IsActivated = false;
+                        }
+
+                        diamonds.Add(diamond);
+                    }
+                }
+                _context.Diamonds.UpdateRange(diamonds);
+                await _context.SaveChangesAsync();
+
+                foreach (var item in diamonds)
+                {
+                    diamondHistory = new DiamondHistory()
+                    {
+                        DiamondId = item.Id,
+                        Step = item.Step,
+                        TypeId = item.TypeId,
+                        Shade = item.Shade,
+                        ShapeId = item.ShapeId,
+                        StoneId = item.StoneId,
+                        Sku = item.Sku,
+                        DNA = item.DNA,
+                        Type = item.Type,
+                        LabId = item.LabId,
+                        Carat = item.Carat,
+                        ColorId = item.ColorId,
+                        Clarity = item.Clarity,
+                        CutId = item.CutId,
+                        PolishId = item.PolishId,
+                        SymmetryId = item.SymmetryId,
+                        Flo = item.Flo,
+                        RAP = item.RAP,
+                        Discount = item.Discount,
+                        Price = item.Price,
+                        Amount = item.Amount,
+                        Measurement = item.Measurement,
+                        Ratio = item.Ratio,
+                        Depth = item.Depth,
+                        Table = item.Table,
+                        LabShape = item.LabShape,
+                        RapAmount = item.RapAmount,
+                        DiamondVideoPath = item.DiamondVideoPath,
+                        Certificate = item.Certificate,
+                        CreatedBy = userId,
+                        CreatedDate = DateTime.Now,
+                        UpdatedBy = userId,
+                        UpdatedDate = DateTime.Now,
+                        UploadStatus = status,
+                        IsActivated = item.IsActivated,
+                    };
+                    diamondHistorys.Add(diamondHistory);
+                }
+                await _context.DiamondHistory.AddRangeAsync(diamondHistorys);
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<IEnumerable<DiamondData>> GetDiamondListByStatus(string status, bool isActive)
+        {
+            try
+            {
+                var diamonds = await _context.DiamondData
+                    .FromSqlRaw($"EXEC SP_SelectDiamondsByStatus {status},{isActive}")
+                    .ToListAsync();
+
+                return diamonds;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<bool> UpdateDiamondsStatus(Diamond diamond)
+        {
+            try
+            {
+                var diamonds = new List<Diamond>();
+                var diamondHistorys = new List<DiamondHistory>();
+                var diamondHistory = new DiamondHistory();
+
+                _context.Diamonds.Update(diamond);
+                await _context.SaveChangesAsync();
+
+                foreach (var item in diamonds)
+                {
+                    diamondHistory = new DiamondHistory()
+                    {
+                        DiamondId = item.Id,
+                        Step = item.Step,
+                        TypeId = item.TypeId,
+                        Shade = item.Shade,
+                        ShapeId = item.ShapeId,
+                        StoneId = item.StoneId,
+                        Sku = item.Sku,
+                        DNA = item.DNA,
+                        Type = item.Type,
+                        LabId = item.LabId,
+                        Carat = item.Carat,
+                        ColorId = item.ColorId,
+                        Clarity = item.Clarity,
+                        CutId = item.CutId,
+                        PolishId = item.PolishId,
+                        SymmetryId = item.SymmetryId,
+                        Flo = item.Flo,
+                        RAP = item.RAP,
+                        Discount = item.Discount,
+                        Price = item.Price,
+                        Amount = item.Amount,
+                        Measurement = item.Measurement,
+                        Ratio = item.Ratio,
+                        Depth = item.Depth,
+                        Table = item.Table,
+                        LabShape = item.LabShape,
+                        RapAmount = item.RapAmount,
+                        DiamondVideoPath = item.DiamondVideoPath,
+                        Certificate = item.Certificate,
+                        CreatedBy = diamond.UpdatedBy,
+                        CreatedDate = DateTime.Now,
+                        UpdatedBy = diamond.UpdatedBy,
+                        UpdatedDate = DateTime.Now,
+                        UploadStatus = item.UploadStatus,
+                        IsActivated = item.IsActivated,
+                    };
+                    diamondHistorys.Add(diamondHistory);
+                }
+                await _context.DiamondHistory.AddRangeAsync(diamondHistorys);
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> AddDiamondHistory(DiamondHistory diamondHistory)
+        {
+            try
+            {
+                await _context.DiamondHistory.AddAsync(diamondHistory);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                return false;
+            }
+
+        }
+
+
     }
 }

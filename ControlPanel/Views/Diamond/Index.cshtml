@@ -1,4 +1,5 @@
-﻿@{
+﻿@using Common
+@{
     <link href="~/jqxcontent/jqwidgets/styles/jqx.base.css" rel="stylesheet" />
     <link href="~/jqxcontent/jqwidgets/styles/jqx.fluent.css" rel="stylesheet" />
 
@@ -18,9 +19,25 @@
         </div>
     </div>
 
-
     <div class="card mt-2">
         <div class="card-body">
+            <div class="row mt-2">
+                <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <div class="btn-group dropup float-end">
+                        <a class="" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </a>
+                        <input type="hidden" id="txtProductIds" />
+
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" data-status="@SD.DeActived">Deactivated</a></li>
+                            <li><a class="dropdown-item" href="#" data-status="@SD.Hold">Hold</a></li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+
             <div class="row mt-2">
                 <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12">
                     <div id="divDetails">
@@ -29,8 +46,6 @@
             </div>
         </div>
     </div>
-
-
 
     <div class="modal fade" id="showFileUpload" tabindex="-1" data-bs-backdrop="false">
         <div class="modal-dialog">
@@ -173,8 +188,193 @@
 
             });
 
+            $('.dropdown-item').on('click', function (e) {
+                            e.preventDefault();
+                            var addItems=[];
+
+                            const newStatus = $(this).data('status');
+
+                            const rowindexes = $('#divDetails').jqxGrid('getselectedrowindexes');
+                            let obj = {};
+                            for (let i = 0; i < rowindexes.length; i++) {
+                                obj = $('#divDetails').jqxGrid('getrowdata', rowindexes[i]);
+                                addItems.push( obj.StoneId
+                                );
+                            }
+
+                            if (addItems.length == 0) {
+                                swal({
+                                    title: "Error",
+                                    text: "Select at least one Record",
+                                    icon: "error"
+                                }).then(function () {
+                                    swal.close();
+                                });
+                                return false;
+                            }
+
+                            Swal.fire({
+                                title: 'Are you sure?',
+                                text: `Do Want to change status for Product? Product Status : "${newStatus}".`,
+                                icon: 'question',
+                                showCancelButton: true,
+                                confirmButtonText: 'Yes, update it!',
+                                cancelButtonText: 'Cancel'
+                            }).then((result) => {
+                                if (!result.isConfirmed) return;
+
+                                $.ajax({
+                                    url: '@Url.Action("ChangeStatus", "Diamond")',
+                                    method: 'POST',
+                                    data: {
+                                        stoneIds: addItems,
+                                        status: newStatus
+                                    },
+                                    success: function (response) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Status Updated',
+                                            text: `Products successfully updated to "${newStatus}".`,
+                                        }).then(() => location.reload());
+                                    },
+                                    error: function (xhr, status, error) {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Update Failed',
+                                            text: 'An error occurred while updating the product status.',
+                                        });
+                                        console.error('AJAX Error:', { status, error, xhr });
+                                    }
+                                });
+                            });
+                        });
 
         });
+
+        // function loadData() {
+        //     resultData = [];
+        //     $('#divDetails').jqxGrid('clear');
+
+        //     $.ajax({
+        //         type: "get",
+        //         url: "@Url.Action("getDiamondList", "Diamond")",
+        //         dataType: "json",
+        //         data:{
+        //             'uploadStatus':'Active',
+        //             'isActive':'1',
+        //         },
+        //         success: function (d) {
+        //             if (d.data.result.length > 0) {
+        //                 resultData = JSON.parse(d.data.result);
+        //                 source =
+        //                 {
+        //                     localdata: resultData,
+        //                     datatype: "array"
+        //                 };
+        //                 var dataAdapter = new $.jqx.dataAdapter(source, {
+        //                     loadComplete: function (data) { },
+        //                     loadError: function (xhr, status, error) { }
+        //                 });
+        //                 var blackstyle = {
+        //                     headerBackgroundColor: '#151542',
+        //                     headerColor: '#fff',
+        //                 };
+
+        //                 var videolink = function (row, column, value) {
+        //                     return '<div style="margin:4px;"><a href="' + value + '" target="_blank"><i class="bi bi-gem" style="font-size:20px;margin:2px 5px;"></i>View 360</a></div>';
+        //                 };
+
+        //                 var Certilink = function (row, column, value) {
+        //                     return '<div style="margin:4px;"><a href="' + value + '" target="_blank"><i class="bi bi-file-earmark" style="font-size:20px;margin:2px 15px;"></i></a></div>';
+        //                 };
+
+        //                 //var Dnalink = function (row, column, value) {
+        //                 //    return '<div style="margin:4px;"><a href="' + value + '" target="_blank">Click Here</a></div>';
+        //                 //};
+
+        //                 var action = function (row, columnfield, value, defaulthtml, columnproperties, rowdata) {
+        //                     return '<button title="" class="btn btn-dark btn-sm" style="margin:1px 15px;"><i class="bi bi-layout-text-window-reverse"></i></button>';
+        //                 };
+
+        //                 $("#divDetails").jqxGrid(
+        //                 {
+        //                     width: "100%",
+        //                     source: dataAdapter,
+        //                     height: '700px',
+        //                     selectionmode: 'checkbox',
+        //                     columnsresize: true,
+        //                     columnsreorder: true,
+        //                     sortable: true,
+        //                     altrows: true,
+        //                     enabletooltips: true,
+        //                     enablebrowserselection: true,
+        //                     filterable: true,
+        //                     editable: false,
+        //                     showstatusbar: true,
+        //                     statusbarheight: 25,
+        //                     showaggregates: false,
+        //                     rowsheight: 30,
+        //                     columns: [
+        //                         {
+        //                             text: '#', sortable: false, filterable: false, editable: false,
+        //                             groupable: false, draggable: false, resizable: false,
+        //                             datafield: '', columntype: 'number', pinned: true, style: blackstyle,
+        //                             align: 'center', cellsalign: 'center', width: 40,
+        //                             cellsrenderer: function (row, column, value) {
+        //                                 return "<div style='margin:4px;'>" + (value + 1) + "</div>";
+        //                             }
+        //                         },
+        //                         {
+        //                                 text: 'Action',
+        //                                 datafield: 'action',
+        //                                 sortable: false, filterable: false, editable: false,
+        //                                 groupable: false, draggable: false, resizable: false,
+        //                                 columntype: 'number',pinned: true,
+        //                                 style: blackstyle,
+        //                                 align: 'center', cellsalign: 'center',
+        //                                 cellsrenderer: action,
+        //                                 width: 60
+        //                         },
+        //                         { text: 'Stone ID', pinned: true, datafield: 'StoneId', style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+        //                         { text: 'Video', pinned: true, datafield: 'DiamondVideoPath', cellsrenderer: videolink, style: blackstyle, width: 90, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+        //                         { text: 'Certi', pinned: true, datafield: 'Certificate',cellsrenderer: Certilink, style: blackstyle, width: 60, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+        //                         //{ text: 'DNA', datafield: 'DNA',cellsrenderer: Dnalink, style: blackstyle, width: 90, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+        //                         { text: 'Step',datafield: 'Step', style: blackstyle, width: 100, align: 'center', cellsalign: 'left' },
+        //                         { text: 'Type',datafield: 'TypeName', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
+        //                         { text: 'Lab',datafield: 'LabName', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
+        //                         { text: 'Shape',datafield: 'ShapeName', style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+        //                         { text: 'Carat',datafield: 'Carat', style: blackstyle, width: 100, align: 'center', cellsalign: 'center' },
+        //                         { text: 'Color',datafield: 'ColorName', style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+        //                         { text: 'Clarity',datafield: 'ClarityName', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
+        //                         { text: 'Cut',datafield: 'CutName', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
+        //                         { text: 'Polish',datafield: 'PolishName', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
+        //                         { text: 'Sym',datafield: 'SymmetyName', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
+        //                         { text: 'Flo',datafield: 'FluorName', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
+        //                         {
+        //                             text: 'Rap.($)',datafield: 'RAP', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', cellsformat: 'f2'
+
+        //                         },
+        //                         { text: 'Disc(%)',datafield: 'Discount', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', cellsformat: 'f2' },
+        //                         { text: 'Price',datafield: 'Price', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', cellsformat: 'f2' },
+        //                         { text: 'Amount',datafield: 'Amount', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', cellsformat: 'f2' },
+        //                         { text: 'Measurement',datafield: 'Measurement', style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+        //                         { text: 'Ratio',datafield: 'Ratio', style: blackstyle, width: 100, align: 'center', cellsalign: 'center' },
+        //                         { text: 'Depth%',datafield: 'Depth', style: blackstyle, width: 100, align: 'center', cellsalign: 'center' },
+        //                         { text: 'Table%',datafield: 'Table', style: blackstyle, width: 100, align: 'center', cellsalign: 'center' },
+        //                         { text: 'Shade',datafield: 'Shade', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
+        //                         { text: 'Lab Shape',datafield: 'LabShape', style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+        //                         { text: 'Rap Amount',datafield: 'RapAmount', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', cellsformat: 'f2' },
+
+
+        //                         { text: 'Id',datafield: 'Id',hidden:true, style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+        //                         { text: 'IsActivated',datafield: 'IsActivated',hidden:true, style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+
+        //                     ],
+        //                 });
+        //             }
+        //         }
+        //     });
+        // }
 
         function loadData() {
             resultData = [];
@@ -184,6 +384,10 @@
                 type: "get",
                 url: "@Url.Action("getDiamondList", "Diamond")",
                 dataType: "json",
+                data:{
+                    'uploadStatus':'Active',
+                    'isActive':'1',
+                },
                 success: function (d) {
                     if (d.data.result.length > 0) {
                         resultData = JSON.parse(d.data.result);
@@ -222,7 +426,7 @@
                             width: "100%",
                             source: dataAdapter,
                             height: '700px',
-                            selectionmode: 'singlerow',
+                           selectionmode: 'checkbox',
                             columnsresize: true,
                             columnsreorder: true,
                             sortable: true,
@@ -234,7 +438,7 @@
                             showstatusbar: true,
                             statusbarheight: 25,
                             showaggregates: false,
-                            rowsheight: 30,
+                            rowsheight: 35,
                             columns: [
                                 {
                                     text: '#', sortable: false, filterable: false, editable: false,
@@ -259,6 +463,7 @@
                                 { text: 'Stone ID', pinned: true, datafield: 'StoneId', style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
                                 { text: 'Video', pinned: true, datafield: 'DiamondVideoPath', cellsrenderer: videolink, style: blackstyle, width: 90, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
                                 { text: 'Certi', pinned: true, datafield: 'Certificate',cellsrenderer: Certilink, style: blackstyle, width: 60, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+                                { text: 'Status', pinned: true, datafield: 'UploadStatus', style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
                                 //{ text: 'DNA', datafield: 'DNA',cellsrenderer: Dnalink, style: blackstyle, width: 90, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
                                 { text: 'Step',datafield: 'Step', style: blackstyle, width: 100, align: 'center', cellsalign: 'left' },
                                 { text: 'Type',datafield: 'TypeName', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
@@ -285,6 +490,8 @@
                                 { text: 'Shade',datafield: 'Shade', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
                                 { text: 'Lab Shape',datafield: 'LabShape', style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
                                 { text: 'Rap Amount',datafield: 'RapAmount', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', cellsformat: 'f2' },
+                                { text: 'User', datafield: 'UploadedBy', style: blackstyle, width: 120, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+                                { text: 'Date', datafield: 'UpdatedDate', style: blackstyle, width: 120, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
 
 
                                 { text: 'Id',datafield: 'Id',hidden:true, style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },

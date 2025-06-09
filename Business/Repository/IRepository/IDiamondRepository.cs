@@ -28,5 +28,13 @@ namespace Business.Repository.IRepository
         Task<Diamond> GetDiamondByStoneId(string stoneId);
 
         Task<IEnumerable<DiamondData>> GetPendingDiamondList();
+
+        Task<bool> UpdateDiamondsStatus(string[] stoneIds, string userId, string status);
+
+        Task<IEnumerable<DiamondData>> GetDiamondListByStatus(string status, bool isActive);
+
+        Task<bool> UpdateDiamondsStatus(Diamond diamond);
+
+        Task<bool> AddDiamondHistory(DiamondHistory diamondHistory);
     }
 }

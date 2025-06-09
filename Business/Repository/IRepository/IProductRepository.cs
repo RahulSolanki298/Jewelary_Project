@@ -68,5 +68,6 @@ namespace Business.Repository.IRepository
 
         Task<ProductImageAndVideoDTO> GetProductImagesVideoById(int id);
 
+
     }
 }
