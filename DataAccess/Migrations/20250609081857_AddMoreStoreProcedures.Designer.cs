@@ -4,38 +4,22 @@ using DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250609081857_AddMoreStoreProcedures")]
+    partial class AddMoreStoreProcedures
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.17")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("DataAccess.Entities.AboutUs", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImagePath")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AboutUs");
-                });
 
             modelBuilder.Entity("DataAccess.Entities.AcceptedVirtualAppointmentData", b =>
                 {
@@ -1414,9 +1398,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CategoryId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -1471,36 +1452,6 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("FileManager");
-                });
-
-            modelBuilder.Entity("DataAccess.Entities.HomePageSetting", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("SetSlider1Path")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SetSlider2Path")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SetSlider3Path")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SetVideoPath")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("isSetCompanySlider")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("isSetVideo")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("HomePageSetting");
                 });
 
             modelBuilder.Entity("DataAccess.Entities.LogEntry", b =>

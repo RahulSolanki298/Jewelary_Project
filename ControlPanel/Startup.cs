@@ -46,7 +46,7 @@ namespace ControlPanel
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
-
+            services.AddHttpContextAccessor();
             services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
 
             // Dependency injection for repositories
@@ -63,6 +63,7 @@ namespace ControlPanel
             services.AddScoped<IDiamondRepository, DiamondRepository>();
             services.AddScoped<IDiamondPropertyRepository, DiamondPropertyRepository>();
             services.AddScoped<IProductStyleRepository, ProductStyleRepository>();
+            services.AddScoped<ISettingRepository, SettingRepository>();
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDBContext>()
                 .AddDefaultTokenProviders();

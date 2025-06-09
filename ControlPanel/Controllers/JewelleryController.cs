@@ -131,11 +131,11 @@ namespace ControlPanel.Controllers
 
             foreach (var wkSheet in categoryList)
             {
-                if (wkSheet.CategoryName.Trim().ToLower() == "rings") {  ringProducts = products.Where(x => x.CategoryName == "Rings").ToList(); await _productRepository.SaveNewProductList(ringProducts, "Rings");}
-                else if (wkSheet.CategoryName.Trim().ToLower() == "bands") { weddings = products.Where(x => x.CategoryName == "Bands").ToList(); await _productRepository.SaveNewProductList(weddings, "Bands");}
-                else if (wkSheet.CategoryName.Trim().ToLower() == "earrings") {earrings = products.Where(x => x.CategoryName == "Earrings").ToList(); await _productRepository.SaveEarringsList(earrings, "Earrings");}
-                else if (wkSheet.CategoryName.Trim().ToLower() == "pendants") { pendants = products.Where(x => x.CategoryName == "Pendants").ToList(); await _productRepository.SaveEarringsList(pendants, "Pendants");}
-                else if (wkSheet.CategoryName.Trim().ToLower() == "bracelets"){ bracelets = products.Where(x => x.CategoryName == "Bracelets").ToList();await _productRepository.SaveEarringsList(bracelets, "Bracelets");}
+                if (wkSheet.CategoryName.Trim().ToLower() == "rings") { ringProducts = products.Where(x => x.CategoryName == "Rings").ToList(); await _productRepository.SaveNewProductList(ringProducts, "Rings"); }
+                else if (wkSheet.CategoryName.Trim().ToLower() == "bands") { weddings = products.Where(x => x.CategoryName == "Bands").ToList(); await _productRepository.SaveNewProductList(weddings, "Bands"); }
+                else if (wkSheet.CategoryName.Trim().ToLower() == "earrings") { earrings = products.Where(x => x.CategoryName == "Earrings").ToList(); await _productRepository.SaveEarringsList(earrings, "Earrings"); }
+                else if (wkSheet.CategoryName.Trim().ToLower() == "pendants") { pendants = products.Where(x => x.CategoryName == "Pendants").ToList(); await _productRepository.SaveEarringsList(pendants, "Pendants"); }
+                else if (wkSheet.CategoryName.Trim().ToLower() == "bracelets") { bracelets = products.Where(x => x.CategoryName == "Bracelets").ToList(); await _productRepository.SaveEarringsList(bracelets, "Bracelets"); }
             }
             return Json("AI transforms data migration Successfully.");
         }
@@ -702,41 +702,93 @@ namespace ControlPanel.Controllers
 
             string karat = leftParts[0];
             var metals = leftParts[1].Split(',', StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (var metal in metals)
+            string[] shapes = { };
+            if (baseProduct.CenterShapeName != null)
             {
-                result.Add(new ProductDTO
-                {
-                    Id = baseProduct.Id,
-                    Title = baseProduct.Title,
-                    CategoryName = baseProduct.CategoryName,
-                    VenderName = baseProduct.VenderName,
-                    VenderStyle = baseProduct.VenderStyle,
-                    Sku = baseProduct.Sku,
-                    Length = baseProduct.Length,
-                    BandWidth = baseProduct.BandWidth,
-                    GoldWeight = baseProduct.GoldWeight,
-                    CTW = baseProduct.CTW,
-                    CenterCaratName = baseProduct.CenterCaratName,
-                    CenterShapeName = baseProduct.CenterShapeName,
-                    Grades = baseProduct.Grades,
-                    DiaWT = baseProduct.DiaWT,
-                    NoOfStones = baseProduct.NoOfStones,
-                    Quantity = baseProduct.NoOfStones,
-                    Price = baseProduct.Price,
-                    UnitPrice = baseProduct.UnitPrice,
-                    ColorName = metal.Trim(),
-                    Karat = karat,
-                    ProductType = baseProduct.ProductType,
-                    MMSize = baseProduct.MMSize,
-                    Certificate = baseProduct.Certificate,
-                    AccentStoneShapeName = baseProduct.AccentStoneShapeName,
-                    Description = baseProduct.Description,
-                    IsReadyforShip = baseProduct.IsReadyforShip,
-                    WholesaleCost = baseProduct.WholesaleCost,
-                    Diameter = baseProduct.Diameter
-                });
+                shapes = baseProduct.CenterShapeName.Split(',', StringSplitOptions.RemoveEmptyEntries);
             }
+
+
+            if (shapes.Length > 0)
+            {
+                foreach (var shape in shapes)
+                {
+                    foreach (var metal in metals)
+                    {
+                        result.Add(new ProductDTO
+                        {
+                            Id = baseProduct.Id,
+                            Title = baseProduct.Title,
+                            CategoryName = baseProduct.CategoryName,
+                            VenderName = baseProduct.VenderName,
+                            VenderStyle = baseProduct.VenderStyle,
+                            Sku = baseProduct.Sku,
+                            Length = baseProduct.Length,
+                            BandWidth = baseProduct.BandWidth,
+                            GoldWeight = baseProduct.GoldWeight,
+                            CTW = baseProduct.CTW,
+                            CenterCaratName = baseProduct.CenterCaratName,
+                            CenterShapeName = shape.Trim(),
+                            Grades = baseProduct.Grades,
+                            DiaWT = baseProduct.DiaWT,
+                            NoOfStones = baseProduct.NoOfStones,
+                            Quantity = baseProduct.NoOfStones,
+                            Price = baseProduct.Price,
+                            UnitPrice = baseProduct.UnitPrice,
+                            ColorName = metal.Trim(),
+                            Karat = karat,
+                            ProductType = baseProduct.ProductType,
+                            MMSize = baseProduct.MMSize,
+                            Certificate = baseProduct.Certificate,
+                            AccentStoneShapeName = baseProduct.AccentStoneShapeName,
+                            Description = baseProduct.Description,
+                            IsReadyforShip = baseProduct.IsReadyforShip,
+                            WholesaleCost = baseProduct.WholesaleCost,
+                            Diameter = baseProduct.Diameter
+                        });
+                    }
+                }
+            }
+            else
+            {
+                foreach (var metal in metals)
+                {
+                    result.Add(new ProductDTO
+                    {
+                        Id = baseProduct.Id,
+                        Title = baseProduct.Title,
+                        CategoryName = baseProduct.CategoryName,
+                        VenderName = baseProduct.VenderName,
+                        VenderStyle = baseProduct.VenderStyle,
+                        Sku = baseProduct.Sku,
+                        Length = baseProduct.Length,
+                        BandWidth = baseProduct.BandWidth,
+                        GoldWeight = baseProduct.GoldWeight,
+                        CTW = baseProduct.CTW,
+                        CenterCaratName = baseProduct.CenterCaratName,
+                        CenterShapeName = baseProduct.CenterShapeName,
+                        Grades = baseProduct.Grades,
+                        DiaWT = baseProduct.DiaWT,
+                        NoOfStones = baseProduct.NoOfStones,
+                        Quantity = baseProduct.NoOfStones,
+                        Price = baseProduct.Price,
+                        UnitPrice = baseProduct.UnitPrice,
+                        ColorName = metal.Trim(),
+                        Karat = karat,
+                        ProductType = baseProduct.ProductType,
+                        MMSize = baseProduct.MMSize,
+                        Certificate = baseProduct.Certificate,
+                        AccentStoneShapeName = baseProduct.AccentStoneShapeName,
+                        Description = baseProduct.Description,
+                        IsReadyforShip = baseProduct.IsReadyforShip,
+                        WholesaleCost = baseProduct.WholesaleCost,
+                        Diameter = baseProduct.Diameter
+                    });
+                }
+            }
+
+
+
             return result;
         }
 
@@ -747,17 +799,17 @@ namespace ControlPanel.Controllers
             try
             {
                 string fileName = string.Empty; int metalId = 0;
-                string extractedFolder= string.Empty;
+                string extractedFolder = string.Empty;
                 string zipPath = string.Empty;
                 string folderPath = string.Empty;
                 var styleName = new FileSplitDTO();
-                var prdDesignDT =new  List<Product>();
+                var prdDesignDT = new List<Product>();
                 string destinationPath = string.Empty;
                 string relativePath = string.Empty;
                 var prdDT = new ProductImages();
                 var sizes = new Dictionary<string, Size>();
                 string resizedName = string.Empty;
-                string resizedPath=string.Empty;
+                string resizedPath = string.Empty;
                 string resizedRelativePath = string.Empty;
                 int resizedId = 0;
 
@@ -799,7 +851,7 @@ namespace ControlPanel.Controllers
                                         styleName = _productRepository.ExtractStyleName(entry.Name);
                                         if (styleName == null) continue;
 
-                                         metalId = await _productRepository.GetMetalId(styleName.ColorName);
+                                        metalId = await _productRepository.GetMetalId(styleName.ColorName);
                                         if (metalId == 0) continue;
 
                                         prdDesignDT = await _productRepository.GetProductDataByDesignNo(styleName.DesignNo, metalId);

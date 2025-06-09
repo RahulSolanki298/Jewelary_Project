@@ -152,11 +152,12 @@
     @* JQX Widgets *@
     <script>
         var resultData = [];
+        var failData = [];
         var source;
         $(document).ready(function () {
 
             loadData();
-
+            loadFailData();
             $("#ExcelUpload").on("click", function () {
                 $("#showFileUpload").modal("show");
             });
@@ -461,7 +462,7 @@
         }
 
         function loadFailData() {
-            resultData = [];
+            failData = [];
             $('#divDetails').jqxGrid('clear');
 
             $.ajax({
@@ -469,15 +470,15 @@
                 url: "@Url.Action("getFailDiamondList", "Diamond")",
                 dataType: "json",
                 data:{
-                    'uploadStatus':'Pending',
+                    'uploadStatus':'@SD.Cancelled',
                     'isActive':'0',
                 },
                 success: function (d) {
-                    if (d.data.result.length > 0) {
-                        resultData = JSON.parse(d.data.result);
+                    if (d.failResponse.result.length > 0) {
+                        failData = JSON.parse(d.failResponse.result);
                         source =
                         {
-                            localdata: resultData,
+                            localdata: failData,
                             datatype: "array"
                         };
                         var dataAdapter = new $.jqx.dataAdapter(source, {

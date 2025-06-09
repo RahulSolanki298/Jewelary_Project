@@ -1,0 +1,55 @@
+﻿@model DataAccess.Entities.HomePageSetting
+@{
+    ViewData["Title"] = "Home Page Setting";
+}
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col">
+            <h4 class="text-uppercase fw-bold border-bottom pb-2">Setup Website Main Slider/Video Contains</h4>
+        </div>
+    </div>
+    <div class="row justify-content-center mt-3">
+
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+
+        <div class="container mt-4">
+            <form asp-action="SaveHomePageSetting" asp-controller="Setting" method="post" enctype="multipart/form-data">
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="toggleVideo" name="isSetVideo" value="true" @(Model != null && Model.isSetVideo == true ? "checked" : "") />
+                    <label class="form-check-label" for="toggleVideo">Set Company Video</label>
+                </div>
+
+                <div id="videoSection" class="form-group" style="display: none;">
+                    <label for="VideoFile">Upload Company Video</label>
+                    <input type="file" class="form-control" asp-for="VideoFile" accept="video/*" />
+                </div>
+
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="toggleSlider" name="isSetCompanySlider" value="true" @(Model != null && Model.isSetCompanySlider == true ? "checked" : "") />
+                    <label class="form-check-label" for="toggleSlider">Set Company Image Slider</label>
+                </div>
+
+                <div id="sliderSection" style="display: none;">
+                    <div class="form-group">
+                        <label for="Image1Path">Upload Image 1</label>
+                        <input type="file" class="form-control" asp-for="Image1Path" accept="image/*" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Image2Path">Upload Image 2</label>
+                        <input type="file" class="form-control" asp-for="Image2Path" accept="image/*" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Image3Path">Upload Image 3</label>
+                        <input type="file" class="form-control" asp-for="Image3Path" accept="image/*" />
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-theme">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+

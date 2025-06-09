@@ -26,6 +26,8 @@
 
         public string  EndDate { get; set; }
 
+        public int? CategoryId { get; set; }
+
         public bool IsActive { get; set; }
     }
 }

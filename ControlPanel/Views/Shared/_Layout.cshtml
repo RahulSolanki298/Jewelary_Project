@@ -1,4 +1,5 @@
-﻿@using Common
+﻿@using Microsoft.AspNetCore.Http;
+@using Common
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -193,10 +194,10 @@
                 </li><!-- End Messages Nav -->
 
                 <li class="nav-item dropdown pe-3">
-
+                    @*@await Component.InvokeAsync("UserInfo")*@
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                         <img src="~/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
-                        <span class="d-none d-md-block dropdown-toggle ps-2">Admin</span>
+                        <span class="d-none d-md-block dropdown-toggle ps-2"> @await Component.InvokeAsync("UserInfo")</span>
                     </a>
                     <!-- End Profile Iamge Icon -->
 
@@ -622,23 +623,13 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
+                    <a class="nav-link collapsed" data-bs-target="#setting-nav" data-bs-toggle="collapse" href="#">
                         <i class="bi bi-layout-text-window-reverse"></i><span>Setting</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>
-                    <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <ul id="setting-nav" class="nav-content collapse " data-bs-parent="#setting-nav">
                         <li>
-                            <a href="@Url.Action("OrderRequestList","Orders")">
-                                <i class="bi bi-circle"></i><span>Order Request</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("Index","Orders")">
-                                <i class="bi bi-circle"></i><span>Order Process</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("OrderReject","Orders")">
-                                <i class="bi bi-circle"></i><span>Order Rejected</span>
+                            <a href="@Url.Action("Index","Setting")">
+                                <i class="bi bi-circle"></i><span>Discount and Page setting</span>
                             </a>
                         </li>
                     </ul>

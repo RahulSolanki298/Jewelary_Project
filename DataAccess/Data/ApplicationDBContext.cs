@@ -92,13 +92,102 @@ namespace DataAccess.Data
         public DbSet<ProductStyleItems> ProductStyleItems { get; set; }
 
         public DbSet<Blogs> Blogs { get; set; }
-
+        public DbSet<HomePageSetting> HomePageSetting { get; set; }
+        public DbSet<AboutUs> AboutUs { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<DiamondData>().ToTable("Diamond").HasNoKey();
+
             modelBuilder.Entity<DiamondShapeData>().ToTable("DiamondShapeData").HasNoKey();
             modelBuilder.Entity<DiamondColorData>().ToTable("DiamondColorData").HasNoKey();
+
+            // DiamondHistory
+            modelBuilder.Entity<DiamondHistory>(e =>
+            {
+                e.Property(d => d.UnitPrice).HasPrecision(18, 2);
+                e.Property(d => d.Width).HasPrecision(10, 3);
+                e.Property(d => d.Amount).HasPrecision(18, 2);
+                e.Property(d => d.CAngle).HasPrecision(8, 3);
+                e.Property(d => d.CHt).HasPrecision(8, 3);
+                e.Property(d => d.Carat).HasPrecision(8, 3);
+                e.Property(d => d.Depth).HasPrecision(8, 3);
+                e.Property(d => d.Dia).HasPrecision(8, 3);
+                e.Property(d => d.Discount).HasPrecision(10, 2);
+                e.Property(d => d.GirdleOpen).HasPrecision(8, 3);
+                e.Property(d => d.Height).HasPrecision(8, 3);
+                e.Property(d => d.Length).HasPrecision(8, 3);
+                e.Property(d => d.PAngle).HasPrecision(8, 3);
+                e.Property(d => d.PHt).HasPrecision(8, 3);
+                e.Property(d => d.Price).HasPrecision(18, 2);
+                e.Property(d => d.Quantity).HasPrecision(10, 2);
+            });
+
+            // OrderItems
+            modelBuilder.Entity<OrderItems>(e =>
+            {
+                e.Property(o => o.Dicount).HasPrecision(5, 2);
+                e.Property(o => o.DicountAmount).HasPrecision(10, 2);
+            });
+
+            // CoupanMaster
+            modelBuilder.Entity<CoupanMaster>()
+                .Property(c => c.Discount)
+                .HasPrecision(5, 2);
+
+            // CustomerOrderItems
+            modelBuilder.Entity<CustomerOrderItems>(e =>
+            {
+                e.Property(c => c.Prices).HasPrecision(18, 2);
+                e.Property(c => c.TotalAmount).HasPrecision(18, 2);
+                e.Property(c => c.UnitPrice).HasPrecision(18, 2);
+            });
+
+            // CustomerOrders
+            modelBuilder.Entity<CustomerOrders>(e =>
+            {
+                e.Property(c => c.Dicount).HasPrecision(5, 2);
+                e.Property(c => c.DicountAmount).HasPrecision(10, 2);
+                e.Property(c => c.NetAmount).HasPrecision(18, 2);
+            });
+
+            // Diamond
+            modelBuilder.Entity<Diamond>(e =>
+            {
+                e.Property(d => d.Amount).HasPrecision(18, 2);
+                e.Property(d => d.CAngle).HasPrecision(8, 3);
+                e.Property(d => d.CHt).HasPrecision(8, 3);
+                e.Property(d => d.Carat).HasPrecision(8, 3);
+                e.Property(d => d.Depth).HasPrecision(8, 3);
+                e.Property(d => d.Dia).HasPrecision(8, 3);
+                e.Property(d => d.Discount).HasPrecision(10, 2);
+                e.Property(d => d.GirdleOpen).HasPrecision(8, 3);
+                e.Property(d => d.Height).HasPrecision(8, 3);
+                e.Property(d => d.Length).HasPrecision(8, 3);
+                e.Property(d => d.PAngle).HasPrecision(8, 3);
+                e.Property(d => d.PHt).HasPrecision(8, 3);
+                e.Property(d => d.Price).HasPrecision(18, 2);
+                e.Property(d => d.Quantity).HasPrecision(10, 2);
+                e.Property(d => d.RAP).HasPrecision(10, 2);
+                e.Property(d => d.RapAmount).HasPrecision(18, 2);
+                e.Property(d => d.RatePct).HasPrecision(5, 2);
+                e.Property(d => d.Ratio).HasPrecision(8, 3);
+                e.Property(d => d.Table).HasPrecision(8, 3);
+                e.Property(d => d.UnitPrice).HasPrecision(18, 2);
+                e.Property(d => d.Width).HasPrecision(8, 3);
+            });
+
+            // ProductProperty.Name should not allow nulls
+            modelBuilder.Entity<ProductProperty>()
+                .Property(p => p.Name)
+                .IsRequired();
+
+            modelBuilder.Entity<DiamondData>(e =>
+            {
+                e.ToTable("Diamond");
+                e.HasNoKey();
+                e.Property(d => d.Table).HasPrecision(8, 3); // You can adjust precision/scale as needed
+            });
         }
+
     }
 }

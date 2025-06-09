@@ -314,7 +314,7 @@ namespace ControlPanel.Controllers
 
             var stoneId = worksheet.Cells[row, 2].Text;
 
-            if (stoneId == null || colorId == 0 || shapeId == 0 || labId==0 || clarityId==0 || cutId == 0)
+            if (string.IsNullOrWhiteSpace(stoneId) || colorId == 0 || shapeId == 0 || labId==0 || clarityId==0 || cutId == 0)
             {
                 return new Diamond
                 {
@@ -347,7 +347,7 @@ namespace ControlPanel.Controllers
                     Certificate = Certi_NewVal,
                     IsActivated = false,
                     IsSuccess = false,
-                    UploadStatus = SD.Pending,
+                    UploadStatus = SD.Cancelled,
                     UpdatedDate = DateTime.Now,
                     UpdatedBy = userId,
                     CreatedBy = userId
@@ -526,6 +526,7 @@ namespace ControlPanel.Controllers
                     DiamondImagePath = "-",
                     DiamondVideoPath = GetVal("Video"),
                     Certificate = GetVal("Certificate"),
+                    UploadStatus=SD.Cancelled,
                     IsActivated = false,
                     UpdatedDate = DateTime.Now,
                     UpdatedBy = userId,

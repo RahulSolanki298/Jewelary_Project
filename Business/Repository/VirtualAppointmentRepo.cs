@@ -6,7 +6,6 @@ using AutoMapper;
 using Business.Repository.IRepository;
 using DataAccess.Data;
 using DataAccess.Entities;
-using DataAccess.Migrations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Models;

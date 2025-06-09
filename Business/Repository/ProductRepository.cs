@@ -800,7 +800,7 @@ namespace Business.Repository
         public async Task<ProductProperty> GetKaratById(int karatId)
         {
             int ktId = await GetKaratId();
-            var result = await _context.ProductProperty.Where(x => x.Id == karatId).FirstOrDefaultAsync();
+            var result = await _context.ProductProperty.Where(x => x.ParentId == karatId).FirstOrDefaultAsync();
             return result;
         }
         public async Task<int> GetShapeId()
@@ -1071,8 +1071,6 @@ namespace Business.Repository
                     centerShapeId = shapeDict.GetValueOrDefault(product.CenterShapeName);
                     centerCaratId = GetProductCarat(product.CenterCaratName);  // If this returns int, else adapt
 
-                    var events = await GetEventSitesByName(product.EventName);
-
                     existingProduct = await _context.Product
                         .Where(x => x.CategoryId == categoryId
                                     && x.ColorId == colorId
@@ -1095,7 +1093,6 @@ namespace Business.Repository
                         existingProduct.Certificate = product.Certificate;
                         existingProduct.AccentStoneShapeId = shapeId;
                         existingProduct.IsReadyforShip = product.IsReadyforShip;
-                        existingProduct.EventId = events.Id;
                         existingProduct.CenterCaratId = centerCaratId;
                         existingProduct.CenterShapeId = centerShapeId;  // Fixed here
                         existingProduct.WholesaleCost = product.WholesaleCost;
@@ -1130,7 +1127,6 @@ namespace Business.Repository
                             Certificate = product.Certificate,
                             AccentStoneShapeId = shapeId,
                             IsReadyforShip = product.IsReadyforShip,
-                            EventId = events.Id,
                             CTW = product.CTW,
                             Vendor = product.VenderName,
                             VenderStyle = product.VenderStyle,
@@ -1712,10 +1708,8 @@ namespace Business.Repository
                 from clarity in clarityGroup.DefaultIfEmpty()
                 join size in _context.ProductProperty on product.CenterCaratId equals size.Id into sizeGroup
                 from size in sizeGroup.DefaultIfEmpty()
-
                 join ashape in _context.ProductProperty on product.AccentStoneShapeId equals ashape.Id into ashapeGroup
                 from ashape in ashapeGroup.DefaultIfEmpty()
-
                 where product.UploadStatus == SD.Pending
                 select new ProductDTO
                 {
@@ -1761,6 +1755,7 @@ namespace Business.Repository
                     NoOfStones=product.NoOfStones,
                     AccentStoneShapeName=ashape.Name,
                     AccentStoneShapeId=product.AccentStoneShapeId,
+                    
                 })
             .OrderByDescending(x => x.Sku)
             .ToListAsync();

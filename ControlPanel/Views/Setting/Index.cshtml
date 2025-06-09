@@ -1,0 +1,153 @@
+﻿<section class="section py-5 bg-light">
+    <div class="container-fluid">
+        <div class="card shadow-sm border-0 rounded">
+            <div class="card-header bg-white border-bottom">
+                <h5 class="card-title mb-0 text-primary">⚙️ Settings</h5>
+            </div>
+            <div class="card-body">
+                <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab">
+                            <i class="bi bi-house me-2"></i>Home Page
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="about-tab" data-bs-toggle="tab" data-bs-target="#about" type="button" role="tab">
+                            <i class="bi bi-info-circle me-2"></i>About Us
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="event-tab" data-bs-toggle="tab" data-bs-target="#event" type="button" role="tab">
+                            <i class="bi bi-tags me-2"></i>Event Manager (Discount)
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="product-tab" data-bs-toggle="tab" data-bs-target="#product" type="button" role="tab">
+                            <i class="bi bi-box-seam me-2"></i>Product Base Discount
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="inquiry-tab" data-bs-toggle="tab" data-bs-target="#inquiry" type="button" role="tab">
+                            <i class="bi bi-chat-left-dots me-2"></i>Inquiry & Virtual Meeting
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <h4 class="mb-3">🏠 Dynamic web content For Live Website Home Page</h4>
+                        <div class="text-muted" id="homeContainer">
+
+
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="about" role="tabpanel" aria-labelledby="about-tab">
+                        <h4 class="mb-3">👥 About Us</h4>
+                        <p class="text-muted">Details about your company, mission, and team go here. Tell your users who you are.</p>
+                    </div>
+                    <div class="tab-pane fade" id="event" role="tabpanel" aria-labelledby="event-tab">
+                        <h4 class="mb-3">🎉 Event Manager (Discount)</h4>
+                        <div class="text-muted" id="evntContainer">
+
+
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="product" role="tabpanel" aria-labelledby="product-tab">
+                        <h4 class="mb-3">📦 Product Base Discount</h4>
+                        <p class="text-muted">Assign discounts to individual products to boost sales and engagement.</p>
+                    </div>
+                    <div class="tab-pane fade" id="inquiry" role="tabpanel" aria-labelledby="inquiry-tab">
+                        <h4 class="mb-3">💬 Inquiry & Virtual Meeting</h4>
+                        <p class="text-muted">Manage customer questions and schedule virtual meetings with ease.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+    <script>
+        $(function () {
+            LoadHome();
+
+            $("#home-tab").click(function () {
+                LoadHome();
+            });
+
+            $("#event-tab").click(function () {
+                $.ajax({
+                    url: '@Url.Action("CreateEventBaseDiscount", "Setting")',
+                    method: 'GET',
+                    success: function (data) {
+                        $('#evntContainer').empty().html(data); // Replace or update your target container
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Failed to load property items:', error);
+                    }
+                });
+            });
+
+
+            $("#homeContainer").on("change", "#toggleVideo", function () {
+                if ($('#toggleVideo').is(':checked')) {
+                    $('#videoSection').slideDown(); // Show with animation
+                } else {
+                    $('#videoSection').slideUp(); // Hide with animation
+                }
+            });
+            $("#homeContainer").on("change", "#toggleSlider", function () {
+                if ($("#toggleSlider").is(":checked")) {
+                    $("#sliderSection").slideDown();
+                } else {
+                    $("#sliderSection").slideUp();
+                }
+            });
+
+            $("#homeContainer").on("submit", "#SaveSetting", function (e) {
+                debugger;
+                e.preventDefault();
+
+                var form = $(this)[0];
+                var formData = new FormData(form);
+
+                $.ajax({
+                    url: form.action,
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        alert("Settings saved successfully!");
+                        form.reset();
+                        $('#videoSection, #sliderSection').slideUp();
+                    },
+                    error: function (xhr) {
+                        alert("An error occurred while saving settings.");
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+
+        });
+
+        function LoadHome() {
+             $.ajax({
+                    url: '@Url.Action("CreateHome", "Setting")',
+                    method: 'GET',
+                    success: function (data) {
+                        $('#homeContainer').empty().html(data); // Replace or update your target container
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Failed to load property items:', error);
+                    }
+                });
+        }
+
+
+    </script>
+}
