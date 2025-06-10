@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -908,11 +909,12 @@ namespace Business.Repository
                 var categories = await _context.Category.ToListAsync();
                 var karats = await GetKaratList();
                 var shapes = await GetShapeList();
-
+                int fileHistoryId = 0;
                 var colorDict = colors.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
                 var categoryDict = categories.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
                 var KaratDict = karats.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
                 var shapeDict = shapes.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
+                var AshapeDict = shapes.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
 
                 var categoryId = categoryDict.GetValueOrDefault(categoryName);
                 var existingProducts = await _context.Product
@@ -920,9 +922,16 @@ namespace Business.Repository
                     .ToListAsync();
 
                 var productList = new List<Product>();
+                var ExistingProductList = new List<Product>();
+                var HistoryProductList = new List<ProductHistory>();
 
                 foreach (var product in products)
                 {
+                    if (fileHistoryId == 0)
+                    {
+                        fileHistoryId = product.FileHistoryId.Value;
+                    }
+
                     if (string.IsNullOrEmpty(product.ColorName)
                         || string.IsNullOrEmpty(categoryName)
                         || string.IsNullOrEmpty(product.Karat))
@@ -933,8 +942,64 @@ namespace Business.Repository
                     var colorId = colorDict.GetValueOrDefault(product.ColorName);
                     var caratId = GetProductCarat(product.CenterCaratName);
                     var shapeId = shapeDict.GetValueOrDefault(product.CenterShapeName);
-                    var AshapeId = shapeDict.GetValueOrDefault(product.AccentStoneShapeName);
+                    var AshapeId = AshapeDict.GetValueOrDefault(product.AccentStoneShapeName);
                     var karatId = KaratDict.GetValueOrDefault(product.Karat);
+
+                    if (string.IsNullOrWhiteSpace(product.Title)&& string.IsNullOrWhiteSpace(product.ColorName ) && string.IsNullOrWhiteSpace(product.Sku) && product.Price==null)
+                    {
+                        
+
+                        var newProduct = new Product
+                        {
+                            Title = $"{product.Title}",
+                            WholesaleCost = product.WholesaleCost,
+                            Sku = product.Sku ?? throw new ArgumentNullException(nameof(product.Sku)),
+                            CategoryId = categoryId,
+                            KaratId = karatId,
+                            Length = product.Length,
+                            ColorId = colorId,
+                            Description = product.Description,
+                            BandWidth = product.BandWidth,
+                            ProductType = product.ProductType,
+                            GoldWeight = product.GoldWeight,
+                            Grades = product.Grades,
+                            Price = product.Price.HasValue ? product.Price.Value : 0,
+                            UnitPrice = product.UnitPrice.HasValue ? product.UnitPrice.Value : 0,
+                            MMSize = product.MMSize,
+                            NoOfStones = Convert.ToInt32(product.NoOfStones),
+                            DiaWT = product.DiaWT,
+                            Certificate = product.Certificate,
+                            IsReadyforShip = product.IsReadyforShip,
+                            CTW = product.CTW,
+                            Vendor = product.VenderName,
+                            VenderStyle = product.VenderStyle,
+                            Diameter = product.Diameter,
+                            Id = Guid.NewGuid(),
+                            UpdatedDate = product.UpdatedDate,
+                            UpdatedBy = product.UpdatedBy,
+                            CreatedBy = product.CreatedBy,
+                            CreatedDate = product.CreatedDate,
+                            FileHistoryId = fileHistoryId,
+                            UploadStatus = SD.Pending,
+                            IsActivated = false,
+                            IsSuccess = false
+                        };
+                        if (caratId > 0)
+                        {
+                            newProduct.CenterCaratId = caratId;
+                        }
+                        if (shapeId > 0)
+                        {
+                            newProduct.CenterShapeId = shapeId;
+
+                        }
+                        if (AshapeId > 0)
+                        {
+                            newProduct.AccentStoneShapeId = AshapeId;
+                        }
+                        productList.Add(newProduct);
+                        continue;
+                    }
 
                     var existingProduct = existingProducts
                         .FirstOrDefault(x => x.ColorId == colorId
@@ -949,7 +1014,7 @@ namespace Business.Repository
                         existingProduct.Title = $"{product.Title}";
                         existingProduct.Sku = product.Sku;
                         existingProduct.KaratId = karatId;
-                        existingProduct.CenterCaratId = caratId;
+                        
                         existingProduct.BandWidth = product.BandWidth;
                         existingProduct.GoldWeight = product.GoldWeight;
                         existingProduct.Grades = product.Grades;
@@ -957,13 +1022,29 @@ namespace Business.Repository
                         existingProduct.CTW = product.CTW;
                         existingProduct.Certificate = product.Certificate;
                         existingProduct.CenterShapeId = shapeId;
-                        existingProduct.AccentStoneShapeId = AshapeId;
                         existingProduct.IsReadyforShip = product.IsReadyforShip;
                         existingProduct.WholesaleCost = product.WholesaleCost;
                         existingProduct.Price = product.Price.HasValue ? product.Price.Value : 0;
                         existingProduct.UnitPrice = product.UnitPrice.HasValue ? product.UnitPrice.Value : 0;
+                        existingProduct.IsSuccess = true;
+                        existingProduct.UploadStatus = SD.Pending;
+                        existingProduct.UpdatedBy = product.UpdatedBy;
+                        existingProduct.UpdatedDate = product.UpdatedDate;
+                        existingProduct.FileHistoryId = fileHistoryId;
+                        if (caratId > 0)
+                        {
+                            existingProduct.CenterCaratId = caratId;
+                        }
+                        if (shapeId > 0)
+                        {
+                            existingProduct.CenterShapeId = shapeId;
 
-                        _context.Product.Update(existingProduct);
+                        }
+                        if (AshapeId > 0)
+                        {
+                            existingProduct.AccentStoneShapeId = AshapeId;
+                        }
+                        ExistingProductList.Add(existingProduct);
                     }
                     else
                     {
@@ -974,7 +1055,6 @@ namespace Business.Repository
                             Sku = product.Sku ?? throw new ArgumentNullException(nameof(product.Sku)),
                             CategoryId = categoryId,
                             KaratId = karatId,
-                            CenterCaratId = caratId,
                             Length = product.Length,
                             ColorId = colorId,
                             Description = product.Description,
@@ -987,30 +1067,98 @@ namespace Business.Repository
                             MMSize = product.MMSize,
                             NoOfStones = Convert.ToInt32(product.NoOfStones),
                             DiaWT = product.DiaWT,
-                            CenterShapeId = shapeId,
                             Certificate = product.Certificate,
-                            AccentStoneShapeId = AshapeId,
                             IsReadyforShip = product.IsReadyforShip,
                             CTW = product.CTW,
                             Vendor = product.VenderName,
                             VenderStyle = product.VenderStyle,
                             Diameter = product.Diameter,
                             Id = Guid.NewGuid(),
+                            UpdatedDate = product.UpdatedDate,
+                            UpdatedBy = product.UpdatedBy,
+                            CreatedBy = product.CreatedBy,
+                            CreatedDate=product.CreatedDate,
+                            FileHistoryId= fileHistoryId,
                             UploadStatus = SD.Pending,
                             IsActivated = false,
                             IsSuccess = true
                         };
+                        if (caratId > 0)
+                        {
+                            newProduct.CenterCaratId = caratId;
+                        }
+                        if (shapeId > 0)
+                        {
+                            newProduct.CenterShapeId = shapeId;
+                        }
+                        if (AshapeId>0)
+                        {
+                            newProduct.AccentStoneShapeId = AshapeId;
+                        }
 
                         productList.Add(newProduct);
                     }
                 }
 
-                if (productList.Any())
+                if (productList.Any()) await _context.Product.AddRangeAsync(productList);
+                if (ExistingProductList.Any()) _context.Product.UpdateRange(ExistingProductList);
+                await _context.SaveChangesAsync();
+
+                var productDT = await _context.Product.Where(x=>x.FileHistoryId== fileHistoryId).ToListAsync();
+
+                foreach (var product in productDT)
                 {
-                    await _context.Product.AddRangeAsync(productList);
+                    HistoryProductList = new List<ProductHistory>
+                    {
+                        new ProductHistory
+                        {
+                            ProductId=product.Id.ToString(),
+                            Title=product.Title,
+                            WholesaleCost = product.WholesaleCost,
+                            Sku = product.Sku ?? throw new ArgumentNullException(nameof(product.Sku)),
+                            CategoryId = product.CategoryId,
+                            KaratId = product.KaratId,
+                            CenterCaratId = product.CenterCaratId,
+                            Length = product.Length,
+                            ColorId = product.ColorId,
+                            Description = product.Description,
+                            BandWidth = product.BandWidth,
+                            ProductType = product.ProductType,
+                            GoldWeight = product.GoldWeight,
+                            Grades = product.Grades,
+                            Price = product.Price,
+                            UnitPrice = product.UnitPrice,
+                            MMSize = product.MMSize,
+                            NoOfStones = Convert.ToInt32(product.NoOfStones),
+                            DiaWT = product.DiaWT,
+                            CenterShapeId = product.CenterShapeId,
+                            Certificate = product.Certificate,
+                            AccentStoneShapeId = product.AccentStoneShapeId,
+                            IsReadyforShip = product.IsReadyforShip,
+                            CTW = product.CTW,
+                            Vendor = product.Vendor,
+                            VenderStyle = product.VenderStyle,
+                            Diameter = product.Diameter,
+                            Id = Guid.NewGuid(),
+                            UpdatedDate = product.UpdatedDate,
+                            UpdatedBy = product.UpdatedBy,
+                            CreatedBy = product.CreatedBy,
+                            CreatedDate=product.CreatedDate,
+                            FileUploadHistoryId=fileHistoryId,
+                            UploadStatus = product.UploadStatus,
+                            IsActivated = product.IsActivated,
+                            IsSuccess = product.IsSuccess
+
+                        }
+                    };
                 }
 
-                await _context.SaveChangesAsync();
+                if (HistoryProductList.Count > 0)
+                {
+                    await _context.ProductHistory.AddRangeAsync(HistoryProductList);
+                    await _context.SaveChangesAsync();
+                }
+                
                 return true;
             }
             catch (Exception ex)

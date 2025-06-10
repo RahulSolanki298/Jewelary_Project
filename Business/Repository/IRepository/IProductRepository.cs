@@ -29,8 +29,6 @@ namespace Business.Repository.IRepository
 
         Task<List<ProductProperty>> GetKaratList();
 
-        Task<bool> SaveNewProductList(List<ProductDTO> products,string categoryName);
-
         Task<bool> UpdateProductDetailsByExcel(List<ProductDTO> products);
 
         Task<ProductDTO> GetProductWithDetails(string productId);
@@ -67,6 +65,10 @@ namespace Business.Repository.IRepository
         Task<List<ProductImageAndVideoDTO>> GetProductImagesVideos(string productId);
 
         Task<ProductImageAndVideoDTO> GetProductImagesVideoById(int id);
+
+        Task<bool> SaveNewProductList(List<ProductDTO> products, string categoryName);
+
+
 
 
     }

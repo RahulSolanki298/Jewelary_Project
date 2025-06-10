@@ -113,36 +113,29 @@ namespace Models
         public string Occasion { get; set; }
 
         public string Remarks { get; set; }
-
         public string Package { get; set; }
-
         public string MfgDesign { get; set; }
-
         public string Designer { get; set; }
-
         public string CadDesigner { get; set; }
-
         public string Setting { get; set; }
-
         public string MMSize { get; set; }
-
         public int? EventId { get; set; }
-
         public string EventName { get; set; }
-
         public string Certificate { get; set; }
-
         public bool? IsReadyforShip { get; set; }
-
         public int? AccentStoneShapeId { get; set; }
-
         public decimal? WholesaleCost { get; set; }
-
         public string AccentStoneShapeName { get; set; }
-
         public string Diameter { get; set; }
+        public bool? IsSuccess { get; set; } = false;
+        public string CreatedBy { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public string UploadStatus { get; set; }  //  Requested, Accepted, Rejected
+        public int? FileHistoryId { get; set; }
+        public bool? IsDelete { get; set; }
 
-        public string UploadStatus { get; set; }
 
         public List<ProductImageAndVideoDTO> ProductImageVideos { get; set; }
         public List<ProductPropertyDTO> Metals { get; set; }

@@ -192,18 +192,35 @@ namespace ControlPanel.Services
                     var centalcarat = await _db.ProductProperty.Where(x => x.Name == SD.CaratSize).FirstOrDefaultAsync();
                     var centalcaratDTs = new List<ProductProperty>
                     {
-                        new ProductProperty{ Name="0.05",ParentId=shape.Id,DisplayOrder=1,IsActive=true},
-                        new ProductProperty{ Name="0.12",ParentId=shape.Id,DisplayOrder=1,IsActive=true},
-                        new ProductProperty{ Name="0.23",ParentId=shape.Id,DisplayOrder=1,IsActive=true},
-                        new ProductProperty{ Name="0.55",ParentId=shape.Id,DisplayOrder=1,IsActive=true},
-                        new ProductProperty{ Name="1",ParentId=shape.Id,DisplayOrder=1,IsActive=true},
-                        new ProductProperty{ Name="2",ParentId=shape.Id,DisplayOrder=1,IsActive=true},
-                        new ProductProperty{ Name="3",ParentId=shape.Id,DisplayOrder=1,IsActive=true},
-                        new ProductProperty{ Name="4",ParentId=shape.Id,DisplayOrder=1,IsActive=true},
-                        new ProductProperty{ Name="5",ParentId=shape.Id,DisplayOrder=1,IsActive=true},
-                        new ProductProperty{ Name="6",ParentId=shape.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="0.05",ParentId=centalcarat.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="0.12",ParentId=centalcarat.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="0.23",ParentId=centalcarat.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="0.55",ParentId=centalcarat.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="1",ParentId=centalcarat.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="2",ParentId=centalcarat.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="3",ParentId=centalcarat.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="4",ParentId=centalcarat.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="5",ParentId=centalcarat.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="6",ParentId=centalcarat.Id,DisplayOrder=1,IsActive=true},
                     };
                     await _db.ProductProperty.AddRangeAsync(centalcaratDTs);
+                    await _db.SaveChangesAsync();
+
+
+                    var karatList = await _db.ProductProperty.Where(x => x.Name == SD.Karat).FirstOrDefaultAsync();
+                    var karatDTs = new List<ProductProperty>
+                    {
+                        new ProductProperty{ Name="8K",ParentId=karatList.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="10K",ParentId=karatList.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="12K",ParentId=karatList.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="14K",ParentId=karatList.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="16K",ParentId=karatList.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="18K",ParentId=karatList.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="20K",ParentId=karatList.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="22K",ParentId=karatList.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="24K",ParentId=karatList.Id,DisplayOrder=1,IsActive=true},
+                    };
+                    await _db.ProductProperty.AddRangeAsync(karatDTs);
                     await _db.SaveChangesAsync();
 
                 }
@@ -252,50 +269,49 @@ namespace ControlPanel.Services
                     await _db.DiamondProperties.AddRangeAsync(colorDTs);
                     await _db.SaveChangesAsync();
 
+                }
+                catch (Exception)
+                {
 
-                    // Add Clarity
-                    //var clarity = await _db.ProductProperty.Where(x => x.Name == SD.Clarity).FirstOrDefaultAsync();
-                    //var ClarityDTs = new List<ProductProperty>
-                    //{
-                    //    new ProductProperty{ Name="White",ParentId=clarity.Id,SymbolName="white",DisplayOrder=1,IsActive=true,Synonyms="W,white,WG,White"},
-                    //    new ProductProperty{ Name="Yellow",ParentId=clarity.Id,SymbolName="yellow",DisplayOrder=1,IsActive=true,Synonyms="Y,Yellow,yellow,YG"},
-                    //    new ProductProperty{ Name="Rose",ParentId=clarity.Id,SymbolName="rose",DisplayOrder=1,IsActive=true,Synonyms="rose,RG,Rose"},
-                    //    new ProductProperty{ Name="E-F",ParentId=clarity.Id,SymbolName="E-F",DisplayOrder=1,IsActive=true,Synonyms="E-F"},
-                    //};
-                    //await _db.ProductProperty.AddRangeAsync(ClarityDTs);
-                    //await _db.SaveChangesAsync();
+                    throw;
+                }
+            }
 
+            if (!await _db.ProductProperty.AnyAsync())
+            {
+                try
+                {
                     // Add Metals
-                    var shape = await _db.ProductProperty.Where(x => x.Name == SD.Shape).FirstOrDefaultAsync();
-                    var shapeDTs = new List<ProductProperty>
+                    var pshape = await _db.ProductProperty.Where(x => x.Name == SD.Shape).FirstOrDefaultAsync();
+                    var pshapeDTs = new List<ProductProperty>
                     {
-                        new ProductProperty{ Name="ROUND",ParentId=shape.Id,SymbolName="round",DisplayOrder=1,IsActive=true,Synonyms="round",IconPath="/assets/img/diamond-svg/ROUND.svg"},
-                        new ProductProperty{ Name="PRINCESS",ParentId=shape.Id,SymbolName="princess",DisplayOrder=1,IsActive=true,Synonyms="princess",IconPath="/assets/img/diamond-svg/PRINCESS.svg"},
-                        new ProductProperty{ Name="MARQUISE",ParentId=shape.Id,SymbolName="marquise",DisplayOrder=1,IsActive=true,Synonyms="marquise",IconPath="/assets/img/diamond-svg/MARQUISE.svg"},
-                        new ProductProperty{ Name="PEAR",ParentId=shape.Id,SymbolName="pear",DisplayOrder=1,IsActive=true,Synonyms="pear",IconPath="/assets/img/diamond-svg/PEAR.svg"},
-                        new ProductProperty{ Name="HEART",ParentId=shape.Id,SymbolName="heart",DisplayOrder=1,IsActive=true,Synonyms="heart",IconPath="/assets/img/diamond-svg/HEART.svg"},
-                        new ProductProperty{ Name="OVAL",ParentId=shape.Id,SymbolName="oval",DisplayOrder=1,IsActive=true,Synonyms="oval",IconPath="/assets/img/diamond-svg/OVAL.svg"},
-                        new ProductProperty{ Name="CUSHION",ParentId=shape.Id,SymbolName="cushion",DisplayOrder=1,IsActive=true,Synonyms="cushion",IconPath="/assets/img/diamond-svg/CUSHION.svg"},
-                        new ProductProperty{ Name="EMERALD",ParentId=shape.Id,SymbolName="emerald",DisplayOrder=1,IsActive=true,Synonyms="emerald",IconPath="/assets/img/diamond-svg/Emerald.svg"},
-                        new ProductProperty{ Name="RADIANT",ParentId=shape.Id,SymbolName="radiant",DisplayOrder=1,IsActive=true,Synonyms="radiant",IconPath="/assets/img/diamond-svg/RADIANT.svg"},
-                        new ProductProperty{ Name="SQ EMERALD",ParentId=shape.Id,SymbolName="sq emerald",DisplayOrder=1,IsActive=true,Synonyms="sq emerald"},
+                        new ProductProperty{ Name="ROUND",ParentId=pshape.Id,SymbolName="round",DisplayOrder=1,IsActive=true,Synonyms="round",IconPath="/assets/img/diamond-svg/ROUND.svg"},
+                        new ProductProperty{ Name="PRINCESS",ParentId=pshape.Id,SymbolName="princess",DisplayOrder=1,IsActive=true,Synonyms="princess",IconPath="/assets/img/diamond-svg/PRINCESS.svg"},
+                        new ProductProperty{ Name="MARQUISE",ParentId=pshape.Id,SymbolName="marquise",DisplayOrder=1,IsActive=true,Synonyms="marquise",IconPath="/assets/img/diamond-svg/MARQUISE.svg"},
+                        new ProductProperty{ Name="PEAR",ParentId=pshape.Id,SymbolName="pear",DisplayOrder=1,IsActive=true,Synonyms="pear",IconPath="/assets/img/diamond-svg/PEAR.svg"},
+                        new ProductProperty{ Name="HEART",ParentId=pshape.Id,SymbolName="heart",DisplayOrder=1,IsActive=true,Synonyms="heart",IconPath="/assets/img/diamond-svg/HEART.svg"},
+                        new ProductProperty{ Name="OVAL",ParentId=pshape.Id,SymbolName="oval",DisplayOrder=1,IsActive=true,Synonyms="oval",IconPath="/assets/img/diamond-svg/OVAL.svg"},
+                        new ProductProperty{ Name="CUSHION",ParentId=pshape.Id,SymbolName="cushion",DisplayOrder=1,IsActive=true,Synonyms="cushion",IconPath="/assets/img/diamond-svg/CUSHION.svg"},
+                        new ProductProperty{ Name="EMERALD",ParentId=pshape.Id,SymbolName="emerald",DisplayOrder=1,IsActive=true,Synonyms="emerald",IconPath="/assets/img/diamond-svg/Emerald.svg"},
+                        new ProductProperty{ Name="RADIANT",ParentId=pshape.Id,SymbolName="radiant",DisplayOrder=1,IsActive=true,Synonyms="radiant",IconPath="/assets/img/diamond-svg/RADIANT.svg"},
+                        new ProductProperty{ Name="SQ EMERALD",ParentId=pshape.Id,SymbolName="sq emerald",DisplayOrder=1,IsActive=true,Synonyms="sq emerald"},
                     };
-                    await _db.ProductProperty.AddRangeAsync(shapeDTs);
+                    await _db.ProductProperty.AddRangeAsync(pshapeDTs);
                     await _db.SaveChangesAsync();
 
                     var centalcarat = await _db.ProductProperty.Where(x => x.Name == SD.CaratSize).FirstOrDefaultAsync();
                     var centalcaratDTs = new List<ProductProperty>
                     {
-                        new ProductProperty{ Name="0.05",ParentId=shape.Id,DisplayOrder=1,IsActive=true},
-                        new ProductProperty{ Name="0.12",ParentId=shape.Id,DisplayOrder=1,IsActive=true},
-                        new ProductProperty{ Name="0.23",ParentId=shape.Id,DisplayOrder=1,IsActive=true},
-                        new ProductProperty{ Name="0.55",ParentId=shape.Id,DisplayOrder=1,IsActive=true},
-                        new ProductProperty{ Name="1",ParentId=shape.Id,DisplayOrder=1,IsActive=true},
-                        new ProductProperty{ Name="2",ParentId=shape.Id,DisplayOrder=1,IsActive=true},
-                        new ProductProperty{ Name="3",ParentId=shape.Id,DisplayOrder=1,IsActive=true},
-                        new ProductProperty{ Name="4",ParentId=shape.Id,DisplayOrder=1,IsActive=true},
-                        new ProductProperty{ Name="5",ParentId=shape.Id,DisplayOrder=1,IsActive=true},
-                        new ProductProperty{ Name="6",ParentId=shape.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="0.05",ParentId=centalcarat.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="0.12",ParentId=centalcarat.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="0.23",ParentId=centalcarat.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="0.55",ParentId=centalcarat.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="1",ParentId=centalcarat.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="2",ParentId=centalcarat.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="3",ParentId=centalcarat.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="4",ParentId=centalcarat.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="5",ParentId=centalcarat.Id,DisplayOrder=1,IsActive=true},
+                        new ProductProperty{ Name="6",ParentId=centalcarat.Id,DisplayOrder=1,IsActive=true},
                     };
                     await _db.ProductProperty.AddRangeAsync(centalcaratDTs);
                     await _db.SaveChangesAsync();

@@ -476,7 +476,7 @@ namespace B2C_ECommerce.ApiControllers
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using var package = new ExcelPackage(stream);
-
+            var userId = HttpContext.Session.GetString("UserId");
             foreach (var wkSheet in package.Workbook.Worksheets)
             {
 
@@ -518,6 +518,7 @@ namespace B2C_ECommerce.ApiControllers
             var categoryList = products.GroupBy(p => p.CategoryName)
                                             .Select(g => g.First())
                                             .ToList();
+            var userId = HttpContext.Session.GetString("UserId");
 
             foreach (var wkSheet in categoryList)
             {

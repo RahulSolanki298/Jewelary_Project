@@ -19,6 +19,8 @@ using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
+using Microsoft.AspNetCore.Identity;
+using Business.Repository;
 
 namespace ControlPanel.Controllers
 {
@@ -30,11 +32,13 @@ namespace ControlPanel.Controllers
         private readonly IProductRepository _productRepository;
         private readonly IProductPropertyRepository _productPropertyRepository;
         private readonly IWebHostEnvironment _env;
-        public JewelleryController(IProductRepository productRepository, IProductPropertyRepository productProperty, IWebHostEnvironment env)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public JewelleryController(IProductRepository productRepository, IProductPropertyRepository productProperty, IWebHostEnvironment env, UserManager<ApplicationUser> userManager)
         {
             _productRepository = productRepository;
             _productPropertyRepository = productProperty;
             _env = env;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -118,10 +122,24 @@ namespace ControlPanel.Controllers
             List<ProductDTO> earrings = new List<ProductDTO>();
             List<ProductDTO> pendants = new List<ProductDTO>();
             List<ProductDTO> bracelets = new List<ProductDTO>();
+
+            var userId = HttpContext.Session.GetString("UserId");
+            var user = await _userManager.FindByIdAsync(userId);
+
             if (string.IsNullOrEmpty(productsJson))
             {
                 return Json("Product Doesn't Found");
             }
+
+            var uploadHistory = new ProductFileUploadHistory
+            {
+                Title = $"Jewellery Upload with {user.FirstName} {user.LastName}",
+                UploadedDate = DateTime.UtcNow,
+                UploadedBy = userId,
+                IsSuccess = 1
+            };
+            int uploadHistoryId = await _productRepository.AddProductFileUploadedHistory(uploadHistory);
+
 
             var products = JsonConvert.DeserializeObject<List<ProductDTO>>(productsJson);
 
@@ -131,6 +149,12 @@ namespace ControlPanel.Controllers
 
             foreach (var wkSheet in categoryList)
             {
+                wkSheet.CreatedBy = userId;
+                wkSheet.UpdatedBy = userId;
+                wkSheet.CreatedDate= DateTime.UtcNow;
+                wkSheet.UpdatedDate= DateTime.UtcNow;
+                wkSheet.FileHistoryId = uploadHistoryId;
+
                 if (wkSheet.CategoryName.Trim().ToLower() == "rings") { ringProducts = products.Where(x => x.CategoryName == "Rings").ToList(); await _productRepository.SaveNewProductList(ringProducts, "Rings"); }
                 else if (wkSheet.CategoryName.Trim().ToLower() == "bands") { weddings = products.Where(x => x.CategoryName == "Bands").ToList(); await _productRepository.SaveNewProductList(weddings, "Bands"); }
                 else if (wkSheet.CategoryName.Trim().ToLower() == "earrings") { earrings = products.Where(x => x.CategoryName == "Earrings").ToList(); await _productRepository.SaveEarringsList(earrings, "Earrings"); }
