@@ -47,8 +47,6 @@ namespace Business.Repository.IRepository
 
         Task<ProductWeight> GetProductWeightData(ProductWeightDTO weightDTO);
 
-        Task<bool> SaveEarringsList(List<ProductDTO> products, string categoryName);
-
         Task<int> AddProductFileUploadedHistory(ProductFileUploadHistory productFileUpload);
 
         Task<IEnumerable<ProductDTO>> GetProductUploadRequestList();
@@ -66,7 +64,10 @@ namespace Business.Repository.IRepository
 
         Task<ProductImageAndVideoDTO> GetProductImagesVideoById(int id);
 
-        Task<bool> SaveNewProductList(List<ProductDTO> products, string categoryName);
+        Task<bool> SaveNewProductList(List<ProductDTO> products, string categoryName, string userId, int fileHistoryId);
+
+
+        Task<bool>  SaveEarringsList(List<ProductDTO> products, string categoryName, string userId, int fileHistoryId);
 
 
 

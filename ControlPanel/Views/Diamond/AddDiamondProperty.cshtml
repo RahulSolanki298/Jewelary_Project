@@ -56,7 +56,7 @@
 
 
 
-                                   
+
 
                                     <div class="form-group mb-3">
                                         <label class="control-label">Image Upload</label>
@@ -137,7 +137,8 @@
             reader.readAsDataURL(event.target.files[0]);
         }
     </script>
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-    }
+
+}
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}

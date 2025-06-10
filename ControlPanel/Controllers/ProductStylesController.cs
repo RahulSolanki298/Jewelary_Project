@@ -73,22 +73,19 @@ namespace ControlPanel.Controllers
         public async Task<IActionResult> UpsertStyle(int? styleId = 0)
         {
             var result = new ProductStyleDTO();
-            if (ModelState.IsValid)
+            if (styleId.HasValue && styleId.Value > 0)
             {
-                if (styleId.HasValue && styleId.Value > 0)
+                var data = await _productStyles.GetProductStyleById(styleId.Value);
+                if (data != null)
                 {
-                    var data = await _productStyles.GetProductStyleById(styleId.Value);
-                    if (data != null)
-                    {
-                        var dt = new ProductStyleDTO();
-                        dt.Id = data.Id;
-                        dt.StyleName = data.StyleName;
-                        dt.VenderId = data.VenderId;
-                        dt.StyleImage = data.StyleImage;
-                        dt.IsActivated = data.IsActivated;
-                        dt.UpdatedDate = DateTime.Now;
-                        return View(data);
-                    }
+                    var dt = new ProductStyleDTO();
+                    dt.Id = data.Id;
+                    dt.StyleName = data.StyleName;
+                    dt.VenderId = data.VenderId;
+                    dt.StyleImage = data.StyleImage;
+                    dt.IsActivated = data.IsActivated;
+                    dt.UpdatedDate = DateTime.Now;
+                    return View(data);
                 }
             }
             return View(result);

@@ -1,0 +1,51 @@
+﻿@model List<DataAccess.Entities.HomePageSetting>
+@using Common;
+<div class="card">
+    <div class="card-header">
+        <h3>
+            Home Page Setting
+        </h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="table-responsive" style="max-height:600px !important">
+                <table class="table table-bordered table-sm" id="homeTable">
+                    <thead class="thead-light" style="position:sticky;top:0">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Multi-platform Selection</th>
+                            <th scope="col">Company.Logo</th>
+                            <th scope="col">Video</th>
+                            <th scope="col">Slider-1</th>
+                            <th scope="col">Slider-2</th>
+                            <th scope="col">Slider-3</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td scope="col"><a href="#" class="btnEdit" data-id="@item.Id"><i class="bi-pencil-fill"></i></a></td>
+                                    <td scope="col">@item.Device</td>
+                                    <td scope="col"><img src="@SD.ImgUrl/@item.CompanyLogo" style="width:100px;" /></td>
+                                    <td scope="col"><img src="@(item.SetVideoPath != null ? "/assets/img/video-icon.svg" : "/assets/img/no-image.png")" style="width:100px;" /> </td>
+                                    <td scope="col"><img src="@SD.ImgUrl/@item.SetSlider1Path" style="width:100px;" /></td>
+                                    <td scope="col"><img src="@SD.ImgUrl/@item.SetSlider2Path" style="width:100px;" /></td>
+                                    <td scope="col"><img src="@SD.ImgUrl/@item.SetSlider3Path" style="width:100px;" /></td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="7"> No data found</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

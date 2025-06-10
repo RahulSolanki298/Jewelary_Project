@@ -25,15 +25,34 @@ namespace ControlPanel.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CreateHome()
+        public async Task<IActionResult> HomePageSettingList()
         {
-            var home = await _settingRepository.GetHomePageSetting();
+            var homeSettingList = await _settingRepository.GetHomePageSettingList();
+            return PartialView("_HomePageSettingList", homeSettingList);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateHome(int? id)
+        {
+            var home = new HomePageSetting();
+            if (home != null)
+            {
+                home = await _settingRepository.GetHomePageSetting(id.Value);
+            }
             return PartialView("_HomePageSetting", home);
         }
 
         [HttpPost]
         public async Task<IActionResult> SaveHomePageSetting(HomePageSetting model)
         {
+            if (model.CompanyLogoFile != null)
+            {
+                var path1 = Path.Combine("wwwroot/uploads", model.CompanyLogoFile.FileName);
+                using var fs1 = new FileStream(path1, FileMode.Create);
+                await model.CompanyLogoFile.CopyToAsync(fs1);
+                model.CompanyLogo = "/uploads/" + model.CompanyLogoFile.FileName;
+            }
+
             if (model.isSetVideo && model.VideoFile != null)
             {
                 // Save video
@@ -79,11 +98,22 @@ namespace ControlPanel.Controllers
             return RedirectToAction("Index");
         }
 
-
-        public IActionResult CreateAboutUs()
+        [HttpGet]
+        public async Task<IActionResult> AboutUs()
         {
+            var about = await _settingRepository.GetAboutUsSetting();
+            return PartialView("_AboutUs", about);
+        }
 
-            return View();
+        [HttpPost]
+        public async Task<IActionResult> AboutUs(AboutUs aboutUs)
+        {
+            var about = await _settingRepository.UpdateAboutUsSetting(aboutUs);
+            if (about!=true)
+            {
+                return Json("Data updated failed.");
+            }
+            return Json("Data updated successfully");
         }
 
         [HttpGet]

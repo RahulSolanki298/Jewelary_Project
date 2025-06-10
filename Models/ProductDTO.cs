@@ -131,6 +131,10 @@ namespace Models
         public string CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
         public string UpdatedBy { get; set; }
+
+        public string UpdatedPersonName { get; set; }
+        public string DisplayDate { get; set; }
+
         public DateTime? UpdatedDate { get; set; }
         public string UploadStatus { get; set; }  //  Requested, Accepted, Rejected
         public int? FileHistoryId { get; set; }

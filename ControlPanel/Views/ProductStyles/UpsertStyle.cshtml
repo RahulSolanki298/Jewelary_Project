@@ -35,15 +35,16 @@
                                 </div>
 
                                 <div class="form-check mb-3">
-                                    <input type="hidden" name="IsActivated" value="false" />
-                                    <input type="checkbox" asp-for="IsActivated" class="form-check-input" />
-                                    <label asp-for="IsActivated" class="form-check-label">Is Activated</label>
+                                    <input class="form-check-input" type="checkbox" @(Model.IsActivated != true ? "" : "checked") />
+                                    <input type="hidden" asp-for="IsActivated" />
+                                    <label class="form-check-label">Active</label>
                                 </div>
 
                                 <div class="form-check mb-3">
                                     <button type="submit" class="btn btn-theme mt-2">Submit</button>
                                     <a href="@Url.Action("Index","Category")" class="btn btn-danger mt-2">Back to Category</a>
                                 </div>
+
                             </form>
 
                         </div>

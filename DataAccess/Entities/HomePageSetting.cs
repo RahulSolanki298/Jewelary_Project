@@ -6,6 +6,14 @@ namespace DataAccess.Entities
     public class HomePageSetting
     {
         public int Id { get; set; }
+
+        public string Device { get; set; } //  Web,Android App
+
+        public string CompanyLogo { get; set; }
+
+        [NotMapped]
+        public IFormFile CompanyLogoFile { get; set; }
+
         public bool isSetVideo { get; set; } // Company Video
         public string SetVideoPath { get; set; }
 

@@ -13,7 +13,6 @@ namespace Models
         [StringLength(100)]
         public string StyleName { get; set; }
 
-        [Required(ErrorMessage = "Vendor Name is required")]
         public string VenderName { get; set; }
 
         public string VenderId { get; set; }

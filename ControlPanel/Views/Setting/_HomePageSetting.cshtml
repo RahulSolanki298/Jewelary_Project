@@ -1,55 +1,113 @@
 ﻿@model DataAccess.Entities.HomePageSetting
+@using Common
 @{
     ViewData["Title"] = "Home Page Setting";
 }
 
-<div class="container-fluid mt-4">
-    <div class="row">
-        <div class="col">
-            <h4 class="text-uppercase fw-bold border-bottom pb-2">Setup Website Main Slider/Video Contains</h4>
-        </div>
-    </div>
-    <div class="row justify-content-center mt-3">
-
-
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
-
-        <div class="container mt-4">
-            <form asp-action="SaveHomePageSetting" asp-controller="Setting" method="post" enctype="multipart/form-data">
-                <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" id="toggleVideo" name="isSetVideo" value="true" @(Model != null && Model.isSetVideo == true ? "checked" : "") />
-                    <label class="form-check-label" for="toggleVideo">Set Company Video</label>
-                </div>
-
-                <div id="videoSection" class="form-group" style="display: none;">
-                    <label for="VideoFile">Upload Company Video</label>
-                    <input type="file" class="form-control" asp-for="VideoFile" accept="video/*" />
-                </div>
-
-                <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" id="toggleSlider" name="isSetCompanySlider" value="true" @(Model != null && Model.isSetCompanySlider == true ? "checked" : "") />
-                    <label class="form-check-label" for="toggleSlider">Set Company Image Slider</label>
-                </div>
-
-                <div id="sliderSection" style="display: none;">
-                    <div class="form-group">
-                        <label for="Image1Path">Upload Image 1</label>
-                        <input type="file" class="form-control" asp-for="Image1Path" accept="image/*" />
+<!-- Include Bootstrap CSS only if not already present in layout -->
+<div class="modal-dialog modal-lg">
+    <!-- modal-lg for larger size -->
+    <div class="modal-content">
+        <form asp-action="SaveHomePageSetting" asp-controller="Setting" method="post" enctype="multipart/form-data">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Setup Website Main Slider / Video Content</h5>
+                @*<h4 class="text-uppercase fw-bold border-bottom"></h4>*@
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container mt-5">
+                    
+                    <div id="deviceSection" class="mb-4">
+                        <div class="row">
+                            <div class="col-xl-12 col-md-12 col-lg-12">
+                                <label>Select Device</label>
+                                <select asp-for="Device" id="Device" class="form-control mb-2">
+                                    <option>@SD.WebDevice</option>
+                                    <option>@SD.AndroidDevice</option>
+                                    <option>@SD.IOsDevice</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="Image2Path">Upload Image 2</label>
-                        <input type="file" class="form-control" asp-for="Image2Path" accept="image/*" />
+                    <div id="homeSection" class="mb-4">
+                        <div class="row">
+                            <div class="col-xl-8 col-md-8 col-lg-8">
+                                <label>Company Logo</label>
+                                <input type="file" class="form-control mb-2" asp-for="CompanyLogoFile" accept="image/*" />
+                            </div>
+                            <div class="col-xl-4 col-md-4 col-lg-4">
+                                <div>
+                                    <img src="@(Model?.CompanyLogo != null ? Model.CompanyLogo.ToString() : "/assets/img/Jewelfacets_Logos_Blue.png")" style="width: 120px;" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="Image3Path">Upload Image 3</label>
-                        <input type="file" class="form-control" asp-for="Image3Path" accept="image/*" />
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="toggleVideo" name="isSetVideo" value="true" @(Model?.isSetVideo == true ? "checked" : "") />
+                        <label class="form-check-label" for="toggleVideo">Set Company Video</label>
                     </div>
-                </div>
+                    <div id="videoSection" class="mb-4" style="@(Model?.isSetVideo == true ? "" : "display: none;")">
+                        <div class="row">
+                            <div class="col-xl-8 col-md-8 col-lg-8">
+                                <label class="form-label" for="VideoFile">Upload Company Video</label>
+                                <input type="file" class="form-control mb-2" asp-for="VideoFile" accept="video/*" />
+                            </div>
+                            <div class="col-xl-4 col-md-4 col-lg-4">
+                                <div>
+                                    <img src="@(Model?.SetVideoPath != null ? "/assets/img/video-icon.svg" : "/assets/img/no-image.png")" style="width: 120px;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="toggleSlider" name="isSetCompanySlider" value="true" @(Model?.isSetCompanySlider == true ? "checked" : "") />
+                        <label class="form-check-label" for="toggleSlider">Set Company Image Slider</label>
+                    </div>
 
-                <button type="submit" class="btn btn-theme">Save</button>
-            </form>
-        </div>
+                    <!-- Image Upload Section -->
+                    <div id="sliderSection" style="@(Model?.isSetCompanySlider == true ? "" : "display: none;")">
+                        <div class="row">
+                            <div class="col-xl-8 col-md-8 col-lg-8">
+                                <label for="Image@iPath">Upload Image 1</label>
+                                <input type="file" class="form-control mb-2" asp-for="Image1Path" accept="image/*" />
+                            </div>
+                            <div class="col-xl-4 col-md-4 col-lg-4">
+                                <div>
+                                    <img src="@(Model?.SetSlider1Path != null ? $"{SD.ImgUrl}/{Model?.SetSlider1Path}" : "/assets/img/no-image.png")" style="width: 120px;" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-8 col-md-8 col-lg-8">
+                                <label for="Image@iPath">Upload Image 2</label>
+                                <input type="file" class="form-control mb-2" asp-for="Image2Path" accept="image/*" />
+                            </div>
+                            <div class="col-xl-4 col-md-4 col-lg-4">
+                                <div>
+                                    <img src="@(Model?.SetSlider2Path != null ? $"{SD.ImgUrl}/{Model?.SetSlider2Path}" : "/assets/img/no-image.png")" style="width: 120px;" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-8 col-md-8 col-lg-8">
+                                <label for="Image@iPath">Upload Image 3</label>
+                                <input type="file" class="form-control mb-2" asp-for="Image3Path" accept="image/*" />
+                            </div>
+                            <div class="col-xl-4 col-md-4 col-lg-4">
+                                <div>
+                                    <img src="@(Model?.SetSlider3Path != null ? $"{SD.ImgUrl}/{Model?.SetSlider3Path}" : "/assets/img/no-image.png")" style="width: 120px;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-theme mt-2">Save</button>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </form>
     </div>
 </div>
-
 

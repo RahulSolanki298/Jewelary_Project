@@ -1,4 +1,5 @@
 ﻿using DataAccess.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Models;
@@ -187,6 +188,9 @@ namespace DataAccess.Data
                 e.HasNoKey();
                 e.Property(d => d.Table).HasPrecision(8, 3); // You can adjust precision/scale as needed
             });
+
+            
+
         }
 
     }

@@ -18,7 +18,7 @@
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="event-tab" data-bs-toggle="tab" data-bs-target="#event" type="button" role="tab">
-                            <i class="bi bi-tags me-2"></i>Event Manager (Discount)
+                            <i class="bi bi-tags me-2"></i>Event & Discount & Coupon Management
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
@@ -43,10 +43,13 @@
                     </div>
                     <div class="tab-pane fade" id="about" role="tabpanel" aria-labelledby="about-tab">
                         <h4 class="mb-3">👥 About Us</h4>
-                        <p class="text-muted">Details about your company, mission, and team go here. Tell your users who you are.</p>
+                        <div class="text-muted" id="aboutContainer">
+
+
+                        </div>
                     </div>
                     <div class="tab-pane fade" id="event" role="tabpanel" aria-labelledby="event-tab">
-                        <h4 class="mb-3">🎉 Event Manager (Discount)</h4>
+                        <h4 class="mb-3">🎉 Event & Discount & Coupon Management </h4>
                         <div class="text-muted" id="evntContainer">
 
 
@@ -67,6 +70,11 @@
 </section>
 
 
+<div class="modal fade" id="homeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+</div>
+
+
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -74,6 +82,16 @@
     <script>
         $(function () {
             LoadHome();
+
+            $('#homeModal').on('shown.bs.modal', function () {
+                $('#Description').summernote({
+                    height: 400,       // set editor height
+                    minHeight: null,   // set minimum height
+                    maxHeight: null,   // set maximum height
+                    focus: true        // set focus after initializing
+                });
+            });
+
 
             $("#home-tab").click(function () {
                 LoadHome();
@@ -93,14 +111,15 @@
             });
 
 
-            $("#homeContainer").on("change", "#toggleVideo", function () {
+            $("#homeModal").on("change", "#toggleVideo", function () {
                 if ($('#toggleVideo').is(':checked')) {
                     $('#videoSection').slideDown(); // Show with animation
                 } else {
                     $('#videoSection').slideUp(); // Hide with animation
                 }
             });
-            $("#homeContainer").on("change", "#toggleSlider", function () {
+            $("#homeModal").on("change", "#toggleSlider", function () {
+                debugger;
                 if ($("#toggleSlider").is(":checked")) {
                     $("#sliderSection").slideDown();
                 } else {
@@ -109,7 +128,6 @@
             });
 
             $("#homeContainer").on("submit", "#SaveSetting", function (e) {
-                debugger;
                 e.preventDefault();
 
                 var form = $(this)[0];
@@ -133,11 +151,42 @@
                 });
             });
 
+
+            $("#homeContainer").on("click", ".btnEdit", function () {
+                debugger;
+                const id = $(this).data("id");
+                 $.ajax({
+                    url: '@Url.Action("CreateHome", "Setting")?id='+id,
+                    method: 'GET',
+                    success: function (data) {
+                        $('#homeModal').empty().html(data);
+                        $("#homeModal").modal("show");
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Failed to load property items:', error);
+                    }
+                });
+            });
+
+            $("#about-tab").click(function () {
+                 $.ajax({
+                    url: '@Url.Action("AboutUs", "Setting")',
+                    method: 'GET',
+                    success: function (data) {
+                        $('#aboutContainer').empty().html(data); // Replace or update your target container
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Failed to load property items:', error);
+                    }
+                });
+            });
+
+
         });
 
         function LoadHome() {
              $.ajax({
-                    url: '@Url.Action("CreateHome", "Setting")',
+                    url: '@Url.Action("HomePageSettingList", "Setting")',
                     method: 'GET',
                     success: function (data) {
                         $('#homeContainer').empty().html(data); // Replace or update your target container

@@ -149,17 +149,11 @@ namespace ControlPanel.Controllers
 
             foreach (var wkSheet in categoryList)
             {
-                wkSheet.CreatedBy = userId;
-                wkSheet.UpdatedBy = userId;
-                wkSheet.CreatedDate= DateTime.UtcNow;
-                wkSheet.UpdatedDate= DateTime.UtcNow;
-                wkSheet.FileHistoryId = uploadHistoryId;
-
-                if (wkSheet.CategoryName.Trim().ToLower() == "rings") { ringProducts = products.Where(x => x.CategoryName == "Rings").ToList(); await _productRepository.SaveNewProductList(ringProducts, "Rings"); }
-                else if (wkSheet.CategoryName.Trim().ToLower() == "bands") { weddings = products.Where(x => x.CategoryName == "Bands").ToList(); await _productRepository.SaveNewProductList(weddings, "Bands"); }
-                else if (wkSheet.CategoryName.Trim().ToLower() == "earrings") { earrings = products.Where(x => x.CategoryName == "Earrings").ToList(); await _productRepository.SaveEarringsList(earrings, "Earrings"); }
-                else if (wkSheet.CategoryName.Trim().ToLower() == "pendants") { pendants = products.Where(x => x.CategoryName == "Pendants").ToList(); await _productRepository.SaveEarringsList(pendants, "Pendants"); }
-                else if (wkSheet.CategoryName.Trim().ToLower() == "bracelets") { bracelets = products.Where(x => x.CategoryName == "Bracelets").ToList(); await _productRepository.SaveEarringsList(bracelets, "Bracelets"); }
+                if (wkSheet.CategoryName.Trim().ToLower() == "rings") { ringProducts = products.Where(x => x.CategoryName == "Rings").ToList(); await _productRepository.SaveNewProductList(ringProducts, "Rings",userId, uploadHistoryId); }
+                else if (wkSheet.CategoryName.Trim().ToLower() == "bands") { weddings = products.Where(x => x.CategoryName == "Bands").ToList(); await _productRepository.SaveNewProductList(weddings, "Bands", userId, uploadHistoryId); }
+                else if (wkSheet.CategoryName.Trim().ToLower() == "earrings") { earrings = products.Where(x => x.CategoryName == "Earrings").ToList(); await _productRepository.SaveNewProductList(earrings, "Earrings", userId, uploadHistoryId); }
+                else if (wkSheet.CategoryName.Trim().ToLower() == "pendants") { pendants = products.Where(x => x.CategoryName == "Pendants").ToList(); await _productRepository.SaveNewProductList(pendants, "Pendants", userId, uploadHistoryId); }
+                else if (wkSheet.CategoryName.Trim().ToLower() == "bracelets") { bracelets = products.Where(x => x.CategoryName == "Bracelets").ToList(); await _productRepository.SaveNewProductList(bracelets, "Bracelets", userId, uploadHistoryId); }
             }
             return Json("AI transforms data migration Successfully.");
         }
