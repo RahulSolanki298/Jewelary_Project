@@ -202,8 +202,6 @@
     </div>
 </section>
 
-
-
 <section class="product-banner-statistics padding-top-20 padding-bottom-20 bg-theme-color">
     <div class="container-fluid">
         <div class="row">
@@ -739,12 +737,59 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 gift-thumb">
-                <img src="~/assets/img/gift-for-you.jpg" alt="gift-for-you" />
-                @*<img src="~/assets/img/banner/Mens-banner.jpg" alt="gift-for-you" />*@
+                <img src="~/assets/img/gift-for-you.jpg" alt="" />
             </div>
             <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 gift-thumb">
-                <img src="~/assets/img/1st-purchase.jpg" alt="1st-purchase" />
+                <img src="~/assets/img/1st-purchase.jpg" alt="" />
             </div>
+        </div>
+    </div>
+</section>
+
+<!-- Collection Slider Section -->
+<section class="padding-bottom-10 padding-top-10">
+    
+    <div class="collection-slider-container">
+        <button class="collection-nav-button left" onclick="scrollSlider(-1)">&#8592;</button>
+        <div class="collection-slider-track" id="sliderTrack">
+            <div class="collection-slide">
+                <div class="collection-slide-content">
+                    <img src="~/assets/img/collection-img/1.jpg" alt="" />
+                    <div class="collection-text-overlay">
+                        <h2 class="collection-slide-heading">Collection 1</h2>
+                        <button class="collection-shop-now">Shop Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="collection-slide">
+                <div class="collection-slide-content">
+                    <img src="~/assets/img/collection-img/2.jpg" alt="" />
+                    <div class="collection-text-overlay">
+                        <h2 class="collection-slide-heading">Collection 2</h2>
+                        <button class="collection-shop-now">Shop Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="collection-slide">
+                <div class="collection-slide-content">
+                    <img src="~/assets/img/collection-img/3.jpg" alt="" />
+                    <div class="collection-text-overlay">
+                        <h2 class="collection-slide-heading">Collection 3</h2>
+                        <button class="collection-shop-now">Shop Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="collection-slide">
+                <div class="collection-slide-content">
+                    <img src="~/assets/img/collection-img/4.jpg" alt="" />
+                    <div class="collection-text-overlay">
+                        <h2 class="collection-slide-heading">Collection 4</h2>
+                        <button class="collection-shop-now">Shop Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <button class="collection-nav-button right" onclick="scrollSlider(1)">&#8594;</button>
         </div>
     </div>
 </section>
@@ -1113,4 +1158,38 @@
 
 
     </script>
+
+    <script>
+        const slider = document.getElementById('sliderTrack');
+        let slides = Array.from(slider.children);
+        const gap = 20;
+
+        // Clone the slides and append them to enable looping
+        function cloneSlides() {
+          slides.forEach(slide => {
+            const clone = slide.cloneNode(true);
+            slider.appendChild(clone);
+          });
+          slides = Array.from(slider.children);
+        }
+
+        cloneSlides();
+
+        function scrollSlider(direction) {
+          // Calculate current slide width dynamically
+          const slideWidth = slider.querySelector('.collection-slide').offsetWidth + gap;
+          slider.scrollBy({ left: direction * slideWidth, behavior: 'smooth' });
+
+          const maxScrollLeft = slider.scrollWidth - slider.clientWidth - slideWidth;
+          if (slider.scrollLeft >= maxScrollLeft - slideWidth) {
+            cloneSlides();
+          }
+        }
+
+        // Ensure responsiveness on resize
+        window.addEventListener('resize', () => {
+          // No action needed here anymore as we recalculate width on scroll
+        });
+    </script>
+
 }

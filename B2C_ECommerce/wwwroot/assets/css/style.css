@@ -7849,3 +7849,118 @@ a {
     }
 }
 
+
+
+/******************************************************
+    Collection Slider Home Page
+*******************************************************/
+
+.collection-slider-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 20px 0;
+}
+
+.collection-slider-track {
+    display: flex;
+    gap: 20px;
+    scroll-behavior: smooth;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+    .collection-slider-track::-webkit-scrollbar {
+        display: none;
+    }
+
+.collection-slide {
+    flex: 0 0 80vw;
+    max-width: 100%;
+}
+
+    .collection-slide img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 8px;
+    }
+
+.collection-nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2rem;
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    padding: 1px 3px;
+    transition: background 0.3s ease;
+}
+
+    .collection-nav-button:hover {
+        background: rgba(255, 255, 255, 1);
+    }
+
+    .collection-nav-button.left {
+        left: 10px;
+    }
+
+    .collection-nav-button.right {
+        right: 10px;
+    }
+
+@media (max-width: 600px) {
+    .collection-nav-button {
+        font-size: 1.5rem;
+        padding: 0px 3px;
+    }
+}
+
+.collection-slide-content {
+    position: relative;
+    width: 100%;
+}
+
+.collection-text-overlay {
+    position: absolute;
+    bottom: 20px;
+    left: 30px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    z-index: 2;
+    max-width: 70%;
+}
+
+.collection-slide-heading {
+    font-size: 3rem;
+    margin: 0 0 35px;
+}
+
+.collection-shop-now {
+    color: #FCF9F0;
+    border-bottom: 1px solid #FCF9F0;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1.12px;
+    text-decoration: none;
+    border-bottom: 1px solid #FCF9F0;
+    padding-bottom: 2px;
+}
+
+@media (max-width: 768px) {
+    .collection-slide-heading {
+        font-size: 1.3rem;
+        margin: 0 0 15px;
+    }
+
+
+    .collection-text-overlay {
+       /* top: 10px;*/
+        left: 10px;
+        max-width: 90%;
+    }
+}
