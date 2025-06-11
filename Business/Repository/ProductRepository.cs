@@ -928,8 +928,17 @@ namespace Business.Repository
                 var KaratDict = karats.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
                 var shapeDict = shapes.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
                 var AshapeDict = shapes.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
+                var caratId = 0;
+                var colorId = 0;
+                var shapeId = 0;
+                var AshapeId = 0;
+                var karatId = 0;
 
                 var categoryId = categoryDict.GetValueOrDefault(categoryName);
+
+                var styleLIst = products.Where(x => x.StyleName != null).Distinct();
+                var styles = styleLIst.ToDictionary(x => x.StyleName, x => x.Id, StringComparer.OrdinalIgnoreCase);
+
                 var existingProducts = await _context.Product
                     .Where(x => x.CategoryId == categoryId)
                     .ToListAsync();
@@ -937,7 +946,8 @@ namespace Business.Repository
                 var productList = new List<Product>();
                 var ExistingProductList = new List<Product>();
                 var HistoryProductList = new List<ProductHistory>();
-
+                var newProduct = new Product();
+                var productStyleList = new List<ProductStyleDTO>();
                 foreach (var product in products)
                 {
                     if (fileHistoryId == 0)
@@ -952,17 +962,18 @@ namespace Business.Repository
                         continue;
                     }
 
-                    var colorId = colorDict.GetValueOrDefault(product.ColorName);
-                    var caratId = GetProductCarat(product.CenterCaratName);
-                    var shapeId = shapeDict.GetValueOrDefault(product.CenterShapeName);
-                    var AshapeId = AshapeDict.GetValueOrDefault(product.AccentStoneShapeName);
-                    var karatId = KaratDict.GetValueOrDefault(product.Karat);
+                    caratId = GetProductCarat(product.CenterCaratName);
+                    colorId = colorDict.GetValueOrDefault(product.ColorName);
+                    shapeId = shapeDict.GetValueOrDefault(product.CenterShapeName);
+                    AshapeId = AshapeDict.GetValueOrDefault(product.AccentStoneShapeName);
+                    karatId = KaratDict.GetValueOrDefault(product.Karat);
 
-                    if (string.IsNullOrWhiteSpace(product.Title) && string.IsNullOrWhiteSpace(product.ColorName) && string.IsNullOrWhiteSpace(product.Sku) && product.Price == null)
+                    var productStyleName = new ProductStyleDTO();
+
+
+                    if (string.IsNullOrWhiteSpace(product.Title) || string.IsNullOrWhiteSpace(product.ColorName) || string.IsNullOrWhiteSpace(product.Sku) || product.Price == null)
                     {
-
-
-                        var newProduct = new Product
+                        newProduct = new Product
                         {
                             Title = $"{product.Title}",
                             WholesaleCost = product.WholesaleCost,
@@ -1061,7 +1072,7 @@ namespace Business.Repository
                     }
                     else
                     {
-                        var newProduct = new Product
+                        newProduct = new Product
                         {
                             Title = $"{product.Title}",
                             WholesaleCost = product.WholesaleCost,
@@ -1111,6 +1122,26 @@ namespace Business.Repository
 
                         productList.Add(newProduct);
                     }
+
+                    var styleDT = await _context.ProductStyles.Where(x => x.StyleName == product.StyleName).FirstOrDefaultAsync();
+                    if (styleDT == null)
+                    {
+                        styleDT = new ProductStyles()
+                        {
+                            StyleName = product.StyleName,
+                            CategoryId = product.CategoryId,
+                            IsActivated = true,
+                            CreatedDate = DateTime.Now,
+                            UpdatedDate = DateTime.Now,
+                        };
+                        await _context.ProductStyles.AddAsync(styleDT);
+                        await _context.SaveChangesAsync();
+                    }
+                    var productStyleItem = new ProductStyleItems();
+                    productStyleItem.StyleId = styleDT.Id;
+                    productStyleItem.UserId = userId;
+                    productStyleItem.ProductId = newProduct.Id.ToString();
+                    productStyleItem.IsActive = true;
                 }
 
                 if (productList.Any()) await _context.Product.AddRangeAsync(productList);
@@ -1182,6 +1213,7 @@ namespace Business.Repository
                     _context.ProductFileUploadHistory.Update(history);
                     await _context.SaveChangesAsync();
                 }
+
 
                 return true;
             }
@@ -2579,6 +2611,6 @@ namespace Business.Repository
             }
             return proImgVideo;
         }
-        
+
     }
 }

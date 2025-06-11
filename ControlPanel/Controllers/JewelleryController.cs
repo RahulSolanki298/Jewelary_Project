@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Identity;
 using Business.Repository;
+using System.Text.RegularExpressions;
 
 namespace ControlPanel.Controllers
 {
@@ -88,10 +89,10 @@ namespace ControlPanel.Controllers
                 var sheetProcessors = new Dictionary<string, Func<ExcelWorksheet, List<ProductDTO>>>(StringComparer.OrdinalIgnoreCase)
                 {
                     { "engagement rings", ProcessRingData },
-                    { "wedding bands", ProcessBandsData },
-                    { "earrings", ProcessEarringsData },
-                    { "pendants", ProcessPendantsData },
-                    { "bracelets", ProcessBraceletsData }
+                    //{ "wedding bands", ProcessBandsData },
+                    //{ "earrings", ProcessEarringsData },
+                    //{ "pendants", ProcessPendantsData },
+                    //{ "bracelets", ProcessBraceletsData }
                 };
 
                 foreach (var worksheet in package.Workbook.Worksheets)
@@ -147,9 +148,10 @@ namespace ControlPanel.Controllers
                                             .Select(g => g.First())
                                             .ToList();
 
+
             foreach (var wkSheet in categoryList)
             {
-                if (wkSheet.CategoryName.Trim().ToLower() == "rings") { ringProducts = products.Where(x => x.CategoryName == "Rings").ToList(); await _productRepository.SaveNewProductList(ringProducts, "Rings",userId, uploadHistoryId); }
+                if (wkSheet.CategoryName.Trim().ToLower() == "rings") { ringProducts = products.Where(x => x.CategoryName == "Rings").ToList(); await _productRepository.SaveNewProductList(ringProducts, "Rings", userId, uploadHistoryId); }
                 else if (wkSheet.CategoryName.Trim().ToLower() == "bands") { weddings = products.Where(x => x.CategoryName == "Bands").ToList(); await _productRepository.SaveNewProductList(weddings, "Bands", userId, uploadHistoryId); }
                 else if (wkSheet.CategoryName.Trim().ToLower() == "earrings") { earrings = products.Where(x => x.CategoryName == "Earrings").ToList(); await _productRepository.SaveNewProductList(earrings, "Earrings", userId, uploadHistoryId); }
                 else if (wkSheet.CategoryName.Trim().ToLower() == "pendants") { pendants = products.Where(x => x.CategoryName == "Pendants").ToList(); await _productRepository.SaveNewProductList(pendants, "Pendants", userId, uploadHistoryId); }
@@ -168,37 +170,37 @@ namespace ControlPanel.Controllers
             var tempProducts = new ProductDTO();
             int rowCount = worksheet.Dimension.Rows;
             ProductDTO product = null;
+            string tempSku = string.Empty;
 
             for (int row = 5; row <= rowCount; row++)
             {
                 product = new ProductDTO
                 {
+                    DisplayDate = worksheet.Cells[row, 1].Text,
                     CategoryName = SD.Rings,
                     Title = worksheet.Cells[row, 5].Text,
                     VenderName = worksheet.Cells[row, 6].Text,
                     VenderStyle = worksheet.Cells[row, 7].Text,
                     Sku = worksheet.Cells[row, 7].Text,
-                    Diameter = worksheet.Cells[row, 8].Text,
-                    Length = worksheet.Cells[row, 9].Text,
-                    BandWidth = worksheet.Cells[row, 10].Text,
-                    GoldWeight = worksheet.Cells[row, 11].Text,
-                    CTW = worksheet.Cells[row, 12].Text,
-                    CenterShapeName = worksheet.Cells[row, 13].Text,
-                    CenterCaratName = worksheet.Cells[row, 14].Text,
-                    Certificate = worksheet.Cells[row, 15].Text,
-                    ColorName = worksheet.Cells[row, 16].Text,
-                    StyleName = worksheet.Cells[row, 17].Text,
-                    AccentStoneShapeName = worksheet.Cells[row, 18].Text,
-                    MMSize = worksheet.Cells[row, 19].Text,
-                    DiaWT = decimal.TryParse(worksheet.Cells[row, 20].Text, out var diaWt) ? diaWt : (decimal?)null,
-                    NoOfStones = int.TryParse(worksheet.Cells[row, 21].Text, out var noOfStones) ? noOfStones : 0,
-                    Grades = worksheet.Cells[row, 22].Text,
-                    ProductType = worksheet.Cells[row, 23].Text,
-                    Price = ConvertStringToDecimal(worksheet.Cells[row, 24].Text),
-                    UnitPrice = ConvertStringToDecimal(worksheet.Cells[row, 24].Text),
-                    Description = worksheet.Cells[row, 33].Text,
-                    WholesaleCost = decimal.TryParse(worksheet.Cells[row, 27].Text, out var hCost) ? hCost : (decimal?)null,
-                    IsReadyforShip = !string.IsNullOrWhiteSpace(worksheet.Cells[row, 1].Text) && worksheet.Cells[row, 1].Text == SD.ReadyToPdp ? true : false,
+                    Length = worksheet.Cells[row, 8].Text,
+                    BandWidth = worksheet.Cells[row, 9].Text,
+                    GoldWeight = worksheet.Cells[row, 10].Text,
+                    CTW = worksheet.Cells[row, 11].Text,
+                    CenterShapeName = worksheet.Cells[row, 12].Text,
+                    CenterCaratName = worksheet.Cells[row, 13].Text,
+                    //Certificate = worksheet.Cells[row, 15].Text,
+                    ColorName = worksheet.Cells[row, 14].Text,
+                    StyleName = worksheet.Cells[row, 16].Text,
+                    AccentStoneShapeName = worksheet.Cells[row, 17].Text,
+                    MMSize = worksheet.Cells[row, 18].Text,
+                    DiaWT = decimal.TryParse(worksheet.Cells[row, 19].Text, out var diaWt) ? diaWt : (decimal?)null,
+                    NoOfStones = int.TryParse(worksheet.Cells[row, 20].Text, out var noOfStones) ? noOfStones : 0,
+                    Grades = worksheet.Cells[row, 21].Text,
+                    //ProductType = worksheet.Cells[row, 23].Text,
+                    Price = ConvertStringToDecimal(worksheet.Cells[row, 22].Text),
+                    //UnitPrice = ConvertStringToDecimal(worksheet.Cells[row, 24].Text),
+                    WholesaleCost = decimal.TryParse(worksheet.Cells[row, 25].Text, out var hCost) ? hCost : (decimal?)null,
+                    Description = worksheet.Cells[row, 29].Text,
                 };
 
                 if (!string.IsNullOrWhiteSpace(product.Title) && !string.IsNullOrWhiteSpace(product.VenderName) && !string.IsNullOrWhiteSpace(product.VenderStyle) && !string.IsNullOrWhiteSpace(product.Sku))
@@ -229,7 +231,6 @@ namespace ControlPanel.Controllers
                     product.DiaWT = product.DiaWT == 0 ? tempProducts.DiaWT : product.DiaWT;
                     product.NoOfStones = product.NoOfStones == 0 ? tempProducts.NoOfStones : product.NoOfStones;
                     product.Grades = string.IsNullOrWhiteSpace(product.Grades) ? tempProducts.Grades : product.Grades;
-                    product.ProductType = string.IsNullOrWhiteSpace(product.ProductType) ? tempProducts.ProductType : product.ProductType;
                     product.Price = product.Price == 0 ? tempProducts.Price : product.Price;
                     product.UnitPrice = product.Price == 0 ? tempProducts.UnitPrice : product.UnitPrice;
                     product.Description = string.IsNullOrWhiteSpace(product.Description) ? tempProducts.Description : product.Description;
@@ -256,6 +257,7 @@ namespace ControlPanel.Controllers
             {
                 product = new ProductDTO
                 {
+                    DisplayDate = worksheet.Cells[row, 1].Text,
                     CategoryName = SD.Bands,
                     Title = worksheet.Cells[row, 5].Text,
                     VenderName = worksheet.Cells[row, 6].Text,
@@ -279,7 +281,6 @@ namespace ControlPanel.Controllers
                     UnitPrice = ConvertStringToDecimal(worksheet.Cells[row, 23].Text),
                     Description = worksheet.Cells[row, 32].Text,
                     WholesaleCost = decimal.TryParse(worksheet.Cells[row, 26].Text, out var hCost) ? hCost : 0,
-                    IsReadyforShip = string.IsNullOrWhiteSpace(worksheet.Cells[row, 1].Text) && worksheet.Cells[row, 1].Text == SD.ReadyToPdp ? true : false,
                 };
 
                 if (!string.IsNullOrWhiteSpace(product.Title) && !string.IsNullOrWhiteSpace(product.VenderName) && !string.IsNullOrWhiteSpace(product.VenderStyle) && !string.IsNullOrWhiteSpace(product.Sku))
@@ -291,6 +292,8 @@ namespace ControlPanel.Controllers
                 }
                 else
                 {
+
+                    product.DisplayDate = worksheet.Cells[row, 1].Text;
                     product.CategoryName = SD.Bands;
                     product.Title = string.IsNullOrWhiteSpace(product.Title) ? tempProducts.Title : product.Title;
                     product.VenderName = string.IsNullOrWhiteSpace(product.VenderName) ? tempProducts.VenderName : product.VenderName;
@@ -333,6 +336,7 @@ namespace ControlPanel.Controllers
             {
                 product = new ProductDTO
                 {
+                    DisplayDate = worksheet.Cells[row, 1].Text,
                     CategoryName = SD.Earrings,
                     Title = worksheet.Cells[row, 5].Text,
                     VenderName = worksheet.Cells[row, 6].Text,
@@ -351,8 +355,7 @@ namespace ControlPanel.Controllers
                     Price = ConvertStringToDecimal(worksheet.Cells[row, 23].Text),
                     UnitPrice = ConvertStringToDecimal(worksheet.Cells[row, 23].Text),
                     Description = worksheet.Cells[row, 32].Text,
-                    WholesaleCost = decimal.TryParse(worksheet.Cells[row, 26].Text, out var hCost) ? hCost : 0,
-                    IsReadyforShip = !string.IsNullOrWhiteSpace(worksheet.Cells[row, 1].Text) && worksheet.Cells[row, 1].Text == SD.ReadyToPdp ? true : false,
+                    WholesaleCost = decimal.TryParse(worksheet.Cells[row, 26].Text, out var hCost) ? hCost : 0
                 };
 
                 if (!string.IsNullOrWhiteSpace(product.Title) && !string.IsNullOrWhiteSpace(product.VenderName) && !string.IsNullOrWhiteSpace(product.VenderStyle) && !string.IsNullOrWhiteSpace(product.Sku))
@@ -364,6 +367,7 @@ namespace ControlPanel.Controllers
                 }
                 else
                 {
+                    product.DisplayDate = worksheet.Cells[row, 1].Text;
                     product.CategoryName = SD.Earrings;
                     product.Diameter = string.IsNullOrWhiteSpace(product.Diameter) ? tempProducts.Diameter : product.Diameter;
                     product.Title = string.IsNullOrWhiteSpace(product.Title) ? tempProducts.Title : product.Title;
@@ -407,8 +411,8 @@ namespace ControlPanel.Controllers
             {
                 product = new ProductDTO
                 {
+                    DisplayDate = worksheet.Cells[row, 1].Text,
                     CategoryName = SD.Pendants,
-                    Title = worksheet.Cells[row, 5].Text,
                     VenderName = worksheet.Cells[row, 6].Text,
                     VenderStyle = worksheet.Cells[row, 7].Text,
                     Sku = worksheet.Cells[row, 7].Text,
@@ -438,6 +442,7 @@ namespace ControlPanel.Controllers
                 }
                 else
                 {
+                    product.DisplayDate = worksheet.Cells[row, 1].Text;
                     product.CategoryName = SD.Pendants;
                     product.Title = string.IsNullOrWhiteSpace(product.Title) ? tempProducts.Title : product.Title;
                     product.VenderName = string.IsNullOrWhiteSpace(product.VenderName) ? tempProducts.VenderName : product.VenderName;
@@ -479,6 +484,7 @@ namespace ControlPanel.Controllers
             {
                 product = new ProductDTO
                 {
+                    DisplayDate = worksheet.Cells[row, 1].Text,
                     CategoryName = SD.Bracelets,
                     Title = worksheet.Cells[row, 5].Text,
                     VenderName = worksheet.Cells[row, 6].Text,
@@ -510,6 +516,7 @@ namespace ControlPanel.Controllers
                 }
                 else
                 {
+                    product.DisplayDate = worksheet.Cells[row, 1].Text;
                     product.CategoryName = SD.Bracelets;
                     product.Title = string.IsNullOrWhiteSpace(product.Title) ? tempProducts.Title : product.Title;
                     product.VenderName = string.IsNullOrWhiteSpace(product.VenderName) ? tempProducts.VenderName : product.VenderName;
@@ -719,13 +726,14 @@ namespace ControlPanel.Controllers
             if (leftParts.Length < 2) return result;
 
             string karat = leftParts[0];
-            var metals = leftParts[1].Split(',', StringSplitOptions.RemoveEmptyEntries);
+            
+            var metals =  GetMetalIds(baseProduct.ColorName);
+
             string[] shapes = { };
             if (baseProduct.CenterShapeName != null)
             {
                 shapes = baseProduct.CenterShapeName.Split(',', StringSplitOptions.RemoveEmptyEntries);
             }
-
 
             if (shapes.Length > 0)
             {
@@ -1167,6 +1175,21 @@ namespace ControlPanel.Controllers
 
         //    }
         //}
+
+        private string[] GetMetalIds(string input)
+        {
+
+            // Regular expression to extract capitalized color words
+            var matches = Regex.Matches(input, @"\b(White|Yellow|Rose)\b", RegexOptions.IgnoreCase);
+
+            List<string> colors = new List<string>();
+            foreach (Match match in matches)
+            {
+                colors.Add(match.Value);
+            }
+
+            return colors.ToArray();
+        }
 
     }
 }
