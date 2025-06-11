@@ -246,21 +246,51 @@ namespace Business.Repository
             }
         }
 
-        public async Task<int> AddDiamondFileUploadedHistory(DiamondFileUploadHistory diamondFileUpload)
+        public async Task<int> AddDiamondFileUploadedHistory(DiamondFileUploadHistoryDTO diamondFileUpload)
         {
+            if (diamondFileUpload == null)
+                return 0;
+
             try
             {
-                var history = new DiamondFileUploadHistory();
-                await _context.DiamondFileUploadHistory.AddAsync(diamondFileUpload);
+                if (diamondFileUpload.Id > 0)
+                {
+                    var existingRecord = await _context.DiamondFileUploadHistory
+                                                       .FirstOrDefaultAsync(x => x.Id == diamondFileUpload.Id);
+
+                    if (existingRecord != null)
+                    {
+                        existingRecord.NoOfSuccess = diamondFileUpload.NoOfSuccess;
+                        existingRecord.NoOfFailed = diamondFileUpload.NoOfFailed;
+
+                        _context.DiamondFileUploadHistory.Update(existingRecord);
+                        await _context.SaveChangesAsync();
+
+                        return existingRecord.Id;
+                    }
+                }
+
+                var newHistory = new DiamondFileUploadHistory
+                {
+                    Title = diamondFileUpload.Title,
+                    UploadedDate = diamondFileUpload.UploadedDate,
+                    IsSuccess = diamondFileUpload.IsSuccess,
+                    NoOfSuccess = diamondFileUpload.NoOfSuccess,
+                    NoOfFailed = diamondFileUpload.NoOfFailed
+                };
+
+                await _context.DiamondFileUploadHistory.AddAsync(newHistory);
                 await _context.SaveChangesAsync();
 
-                return diamondFileUpload.Id;
+                return newHistory.Id;
             }
             catch (Exception)
             {
+                // Ideally log the exception here
                 return 0;
             }
         }
+
 
         public async Task<IEnumerable<DiamondData>> GetPendingDiamondList()
         {
@@ -460,6 +490,64 @@ namespace Business.Repository
 
         }
 
+        public async Task<List<DiamondFileUploadHistoryDTO>> GetDiamondFileUploadedHistoryList()
+        {
+            try
+            {
+                var result = await (from histroty in _context.DiamondFileUploadHistory
+                                    join usr in _context.ApplicationUser on histroty.UploadedBy equals usr.Id
+                                    select new DiamondFileUploadHistoryDTO
+                                    {
+                                        Id = histroty.Id,
+                                        Title = histroty.Title,
+                                        UploadedPersonName = usr.FirstName + " " + usr.LastName,
+                                        UploadedBy = histroty.UploadedBy,
+                                        NoOfFailed = histroty.NoOfFailed,
+                                        NoOfSuccess = histroty.NoOfSuccess,
+                                        IsSuccess = histroty.IsSuccess,
+                                        UploadedDate = histroty.UploadedDate
+                                    }).ToListAsync();
 
+                return result;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public async Task<DiamondFileUploadHistoryDTO> GetDiamondFileUploadedHistoryById(int id)
+        {
+            try
+            {
+                var result = await (from histroty in _context.DiamondFileUploadHistory
+                                    join usr in _context.ApplicationUser on histroty.UploadedBy equals usr.Id
+                                    where histroty.Id == id
+                                    select new DiamondFileUploadHistoryDTO
+                                    {
+                                        Id = histroty.Id,
+                                        Title = histroty.Title,
+                                        UploadedPersonName = usr.FirstName + " " + usr.LastName,
+                                        UploadedBy = histroty.UploadedBy,
+                                        NoOfFailed = histroty.NoOfFailed,
+                                        NoOfSuccess = histroty.NoOfSuccess,
+                                        IsSuccess = histroty.IsSuccess,
+                                        UploadedDate = histroty.UploadedDate
+                                    }).FirstOrDefaultAsync();
+
+                return result;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<Diamond>> GetDiamondListByHistoryId(int historyId)
+        {
+            var diamonds= await _context.Diamonds.Where(x=>x.FileUploadHistoryId== historyId).ToListAsync();
+            return diamonds;
+        }
+
+        
     }
 }

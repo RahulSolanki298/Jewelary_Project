@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Graph.Models;
+using Models;
 using Newtonsoft.Json;
 using OfficeOpenXml;
 using System;
@@ -68,9 +69,7 @@ namespace ControlPanel.Controllers
         {
             if (file == null || file.Length == 0)
             {
-                TempData["Status"] = "Fail";
-                TempData["Message"] = "No file uploaded.";
-                return RedirectToAction("UploadView"); // change this to your actual view
+                return Json("No file uploaded.");
             }
 
             var userId = HttpContext.Session.GetString("UserId");
@@ -79,15 +78,13 @@ namespace ControlPanel.Controllers
             string extension = Path.GetExtension(file.FileName).ToLowerInvariant();
             if (extension != ".xlsx" && extension != ".csv")
             {
-                TempData["Status"] = "Fail";
-                TempData["Message"] = "Invalid file format. Only .xlsx or .csv files are supported.";
-                return RedirectToAction("Index");
+                return Json("Invalid file format. Only .xlsx or .csv files are supported.");
             }
 
             try
             {
                 // Step 1: Save upload history
-                var uploadHistory = new DiamondFileUploadHistory
+                var uploadHistory = new DiamondFileUploadHistoryDTO
                 {
                     Title = $"Diamond File Upload with {user.FirstName} {user.LastName}",
                     UploadedDate = DateTime.UtcNow,
@@ -108,9 +105,7 @@ namespace ControlPanel.Controllers
 
                 if (diamondsList == null || diamondsList.Count == 0)
                 {
-                    TempData["Status"] = "Fail";
-                    TempData["Message"] = "No valid diamond records found in the file.";
-                    return RedirectToAction("Index");
+                    return Json("No valid diamond records found in the file.");
                 }
 
                 // Step 4: Bulk insert
@@ -121,15 +116,23 @@ namespace ControlPanel.Controllers
                     await _diamondRepository.BulkInsertDiamondHistoryAsync(result);
                 }
 
-                TempData["Status"] = "Success";
-                TempData["Message"] = $"File uploaded successfully. {diamondsList.Count} records inserted.";
-                return RedirectToAction("Index");
+                var fileHistory = await _diamondRepository.GetDiamondFileUploadedHistoryById(uploadHistoryId);
+                var data=await _diamondRepository.GetDiamondListByHistoryId(uploadHistoryId);
+                var successCount=data.Where(x=>x.IsSuccess==true && x.FileUploadHistoryId==uploadHistoryId).Count();
+                var failCount =data.Where(x=>x.IsSuccess==false && x.FileUploadHistoryId==uploadHistoryId).Count();
+
+                if (fileHistory != null)
+                {
+                    fileHistory.NoOfSuccess = successCount;
+                    fileHistory.NoOfFailed = failCount;
+                    await _diamondRepository.AddDiamondFileUploadedHistory(fileHistory);
+                }
+
+                return Json($"File uploaded successfully. {diamondsList.Count} records inserted.");
             }
             catch (Exception ex)
             {
-                TempData["Status"] = "Success";
-                TempData["Message"] = $"Internal server error: {ex.Message}";
-                return RedirectToAction("Index");
+                return Json($"Internal server error: {ex.Message}");
             }
         }
 
@@ -812,6 +815,19 @@ namespace ControlPanel.Controllers
                 return Json($"Please select diamonds.");
             }
 
+        }
+
+
+        public IActionResult UploadHistory()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> FileUploadDiamondHistory()
+        {
+            var result = await _diamondRepository.GetDiamondFileUploadedHistoryList();
+            return PartialView("_FileUploadHistory",result);
         }
     }
 }

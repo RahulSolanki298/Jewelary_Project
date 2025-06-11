@@ -71,6 +71,5 @@ namespace Business.Repository.IRepository
 
 
 
-
     }
 }

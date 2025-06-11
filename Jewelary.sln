@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35527.113 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminDashboard.Server", "AdminDashboard.Server\AdminDashboard.Server.csproj", "{54EDCD5F-977C-4CA0-9FBF-311B993C4367}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{845959D5-DF6C-4E50-A176-728E66DC3BAF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Business", "Business\Business.csproj", "{8E0C97F6-1D34-444E-B5BD-A2BA763E39A0}"
@@ -12,8 +10,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{467B1CE7-0DDE-4368-997C-12CD6B4C8068}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{11C7E9BA-2267-4B84-815A-71381BFAE291}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIs", "APIs\APIs.csproj", "{C16183CF-5B77-4C4D-AD0D-933ABE8EF1D0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Client\Client.csproj", "{15E8AE59-0395-4749-939C-EAE3446929EF}"
 EndProject

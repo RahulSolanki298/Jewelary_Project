@@ -17,7 +17,7 @@ namespace Business.Repository.IRepository
 
         Task<IEnumerable<DiamondData>> GetShapeWiseDiamondList();
 
-        Task<int> AddDiamondFileUploadedHistory(DiamondFileUploadHistory diamondFileUpload);
+        Task<int> AddDiamondFileUploadedHistory(DiamondFileUploadHistoryDTO diamondFileUpload);
 
         Task<List<Diamond>> BulkInsertDiamondsAsync(string jsonData, int historyId);
 
@@ -36,5 +36,11 @@ namespace Business.Repository.IRepository
         Task<bool> UpdateDiamondsStatus(Diamond diamond);
 
         Task<bool> AddDiamondHistory(DiamondHistory diamondHistory);
+
+        Task<List<Diamond>> GetDiamondListByHistoryId(int historyId);
+
+        Task<List<DiamondFileUploadHistoryDTO>> GetDiamondFileUploadedHistoryList();
+
+        Task<DiamondFileUploadHistoryDTO> GetDiamondFileUploadedHistoryById(int id);
     }
 }

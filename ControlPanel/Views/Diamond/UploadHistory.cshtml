@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "Upload History";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="section">
+    <div class="row mb-2">
+        <div class="col-lg-12">
+            <h4>
+                <b>File Upload History</b>
+            </h4>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="historyList">
+
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $(document).ready(function(){
+            historyList();
+        });
+
+        function historyList()
+        {
+            $.ajax({
+                    url: "@Url.Action("FileUploadDiamondHistory", "Diamond")",
+                    type: 'POST',
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        $("#historyList").empty();
+                        $("#historyList").html(response);
+                    },
+                    error: function (xhr) {
+                        alert('Upload failed: ' + xhr.responseText);
+                    }
+                });
+
+        }
+    </script>
+}
