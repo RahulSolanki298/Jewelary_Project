@@ -1,0 +1,86 @@
+﻿@model IEnumerable<Models.DiamondFileUploadHistoryDTO>
+@using Common
+@{
+    string defaultImage = string.Empty;
+}
+<style>
+    .card-deck {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 5px; /* Optional: space between images */
+        max-width: 250px; /* Limit width, allow scrolling */
+    }
+
+        .card-deck .card {
+            flex: 0 0 auto;
+            border: none;
+            background: transparent;
+            padding: 0;
+        }
+
+        .card-deck img.card-img-top {
+            height: 60px; /* Keep height small */
+            width: auto;
+            object-fit: contain;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+    .image-row {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 5px;
+        max-width: 500px; /* Adjust as needed */
+    }
+
+    .thumb-img {
+        height: 60px;
+        width: auto;
+        object-fit: contain;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+</style>
+
+
+<table class="table table-hover table-bordered mb-0 table-responsive" id="ringTable">
+    <thead>
+        <tr>
+            <th scope="col"><input type="checkbox" class="chkId" id="chkAllIds" /></th>
+            <th scope="col">Title</th>
+            <th scope="col">Uploaded By</th>
+            <th scope="col">Uploaded Date</th>
+            <th scope="col">No of success</th>
+            <th scope="col">No of failed</th>
+            <th scope="col">Is Success</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td scope="col"><input type="checkbox" class="chkId" value="@item.Id" /></td>
+                    <td scope="col">@item.Title</td>
+                    <td scope="col">
+                       @item.UploadedPersonName
+                    </td>
+                    <td scope="col">@item.UploadedDate</td>
+                    <td scope="col">@item.NoOfSuccess</td>
+                    <td scope="col">@item.NoOfFailed</td>
+                    <td scope="col">@item.IsSuccess</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="7"> No data found</td>
+            </tr>
+        }
+    </tbody>
+</table>

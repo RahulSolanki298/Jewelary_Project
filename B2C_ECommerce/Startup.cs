@@ -93,6 +93,7 @@ namespace B2C_ECommerce
             services.AddScoped<IDiamondRepository, DiamondRepository>();
             services.AddScoped<IB2COrdersRepository, B2COrdersRepository>();
             services.AddScoped<IBlogRepository, BlogRepository>();
+            services.AddScoped<ISettingRepository, SettingRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

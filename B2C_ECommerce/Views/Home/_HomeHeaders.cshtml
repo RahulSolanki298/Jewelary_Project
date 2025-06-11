@@ -1,0 +1,107 @@
+﻿@model DataAccess.Entities.HomePageSetting
+@using Common
+
+<style>
+    /*.carousel-item {
+        height: 600px;
+    }*/
+
+    .main-carousel-item {
+        height: 600px;
+    }
+
+        .carousel-item img {
+            object-fit: cover;
+            height: 100%;
+            width: 100%;
+            filter: brightness(70%);
+        }
+
+    .carousel-caption {
+        bottom: 20%;
+    }
+
+        .carousel-caption h1 {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .carousel-caption p {
+            font-size: 1.25rem;
+        }
+</style>
+
+<!-- VIDEO SECTION -->
+@if (Model.isSetVideo && !string.IsNullOrEmpty(Model.SetVideoPath))
+{
+<div class="video-area">
+    <div class="video-container">
+        <video id="desktop-video-banner" autoplay loop muted playsinline preload="auto" class="bg-video desktop-video">
+            <source src="@($"{SD.ImgUrl.TrimEnd('/')}/{Model.SetVideoPath.TrimStart('/')}" )" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+        <!-- Mobile Video -->
+        <video id="desktop-video-phone" autoplay loop muted playsinline preload="auto" class="bg-video phone-video">
+            <source src="@($"{SD.ImgUrl.TrimEnd('/')}/{Model.SetVideoPath.TrimStart('/')}" )" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+        <div class="video-overlay"></div>
+        <div class="video-content">
+            <h2 class="video-title">
+                <span class="PlayfairDisplay-title">
+                    World’s finest diamonds and unparalleled craftsmanship
+                </span>
+            </h2>
+            <a href="#" class="btn btn-dark text-capitalize mt-3 shop-now-btn">SHOP NOW</a>
+        </div>
+
+        <div class="video-down-arrow">
+            <a href="#section2">
+                <img src="~/assets/img/logo/_arrow.gif" alt="Scroll Down" class="scroll-down-image" />
+            </a>
+        </div>
+    </div>
+</div>}
+
+<!-- IMAGE SLIDER SECTION -->
+@if (Model.isSetCompanySlider &&
+   !string.IsNullOrEmpty(Model.SetSlider1Path) &&
+   !string.IsNullOrEmpty(Model.SetSlider2Path) &&
+   !string.IsNullOrEmpty(Model.SetSlider3Path))
+{
+<div id="mainSlider" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        <div class="carousel-item main-carousel-item active">
+            <img src="@($"{SD.ImgUrl.TrimEnd('/')}/{Model.SetSlider1Path.TrimStart('/')}")" class="d-block w-100" alt="Slide 1" />
+            <div class="carousel-caption text-start">
+                <h1>Explore the World</h1>
+                <p>Discover amazing places with our travel guides.</p>
+            </div>
+        </div>
+        <div class="carousel-item main-carousel-item">
+            <img src="@($"{SD.ImgUrl.TrimEnd('/')}/{Model.SetSlider2Path.TrimStart('/')}")" class="d-block w-100" alt="Slide 2" />
+            <div class="carousel-caption text-end">
+                <h1>Urban Adventures</h1>
+                <p>Find the best spots in top cities around the globe.</p>
+            </div>
+        </div>
+        <div class="carousel-item main-carousel-item">
+            <img src="@($"{SD.ImgUrl.TrimEnd('/')}/{Model.SetSlider3Path.TrimStart('/')}")" class="d-block w-100" alt="Slide 3" />
+            <div class="carousel-caption text-center">
+                <h1>Breathtaking Views</h1>
+                <p>Capture memories in beautiful landscapes.</p>
+            </div>
+        </div>
+    </div>
+
+    <button class="carousel-control-prev" type="button" data-bs-target="#mainSlider" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#mainSlider" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>}

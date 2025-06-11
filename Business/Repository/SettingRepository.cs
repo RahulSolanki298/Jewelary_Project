@@ -32,7 +32,7 @@ namespace Business.Repository
                     response.CompanyLogo = homePageSetting.CompanyLogo;
                     response.Device = homePageSetting.Device;
                     response.isSetVideo = homePageSetting.isSetVideo;
-                    response.VideoFile = homePageSetting.VideoFile;
+                    response.SetVideoPath = homePageSetting.SetVideoPath;
 
                     response.isSetCompanySlider = homePageSetting.isSetCompanySlider;
                     response.SetSlider1Path = homePageSetting.SetSlider1Path;

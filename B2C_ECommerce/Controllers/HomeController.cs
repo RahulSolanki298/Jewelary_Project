@@ -51,12 +51,13 @@ namespace B2C_ECommerce.Controllers
         }
 
 
-        public async Task<IActionResult> HomePageData() { 
+        [HttpGet]
+        public async Task<IActionResult> ShowHomePageData() { 
         
             var response=await _settingRepository.GetHomePageSettingList();
             var webData=response.Where(x=>x.Device==SD.WebDevice).FirstOrDefault();
 
-            return PartialView("_HomePage",webData);
+            return PartialView("_HomeHeaders", webData);
         }
 
 

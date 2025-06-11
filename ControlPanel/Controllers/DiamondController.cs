@@ -69,7 +69,7 @@ namespace ControlPanel.Controllers
         {
             if (file == null || file.Length == 0)
             {
-                return Json("No file uploaded.");
+                return Json(new { message = "No file uploaded." });
             }
 
             var userId = HttpContext.Session.GetString("UserId");
@@ -78,7 +78,7 @@ namespace ControlPanel.Controllers
             string extension = Path.GetExtension(file.FileName).ToLowerInvariant();
             if (extension != ".xlsx" && extension != ".csv")
             {
-                return Json("Invalid file format. Only .xlsx or .csv files are supported.");
+                return Json(new { message = "Invalid file format. Only .xlsx or .csv files are supported." });
             }
 
             try
@@ -105,7 +105,7 @@ namespace ControlPanel.Controllers
 
                 if (diamondsList == null || diamondsList.Count == 0)
                 {
-                    return Json("No valid diamond records found in the file.");
+                    return Json(new { message = "No valid diamond records found in the file." });
                 }
 
                 // Step 4: Bulk insert
@@ -116,25 +116,14 @@ namespace ControlPanel.Controllers
                     await _diamondRepository.BulkInsertDiamondHistoryAsync(result);
                 }
 
-                var fileHistory = await _diamondRepository.GetDiamondFileUploadedHistoryById(uploadHistoryId);
-                var data=await _diamondRepository.GetDiamondListByHistoryId(uploadHistoryId);
-                var successCount=data.Where(x=>x.IsSuccess==true && x.FileUploadHistoryId==uploadHistoryId).Count();
-                var failCount =data.Where(x=>x.IsSuccess==false && x.FileUploadHistoryId==uploadHistoryId).Count();
-
-                if (fileHistory != null)
-                {
-                    fileHistory.NoOfSuccess = successCount;
-                    fileHistory.NoOfFailed = failCount;
-                    await _diamondRepository.AddDiamondFileUploadedHistory(fileHistory);
-                }
-
-                return Json($"File uploaded successfully. {diamondsList.Count} records inserted.");
+                return Json(new { message = $"File uploaded successfully. {diamondsList.Count} records inserted." });
             }
             catch (Exception ex)
             {
-                return Json($"Internal server error: {ex.Message}");
+                return Json(new { message = $"Internal server error: {ex.Message}" });
             }
         }
+
 
         private async Task<List<Diamond>> ParseCsvDiamondsAsync(Stream stream, string userId)
         {
@@ -167,7 +156,7 @@ namespace ControlPanel.Controllers
 
             int rowCount = worksheet.Dimension.Rows;
             var diamonds = new List<Diamond>();
-            var diamond=new Diamond();
+            var diamond = new Diamond();
             for (int row = 6; row <= rowCount; row++) // Start from row 6
             {
                 diamond = await ParseExcelDiamondRowAsync(worksheet, row, userId);
@@ -317,7 +306,7 @@ namespace ControlPanel.Controllers
 
             var stoneId = worksheet.Cells[row, 2].Text;
 
-            if (string.IsNullOrWhiteSpace(stoneId) || colorId == 0 || shapeId == 0 || labId==0 || clarityId==0 || cutId == 0)
+            if (string.IsNullOrWhiteSpace(stoneId) || colorId == 0 || shapeId == 0 || labId == 0 || clarityId == 0 || cutId == 0)
             {
                 return new Diamond
                 {
@@ -529,7 +518,7 @@ namespace ControlPanel.Controllers
                     DiamondImagePath = "-",
                     DiamondVideoPath = GetVal("Video"),
                     Certificate = GetVal("Certificate"),
-                    UploadStatus=SD.Cancelled,
+                    UploadStatus = SD.Cancelled,
                     IsActivated = false,
                     UpdatedDate = DateTime.Now,
                     UpdatedBy = userId,
@@ -697,13 +686,13 @@ namespace ControlPanel.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> getDiamondList(string uploadStatus,bool isActive)
+        public async Task<IActionResult> getDiamondList(string uploadStatus, bool isActive)
         {
             bool status = false;
             string strResult = "";
             string strMessage = "Data Not Found";
 
-            var data = await _diamondRepository.GetDiamondListByStatus(uploadStatus,isActive);
+            var data = await _diamondRepository.GetDiamondListByStatus(uploadStatus, isActive);
             if (data != null)
             {
                 status = true;
@@ -731,7 +720,7 @@ namespace ControlPanel.Controllers
             var data = await _diamondRepository.GetDiamondListByStatus(uploadStatus, isActive);
             if (data != null)
             {
-                var failResponse= data.Where(x=>x.IsSuccess==false).ToList();
+                var failResponse = data.Where(x => x.IsSuccess == false).ToList();
                 status = true;
                 strMessage = "";
                 strResult = JsonConvert.SerializeObject(failResponse);
@@ -753,7 +742,7 @@ namespace ControlPanel.Controllers
             return View();
         }
 
-        
+
         [HttpGet]
         public IActionResult DiamondHold()
         {
@@ -767,13 +756,17 @@ namespace ControlPanel.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetDiamondVerificationList()
+        public async Task<IActionResult> GetDiamondVerificationList(int? fileHistoryId = 0)
         {
             bool status = false;
             string strResult = "";
             string strMessage = "Data Not Found";
 
             var data = await _diamondRepository.GetPendingDiamondList();
+            if (fileHistoryId > 0)
+            {
+            }
+
             if (data != null)
             {
                 status = true;
@@ -798,9 +791,9 @@ namespace ControlPanel.Controllers
             var userId = HttpContext.Session.GetString("UserId");
             var user = await _userManager.FindByIdAsync(userId);
 
-             if (stoneIds.Length > 0)
+            if (stoneIds.Length > 0)
             {
-               var response= await _diamondRepository.UpdateDiamondsStatus(stoneIds, userId, status);
+                var response = await _diamondRepository.UpdateDiamondsStatus(stoneIds, userId, status);
                 if (response == true)
                 {
                     return Json($"Diamonds status have been change successfully. status : {status}");
@@ -817,17 +810,25 @@ namespace ControlPanel.Controllers
 
         }
 
-
-        public IActionResult UploadHistory()
+        [HttpGet]
+        public async Task<IActionResult> GetFileUploadHistory()
         {
-            return View();
+
+            var response = await _diamondRepository.GetDiamondFileUploadedHistoryList();
+            if (response != null)
+            {
+                return PartialView("_DiamondFileUploadList", response);
+            }
+            else
+            {
+                return PartialView("_DiamondFileUploadList", new List<DiamondFileUploadHistoryDTO>());
+            }
         }
 
         [HttpGet]
-        public async Task<IActionResult> FileUploadDiamondHistory()
+        public IActionResult ThankYouForUploaded()
         {
-            var result = await _diamondRepository.GetDiamondFileUploadedHistoryList();
-            return PartialView("_FileUploadHistory",result);
+            return View();
         }
     }
 }
