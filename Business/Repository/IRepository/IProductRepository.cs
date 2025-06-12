@@ -70,6 +70,8 @@ namespace Business.Repository.IRepository
         Task<bool>  SaveEarringsList(List<ProductDTO> products, string categoryName, string userId, int fileHistoryId);
 
 
+        Task<List<Product>> GetJewelleryDTByDesignNo(string designNo, int metalId, int shapeId);
 
+        Task<ProductProperty> GetProductShapeId(string ShapeCode, int shapeId);
     }
 }

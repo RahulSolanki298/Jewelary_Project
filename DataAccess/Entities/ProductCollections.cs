@@ -17,6 +17,10 @@ namespace DataAccess.Entities
 
         public string CreatedBy { get; set; }
 
+        public string UpdatedBy { get; set; }
+
+        public DateTime? UpdatedDate { get; set; }
+
         public int? CategoryId { get; set; }
 
         public bool? IsActivated { get; set; } = false;

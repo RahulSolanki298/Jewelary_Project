@@ -89,10 +89,10 @@ namespace ControlPanel.Controllers
                 var sheetProcessors = new Dictionary<string, Func<ExcelWorksheet, List<ProductDTO>>>(StringComparer.OrdinalIgnoreCase)
                 {
                     { "engagement rings", ProcessRingData },
-                    //{ "wedding bands", ProcessBandsData },
-                    //{ "earrings", ProcessEarringsData },
-                    //{ "pendants", ProcessPendantsData },
-                    //{ "bracelets", ProcessBraceletsData }
+                    { "wedding bands", ProcessBandsData },
+                    { "earrings", ProcessEarringsData },
+                    { "pendants", ProcessPendantsData },
+                    { "bracelets", ProcessBraceletsData }
                 };
 
                 foreach (var worksheet in package.Workbook.Worksheets)
@@ -157,6 +157,8 @@ namespace ControlPanel.Controllers
                 else if (wkSheet.CategoryName.Trim().ToLower() == "pendants") { pendants = products.Where(x => x.CategoryName == "Pendants").ToList(); await _productRepository.SaveNewProductList(pendants, "Pendants", userId, uploadHistoryId); }
                 else if (wkSheet.CategoryName.Trim().ToLower() == "bracelets") { bracelets = products.Where(x => x.CategoryName == "Bracelets").ToList(); await _productRepository.SaveNewProductList(bracelets, "Bracelets", userId, uploadHistoryId); }
             }
+
+
             return Json("AI transforms data migration Successfully.");
         }
 
@@ -165,6 +167,7 @@ namespace ControlPanel.Controllers
 
         private List<ProductDTO> ProcessRingData(ExcelWorksheet worksheet)
         {
+            var tempProductList = new List<ProductDTO>();
             var newProductList = new List<ProductDTO>();
             var products = new List<ProductDTO>();
             var tempProducts = new ProductDTO();
@@ -190,6 +193,7 @@ namespace ControlPanel.Controllers
                     CenterCaratName = worksheet.Cells[row, 13].Text,
                     //Certificate = worksheet.Cells[row, 15].Text,
                     ColorName = worksheet.Cells[row, 14].Text,
+                    CollectionName = worksheet.Cells[row, 15].Text,
                     StyleName = worksheet.Cells[row, 16].Text,
                     AccentStoneShapeName = worksheet.Cells[row, 17].Text,
                     MMSize = worksheet.Cells[row, 18].Text,
@@ -208,10 +212,11 @@ namespace ControlPanel.Controllers
                     tempProducts = new ProductDTO();
                     tempProducts = product;
                     newProductList = CreateRingVariantsFromColor(product);
-                    products.AddRange(newProductList);
+                    tempProductList.AddRange(newProductList);
                 }
                 else
                 {
+                    product.DisplayDate = string.IsNullOrWhiteSpace(product.DisplayDate) ? tempProducts.DisplayDate : product.DisplayDate; 
                     product.CategoryName = SD.Rings;
                     product.Title = string.IsNullOrWhiteSpace(product.Title) ? tempProducts.Title : product.Title;
                     product.VenderName = string.IsNullOrWhiteSpace(product.VenderName) ? tempProducts.VenderName : product.VenderName;
@@ -224,6 +229,90 @@ namespace ControlPanel.Controllers
                     product.CenterShapeName = string.IsNullOrWhiteSpace(product.CenterShapeName) ? tempProducts.CenterShapeName : product.CenterShapeName;
                     product.CenterCaratName = string.IsNullOrWhiteSpace(product.CenterCaratName) ? tempProducts.CenterCaratName : product.CenterCaratName;
                     product.Certificate = string.IsNullOrWhiteSpace(product.Certificate) ? tempProducts.Certificate : product.Certificate;
+                    product.CollectionName = string.IsNullOrWhiteSpace(product.CollectionName) ? tempProducts.CollectionName : product.CollectionName;
+                    product.StyleName = string.IsNullOrWhiteSpace(product.StyleName) ? tempProducts.StyleName : product.StyleName;
+                    product.ColorName = string.IsNullOrWhiteSpace(product.ColorName) ? tempProducts.ColorName : product.ColorName;
+                    product.AccentStoneShapeName = string.IsNullOrWhiteSpace(product.AccentStoneShapeName) ? tempProducts.AccentStoneShapeName : product.AccentStoneShapeName;
+                    product.MMSize = string.IsNullOrWhiteSpace(product.MMSize) ? tempProducts.MMSize : product.MMSize;
+                    product.DiaWT = product.DiaWT == 0 ? tempProducts.DiaWT : product.DiaWT;
+                    product.NoOfStones = product.NoOfStones == 0 ? tempProducts.NoOfStones : product.NoOfStones;
+                    product.Grades = string.IsNullOrWhiteSpace(product.Grades) ? tempProducts.Grades : product.Grades;
+                    product.Price = product.Price == 0 ? tempProducts.Price : product.Price;
+                    product.UnitPrice = product.Price == 0 ? tempProducts.UnitPrice : product.UnitPrice;
+                    product.Description = string.IsNullOrWhiteSpace(product.Description) ? tempProducts.Description : product.Description;
+                    product.WholesaleCost = string.IsNullOrWhiteSpace(product.WholesaleCost.ToString()) ? tempProducts.WholesaleCost : product.WholesaleCost;
+                    products.Add(product);
+                    newProductList = CreateRingVariantsFromColor(product);
+                    tempProductList.AddRange(newProductList);
+                }
+            }
+
+            return tempProductList;
+        }
+
+        private List<ProductDTO> ProcessBandsData(ExcelWorksheet worksheet)
+        {
+            var tempProductList = new List<ProductDTO>(); 
+            var newProductList = new List<ProductDTO>();
+            var products = new List<ProductDTO>();
+            var tempProducts = new ProductDTO();
+            int rowCount = worksheet.Dimension.Rows;
+            ProductDTO product = null;
+
+            for (int row = 5; row <= rowCount; row++)
+            {
+                product = new ProductDTO
+                {
+                    DisplayDate = worksheet.Cells[row, 1].Text,
+                    CategoryName = SD.Rings,
+                    Title = worksheet.Cells[row, 5].Text,
+                    VenderName = worksheet.Cells[row, 6].Text,
+                    VenderStyle = worksheet.Cells[row, 7].Text,
+                    Sku = worksheet.Cells[row, 7].Text,
+                    Length = worksheet.Cells[row, 8].Text,
+                    BandWidth = worksheet.Cells[row, 9].Text,
+                    GoldWeight = worksheet.Cells[row, 10].Text,
+                    CTW = worksheet.Cells[row, 11].Text,
+                    CenterShapeName = worksheet.Cells[row, 12].Text,
+                    CenterCaratName = worksheet.Cells[row, 13].Text,
+                    //Certificate = worksheet.Cells[row, 15].Text,
+                    ColorName = worksheet.Cells[row, 14].Text,
+                    CollectionName = worksheet.Cells[row, 15].Text,
+                    StyleName = worksheet.Cells[row, 16].Text,
+                    AccentStoneShapeName = worksheet.Cells[row, 17].Text,
+                    MMSize = worksheet.Cells[row, 18].Text,
+                    DiaWT = decimal.TryParse(worksheet.Cells[row, 19].Text, out var diaWt) ? diaWt : (decimal?)null,
+                    NoOfStones = int.TryParse(worksheet.Cells[row, 20].Text, out var noOfStones) ? noOfStones : 0,
+                    Grades = worksheet.Cells[row, 21].Text,
+                    //ProductType = worksheet.Cells[row, 23].Text,
+                    Price = ConvertStringToDecimal(worksheet.Cells[row, 22].Text),
+                    //UnitPrice = ConvertStringToDecimal(worksheet.Cells[row, 24].Text),
+                    WholesaleCost = decimal.TryParse(worksheet.Cells[row, 25].Text, out var hCost) ? hCost : (decimal?)null,
+                    Description = worksheet.Cells[row, 29].Text,
+                };
+
+                if (!string.IsNullOrWhiteSpace(product.Title) && !string.IsNullOrWhiteSpace(product.VenderName) && !string.IsNullOrWhiteSpace(product.VenderStyle) && !string.IsNullOrWhiteSpace(product.Sku))
+                {
+                    tempProducts = new ProductDTO();
+                    tempProducts = product;
+                    newProductList = CreateRingVariantsFromColor(product);
+                    tempProductList.AddRange(newProductList);
+                }
+                else
+                {
+                    product.CategoryName = SD.Bands;
+                    product.Title = string.IsNullOrWhiteSpace(product.Title) ? tempProducts.Title : product.Title;
+                    product.VenderName = string.IsNullOrWhiteSpace(product.VenderName) ? tempProducts.VenderName : product.VenderName;
+                    product.VenderStyle = string.IsNullOrWhiteSpace(product.VenderStyle) ? tempProducts.VenderStyle : product.VenderStyle;
+                    product.Sku = string.IsNullOrWhiteSpace(product.Sku) ? tempProducts.Sku : product.Sku;
+                    product.Length = string.IsNullOrWhiteSpace(product.Length) ? tempProducts.Length : product.Length;
+                    product.BandWidth = string.IsNullOrWhiteSpace(product.BandWidth) ? tempProducts.BandWidth : product.BandWidth;
+                    product.GoldWeight = string.IsNullOrWhiteSpace(product.GoldWeight) ? tempProducts.GoldWeight : product.GoldWeight;
+                    product.CTW = string.IsNullOrWhiteSpace(product.CTW) ? tempProducts.CTW : product.CTW;
+                    product.CenterShapeName = string.IsNullOrWhiteSpace(product.CenterShapeName) ? tempProducts.CenterShapeName : product.CenterShapeName;
+                    product.CenterCaratName = string.IsNullOrWhiteSpace(product.CenterCaratName) ? tempProducts.CenterCaratName : product.CenterCaratName;
+                    product.Certificate = string.IsNullOrWhiteSpace(product.Certificate) ? tempProducts.Certificate : product.Certificate;
+                    product.CollectionName = string.IsNullOrWhiteSpace(product.CollectionName) ? tempProducts.CollectionName : product.CollectionName;
                     product.StyleName = string.IsNullOrWhiteSpace(product.StyleName) ? tempProducts.StyleName : product.StyleName;
                     product.ColorName = string.IsNullOrWhiteSpace(product.ColorName) ? tempProducts.ColorName : product.ColorName;
                     product.AccentStoneShapeName = string.IsNullOrWhiteSpace(product.AccentStoneShapeName) ? tempProducts.AccentStoneShapeName : product.AccentStoneShapeName;
@@ -238,94 +327,16 @@ namespace ControlPanel.Controllers
                     product.IsReadyforShip = product.IsReadyforShip != true ? tempProducts.IsReadyforShip : product.IsReadyforShip;
                     products.Add(product);
                     newProductList = CreateRingVariantsFromColor(product);
-                    products.AddRange(newProductList);
+                    tempProductList.AddRange(newProductList);
                 }
             }
 
-            return products;
-        }
-
-        private List<ProductDTO> ProcessBandsData(ExcelWorksheet worksheet)
-        {
-            var newProductList = new List<ProductDTO>();
-            var products = new List<ProductDTO>();
-            var tempProducts = new ProductDTO();
-            int rowCount = worksheet.Dimension.Rows;
-            ProductDTO product = null;
-
-            for (int row = 5; row <= rowCount; row++)
-            {
-                product = new ProductDTO
-                {
-                    DisplayDate = worksheet.Cells[row, 1].Text,
-                    CategoryName = SD.Bands,
-                    Title = worksheet.Cells[row, 5].Text,
-                    VenderName = worksheet.Cells[row, 6].Text,
-                    VenderStyle = worksheet.Cells[row, 7].Text,
-                    Sku = worksheet.Cells[row, 7].Text,
-                    Diameter = worksheet.Cells[row, 8].Text,
-                    Length = worksheet.Cells[row, 9].Text,
-                    BandWidth = worksheet.Cells[row, 10].Text,
-                    GoldWeight = worksheet.Cells[row, 11].Text,
-                    CTW = worksheet.Cells[row, 12].Text,
-                    CenterShapeName = worksheet.Cells[row, 13].Text,
-                    CenterCaratName = worksheet.Cells[row, 14].Text,
-                    ColorName = worksheet.Cells[row, 15].Text,
-                    AccentStoneShapeName = worksheet.Cells[row, 17].Text,
-                    MMSize = worksheet.Cells[row, 18].Text,
-                    DiaWT = decimal.TryParse(worksheet.Cells[row, 19].Text, out var diaWt) ? diaWt : 0,
-                    NoOfStones = int.TryParse(worksheet.Cells[row, 20].Text, out var noOfStones) ? noOfStones : 0,
-                    Grades = worksheet.Cells[row, 21].Text,
-                    ProductType = worksheet.Cells[row, 22].Text,
-                    Price = ConvertStringToDecimal(worksheet.Cells[row, 23].Text),
-                    UnitPrice = ConvertStringToDecimal(worksheet.Cells[row, 23].Text),
-                    Description = worksheet.Cells[row, 32].Text,
-                    WholesaleCost = decimal.TryParse(worksheet.Cells[row, 26].Text, out var hCost) ? hCost : 0,
-                };
-
-                if (!string.IsNullOrWhiteSpace(product.Title) && !string.IsNullOrWhiteSpace(product.VenderName) && !string.IsNullOrWhiteSpace(product.VenderStyle) && !string.IsNullOrWhiteSpace(product.Sku))
-                {
-                    tempProducts = new ProductDTO();
-                    tempProducts = product;
-                    newProductList = CreateRingVariantsFromColor(product);
-                    products.AddRange(newProductList);
-                }
-                else
-                {
-
-                    product.DisplayDate = worksheet.Cells[row, 1].Text;
-                    product.CategoryName = SD.Bands;
-                    product.Title = string.IsNullOrWhiteSpace(product.Title) ? tempProducts.Title : product.Title;
-                    product.VenderName = string.IsNullOrWhiteSpace(product.VenderName) ? tempProducts.VenderName : product.VenderName;
-                    product.VenderStyle = string.IsNullOrWhiteSpace(product.VenderStyle) ? tempProducts.VenderStyle : product.VenderStyle;
-                    product.Sku = string.IsNullOrWhiteSpace(product.Sku) ? tempProducts.Sku : product.Sku;
-                    product.Diameter = string.IsNullOrWhiteSpace(product.Diameter) ? tempProducts.Diameter : product.Diameter;
-                    product.GoldWeight = string.IsNullOrWhiteSpace(product.GoldWeight) ? tempProducts.GoldWeight : product.GoldWeight;
-                    product.CTW = string.IsNullOrWhiteSpace(product.CTW) ? tempProducts.CTW : product.CTW;
-                    product.ColorName = string.IsNullOrWhiteSpace(product.ColorName) ? tempProducts.ColorName : product.ColorName;
-                    product.AccentStoneShapeName = string.IsNullOrWhiteSpace(product.AccentStoneShapeName) ? tempProducts.AccentStoneShapeName : product.AccentStoneShapeName;
-                    product.MMSize = string.IsNullOrWhiteSpace(product.MMSize) ? tempProducts.MMSize : product.MMSize;
-                    product.DiaWT = product.DiaWT == 0 ? tempProducts.DiaWT : product.DiaWT;
-                    product.NoOfStones = product.NoOfStones == 0 ? tempProducts.NoOfStones : product.NoOfStones;
-                    product.Grades = string.IsNullOrWhiteSpace(product.Grades) ? tempProducts.Grades : product.Grades;
-                    product.ProductType = string.IsNullOrWhiteSpace(product.ProductType) ? tempProducts.ProductType : product.ProductType;
-                    product.Price = product.Price == 0 ? tempProducts.Price : product.Price;
-                    product.UnitPrice = product.Price == 0 ? tempProducts.UnitPrice : product.UnitPrice;
-                    product.Description = string.IsNullOrWhiteSpace(product.Description) ? tempProducts.Description : product.Description;
-                    product.WholesaleCost = product.WholesaleCost > 0 ? tempProducts.WholesaleCost : product.WholesaleCost;
-                    product.IsReadyforShip = product.IsReadyforShip != true ? tempProducts.IsReadyforShip : product.IsReadyforShip;
-                    products.Add(product);
-                    newProductList = CreateRingVariantsFromColor(product);
-                    products.AddRange(newProductList);
-
-                }
-            }
-
-            return products;
+            return tempProductList;
         }
 
         private List<ProductDTO> ProcessEarringsData(ExcelWorksheet worksheet)
         {
+            var tempProductList = new List<ProductDTO>(); 
             var newProductList = new List<ProductDTO>();
             var products = new List<ProductDTO>();
             var tempProducts = new ProductDTO();
@@ -343,19 +354,24 @@ namespace ControlPanel.Controllers
                     VenderStyle = worksheet.Cells[row, 7].Text,
                     Sku = worksheet.Cells[row, 7].Text,
                     Diameter = worksheet.Cells[row, 8].Text,
-                    GoldWeight = worksheet.Cells[row, 11].Text,
-                    CTW = worksheet.Cells[row, 12].Text,
-                    ColorName = worksheet.Cells[row, 15].Text,
-                    AccentStoneShapeName = worksheet.Cells[row, 17].Text,
-                    MMSize = worksheet.Cells[row, 18].Text,
-                    DiaWT = decimal.TryParse(worksheet.Cells[row, 19].Text, out var diaWt) ? diaWt : 0,
-                    NoOfStones = int.TryParse(worksheet.Cells[row, 20].Text, out var noOfStones) ? noOfStones : 0,
-                    Grades = worksheet.Cells[row, 21].Text,
-                    ProductType = worksheet.Cells[row, 22].Text,
-                    Price = ConvertStringToDecimal(worksheet.Cells[row, 23].Text),
-                    UnitPrice = ConvertStringToDecimal(worksheet.Cells[row, 23].Text),
-                    Description = worksheet.Cells[row, 32].Text,
-                    WholesaleCost = decimal.TryParse(worksheet.Cells[row, 26].Text, out var hCost) ? hCost : 0
+                    GoldWeight = worksheet.Cells[row, 9].Text,
+                    CTW = worksheet.Cells[row, 10].Text,
+                    CenterShapeName= worksheet.Cells[row, 11].Text,
+                    CenterCaratName= worksheet.Cells[row, 12].Text,
+                    ColorName = worksheet.Cells[row, 13].Text,
+                    CollectionName = worksheet.Cells[row, 14].Text,
+                    StyleName = worksheet.Cells[row, 15].Text,
+                    AccentStoneShapeName = worksheet.Cells[row, 16].Text,
+                    MMSize = worksheet.Cells[row, 17].Text,
+                    DiaWT = decimal.TryParse(worksheet.Cells[row, 18].Text, out var diaWt) ? diaWt : 0,
+                    NoOfStones = int.TryParse(worksheet.Cells[row, 19].Text, out var noOfStones) ? noOfStones : 0,
+                    Grades = worksheet.Cells[row, 20].Text,
+                    //ProductType = worksheet.Cells[row, 22].Text,
+                    Price = ConvertStringToDecimal(worksheet.Cells[row, 21].Text),
+                    WholesaleCost = decimal.TryParse(worksheet.Cells[row, 24].Text, out var hCost) ? hCost : 0,
+                    //UnitPrice = ConvertStringToDecimal(worksheet.Cells[row, 23].Text),
+                    Description = worksheet.Cells[row, 30].Text,
+                    
                 };
 
                 if (!string.IsNullOrWhiteSpace(product.Title) && !string.IsNullOrWhiteSpace(product.VenderName) && !string.IsNullOrWhiteSpace(product.VenderStyle) && !string.IsNullOrWhiteSpace(product.Sku))
@@ -363,21 +379,24 @@ namespace ControlPanel.Controllers
                     tempProducts = new ProductDTO();
                     tempProducts = product;
                     newProductList = CreateRingVariantsFromColor(product);
-                    products.AddRange(newProductList);
+                    tempProductList.AddRange(newProductList);
                 }
                 else
                 {
-                    product.DisplayDate = worksheet.Cells[row, 1].Text;
+                    product.DisplayDate = string.IsNullOrWhiteSpace(product.DisplayDate) ? tempProducts.DisplayDate : product.DisplayDate;
                     product.CategoryName = SD.Earrings;
-                    product.Diameter = string.IsNullOrWhiteSpace(product.Diameter) ? tempProducts.Diameter : product.Diameter;
                     product.Title = string.IsNullOrWhiteSpace(product.Title) ? tempProducts.Title : product.Title;
                     product.VenderName = string.IsNullOrWhiteSpace(product.VenderName) ? tempProducts.VenderName : product.VenderName;
                     product.VenderStyle = string.IsNullOrWhiteSpace(product.VenderStyle) ? tempProducts.VenderStyle : product.VenderStyle;
                     product.Sku = string.IsNullOrWhiteSpace(product.Sku) ? tempProducts.Sku : product.Sku;
-                    product.BandWidth = string.IsNullOrWhiteSpace(product.BandWidth) ? tempProducts.BandWidth : product.BandWidth;
+                    product.Diameter = string.IsNullOrWhiteSpace(product.Diameter) ? tempProducts.Diameter : product.Diameter;
                     product.GoldWeight = string.IsNullOrWhiteSpace(product.GoldWeight) ? tempProducts.GoldWeight : product.GoldWeight;
                     product.CTW = string.IsNullOrWhiteSpace(product.CTW) ? tempProducts.CTW : product.CTW;
+                    product.CenterShapeName = string.IsNullOrWhiteSpace(product.CenterShapeName) ? tempProducts.CenterShapeName : product.CenterShapeName;
+                    product.CenterCaratName = string.IsNullOrWhiteSpace(product.CenterCaratName) ? tempProducts.CenterCaratName : product.CenterCaratName;
                     product.ColorName = string.IsNullOrWhiteSpace(product.ColorName) ? tempProducts.ColorName : product.ColorName;
+                    product.CollectionName = string.IsNullOrWhiteSpace(product.CollectionName) ? tempProducts.CollectionName : product.CollectionName;
+                    product.StyleName = string.IsNullOrWhiteSpace(product.StyleName) ? tempProducts.StyleName : product.StyleName;
                     product.AccentStoneShapeName = string.IsNullOrWhiteSpace(product.AccentStoneShapeName) ? tempProducts.AccentStoneShapeName : product.AccentStoneShapeName;
                     product.MMSize = string.IsNullOrWhiteSpace(product.MMSize) ? tempProducts.MMSize : product.MMSize;
                     product.DiaWT = product.DiaWT == 0 ? tempProducts.DiaWT : product.DiaWT;
@@ -385,22 +404,22 @@ namespace ControlPanel.Controllers
                     product.Grades = string.IsNullOrWhiteSpace(product.Grades) ? tempProducts.Grades : product.Grades;
                     product.ProductType = string.IsNullOrWhiteSpace(product.ProductType) ? tempProducts.ProductType : product.ProductType;
                     product.Price = product.Price == 0 ? tempProducts.Price : product.Price;
-                    product.UnitPrice = product.Price == 0 ? tempProducts.UnitPrice : product.UnitPrice;
-                    product.Description = string.IsNullOrWhiteSpace(product.Description) ? tempProducts.Description : product.Description;
                     product.WholesaleCost = product.WholesaleCost > 0 ? tempProducts.WholesaleCost : product.WholesaleCost;
-                    product.IsReadyforShip = product.IsReadyforShip != true ? tempProducts.IsReadyforShip : product.IsReadyforShip;
+                    product.Description = string.IsNullOrWhiteSpace(product.Description) ? tempProducts.Description : product.Description;
+                    //product.IsReadyforShip = product.IsReadyforShip != true ? tempProducts.IsReadyforShip : product.IsReadyforShip;
                     products.Add(product);
                     newProductList = CreateRingVariantsFromColor(product);
-                    products.AddRange(newProductList);
+                    tempProductList.AddRange(newProductList);
 
                 }
             }
 
-            return products;
+            return tempProductList;
         }
 
         private List<ProductDTO> ProcessPendantsData(ExcelWorksheet worksheet)
         {
+            var tempProductList = new List<ProductDTO>(); 
             var newProductList = new List<ProductDTO>();
             var products = new List<ProductDTO>();
             var tempProducts = new ProductDTO();
@@ -438,7 +457,7 @@ namespace ControlPanel.Controllers
                     tempProducts = new ProductDTO();
                     tempProducts = product;
                     newProductList = CreateRingVariantsFromColor(product);
-                    products.AddRange(newProductList);
+                    tempProductList.AddRange(newProductList);
                 }
                 else
                 {
@@ -465,17 +484,18 @@ namespace ControlPanel.Controllers
                     product.IsReadyforShip = product.IsReadyforShip != true ? tempProducts.IsReadyforShip : product.IsReadyforShip;
                     products.Add(product);
                     newProductList = CreateRingVariantsFromColor(product);
-                    products.AddRange(newProductList);
+                    tempProductList.AddRange(newProductList);
 
                 }
             }
 
-            return products;
+            return tempProductList;
         }
 
         private List<ProductDTO> ProcessBraceletsData(ExcelWorksheet worksheet)
         {
             var newProductList = new List<ProductDTO>();
+            var tempProductList = new List<ProductDTO>();
             var products = new List<ProductDTO>();
             var tempProducts = new ProductDTO();
             int rowCount = worksheet.Dimension.Rows;
@@ -512,7 +532,8 @@ namespace ControlPanel.Controllers
                     tempProducts = new ProductDTO();
                     tempProducts = product;
                     newProductList = CreateRingVariantsFromColor(product);
-                    products.AddRange(newProductList);
+                    tempProductList.AddRange(newProductList);
+
                 }
                 else
                 {
@@ -539,12 +560,13 @@ namespace ControlPanel.Controllers
                     product.IsReadyforShip = product.IsReadyforShip != true ? tempProducts.IsReadyforShip : product.IsReadyforShip;
                     products.Add(product);
                     newProductList = CreateRingVariantsFromColor(product);
-                    products.AddRange(newProductList);
+                    tempProductList.AddRange(newProductList);
+
 
                 }
             }
 
-            return products;
+            return tempProductList;
         }
 
         #endregion
@@ -739,7 +761,7 @@ namespace ControlPanel.Controllers
             {
                 foreach (var shape in shapes)
                 {
-                    foreach (var metal in metals)
+                    for (int metal=0;metal< metals.Length;metal++)
                     {
                         result.Add(new ProductDTO
                         {
@@ -761,7 +783,7 @@ namespace ControlPanel.Controllers
                             Quantity = baseProduct.NoOfStones,
                             Price = baseProduct.Price,
                             UnitPrice = baseProduct.UnitPrice,
-                            ColorName = metal.Trim(),
+                            ColorName = metals[metal],
                             Karat = karat,
                             ProductType = baseProduct.ProductType,
                             MMSize = baseProduct.MMSize,
@@ -770,14 +792,16 @@ namespace ControlPanel.Controllers
                             Description = baseProduct.Description,
                             IsReadyforShip = baseProduct.IsReadyforShip,
                             WholesaleCost = baseProduct.WholesaleCost,
-                            Diameter = baseProduct.Diameter
+                            Diameter = baseProduct.Diameter,
+                            StyleName=baseProduct.StyleName,
+                            CollectionName=baseProduct.CollectionName
                         });
                     }
                 }
             }
             else
             {
-                foreach (var metal in metals)
+                for (int metal = 0; metal < metals.Length; metal++)
                 {
                     result.Add(new ProductDTO
                     {
@@ -799,7 +823,7 @@ namespace ControlPanel.Controllers
                         Quantity = baseProduct.NoOfStones,
                         Price = baseProduct.Price,
                         UnitPrice = baseProduct.UnitPrice,
-                        ColorName = metal.Trim(),
+                        ColorName = metals[metal],
                         Karat = karat,
                         ProductType = baseProduct.ProductType,
                         MMSize = baseProduct.MMSize,
@@ -808,7 +832,9 @@ namespace ControlPanel.Controllers
                         Description = baseProduct.Description,
                         IsReadyforShip = baseProduct.IsReadyforShip,
                         WholesaleCost = baseProduct.WholesaleCost,
-                        Diameter = baseProduct.Diameter
+                        Diameter = baseProduct.Diameter,
+                        StyleName = baseProduct.StyleName,
+                        CollectionName = baseProduct.CollectionName
                     });
                 }
             }
@@ -824,7 +850,9 @@ namespace ControlPanel.Controllers
         {
             try
             {
-                string fileName = string.Empty; int metalId = 0;
+                string fileName = string.Empty; 
+                int metalId = 0;
+                int shapeId = 0;
                 string extractedFolder = string.Empty;
                 string zipPath = string.Empty;
                 string folderPath = string.Empty;
@@ -842,6 +870,7 @@ namespace ControlPanel.Controllers
                 var boundary = HeaderUtilities.RemoveQuotes(MediaTypeHeaderValue.Parse(Request.ContentType).Boundary).Value;
                 var reader = new MultipartReader(boundary, Request.Body);
                 var section = await reader.ReadNextSectionAsync();
+                var shapeList = _productRepository.GetShapeList();
 
                 if (section == null)
                     return Json("No file uploaded.");
@@ -877,10 +906,15 @@ namespace ControlPanel.Controllers
                                         styleName = _productRepository.ExtractStyleName(entry.Name);
                                         if (styleName == null) continue;
 
+                                        var dt = shapeList.Result.Where(x => x.SymbolName == styleName.ShapeCode).FirstOrDefault();
+                                        
+                                       var  shape = await _productRepository.GetProductShapeId(styleName.ShapeCode, dt.Id);
+                                        if (shape == null) continue;
+
                                         metalId = await _productRepository.GetMetalId(styleName.ColorName);
                                         if (metalId == 0) continue;
 
-                                        prdDesignDT = await _productRepository.GetProductDataByDesignNo(styleName.DesignNo, metalId);
+                                        prdDesignDT = await _productRepository.GetJewelleryDTByDesignNo(styleName.DesignNo, metalId,shape.Id);
                                         if (prdDesignDT.Count == 0) continue;
 
                                         folderPath = Path.Combine(extractedFolder, styleName.DesignNo);
@@ -898,7 +932,7 @@ namespace ControlPanel.Controllers
                                                 ProductId = pro.Id.ToString(),
                                                 MetalId = metalId,
                                                 Sku = styleName.DesignNo,
-                                                ShapeId = pro.ShapeId,
+                                                ShapeId = shape.Id,
                                                 ImageIndexNumber = styleName.Index,
                                                 IsDefault = (styleName.Index == 1)
                                             };
@@ -1163,19 +1197,6 @@ namespace ControlPanel.Controllers
         }
 
 
-        //public async Task<IActionResult> AddProductAndProperty(string sku)
-        //{
-        //    var product = new ProductDTO();
-        //    if (!string.IsNullOrEmpty(sku))
-        //    {
-        //        product = await _productRepository.GetProductByDesignNo(sku);
-        //    }
-        //    else
-        //    {
-
-        //    }
-        //}
-
         private string[] GetMetalIds(string input)
         {
 
@@ -1189,6 +1210,13 @@ namespace ControlPanel.Controllers
             }
 
             return colors.ToArray();
+        }
+
+
+        [HttpGet]
+        public IActionResult UploadProductImages()
+        {
+            return View();
         }
 
     }

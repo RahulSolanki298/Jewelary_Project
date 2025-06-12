@@ -17,6 +17,14 @@ namespace DataAccess.Entities
 
         public bool IsHomePage { get; set; }
 
+        public DateTime? CreatedDate { get; set; }
+
+        public string CreatedBy { get; set; }
+
+        public string UpdatedBy { get; set; }
+
+        public DateTime? UpdatedDate { get; set; }
+
         public int Index { get; set; }
 
     }

@@ -236,7 +236,7 @@
 @section Scripts {
     @*<script src="assets/js/plugins/slick.min.js"></script>*@
 
-<script>
+    <script>
             var page = 1;
             var rangeVal = 10;
 
@@ -718,6 +718,16 @@
 
            return formatted;
         }
-</script>
+
+        function scrollShapes(offset) {
+            const container = document.querySelector('#MyProductsImg #shapeList');
+            if (container) {
+                container.scrollLeft += offset;
+            } else {
+                console.warn("shapeList not found inside MyProductsImg");
+            }
+        }
+
+    </script>
 
 }

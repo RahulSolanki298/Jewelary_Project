@@ -11,13 +11,12 @@
 
             <a href="@Url.Action("UploadJewellery","Jewellery")" class="btn btn-theme float-end m-2">Add Single Product </a>
         </div>
-
     </div>
     <div class="row">
         <div class="col-lg-12">
             <div class="">
                 <div class="" id="jewelleryList">
-                    
+
                 </div>
             </div>
         </div>
@@ -35,11 +34,11 @@
                 <div class="modal-body">
                     @if (TempData["UploadSuccess"] != null)
                     {
-                        <div class="alert alert-success">@TempData["UploadSuccess"]</div>
+                    <div class="alert alert-success">@TempData["UploadSuccess"]</div>
                     }
                     @if (TempData["UploadError"] != null)
                     {
-                        <div class="alert alert-danger">@TempData["UploadError"]</div>
+                    <div class="alert alert-danger">@TempData["UploadError"]</div>
                     }
                     <div class="mb-3">
                         <label for="excelFile" class="form-label">Select Excel or CSV File</label>

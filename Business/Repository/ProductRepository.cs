@@ -34,6 +34,12 @@ namespace Business.Repository
             return dtDesign;
         }
 
+        public async Task<List<Product>> GetJewelleryDTByDesignNo(string designNo, int metalId, int shapeId)
+        {
+            var dtDesign = await _context.Product.Where(x => x.Sku == designNo && x.ColorId == metalId && x.CenterShapeId==shapeId).ToListAsync();
+            return dtDesign;
+        }
+
         public async Task<bool> SaveProductList(List<ProductDTO> products)
         {
             try
@@ -818,6 +824,13 @@ namespace Business.Repository
             var result = await _context.ProductProperty.Where(x => x.ParentId == karatId).FirstOrDefaultAsync();
             return result;
         }
+
+        public async Task<ProductProperty> GetProductShapeId(string ShapeCode,int shapeId)
+        {
+           var result = await _context.ProductProperty.Where(x => x.SymbolName == ShapeCode && x.Id==shapeId).FirstOrDefaultAsync();
+            return result;
+        }
+
         public async Task<int> GetShapeId()
         {
             var shapeDT = await _context.ProductProperty.Where(static x => x.Name == SD.Shape).FirstOrDefaultAsync();
@@ -919,6 +932,7 @@ namespace Business.Repository
             try
             {
                 // Step 0: Initialize variables
+                var styleList = new List<ProductStyleItems>();
                 var colors = await GetColorList();
                 var categories = await _context.Category.ToListAsync();
                 var karats = await GetKaratList();
@@ -936,9 +950,6 @@ namespace Business.Repository
 
                 var categoryId = categoryDict.GetValueOrDefault(categoryName);
 
-                var styleLIst = products.Where(x => x.StyleName != null).Distinct();
-                var styles = styleLIst.ToDictionary(x => x.StyleName, x => x.Id, StringComparer.OrdinalIgnoreCase);
-
                 var existingProducts = await _context.Product
                     .Where(x => x.CategoryId == categoryId)
                     .ToListAsync();
@@ -948,6 +959,7 @@ namespace Business.Repository
                 var HistoryProductList = new List<ProductHistory>();
                 var newProduct = new Product();
                 var productStyleList = new List<ProductStyleDTO>();
+                var productCollectionList = new List<ProductCollectionItems>();
                 foreach (var product in products)
                 {
                     if (fileHistoryId == 0)
@@ -1038,7 +1050,6 @@ namespace Business.Repository
                         existingProduct.Title = $"{product.Title}";
                         existingProduct.Sku = product.Sku;
                         existingProduct.KaratId = karatId;
-
                         existingProduct.BandWidth = product.BandWidth;
                         existingProduct.GoldWeight = product.GoldWeight;
                         existingProduct.Grades = product.Grades;
@@ -1124,12 +1135,12 @@ namespace Business.Repository
                     }
 
                     var styleDT = await _context.ProductStyles.Where(x => x.StyleName == product.StyleName).FirstOrDefaultAsync();
-                    if (styleDT == null)
+                    if (styleDT == null && product.StyleName != null)
                     {
                         styleDT = new ProductStyles()
                         {
                             StyleName = product.StyleName,
-                            CategoryId = product.CategoryId,
+                            CategoryId = categoryId,
                             IsActivated = true,
                             CreatedDate = DateTime.Now,
                             UpdatedDate = DateTime.Now,
@@ -1137,16 +1148,62 @@ namespace Business.Repository
                         await _context.ProductStyles.AddAsync(styleDT);
                         await _context.SaveChangesAsync();
                     }
-                    var productStyleItem = new ProductStyleItems();
-                    productStyleItem.StyleId = styleDT.Id;
-                    productStyleItem.UserId = userId;
-                    productStyleItem.ProductId = newProduct.Id.ToString();
-                    productStyleItem.IsActive = true;
+                    else if (styleDT != null)
+                    {
+                        var productStyleItem = await _context.ProductStyleItems.Where(x => x.StyleId == styleDT.Id).FirstOrDefaultAsync();
+                        if (productStyleItem == null && !string.IsNullOrEmpty(product.StyleName))
+                        {
+                            productStyleItem = new ProductStyleItems();
+                            productStyleItem.StyleId = styleDT.Id;
+                            productStyleItem.UserId = userId;
+                            productStyleItem.ProductId = newProduct.Id.ToString();
+                            productStyleItem.IsActive = true;
+
+                            styleList.Add(productStyleItem);
+                        }
+                    }
+                    
+                    var collectionDT = await _context.ProductCollections.Where(x => x.CollectionName == product.CollectionName).FirstOrDefaultAsync();
+                    if (collectionDT == null && !string.IsNullOrEmpty(product.CollectionName))
+                    {
+                        collectionDT = new ProductCollections()
+                        {
+                            CollectionName = product.CollectionName,
+                            CategoryId = categoryId,
+                            IsActivated = true,
+                            CreatedDate = DateTime.Now,
+                        };
+                        await _context.ProductCollections.AddAsync(collectionDT);
+                        await _context.SaveChangesAsync();
+                    }
+                    else if (collectionDT != null)
+                    {
+                        var productCollectionItem = await _context.ProductCollectionItems.Where(x=>x.CollectionId==collectionDT.Id).FirstOrDefaultAsync();
+                        if (productCollectionItem == null && !string.IsNullOrEmpty(newProduct.Id.ToString()))
+                        {
+                            productCollectionItem = new ProductCollectionItems();
+                            productCollectionItem.CollectionId = collectionDT.Id;
+                            productCollectionItem.UserId = userId;
+                            productCollectionItem.ProductId = newProduct.Id.ToString();
+                            productCollectionItem.IsActive = true;
+                            productCollectionItem.CreatedBy = userId;
+                            productCollectionItem.CreatedDate = DateTime.Now;
+                            productCollectionItem.UpdatedBy = userId;
+                            productCollectionItem.UpdatedDate = DateTime.Now;
+
+                            productCollectionList.Add(productCollectionItem);
+                        }
+                        
+                    }
+                
                 }
 
                 if (productList.Any()) await _context.Product.AddRangeAsync(productList);
                 if (ExistingProductList.Any()) _context.Product.UpdateRange(ExistingProductList);
+                if (styleList.Any()) await _context.ProductStyleItems.AddRangeAsync(styleList);
+                if (productCollectionList.Any()) await _context.ProductCollectionItems.AddRangeAsync(productCollectionList);
                 await _context.SaveChangesAsync();
+
 
                 var productDT = await _context.Product.Where(x => x.FileHistoryId == fileHistoryId).ToListAsync();
 
@@ -1384,7 +1441,7 @@ namespace Business.Repository
             string nameOnly = Path.GetFileNameWithoutExtension(fileName);
             var parts = nameOnly.Split('-');
 
-            if (parts.Length < 3)
+            if (parts.Length < 4)
             {
                 return new FileSplitDTO();
                 throw new ArgumentException("Filename format is invalid. Expected format: DESIGNNO-COLORCODE");
@@ -1395,7 +1452,10 @@ namespace Business.Repository
                 DesignNo = $"{parts[0]}-{parts[1]}"
             };
 
-            string colorPart = parts[2];
+            string shapePart = parts[2];
+            dtImgVideo.ShapeCode = shapePart.ToString();
+
+            string colorPart = parts[3];
 
             if (char.IsDigit(colorPart.Last()))
             {
@@ -1714,7 +1774,7 @@ namespace Business.Repository
             };
 
             // Step 4: Get the product images for the first product
-            var productImages = await _context.ProductImages.Where(x => x.ProductId == firstProduct.Id.ToString() && x.MetalId == colorId).ToListAsync();
+            var productImages = await _context.ProductImages.Where(x => x.ProductId == firstProduct.Id.ToString() && x.MetalId == colorId && x.ShapeId == firstProduct.CenterShapeId).ToListAsync();
 
             foreach (var image in productImages)
             {
@@ -1742,7 +1802,8 @@ namespace Business.Repository
 
             // Use EF.Functions.Like for partial matching (fuzzy search)
             var color = await _context.ProductProperty
-                .Where(x => x.ParentId == colorId && EF.Functions.Like(x.Synonyms, "%" + name + "%"))
+                //.Where(x => x.ParentId == colorId && EF.Functions.Like(x.Synonyms, "%" + name + "%"))
+                .Where(x => x.ParentId == colorId && x.SymbolName==name)
                 .FirstOrDefaultAsync();
 
             return color?.Id ?? 0; // If no match found, return 0
@@ -2074,7 +2135,7 @@ namespace Business.Repository
                 //  await _context.ProductPrices.Where(x => x.ProductId == firstProduct.Id.ToString()).ToListAsync();
 
                 // Step 4: Get the product images for the first product
-                var productImages = await _context.ProductImages.Where(x => x.ProductId == firstProduct.Id.ToString() && x.MetalId == firstProduct.ColorId).ToListAsync();
+                var productImages = await _context.ProductImages.Where(x => x.ProductId == firstProduct.Id.ToString() && x.MetalId == firstProduct.ColorId && x.ShapeId==firstProduct.CenterShapeId).ToListAsync();
 
                 foreach (var image in productImages)
                 {
@@ -2270,7 +2331,7 @@ namespace Business.Repository
                 //  await _context.ProductPrices.Where(x => x.ProductId == firstProduct.Id.ToString()).ToListAsync();
 
                 // Step 4: Get the product images for the first product
-                var productImages = await _context.ProductImages.Where(x => x.ProductId == firstProduct.Id.ToString() && x.MetalId == firstProduct.ColorId).ToListAsync();
+                var productImages = await _context.ProductImages.Where(x => x.ProductId == firstProduct.Id.ToString() && x.MetalId == firstProduct.ColorId && x.ShapeId==firstProduct.CenterShapeId).ToListAsync();
 
                 foreach (var image in productImages)
                 {
@@ -2466,7 +2527,7 @@ namespace Business.Repository
                 //  await _context.ProductPrices.Where(x => x.ProductId == firstProduct.Id.ToString()).ToListAsync();
 
                 // Step 4: Get the product images for the first product
-                var productImages = await _context.ProductImages.Where(x => x.ProductId == firstProduct.Id.ToString() && x.MetalId == firstProduct.ColorId).ToListAsync();
+                var productImages = await _context.ProductImages.Where(x => x.ProductId == firstProduct.Id.ToString() && x.MetalId == firstProduct.ColorId && x.ShapeId == firstProduct.CenterShapeId).ToListAsync();
 
                 foreach (var image in productImages)
                 {

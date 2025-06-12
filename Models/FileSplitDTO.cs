@@ -10,6 +10,8 @@ namespace Models
     {
         public string DesignNo { get; set; }
 
+        public string ShapeCode { get; set; }
+
         public string ColorName { get; set; }
 
         public int Index { get; set; }

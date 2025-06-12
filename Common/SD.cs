@@ -7,6 +7,10 @@
         public static string Supplier = "Supplier";
         public static string Employee = "Employee";
 
+        public static string WebDevice = "WebApp";
+        public static string AndroidDevice = "AndroidApp";
+        public static string IOsDevice = "WebApp";
+
         /* Customers for b2c*/
         public static string Customer = "Customer";
 
@@ -92,26 +96,23 @@
         public static string Active = "Active";
         public static string Sold = "Sold";
 
-
-        ///public static string AdminPath = "https://localhost:5001";
-         public static string AdminPath = "http://180.211.116.206/jewelfacetadmin";
-        // public static string AdminPath = "http://192.168.29.11/jewelfacetadmin";
-
         // local
-       // public static string ShapeImgUrl = "https://localhost:44325";
-       // public static string ImgUrl = "https://localhost:5001";
-       // public static string BaseApiUrl = "https://localhost:5001"; // https://jswebapi.com
+        // public static string AdminPath = "https://localhost:44308";
+        // public static string ShapeImgUrl = "https://localhost:44325";
+        // public static string ImgUrl = "https://localhost:44308";
+        // public static string BaseApiUrl = "https://localhost:44308"; // https://jswebapi.com
 
         // local iis
-        //  public static string ShapeImgUrl = "http://192.168.29.11/jewelfacetadmin";
-        //  public static string ImgUrl = "http://192.168.29.11/jewelfacetadmin";
-        //  public static string BaseApiUrl = "http://192.168.29.11/jewelfacet";
+        //   public static string AdminPath = "http://192.168.29.106/jewelfacetadmin";
+        //  public static string ShapeImgUrl = "http://192.168.29.106/jewelfacet";
+        //  public static string ImgUrl = "http://192.168.29.106/jewelfacetadmin";
+        //  public static string BaseApiUrl = "http://192.168.29.106/jewelfacetadmin";
         
         //  production
         public static string ShapeImgUrl = "http://180.211.116.206/jewelfacet";
         public static string ImgUrl = "http://180.211.116.206/jewelfacetadmin";
         public static string BaseApiUrl = "http://180.211.116.206/jewelfacetadmin";
-
+        public static string AdminPath = "http://180.211.116.206/jewelfacetadmin";
 
     }
 }

@@ -29,7 +29,7 @@ namespace B2C_ECommerce.Services
 
         public async Task<List<ProductDTO>> GetProductListByFilter(ProductFilters filters, int pageNumber = 1, int pageSize = 10)
         {
-           var products = await GetProductStyleList();
+            var products = await GetProductStyleList();
 
             var query = products.AsQueryable();
 
@@ -144,19 +144,19 @@ namespace B2C_ECommerce.Services
                       UnitPrice = product.UnitPrice,
                       Price = product.Price,
                       IsActivated = product.IsActivated,
-                      GoldWeight=product.GoldWeight,
-                      CenterCaratName=size.Name,
-                      Grades=product.Grades,
-                      Certificate=product.Certificate,
-                      VenderName=product.Vendor,
-                      CTW=product.CTW,
-                      Diameter=product.Diameter,
-                      CenterCaratId=product.CenterCaratId,
-                      MMSize=product.MMSize,
-                      NoOfStones=product.NoOfStones,
-                      DiaWT=product.DiaWT,
-                      KaratId=product.KaratId,
-                      Karat=karat.Name
+                      GoldWeight = product.GoldWeight,
+                      CenterCaratName = size.Name,
+                      Grades = product.Grades,
+                      Certificate = product.Certificate,
+                      VenderName = product.Vendor,
+                      CTW = product.CTW,
+                      Diameter = product.Diameter,
+                      CenterCaratId = product.CenterCaratId,
+                      MMSize = product.MMSize,
+                      NoOfStones = product.NoOfStones,
+                      DiaWT = product.DiaWT,
+                      KaratId = product.KaratId,
+                      Karat = karat.Name
                   }
               ).AsNoTracking().FirstOrDefaultAsync();
 
@@ -173,6 +173,7 @@ namespace B2C_ECommerce.Services
                                     Id = col.Id,
                                     Name = col.Name,
                                     SymbolName = col.SymbolName,
+                                    Synonyms = col.Synonyms,
                                     IsActive = col.IsActive.HasValue ? col.IsActive.Value : false
                                 }).Distinct().ToListAsync();
 
@@ -291,6 +292,7 @@ namespace B2C_ECommerce.Services
                                         Name = prd.Name,
                                         Description = prd.Description,
                                         SymbolName = prd.SymbolName,
+                                        Synonyms = prd.Synonyms,
                                         IconPath = prd.IconPath,
                                         ParentId = met.Id,
                                         ParentProperty = "-"
@@ -462,6 +464,7 @@ namespace B2C_ECommerce.Services
                                     Id = col.Id,
                                     Name = col.Name,
                                     SymbolName = col.SymbolName,
+                                    Synonyms = col.Synonyms,
                                     IsActive = col.IsActive.HasValue ? col.IsActive.Value : false
                                 }).Distinct().ToListAsync();
 
@@ -530,7 +533,7 @@ namespace B2C_ECommerce.Services
                 MMSize = firstProduct.MMSize,
                 NoOfStones = firstProduct.NoOfStones,
                 DiaWT = firstProduct.DiaWT,
-                GoldWeight=firstProduct.GoldWeight,
+                GoldWeight = firstProduct.GoldWeight,
                 AccentStoneShapeId = firstProduct.AccentStoneShapeId,
                 AccentStoneShapeName = firstProduct.AccentStoneShapeName,
                 ProductImageVideos = new List<ProductImageAndVideoDTO>() // Initialize to avoid null reference
@@ -620,12 +623,13 @@ namespace B2C_ECommerce.Services
                 var metals = await (from col in _context.ProductProperty
                                     join prod in _context.Product on col.Id equals prod.ColorId
                                     join colN in _context.ProductProperty on col.ParentId equals colN.Id
-                                    where colN.Name == SD.Metal && prod.Sku == firstProduct.Sku && prod.IsActivated !=false
+                                    where colN.Name == SD.Metal && prod.Sku == firstProduct.Sku && prod.IsActivated != false
                                     select new ProductPropertyDTO
                                     {
                                         Id = col.Id,
                                         Name = col.Name,
                                         SymbolName = col.SymbolName,
+                                        Synonyms = col.Synonyms,
                                         IsActive = col.IsActive.HasValue ? col.IsActive.Value : false
                                     }).Distinct().ToListAsync();
 
@@ -649,10 +653,11 @@ namespace B2C_ECommerce.Services
                                         Id = col.Id,
                                         Name = col.Name,
                                         IconPath = col.IconPath,
+                                        Synonyms = col.Synonyms,
                                         IsActive = col.IsActive.HasValue ? col.IsActive.Value : false
                                     }).Distinct().ToListAsync();
 
-                
+
 
                 var productDTO = new ProductDTO
                 {
@@ -693,7 +698,7 @@ namespace B2C_ECommerce.Services
                     VenderName = firstProduct.VenderName,
                     WholesaleCost = firstProduct.WholesaleCost,
                     ProductImageVideos = new List<ProductImageAndVideoDTO>(),
-                    
+
                 };
 
                 //  await _context.ProductPrices.Where(x => x.ProductId == firstProduct.Id.ToString()).ToListAsync();
