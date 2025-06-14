@@ -13,6 +13,7 @@ using System.Linq;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using Business.Repository.IRepository;
+using Newtonsoft.Json;
 
 namespace B2C_ECommerce.Services
 {
@@ -33,6 +34,10 @@ namespace B2C_ECommerce.Services
         {
             try
             {
+                var data= JsonConvert.SerializeObject(filters);
+
+
+
                 DiamondAllDataDto diamonData = new DiamondAllDataDto();
                 // Construct the SQL parameters
                 var parameters = new[]

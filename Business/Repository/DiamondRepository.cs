@@ -220,6 +220,23 @@ namespace Business.Repository
             }
         }
 
+        public async Task<IEnumerable<DiamondData>> GetDiamondHistoryById(string diamondId)
+        {
+            try
+            {
+                var diamond = await _context.DiamondData
+                    .FromSqlRaw($"EXEC SP_GetDiamondHistoryDataById {diamondId}")
+                    .ToListAsync();
+
+                return diamond;
+            }
+            catch (Exception ex)
+            {
+                // Optionally log the exception or handle it
+                throw new Exception("An error occurred while fetching the diamond data.", ex);
+            }
+        }
+
         public async Task<IEnumerable<DiamondFileUploadHistoryDTO>> GetDiamondFileUploadedHistories()
         {
             try
@@ -274,6 +291,7 @@ namespace Business.Repository
                 {
                     Title = diamondFileUpload.Title,
                     UploadedDate = diamondFileUpload.UploadedDate,
+                    UploadedBy = diamondFileUpload.UploadedBy,
                     IsSuccess = diamondFileUpload.IsSuccess,
                     NoOfSuccess = diamondFileUpload.NoOfSuccess,
                     NoOfFailed = diamondFileUpload.NoOfFailed
@@ -544,10 +562,17 @@ namespace Business.Repository
 
         public async Task<List<Diamond>> GetDiamondListByHistoryId(int historyId)
         {
-            var diamonds= await _context.Diamonds.Where(x=>x.FileUploadHistoryId== historyId).ToListAsync();
+            var diamonds = await _context.Diamonds.Where(x => x.FileUploadHistoryId == historyId).ToListAsync();
             return diamonds;
         }
 
-        
+        public async Task InsertDiamondHistoryFromDiamondAsync(int historyId)
+        {
+            var parameter = new SqlParameter("@FileUploadHistoryId", historyId);
+
+            await _context.Database.ExecuteSqlRawAsync(
+                "EXEC SP_Add_DIAMOND_HISTORY @FileUploadHistoryId",
+                parameter);
+        }
     }
 }

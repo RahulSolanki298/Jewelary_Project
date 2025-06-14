@@ -25,6 +25,33 @@
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.css" rel="stylesheet">
 
     <link href="~/assets/css/style.css" rel="stylesheet">
+    <style>
+        #loader-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        #loader-content {
+            text-align: center;
+        }
+
+        #loader-percentage {
+            margin-top: 15px;
+            font-size: 24px;
+            color: #333;
+            font-weight: bold;
+        }
+
+    </style>
 </head>
 <body>
     <header id="header" class="header fixed-top d-flex align-items-center">
@@ -265,310 +292,155 @@
                 </a>
             </li>
 
-            @if (@SD.ImgUrl == "http://180.211.116.206/jewelfacet")
-            {
-                <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-                        <i class="bi bi-gem"></i><span>Diamonds</span><i class="bi bi-chevron-down ms-auto"></i>
-                    </a>
-                    <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                        <li>
-                            <a href="@Url.Action("Property","Diamond")">
-                                <i class="bi bi-circle"></i><span>Diamond Property</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("Index","Diamond")">
-                                <i class="bi bi-circle"></i><span>Diamonds</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("DiamondVerification","Diamond")">
-                                <i class="bi bi-circle"></i><span>Diamonds</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("DiamondHold","Diamond")">
-                                <i class="bi bi-circle"></i><span>Diamond Hold</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
 
-                <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-                        <i class="bi bi-journal-text"></i><span>Jewellery</span><i class="bi bi-chevron-down ms-auto"></i>
-                    </a>
-                    <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                        <li>
-                            <a href="@Url.Action("Property","Jewellery")">
-                                <i class="bi bi-circle"></i><span>Jewellery Property</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("Index","Jewellery")">
-                                <i class="bi bi-circle"></i><span>Jewellary Data</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("RequestedProductList","Jewellery")">
-                                <i class="bi bi-circle"></i><span>Jewellary Status</span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="@Url.Action("HoldProductList","Jewellery")">
-                                <i class="bi bi-circle"></i><span>Hold Jewellary</span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="@Url.Action("DeactivatedProductList","Jewellery")">
-                                <i class="bi bi-circle"></i><span>Deactivated Jewellary</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
-                        <i class="bi bi-layout-text-window-reverse"></i><span>Category</span><i class="bi bi-chevron-down ms-auto"></i>
-                    </a>
-                    <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                        <li>
-                            <a href="@Url.Action("Index","Category")">
-                                <i class="bi bi-circle"></i><span>Category List</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
-                        <i class="bi bi-layout-text-window-reverse"></i><span>Orders</span><i class="bi bi-chevron-down ms-auto"></i>
-                    </a>
-                    <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                        <li>
-                            <a href="@Url.Action("OrderRequestList","Orders")">
-                                <i class="bi bi-circle"></i><span>Order Request</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("Index","Orders")">
-                                <i class="bi bi-circle"></i><span>Order Process</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("OrderReject","Orders")">
-                                <i class="bi bi-circle"></i><span>Order Rejected</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
-                        <i class="bi bi-bar-chart"></i><span>Employee</span><i class="bi bi-chevron-down ms-auto"></i>
-                    </a>
-                    <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                        <li>
-                            <a href="@Url.Action("Registration","Employee")">
-                                <i class="bi bi-circle"></i><span>Register</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("EmployeeList","Employee")">
-                                <i class="bi bi-circle"></i><span>Employee List</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("EmployeePermission","Employee")">
-                                <i class="bi bi-circle"></i><span>Employee Permission</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <!-- End Charts Nav -->
-
-                <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
-                        <i class="bi bi-menu-button-wide"></i><span>Suppliers</span><i class="bi bi-chevron-down ms-auto"></i>
-                    </a>
-                    <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                        <li>
-                            <a href="@Url.Action("Register","Suppliers")">
-                                <i class="bi bi-circle"></i><span>Register</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("SupplierList","Suppliers")">
-                                <i class="bi bi-circle"></i><span>Supplier List</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("SupplierPermission","Suppliers")">
-                                <i class="bi bi-circle"></i><span>Supplier Permission</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            }
-            else
-            {
-                <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-                        <i class="bi bi-gem"></i><span>Diamonds</span><i class="bi bi-chevron-down ms-auto"></i>
-                    </a>
-                    <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                        <li>
-                            <a href="@Url.Action("DiamondProperty","Diamond")">
-                                <i class="bi bi-circle"></i><span>Diamond Master</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("Index","Diamond")">
-                                <i class="bi bi-circle"></i><span>View Online Store</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("DiamondVerification","Diamond")">
-                                <i class="bi bi-circle"></i><span>Product Verification</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("DiamondHold","Diamond")">
-                                <i class="bi bi-circle"></i><span>Hold Diamond</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("DeactivatedDiamond","Diamond")">
-                                <i class="bi bi-circle"></i><span>Deactivated Product</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("DeactivatedDiamond","Diamond")">
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-gem"></i><span>Diamonds</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="@Url.Action("DiamondProperty","Diamond")">
+                            <i class="bi bi-circle"></i><span>Diamond Master</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index","Diamond")">
+                            <i class="bi bi-circle"></i><span>View Online Store</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("DiamondVerification","Diamond")">
+                            <i class="bi bi-circle"></i><span>Product Verification</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("DiamondHold","Diamond")">
+                            <i class="bi bi-circle"></i><span>Hold Diamond</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("DeactivatedDiamond","Diamond")">
+                            <i class="bi bi-circle"></i><span>Deactivated Product</span>
+                        </a>
+                    </li>
+                    @*<li>
+                            <a href="@Url.Action("GetFileUploadHistory","Diamond")">
                                 <i class="bi bi-circle"></i><span>Diamond History</span>
                             </a>
-                        </li>
-                    </ul>
-                </li>
+                        </li>*@
+                </ul>
+            </li>
 
-                <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-                        <i class="bi bi-journal-text"></i><span>Jewellery</span><i class="bi bi-chevron-down ms-auto"></i>
-                    </a>
-                    <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                        <li>
-                            <a href="@Url.Action("JewelryProperty","Jewellery")">
-                                <i class="bi bi-circle"></i><span>Jewellery Master</span>
-                            </a>
-                        </li>
-                        <li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-journal-text"></i><span>Jewellery</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="@Url.Action("JewelryProperty","Jewellery")">
+                            <i class="bi bi-circle"></i><span>Jewellery Master</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index","Jewellery")">
+                            <i class="bi bi-circle"></i><span>View Online Store</span>
+                        </a>
+                    </li>
+                    @* <li>
                             <a href="@Url.Action("Index","Jewellery")">
-                                <i class="bi bi-circle"></i><span>View Online Store</span>
+                                <i class="bi bi-circle"></i><span>Add New Product</span>
                             </a>
-                        </li>
-                        @* <li>
-            <a href="@Url.Action("Index","Jewellery")">
-                <i class="bi bi-circle"></i><span>Add New Product</span>
-            </a>
-        </li> *@
-                        <li>
-                            <a href="@Url.Action("RequestedProductList","Jewellery")">
-                                <i class="bi bi-circle"></i><span>Product Verifacation</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("HoldProductList","Jewellery")">
-                                <i class="bi bi-circle"></i><span>Hold Product</span>
-                                @* Jewellary varify *@
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("DeactivatedProductList","Jewellery")">
-                                <i class="bi bi-circle"></i><span>Deactivated Product</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("DeactivatedProductList","Jewellery")">
-                                <i class="bi bi-circle"></i><span>Deactivated Product</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("UploadProductImages","Jewellery")">
-                                <i class="bi bi-circle"></i><span>Add Jewellery Images</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+                        </li> *@
+                    <li>
+                        <a href="@Url.Action("RequestedProductList","Jewellery")">
+                            <i class="bi bi-circle"></i><span>Product Verification</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("HoldProductList","Jewellery")">
+                            <i class="bi bi-circle"></i><span>Hold Product</span>
+                            @* Jewellary varify *@
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("DeactivatedProductList","Jewellery")">
+                            <i class="bi bi-circle"></i><span>Deactivated Product</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("UploadProductImages","Jewellery")">
+                            <i class="bi bi-circle"></i><span>Add Jewellery Images</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
 
-                <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#category-nav" data-bs-toggle="collapse" href="#">
-                        <i class="bi bi-layout-text-window-reverse"></i><span>Category</span><i class="bi bi-chevron-down ms-auto"></i>
-                    </a>
-                    <ul id="category-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                        <li>
-                            <a href="@Url.Action("Index","Category")">
-                                <i class="bi bi-circle"></i><span>Category List</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#category-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-layout-text-window-reverse"></i><span>Category</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="category-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="@Url.Action("Index","Category")">
+                            <i class="bi bi-circle"></i><span>Category List</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
 
-                <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#styles-nav" data-bs-toggle="collapse" href="#">
-                        <i class="bi bi-layout-text-window-reverse"></i><span>Product Program</span><i class="bi bi-chevron-down ms-auto"></i>
-                    </a>
-                    <ul id="styles-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                        <li>
-                            <a href="@Url.Action("Index","ProductStyles")">
-                                <i class="bi bi-circle"></i><span>Program List</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#styles-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-layout-text-window-reverse"></i><span>Product Program</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="styles-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="@Url.Action("Index","ProductStyles")">
+                            <i class="bi bi-circle"></i><span>Program List</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
 
-                <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#collection-nav" data-bs-toggle="collapse" href="#">
-                        <i class="bi bi-layout-text-window-reverse"></i><span>Product Collection</span><i class="bi bi-chevron-down ms-auto"></i>
-                    </a>
-                    <ul id="collection-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                        <li>
-                            <a href="@Url.Action("Index","ProductStyles")">
-                                <i class="bi bi-circle"></i><span>Collection List</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#collection-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-layout-text-window-reverse"></i><span>Product Collection</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="collection-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="@Url.Action("Index","ProductStyles")">
+                            <i class="bi bi-circle"></i><span>Collection List</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
 
 
-                <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
-                        <i class="bi bi-layout-text-window-reverse"></i><span>Orders</span><i class="bi bi-chevron-down ms-auto"></i>
-                    </a>
-                    <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                        <li>
-                            <a href="@Url.Action("OrderRequestData","Orders")">
-                                <i class="bi bi-circle"></i><span>Order Request</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("Index","Orders")">
-                                <i class="bi bi-circle"></i><span>Order Process</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("OrderReject","Orders")">
-                                <i class="bi bi-circle"></i><span>Order Rejected</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-layout-text-window-reverse"></i><span>Orders</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="@Url.Action("OrderRequestData","Orders")">
+                            <i class="bi bi-circle"></i><span>Order Request</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index","Orders")">
+                            <i class="bi bi-circle"></i><span>Order Process</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("OrderReject","Orders")">
+                            <i class="bi bi-circle"></i><span>Order Rejected</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
 
-               
 
-                @*<li class="nav-item">
+
+            @*<li class="nav-item">
                     <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
                         <i class="bi bi-bar-chart"></i><span>Employee</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>
@@ -591,9 +463,8 @@
                     </ul>
                 </li>*@
 
-                <!-- End Charts Nav -->
-
-                @*<li class="nav-item">
+            <!-- End Charts Nav -->
+            @*<li class="nav-item">
                     <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
                         <i class="bi bi-menu-button-wide"></i><span>Suppliers</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>
@@ -616,39 +487,39 @@
                     </ul>
                 </li>*@
 
-                <!-- End Icons Nav -->
+            <!-- End Icons Nav -->
 
-                <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#styles-nav" data-bs-toggle="collapse" href="#">
-                        <i class="bi bi-layout-text-window-reverse"></i><span>Blogs</span><i class="bi bi-chevron-down ms-auto"></i>
-                    </a>
-                    <ul id="styles-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                        <li>
-                            <a href="@Url.Action("Index","Blog")">
-                                <i class="bi bi-circle"></i><span>Blog List</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("GetBlogById","Blog")">
-                                <i class="bi bi-circle"></i><span>Add Blog</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#blogs-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-layout-text-window-reverse"></i><span>Blogs</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="blogs-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="@Url.Action("Index","Blog")">
+                            <i class="bi bi-circle"></i><span>Blog List</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("GetBlogById","Blog")">
+                            <i class="bi bi-circle"></i><span>Add Blog</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
 
-                <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#setting-nav" data-bs-toggle="collapse" href="#">
-                        <i class="bi bi-layout-text-window-reverse"></i><span>Setting</span><i class="bi bi-chevron-down ms-auto"></i>
-                    </a>
-                    <ul id="setting-nav" class="nav-content collapse " data-bs-parent="#setting-nav">
-                        <li>
-                            <a href="@Url.Action("Index","Setting")">
-                                <i class="bi bi-circle"></i><span>Discount and Page setting</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            }
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#setting-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-layout-text-window-reverse"></i><span>Setting</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="setting-nav" class="nav-content collapse " data-bs-parent="#setting-nav">
+                    <li>
+                        <a href="@Url.Action("Index","Setting")">
+                            <i class="bi bi-circle"></i><span>Discount and Page setting</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
 
         </ul>
     </aside>
@@ -656,12 +527,34 @@
     <main id="main" class="main">
         @await Html.PartialAsync("_Notification")
         @Html.Partial("_Loading")
-
         @RenderBody()
     </main>
 
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let counter = 0;
+            const loaderPercent = document.getElementById('loader-percentage');
+            const loaderWrapper = document.getElementById('loader-wrapper');
+
+            // Disable page interaction
+            document.body.classList.add("loading");
+
+            const interval = setInterval(() => {
+                counter++;
+                loaderPercent.textContent = counter + "%";
+
+                if (counter >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        loaderWrapper.style.display = 'none';
+                        document.body.classList.remove("loading");
+                    }, 50); // delay to let user see 100%
+                }
+            }, 20); // ~2 seconds to reach 100%
+        });
+    </script>
 
     <!-- jQuery (load first if any plugin depends on it) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

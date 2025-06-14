@@ -46,7 +46,8 @@ namespace Models
         public string IconPath { get; set; }
         public string UploadedBy { get; set; }
         public string UploadStatus { get; set; }
-        public string? UpdatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public string? DispUpdatedDate { get; set; }
         public bool? IsSuccess { get; set; }
         public bool? IsActivated { get; set; } = false;
     }

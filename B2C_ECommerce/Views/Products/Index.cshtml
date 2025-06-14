@@ -355,7 +355,7 @@
                     });
 
                     // Set initial values
-                    $("#MyProductsImg").on("click", ".metalColor", function (event) {
+                $("#MyProductsImg").on("click", ".metalColor", function (event) {
                         event.preventDefault();
 
                         var productId = $(this).attr('productId');
@@ -365,7 +365,9 @@
 
                         $(this).addClass("metalShow");
                         GetProductByColorId(productId, metalId);
-                    });
+                });
+
+
 
                     $("#MyProductsImg").on("mouseenter", ".metalColor", function (event) {
                         event.preventDefault();
@@ -400,6 +402,16 @@
                         $(this).addClass("metalHide");
                         GetProductByCaratId(productId, caratId);
                     });
+
+                    $("#MyProductsImg").on("click", ".shapeDT", function (event) {
+                        debugger;
+                        event.preventDefault();
+                        var sku = $(this).attr('sku');
+                        var shapeId = $(this).attr('shapeId');
+                        var colorId = $(this).attr('colorId');
+                        GetProductByShapeId(sku, shapeId, colorId)
+                    });
+
 
                     ActivePriceSlider();
 
@@ -686,6 +698,50 @@
                     });
             }
 
+
+        function GetProductByShapeId(sku, shapeId, colorId) {
+                $.ajax({
+                    url: '@Url.Action("GetProductDetailsByShapeId", "Products")',
+                    data: {
+                        sku: sku,
+                        shapeId: parseInt(shapeId),
+                        colorId: parseInt(colorId)
+                    },
+                    type: 'GET',
+                    dataType: 'json'
+                })
+                    .done(function (response) {
+                        const $productContainer = $(".product-item").has("[data-sku='" + sku + "']");
+                        const baseUrl = '@SD.BaseApiUrl'.replace(/\\/g, '/');
+
+                        //console.log($(".activemetalname[data-sku='" + sku + "']"));
+                        //console.log($(".price-regular[data-sku='" + sku + "']"));
+                        //console.log($(".price-old[data-sku='" + sku + "']"));
+
+                        $(".pro-title[data-title='" + response[0].title + "']");
+                        $(".activemetalname[data-sku='" + sku + "']").text(response[0].colorName);
+
+                        $(".price-regular[data-sku='" + response[0].Price + "']").text(response[0].Price);
+                        /*$(".price-old[data-sku='" + productId + "']").html('<del>' + response.unitPrice + '</del>');*/
+
+                        //const images = (response.productImageVideos || []).filter(x => x.imageUrl && x.imageUrl !== "-");
+                        //if (images.length > 0) {
+                        //    const priImg = baseUrl + '/' + images[0].imageUrl.replace(/\\/g, '/');
+                        //    $productContainer.find('.pri-img').attr('src', priImg).attr('alt', response.colorName + ' - Primary Image');
+                        //}
+
+                        //if (images.length > 1) {
+                        //    const secImg = baseUrl + '/' + images[1].imageUrl.replace(/\\/g, '/');
+                        //    $productContainer.find('.sec-img').attr('src', secImg).attr('alt', response.colorName + ' - Secondary Image');
+                        //}
+                    })
+                    .fail(function (xhr, status, error) {
+                        console.error('AJAX error:', status, error);
+                    });
+            }
+
+
+
             function ResetAllData()
             {
                 var page = 1;
@@ -720,6 +776,7 @@
         }
 
         function scrollShapes(offset) {
+            debugger;
             const container = document.querySelector('#MyProductsImg #shapeList');
             if (container) {
                 container.scrollLeft += offset;

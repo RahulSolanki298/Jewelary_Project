@@ -42,5 +42,10 @@ namespace Business.Repository.IRepository
         Task<List<DiamondFileUploadHistoryDTO>> GetDiamondFileUploadedHistoryList();
 
         Task<DiamondFileUploadHistoryDTO> GetDiamondFileUploadedHistoryById(int id);
+
+        Task<IEnumerable<DiamondData>> GetDiamondHistoryById(string diamondId);
+
+        Task InsertDiamondHistoryFromDiamondAsync(int historyId);
+
     }
 }

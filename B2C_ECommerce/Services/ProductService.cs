@@ -102,6 +102,7 @@ namespace B2C_ECommerce.Services
         public async Task<ProductDTO> GetProductByProductId(string productId)
         {
             var imageVideo = new ProductImageAndVideoDTO();
+            var RelatedProducts = new List<ProductDTO>();
             string imageUrl = "-";
             string videoUrl = "-";
 
@@ -271,8 +272,7 @@ namespace B2C_ECommerce.Services
                 productDTO.ProductImageVideos.Add(imageVideo);
             }
 
-
-
+            productDTO.RelatedProducts = await GetJewelleryByShapeColorId(firstProduct.Sku, firstProduct.ColorId.Value, firstProduct.CenterShapeId.Value);
             // Return products where there are product images/videos
             return productDTO;
         }
@@ -727,6 +727,130 @@ namespace B2C_ECommerce.Services
 
             // Return products where there are product images/videos
             return productDTOList;
+        }
+
+
+        public async Task<List<ProductDTO>> GetJewelleryByShapeColorId(string sku, int colorId, int? shapeId = 0)
+        {
+            List<ProductDTO> productQry = new List<ProductDTO>();
+            if (shapeId > 0)
+            {
+                productQry = await (
+                 from product in _context.Product
+                 where product.IsActivated == true && product.Sku == sku && product.CenterShapeId.Value == shapeId && product.ColorId == colorId
+                 join cat in _context.Category on product.CategoryId equals cat.Id
+                 join karat in _context.ProductProperty on product.KaratId equals karat.Id
+                 join colorProp in _context.ProductProperty on product.ColorId equals colorProp.Id into colorGroup
+                 from color in colorGroup.DefaultIfEmpty()
+                 join shapeProp in _context.ProductProperty on product.CenterShapeId equals shapeProp.Id into shapeGroup
+                 from shape in shapeGroup.DefaultIfEmpty()
+                 join ashapeProp in _context.ProductProperty on product.AccentStoneShapeId equals ashapeProp.Id into ashapeGroup
+                 from ashape in ashapeGroup.DefaultIfEmpty()
+                 join clarityProp in _context.ProductProperty on product.ClarityId equals clarityProp.Id into clarityGroup
+                 from clarity in clarityGroup.DefaultIfEmpty()
+                 join sizeProp in _context.ProductProperty on product.CenterCaratId equals sizeProp.Id into sizeGroup
+                 from size in sizeGroup.DefaultIfEmpty()
+                 select new ProductDTO
+                 {
+                     Id = product.Id,
+                     Title = product.Title,
+                     BandWidth = product.BandWidth,
+                     Length = product.Length,
+                     CaratName = product.Carat,
+                     CategoryId = cat.Id,
+                     CategoryName = cat.Name,
+                     ProductType = cat.ProductType,
+                     ColorId = product.ColorId,
+                     ColorName = color.Name,
+                     ClarityId = product.ClarityId,
+                     ClarityName = clarity.Name,
+                     CenterShapeId = product.CenterShapeId,
+                     CenterShapeName = shape.Name,
+                     AccentStoneShapeId = product.AccentStoneShapeId,
+                     AccentStoneShapeName = ashape.Name,
+                     CaratSizeId = product.CaratSizeId,
+                     Description = product.Description,
+                     Sku = product.Sku,
+                     UnitPrice = product.UnitPrice,
+                     Price = product.Price,
+                     IsActivated = product.IsActivated,
+                     GoldWeight = product.GoldWeight,
+                     CenterCaratName = size.Name,
+                     Grades = product.Grades,
+                     Certificate = product.Certificate,
+                     VenderName = product.Vendor,
+                     CTW = product.CTW,
+                     Diameter = product.Diameter,
+                     CenterCaratId = product.CenterCaratId,
+                     MMSize = product.MMSize,
+                     NoOfStones = product.NoOfStones,
+                     DiaWT = product.DiaWT,
+                     KaratId = product.KaratId,
+                     Karat = karat.Name
+                 }
+             ).AsNoTracking().ToListAsync();
+            }
+            else
+            {
+                productQry = await (
+                  from product in _context.Product
+                  where product.IsActivated == true && product.Sku == sku && product.ColorId == colorId
+                  join cat in _context.Category on product.CategoryId equals cat.Id
+                  join karat in _context.ProductProperty on product.KaratId equals karat.Id
+                  join colorProp in _context.ProductProperty on product.ColorId equals colorProp.Id into colorGroup
+                  from color in colorGroup.DefaultIfEmpty()
+                  join shapeProp in _context.ProductProperty on product.CenterShapeId equals shapeProp.Id into shapeGroup
+                  from shape in shapeGroup.DefaultIfEmpty()
+                  join ashapeProp in _context.ProductProperty on product.AccentStoneShapeId equals ashapeProp.Id into ashapeGroup
+                  from ashape in ashapeGroup.DefaultIfEmpty()
+                  join clarityProp in _context.ProductProperty on product.ClarityId equals clarityProp.Id into clarityGroup
+                  from clarity in clarityGroup.DefaultIfEmpty()
+                  join sizeProp in _context.ProductProperty on product.CenterCaratId equals sizeProp.Id into sizeGroup
+                  from size in sizeGroup.DefaultIfEmpty()
+                  select new ProductDTO
+                  {
+                      Id = product.Id,
+                      Title = product.Title,
+                      BandWidth = product.BandWidth,
+                      Length = product.Length,
+                      CaratName = product.Carat,
+                      CategoryId = cat.Id,
+                      CategoryName = cat.Name,
+                      ProductType = cat.ProductType,
+                      ColorId = product.ColorId,
+                      ColorName = color.Name,
+                      ClarityId = product.ClarityId,
+                      ClarityName = clarity.Name,
+                      CenterShapeId = product.CenterShapeId,
+                      CenterShapeName = shape.Name,
+                      AccentStoneShapeId = product.AccentStoneShapeId,
+                      AccentStoneShapeName = ashape.Name,
+                      CaratSizeId = product.CaratSizeId,
+                      Description = product.Description,
+                      Sku = product.Sku,
+                      UnitPrice = product.UnitPrice,
+                      Price = product.Price,
+                      IsActivated = product.IsActivated,
+                      GoldWeight = product.GoldWeight,
+                      CenterCaratName = size.Name,
+                      Grades = product.Grades,
+                      Certificate = product.Certificate,
+                      VenderName = product.Vendor,
+                      CTW = product.CTW,
+                      Diameter = product.Diameter,
+                      CenterCaratId = product.CenterCaratId,
+                      MMSize = product.MMSize,
+                      NoOfStones = product.NoOfStones,
+                      DiaWT = product.DiaWT,
+                      KaratId = product.KaratId,
+                      Karat = karat.Name
+                  }
+              ).AsNoTracking().ToListAsync();
+            }
+
+
+
+            return productQry;
         }
     }
 }

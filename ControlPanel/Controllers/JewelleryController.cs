@@ -191,20 +191,20 @@ namespace ControlPanel.Controllers
                     CTW = worksheet.Cells[row, 11].Text,
                     CenterShapeName = worksheet.Cells[row, 12].Text,
                     CenterCaratName = worksheet.Cells[row, 13].Text,
-                    //Certificate = worksheet.Cells[row, 15].Text,
                     ColorName = worksheet.Cells[row, 14].Text,
-                    CollectionName = worksheet.Cells[row, 15].Text,
-                    StyleName = worksheet.Cells[row, 16].Text,
-                    AccentStoneShapeName = worksheet.Cells[row, 17].Text,
-                    MMSize = worksheet.Cells[row, 18].Text,
-                    DiaWT = decimal.TryParse(worksheet.Cells[row, 19].Text, out var diaWt) ? diaWt : (decimal?)null,
-                    NoOfStones = int.TryParse(worksheet.Cells[row, 20].Text, out var noOfStones) ? noOfStones : 0,
-                    Grades = worksheet.Cells[row, 21].Text,
+                    Certificate = worksheet.Cells[row, 15].Text,
+                    CollectionName = worksheet.Cells[row, 16].Text,
+                    StyleName = worksheet.Cells[row, 17].Text,
+                    AccentStoneShapeName = worksheet.Cells[row, 18].Text,
+                    MMSize = worksheet.Cells[row, 19].Text,
+                    DiaWT = decimal.TryParse(worksheet.Cells[row, 20].Text, out var diaWt) ? diaWt : (decimal?)null,
+                    NoOfStones = int.TryParse(worksheet.Cells[row, 21].Text, out var noOfStones) ? noOfStones : 0,
+                    Grades = worksheet.Cells[row, 22].Text,
                     //ProductType = worksheet.Cells[row, 23].Text,
-                    Price = ConvertStringToDecimal(worksheet.Cells[row, 22].Text),
+                    Price = ConvertStringToDecimal(worksheet.Cells[row, 23].Text),
                     //UnitPrice = ConvertStringToDecimal(worksheet.Cells[row, 24].Text),
-                    WholesaleCost = decimal.TryParse(worksheet.Cells[row, 25].Text, out var hCost) ? hCost : (decimal?)null,
-                    Description = worksheet.Cells[row, 29].Text,
+                    WholesaleCost = decimal.TryParse(worksheet.Cells[row, 26].Text, out var hCost) ? hCost : (decimal?)null,
+                    Description = worksheet.Cells[row, 30].Text,
                 };
 
                 if (!string.IsNullOrWhiteSpace(product.Title) && !string.IsNullOrWhiteSpace(product.VenderName) && !string.IsNullOrWhiteSpace(product.VenderStyle) && !string.IsNullOrWhiteSpace(product.Sku))
@@ -359,18 +359,19 @@ namespace ControlPanel.Controllers
                     CenterShapeName= worksheet.Cells[row, 11].Text,
                     CenterCaratName= worksheet.Cells[row, 12].Text,
                     ColorName = worksheet.Cells[row, 13].Text,
-                    CollectionName = worksheet.Cells[row, 14].Text,
-                    StyleName = worksheet.Cells[row, 15].Text,
-                    AccentStoneShapeName = worksheet.Cells[row, 16].Text,
-                    MMSize = worksheet.Cells[row, 17].Text,
-                    DiaWT = decimal.TryParse(worksheet.Cells[row, 18].Text, out var diaWt) ? diaWt : 0,
-                    NoOfStones = int.TryParse(worksheet.Cells[row, 19].Text, out var noOfStones) ? noOfStones : 0,
-                    Grades = worksheet.Cells[row, 20].Text,
+                    Certificate= worksheet.Cells[row, 14].Text,
+                    CollectionName = worksheet.Cells[row, 15].Text,
+                    StyleName = worksheet.Cells[row, 16].Text,
+                    AccentStoneShapeName = worksheet.Cells[row, 17].Text,
+                    MMSize = worksheet.Cells[row, 18].Text,
+                    DiaWT = decimal.TryParse(worksheet.Cells[row, 19].Text, out var diaWt) ? diaWt : 0,
+                    NoOfStones = int.TryParse(worksheet.Cells[row, 20].Text, out var noOfStones) ? noOfStones : 0,
+                    Grades = worksheet.Cells[row, 21].Text,
                     //ProductType = worksheet.Cells[row, 22].Text,
-                    Price = ConvertStringToDecimal(worksheet.Cells[row, 21].Text),
-                    WholesaleCost = decimal.TryParse(worksheet.Cells[row, 24].Text, out var hCost) ? hCost : 0,
+                    Price = ConvertStringToDecimal(worksheet.Cells[row, 22].Text),
+                    WholesaleCost = decimal.TryParse(worksheet.Cells[row, 23].Text, out var hCost) ? hCost : 0,
                     //UnitPrice = ConvertStringToDecimal(worksheet.Cells[row, 23].Text),
-                    Description = worksheet.Cells[row, 30].Text,
+                    Description = worksheet.Cells[row, 31].Text,
                     
                 };
 
@@ -395,6 +396,7 @@ namespace ControlPanel.Controllers
                     product.CenterShapeName = string.IsNullOrWhiteSpace(product.CenterShapeName) ? tempProducts.CenterShapeName : product.CenterShapeName;
                     product.CenterCaratName = string.IsNullOrWhiteSpace(product.CenterCaratName) ? tempProducts.CenterCaratName : product.CenterCaratName;
                     product.ColorName = string.IsNullOrWhiteSpace(product.ColorName) ? tempProducts.ColorName : product.ColorName;
+                    product.Certificate = string.IsNullOrWhiteSpace(product.Certificate) ? tempProducts.Certificate : product.Certificate;
                     product.CollectionName = string.IsNullOrWhiteSpace(product.CollectionName) ? tempProducts.CollectionName : product.CollectionName;
                     product.StyleName = string.IsNullOrWhiteSpace(product.StyleName) ? tempProducts.StyleName : product.StyleName;
                     product.AccentStoneShapeName = string.IsNullOrWhiteSpace(product.AccentStoneShapeName) ? tempProducts.AccentStoneShapeName : product.AccentStoneShapeName;
@@ -794,7 +796,8 @@ namespace ControlPanel.Controllers
                             WholesaleCost = baseProduct.WholesaleCost,
                             Diameter = baseProduct.Diameter,
                             StyleName=baseProduct.StyleName,
-                            CollectionName=baseProduct.CollectionName
+                            CollectionName=baseProduct.CollectionName,
+                            
                         });
                     }
                 }

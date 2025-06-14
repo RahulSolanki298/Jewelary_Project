@@ -8,6 +8,25 @@
             color: transparent !important;
         }
     </style>
+    <style>
+        .loader-container {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+            .loader-container.active {
+                display: flex;
+            }
+
+        /* Optional: fade out form content during loading */
+        #formContent.loading {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    </style>
+
 }
 <div class="container-fluid">
     <div class="row mb-0">
@@ -47,46 +66,63 @@
         </div>
     </div>
 
-    <div class="modal fade" id="showFileUpload" tabindex="-1" data-bs-backdrop="false">
+    <!-- Upload Excel Modal -->
+    <div class="modal fade" id="showFileUpload" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form id="uploadForm" asp-controller="Diamond" asp-action="UpsertDiamonds" method="post" enctype="multipart/form-data">
-                    <div class="modal-header bg-dark text-light">
-                        <h5 class="modal-title">Upload Excel</h5>
-                        <button type="button" class="btn-close btn-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="modal-header bg-dark text-white">
+                        <h5 class="modal-title" id="uploadModalLabel">Upload Excel</h5>
+                        <button type="button" class="btn-close btn-danger btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        @if (TempData["UploadSuccess"] != null)
-                        {
-                            <div class="alert alert-success">@TempData["UploadSuccess"]</div>
-                        }
-                        @if (TempData["UploadError"] != null)
-                        {
-                            <div class="alert alert-danger">@TempData["UploadError"]</div>
-                        }
+                        <div id="uploadMessage"></div>
+
                         <div class="mb-3">
                             <label for="excelFile" class="form-label">Select Excel or CSV File</label>
                             <input type="file" class="form-control" id="excelFile" name="file" accept=".xls,.xlsx,.csv" required>
                         </div>
-                        <div class="col-12">
-                            <h5>Note :</h5>
+                        <!-- Loader -->
+                        <div id="formLoader" class="loader-container">
+                            <img src="~/assets/Loader/JF-WEB-LOADER.gif" style="width:120px;" />
+                        </div>
+                        <div>
+                            <h6>Note:</h6>
                             <p>
-                                we accept CSV and Excel File for upload bulk diamond.<br />
-                                excel format is : <a href="~/FileFormats/DiamondFormat.xlsx">Download</a>
+                                We accept CSV and Excel files for bulk diamond uploads.<br>
+                                Download sample format: <a href="~/FileFormats/DiamondFormat.xlsx">Download</a>
                             </p>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <div class="row">
-                            <div class="col-12">
-                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                                <button id="uploadBtn" type="submit" class="btn btn-dark">Upload</button>
-                            </div>
-                        </div>
-                       
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        <button id="uploadBtn" type="submit" class="btn btn-theme">Upload</button>
                     </div>
                 </form>
             </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade m-2" id="showHistory" tabindex="-1" data-bs-backdrop="false">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header bg-dark">
+                <h5 class="modal-title text-white">History Data</h5>
+                <button type="button" class="btn-close text-white" style="color:black !important;background:white !important" data-bs-dismiss="modal" aria-label="Close">X</button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12 p-1">
+                            <div id="divHistoryDetails">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -120,8 +156,9 @@
     <script src="~/jqxcontent/jqwidgets/jqxgrid.grouping.js"></script>
 
     @* JQX Widgets *@
-<script>
-        var resultData = [];
+    <script>
+    var resultData = [];
+    var resultHistoryData = [];
         var source;
         $(document).ready(function () {
 
@@ -138,8 +175,8 @@
                 let formData = new FormData(form);
 
                 $('#uploadBtn').prop('disabled', true).text('Uploading...');
-                $('#loader').show();
-
+               const loader = document.getElementById('formLoader');
+               loader.classList.add('active');
                 $.ajax({
                     url: form.action,
                     type: 'POST',
@@ -147,24 +184,37 @@
                     contentType: false,
                     processData: false,
                     success: function (response) {
-                        $('#loader').hide();
+                        debugger;
+                        $('.loader').hide();
                         $('#uploadBtn').prop('disabled', false).text('Upload');
-
-                        // Show success alert
+                        if (response.status=="success") {
+                            // Show success alert
                         Swal.fire({
                             icon: 'success',
                             title: 'Success',
                             text: response.message,
                             confirmButtonColor: '#3085d6',
                         }).then(() => {
-                            // Redirect after user clicks OK
+                            setTimeout(() => {
+                                loader.classList.remove('active');
+                                formContent.classList.remove('loading');
+                            }, 600);
                             window.location.href = '@Url.Action("ThankYouForUploaded", "Diamond")';
                         });
 
                         toastr.success(response.message);
+                        } else {
+                            Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.message,
+                        }).then(() => {
+                        });
+                        }
+
                     },
                     error: function (xhr) {
-                        $('#loader').hide();
+                        $('.loader').hide();
                         $('#uploadBtn').prop('disabled', false).text('Upload');
 
                         let errorMsg = 'Something went wrong. Please try again.';
@@ -188,8 +238,7 @@
              $('#divDetails').on('filter', function (event) {
                 var filteredData = $('#divDetails').jqxGrid('getrows');
                 updateFilterItems(filteredData);
-            });
-
+             });
 
             $("#divDetails").on("cellclick", function (event) {
 
@@ -209,8 +258,19 @@
                     let data = $("#divDetails").jqxGrid('getrowdata', rowBoundIndex);
                     window.location.href = `@Url.Action("GetDiamond", "Diamond")?diamondId=${data.Id}`;
                 }
+                if (dataField == 'StoneId') {
+                    let data = $("#divDetails").jqxGrid('getrowdata', rowBoundIndex);
+                    loadHistoryData(data.StoneId)
+                }
+
 
             });
+
+            $('#divHistoryDetails').on('filter', function (event) {
+                var filteredData = $('#divHistoryDetails').jqxGrid('getrows');
+                updateHistoryFilterItems(filteredData);
+            });
+
 
             $('.dropdown-item').on('click', function (e) {
                             e.preventDefault();
@@ -515,7 +575,7 @@
                                 { text: 'Lab Shape',datafield: 'LabShape', style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
                                 { text: 'Rap Amount',datafield: 'RapAmount', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', cellsformat: 'f2' },
                                 { text: 'User', datafield: 'UploadedBy', style: blackstyle, width: 120, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
-                                { text: 'Date', datafield: 'UpdatedDate', style: blackstyle, width: 120, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+                                { text: 'Date', datafield: 'DispUpdatedDate', style: blackstyle, width: 120, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
 
 
                                 { text: 'Id',datafield: 'Id',hidden:true, style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
@@ -548,5 +608,129 @@
             });
         }
 
-</script>
+        function loadHistoryData(id) {
+            resultHistoryData = [];
+            $('#divHistoryDetails').jqxGrid('clear');
+            $("#showHistory").modal("hide");
+            $.ajax({
+                type: "get",
+                url: "@Url.Action("GetDiamondHistoryById", "Diamond")",
+                dataType: "json",
+                data:{
+                    'diamondId':id,
+                },
+                success: function (d) {
+                    if (d.data.result.length > 0) {
+                        $("#showHistory").modal("show");
+
+                        resultHistoryData = JSON.parse(d.data.result);
+                        source =
+                        {
+                            localdata: resultHistoryData,
+                            datatype: "array"
+                        };
+                        var dataAdapter = new $.jqx.dataAdapter(source, {
+                            loadComplete: function (data) { },
+                            loadError: function (xhr, status, error) { }
+                        });
+                        var blackstyle = {
+                            headerBackgroundColor: '#151542',
+                            headerColor: '#fff',
+                        };
+
+                        var videolink = function (row, column, value) {
+                            return '<div style="margin:4px;"><a href="' + value + '" target="_blank"><i class="bi bi-gem" style="font-size:20px;margin:2px 5px;"></i>View 360</a></div>';
+                        };
+
+                        var Certilink = function (row, column, value) {
+                            return '<div style="margin:4px;"><a href="' + value + '" target="_blank"><i class="bi bi-file-earmark" style="font-size:20px;margin:2px 15px;"></i></a></div>';
+                        };
+
+                        $("#divHistoryDetails").jqxGrid(
+                        {
+                            width: "100%",
+                            source: dataAdapter,
+                            height: '700px',
+                            columnsresize: true,
+                            columnsreorder: true,
+                            sortable: true,
+                            altrows: true,
+                            enabletooltips: true,
+                            enablebrowserselection: true,
+                            filterable: true,
+                            editable: false,
+                            showstatusbar: true,
+                            statusbarheight: 25,
+                            showaggregates: false,
+                            rowsheight: 35,
+                            columns: [
+                                {
+                                    text: '#', sortable: false, filterable: false, editable: false,
+                                    groupable: false, draggable: false, resizable: false,
+                                    datafield: '', columntype: 'number', pinned: true, style: blackstyle,
+                                    align: 'center', cellsalign: 'center', width: 40,
+                                    cellsrenderer: function (row, column, value) {
+                                        return "<div style='margin:4px;'>" + (value + 1) + "</div>";
+                                    }
+                                },
+                                { text: 'Stone ID', pinned: true, datafield: 'StoneId', style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+                                { text: 'Status', pinned: true, datafield: 'UploadStatus', style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+                                { text: 'Step',datafield: 'Step', style: blackstyle, width: 100, align: 'center', cellsalign: 'left' },
+                                { text: 'Type',datafield: 'TypeName', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
+                                { text: 'Lab',datafield: 'LabName', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
+                                { text: 'Shape',datafield: 'ShapeName', style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+                                { text: 'Carat',datafield: 'Carat', style: blackstyle, width: 100, align: 'center', cellsalign: 'center' },
+                                { text: 'Color',datafield: 'ColorName', style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+                                { text: 'Clarity',datafield: 'ClarityName', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
+                                { text: 'Cut',datafield: 'CutName', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
+                                { text: 'Polish',datafield: 'PolishName', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
+                                { text: 'Sym',datafield: 'SymmetyName', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
+                                { text: 'Flo',datafield: 'FluorName', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
+                                {
+                                    text: 'Rap.($)',datafield: 'RAP', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', cellsformat: 'f2'
+
+                                },
+                                { text: 'Disc(%)',datafield: 'Discount', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', cellsformat: 'f2' },
+                                { text: 'Price',datafield: 'Price', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', cellsformat: 'f2' },
+                                { text: 'Amount',datafield: 'Amount', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', cellsformat: 'f2' },
+                                { text: 'Measurement',datafield: 'Measurement', style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+                                { text: 'Ratio',datafield: 'Ratio', style: blackstyle, width: 100, align: 'center', cellsalign: 'center' },
+                                { text: 'Depth%',datafield: 'Depth', style: blackstyle, width: 100, align: 'center', cellsalign: 'center' },
+                                { text: 'Table%',datafield: 'Table', style: blackstyle, width: 100, align: 'center', cellsalign: 'center' },
+                                { text: 'Shade',datafield: 'Shade', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', filtertype: 'checkedlist' },
+                                { text: 'Lab Shape',datafield: 'LabShape', style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+                                { text: 'Rap Amount',datafield: 'RapAmount', style: blackstyle, width: 100, align: 'center', cellsalign: 'center', cellsformat: 'f2' },
+                                { text: 'User', datafield: 'UploadedBy', style: blackstyle, width: 120, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+                                { text: 'Date', datafield: 'DispUpdatedDate', style: blackstyle, width: 120, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+
+
+                                { text: 'Id',datafield: 'Id',hidden:true, style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+                                { text: 'IsActivated',datafield: 'IsActivated',hidden:true, style: blackstyle, width: 100, align: 'center', cellsalign: 'left', filtertype: 'checkedlist' },
+
+                            ],
+                        });
+                    }
+                }
+            });
+    }
+
+        function updateHistoryFilterItems(filteredData) {
+            var columns = $('#divHistoryDetails').jqxGrid('columns').records;
+
+            columns.forEach(column => {
+                var columnName = column.datafield;
+
+                var uniqueValues = [...new Set(filteredData.map(row => row[columnName] === null ? "" : row[columnName]))].filter(value => value !== undefined);
+
+                var updatedFilterItems = uniqueValues.map(value => value.toString());
+
+                if (updatedFilterItems.length > 0) {
+                    $('#divHistoryDetails').jqxGrid('setcolumnproperty', columnName, 'filteritems', updatedFilterItems);
+                }
+                else {
+                    $('#divHistoryDetails').jqxGrid('setcolumnproperty', columnName, 'filteritems', []);
+                }
+            });
+        }
+    </script>
 }

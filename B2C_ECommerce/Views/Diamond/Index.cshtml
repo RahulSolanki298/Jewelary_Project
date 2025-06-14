@@ -505,6 +505,7 @@
             }
 
         async function GetCutData() {
+            debugger;
                 try {
                     const response = await $.ajax({
                         url:'@Url.Action("GetCutList", "Diamond")',
@@ -555,13 +556,13 @@
                              const startindex = ui.values[0];
                              const endindex = ui.values[1];
 
-                             const mincut = cutlist[startindex];
-                             const maxcut = cutlist[endindex];
+                            const mincut = cutList[startindex];
+                            const maxcut = cutList[endindex];
 
                              $("#mincut").val(mincut.name);
                              $("#maxcut").val(maxcut.name);
 
-                             const selectedcutids = cutlist
+                            const selectedcutids = cutList
                                  .slice(startindex, endindex + 1)
                                  .map(item => item.id);
 
@@ -1243,10 +1244,8 @@
                             //    $(`.shape-btn[shapeId='${txtShape}']`).addClass('selected');
 
                             //}
-                            debugger
                             const shapeId = txtShape?.toString(); // or parseInt(txtShape) depending on type of filter
                             if (shapeId && shapeId !== '0') {
-                                debugger
                                 if (!diamondFilters.Shapes.includes(shapeId)) {
                                     diamondFilters.Shapes.push(shapeId);
                                 }

@@ -17,12 +17,15 @@ namespace B2C_ECommerce.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IBlogRepository _blogRepository;
         private readonly ISettingRepository _settingRepository;
-        public HomeController(ILogger<HomeController> logger
-            , IBlogRepository blogRepository,ISettingRepository settingRepository)
+        private readonly IProductPropertyRepository _productPropertyRepository;
+
+        public HomeController(ILogger<HomeController> logger, IBlogRepository blogRepository,ISettingRepository settingRepository
+            ,IProductPropertyRepository productPropertyRepository)
         {
             _logger = logger;
             _blogRepository = blogRepository;
             _settingRepository = settingRepository;
+            _productPropertyRepository = productPropertyRepository;
         }
 
         public IActionResult Index()
@@ -42,15 +45,12 @@ namespace B2C_ECommerce.Controllers
 
         }
 
-
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
-
+        
         [HttpGet]
         public async Task<IActionResult> ShowHomePageData() { 
         
@@ -60,15 +60,12 @@ namespace B2C_ECommerce.Controllers
             return PartialView("_HomeHeaders", webData);
         }
 
-
-        //public async IActionResult StylesListData()
-        //{
-
-        //    var response = await _settingRepository.GetHomePageSettingList();
-        //    var webData = response.Where(x => x.Device == SD.WebDevice).FirstOrDefault();
-
-        //    return PartialView("_HomePage", webData);
-        //}
+        [HttpGet]
+        public async Task<IActionResult> ShowApplicationNavmenu()
+        {
+            var response = await _productPropertyRepository.GetMainPropertyList();
+            return PartialView("_HomeHeaders", response);
+        }
 
     }
 }

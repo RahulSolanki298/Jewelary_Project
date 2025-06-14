@@ -71,9 +71,20 @@ namespace B2C_ECommerce.Controllers
         public async Task<IActionResult> ProductDetailsByCaratId(string sku, int? caratId = 0)
         {
             var jsonResult = await _productRepository.GetProductsByColorId(sku, 0, caratId);
-
-
             return Json(jsonResult);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetProductDetailsByShapeId(string sku, int? shapeId = 0, int colorId = 0)
+        {
+            if (colorId > 0 && shapeId > 0)
+            {
+                var jsonResult = await _productRepository.GetJewelleryByShapeColorId(sku, colorId, shapeId);
+                return Json(jsonResult);
+
+            }
+
+            return null;
         }
     }
 }

@@ -22,5 +22,8 @@ namespace B2C_ECommerce.IServices
         Task<List<ProductPropertyDTO>> GetProductColorList();
 
         Task<List<ProductPropertyDTO>> GetShapeList();
+
+
+        Task<List<ProductDTO>> GetJewelleryByShapeColorId(string sku, int colorId, int? shapeId = 0);
     }
 }

@@ -1,0 +1,132 @@
+﻿
+@{
+    ViewData["Title"] = "File Upload History";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    <link href="~/jqxcontent/jqwidgets/styles/jqx.base.css" rel="stylesheet" />
+    <link href="~/jqxcontent/jqwidgets/styles/jqx.fluent.css" rel="stylesheet" />
+
+    <style>
+        span[id^="jqxWidget"] {
+            color: transparent !important;
+        }
+    </style>
+}
+<div class="container-fluid">
+    <div class="row mb-0">
+        <div class="col-xxl-10 col-xl-10 col-lg-9 col-md-9 col-sm-8">
+            <h4 class=""><b>View your online Diamond Inventory</b> <span class="ml-2 badge badge-light blinkingTextRed">Live</span></h4>
+        </div>
+        <div class="col-xxl-2 col-xl-2 col-lg-3 col-md-3 col-sm-4">
+            <button class="btn btn-theme float-end" id="ExcelUpload" title="Upload diamonds with excel upload."><i class="bi bi-plus-circle me-1"></i> Add Products</button>
+        </div>
+    </div>
+    <div class="card mt-2">
+        <div class="card-body">
+            <div class="row mt-2">
+                <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <div id="divDetails">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script src="~/jqxcontent/jqwidgets/jqxcore.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxdata.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxcore.elements.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxdata.export.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxbuttons.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxscrollbar.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxmenu.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxcheckbox.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxlistbox.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxdropdownlist.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.sort.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.pager.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.selection.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.edit.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.filter.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.columnsresize.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.aggregates.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxpanel.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.columnsreorder.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxtextarea.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxinput.js"></script>
+    <script src="~/jqxcontent/jqwidgets/jqxgrid.grouping.js"></script>
+
+    <script>
+        var resultData = [];
+        var source;
+        $(document).ready(function () {
+            loadData();
+        });
+        function loadData() {
+    $('#divDetails').jqxGrid('clear');
+
+    $.ajax({
+        type: "GET",
+        url: "@Url.Action("ShowFileUploadHistory", "Diamond")",
+        dataType: "json",
+        success: function (d) {
+            debugger;
+            if (d.data.result && d.data.result.length > 0) {
+                var resultData = d.data.result;
+
+                var source = {
+                    localdata: resultData,
+                    datatype: "array"
+                };
+
+                var dataAdapter = new $.jqx.dataAdapter(source);
+
+                $('#divDetails').jqxGrid({
+                    width: "100%",
+                    source: dataAdapter,
+                    height: 700,
+                    sortable: true,
+                    filterable: true,
+                    columnsresize: true,
+                    altrows: true,
+                    selectionmode: 'singlerow',
+                    columns: [
+                        {
+                            text: '#', datafield: '', columntype: 'number', width: 40,
+                            cellsrenderer: function (row) {
+                                return "<div style='margin:4px;'>" + (row + 1) + "</div>";
+                            }
+                        },
+                        { text: 'Title', datafield: 'Title', width: 200 },
+                        {
+                            text: 'Uploaded Date', datafield: 'UploadedDate', width: 150,
+                            cellsrenderer: function (row, column, value) {
+                                let date = new Date(value);
+                                return date.toLocaleDateString(); // Format as dd/MM/yyyy if needed
+                            }
+                        },
+                        { text: 'Uploaded By', datafield: 'UploadedPersonName', width: 150 },
+                        { text: 'Success', datafield: 'NoOfSuccess', width: 80 },
+                        { text: 'Failed', datafield: 'NoOfFailed', width: 80 },
+                        { text: 'Is Success', datafield: 'IsSuccess', width: 80 },
+                        { text: 'Id', datafield: 'Id', hidden: true }
+                    ]
+                });
+            } else {
+                console.warn("No data found.");
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error loading data:", error);
+        }
+    });
+}
+
+    </script>
+}

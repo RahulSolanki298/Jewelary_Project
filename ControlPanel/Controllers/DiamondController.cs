@@ -69,7 +69,7 @@ namespace ControlPanel.Controllers
         {
             if (file == null || file.Length == 0)
             {
-                return Json(new { message = "No file uploaded." });
+                return Json(new { status="fail",message = "No file uploaded." });
             }
 
             var userId = HttpContext.Session.GetString("UserId");
@@ -78,7 +78,7 @@ namespace ControlPanel.Controllers
             string extension = Path.GetExtension(file.FileName).ToLowerInvariant();
             if (extension != ".xlsx" && extension != ".csv")
             {
-                return Json(new { message = "Invalid file format. Only .xlsx or .csv files are supported." });
+                return Json(new { status = "fail", message = "Invalid file format. Only .xlsx or .csv files are supported." });
             }
 
             try
@@ -105,7 +105,7 @@ namespace ControlPanel.Controllers
 
                 if (diamondsList == null || diamondsList.Count == 0)
                 {
-                    return Json(new { message = "No valid diamond records found in the file." });
+                    return Json(new { status = "fail", message = "No valid diamond records found in the file." });
                 }
 
                 // Step 4: Bulk insert
@@ -113,14 +113,14 @@ namespace ControlPanel.Controllers
                 var result = await _diamondRepository.BulkInsertDiamondsAsync(jsonData, uploadHistoryId);
                 if (result.Count > 0)
                 {
-                    await _diamondRepository.BulkInsertDiamondHistoryAsync(result);
+                    await _diamondRepository.InsertDiamondHistoryFromDiamondAsync(uploadHistoryId);
                 }
 
-                return Json(new { message = $"File uploaded successfully. {diamondsList.Count} records inserted." });
+                return Json(new { status = "success", message = $"File uploaded successfully. {diamondsList.Count} records inserted." });
             }
             catch (Exception ex)
             {
-                return Json(new { message = $"Internal server error: {ex.Message}" });
+                return Json(new { status = "fail", message = $"Internal server error: {ex.Message}" });
             }
         }
 
@@ -243,11 +243,11 @@ namespace ControlPanel.Controllers
                     return View(diamondData);
                 }
 
-                existingProperty.Name = diamondData.Name;
-                existingProperty.SymbolName = diamondData.SymbolName;
-                existingProperty.IconPath = diamondData.IconPath;
-                existingProperty.Description = diamondData.Description;
-                existingProperty.IsActivated = diamondData.IsActivated;
+                existingProperty.Name = !string.IsNullOrWhiteSpace(diamondData.Name) ? diamondData.Name : existingProperty.Name;
+                existingProperty.SymbolName = !string.IsNullOrWhiteSpace(diamondData.SymbolName) ? diamondData.SymbolName : existingProperty.SymbolName;
+                existingProperty.IconPath = !string.IsNullOrWhiteSpace(diamondData.IconPath) ? diamondData.IconPath : existingProperty.IconPath;
+                existingProperty.Description = !string.IsNullOrWhiteSpace(diamondData.Description) ? diamondData.Description : existingProperty.Description;
+                existingProperty.IsActivated = diamondData.IsActivated != true ? false : true;
                 existingProperty.ParentId = diamondData.ParentId;
                 existingProperty.DispOrder = diamondData.DispOrder;
 
@@ -387,49 +387,6 @@ namespace ControlPanel.Controllers
 
                 await _diamondRepository.UpdateDiamondsStatus(IsExist);
 
-                var diamondHist = new DiamondHistory
-                {
-                    DiamondId = IsExist.Id,
-                    StoneId = IsExist.StoneId,
-                    DNA = IsExist.DNA,
-                    Step = IsExist.Step,
-                    TypeId = IsExist.TypeId,
-                    LabId = IsExist.LabId,
-                    ShapeId = IsExist.ShapeId,
-                    Carat = IsExist.Carat,
-                    ClarityId = IsExist.ClarityId,
-                    ColorId = IsExist.ColorId,
-                    CutId = IsExist.CutId,
-                    PolishId = IsExist.PolishId,
-                    SymmetryId = IsExist.SymmetryId,
-                    FluorId = IsExist.FluorId,
-                    RAP = IsExist.RAP,
-                    Discount = IsExist.Discount,
-                    Price = IsExist.Price,
-                    Amount = IsExist.Amount,
-                    Measurement = IsExist.Measurement,
-                    Ratio = IsExist.Ratio,
-                    Depth = IsExist.Depth,
-                    Table = IsExist.Table,
-                    Shade = IsExist.Shade,
-                    LabShape = IsExist.LabShape,
-                    RapAmount = IsExist.RapAmount,
-                    Certificate = IsExist.Certificate,
-                    DiamondImagePath = IsExist.DiamondImagePath,
-                    DiamondVideoPath = IsExist.DiamondVideoPath,
-                    UploadStatus = IsExist.UploadStatus,
-                    UpdatedBy = IsExist.UpdatedBy,
-                    UpdatedDate = IsExist.UpdatedDate,
-                    IsActivated = IsExist.IsActivated,
-                    CreatedBy = IsExist.CreatedBy,
-                    CreatedDate = IsExist.CreatedDate,
-                    IsSuccess = true,
-                };
-
-                await _diamondRepository.AddDiamondHistory(diamondHist);
-
-
-
                 return new Diamond();
             }
 
@@ -563,46 +520,6 @@ namespace ControlPanel.Controllers
                 IsExist.UpdatedBy = userId;
                 IsExist.IsSuccess = true;
                 await _diamondRepository.UpdateDiamondsStatus(IsExist);
-
-                diamondHist = new DiamondHistory
-                {
-                    DiamondId = IsExist.Id,
-                    StoneId = IsExist.StoneId,
-                    DNA = IsExist.DNA,
-                    Step = IsExist.Step,
-                    TypeId = IsExist.TypeId,
-                    LabId = IsExist.LabId,
-                    ShapeId = IsExist.ShapeId,
-                    Carat = IsExist.Carat,
-                    ClarityId = IsExist.ClarityId,
-                    ColorId = IsExist.ColorId,
-                    CutId = IsExist.CutId,
-                    PolishId = IsExist.PolishId,
-                    SymmetryId = IsExist.SymmetryId,
-                    FluorId = IsExist.FluorId,
-                    RAP = IsExist.RAP,
-                    Discount = IsExist.Discount,
-                    Price = IsExist.Price,
-                    Amount = IsExist.Amount,
-                    Measurement = IsExist.Measurement,
-                    Ratio = IsExist.Ratio,
-                    Depth = IsExist.Depth,
-                    Table = IsExist.Table,
-                    Shade = IsExist.Shade,
-                    LabShape = IsExist.LabShape,
-                    RapAmount = IsExist.RapAmount,
-                    Certificate = IsExist.Certificate,
-                    DiamondImagePath = IsExist.DiamondImagePath,
-                    DiamondVideoPath = IsExist.DiamondVideoPath,
-                    UploadStatus = IsExist.UploadStatus,
-                    UpdatedBy = IsExist.UpdatedBy,
-                    UpdatedDate = IsExist.UpdatedDate,
-                    IsActivated = IsExist.IsActivated,
-                    CreatedBy = IsExist.CreatedBy,
-                    CreatedDate = IsExist.CreatedDate
-                };
-
-                await _diamondRepository.AddDiamondHistory(diamondHist);
 
                 return new Diamond();
             }
@@ -811,24 +728,63 @@ namespace ControlPanel.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetFileUploadHistory()
+        public IActionResult GetFileUploadHistory() { return View(); }
+
+        [HttpGet]
+        public async Task<IActionResult> ShowFileUploadHistory()
         {
+            bool status = false;
+            string strResult = "";
+            string strMessage = "Data Not Found";
 
             var response = await _diamondRepository.GetDiamondFileUploadedHistoryList();
             if (response != null)
             {
-                return PartialView("_DiamondFileUploadList", response);
+                status = true;
+                strMessage = "";
+                strResult = JsonConvert.SerializeObject(response);
             }
-            else
+            return Json(new
             {
-                return PartialView("_DiamondFileUploadList", new List<DiamondFileUploadHistoryDTO>());
-            }
+                Data = new
+                {
+                    status = status,
+                    result = strResult,
+                    message = strMessage
+                }
+            });
         }
 
         [HttpGet]
         public IActionResult ThankYouForUploaded()
         {
             return View();
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetDiamondHistoryById(string diamondId)
+        {
+            bool status = false;
+            string strResult = "";
+            string strMessage = "Data Not Found";
+
+            var data = await _diamondRepository.GetDiamondHistoryById(diamondId);
+            if (data != null)
+            {
+                status = true;
+                strMessage = "";
+                strResult = JsonConvert.SerializeObject(data);
+            }
+            return Json(new
+            {
+                Data = new
+                {
+                    status = status,
+                    result = strResult,
+                    message = strMessage
+                }
+            });
         }
     }
 }
