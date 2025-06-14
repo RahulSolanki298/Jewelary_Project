@@ -44,9 +44,10 @@ namespace Business.Repository
                     new SqlParameter("@LabNames", SqlDbType.NVarChar) { Value = filters.LabNames != null && filters.LabNames.Any() ? string.Join(",", filters.LabNames) : (object)DBNull.Value },
                 };
 
-                diamonData.DiamondData = await _context.DiamondData
-                    .FromSqlRaw("EXEC SP_GetDiamondDataBY_NEW_DiamondFilters @Shapes, @Colors, @FromCarat, @ToCarat, @FromPrice, @ToPrice, @Cuts, @Clarities, @FromRatio, @ToRatio, @FromTable, @ToTable, @FromDepth, @ToDepth, @Polish, @Fluor, @Symmeties,@LabNames", parameters)
-                    .ToListAsync();
+                var diamondDT = await _context
+                                    .Set<DiamondData>()
+                                    .FromSqlRaw("EXEC SP_GetDiamondDataBY_NEW_DiamondFilters @Shapes, @Colors, @FromCarat, @ToCarat, @FromPrice, @ToPrice, @Cuts, @Clarities, @FromRatio, @ToRatio, @FromTable, @ToTable, @FromDepth, @ToDepth, @Polish, @Fluor, @Symmeties,@LabNames", parameters)
+                                    .ToListAsync();
                 diamonData.DiamondCounter = diamonData.DiamondData.Count();
                 diamonData.DiamondData = diamonData.DiamondData.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
                 return diamonData;
@@ -61,8 +62,11 @@ namespace Business.Repository
         {
             try
             {
-                var diamonds = await _context.DiamondData.FromSqlRaw("EXEC SP_SelectAllDiamonds").ToListAsync();
-                return diamonds;
+                var diamondResults = await _context
+                                            .Set<DiamondData>()
+                                            .FromSqlRaw("EXEC SP_SelectAllDiamonds")
+                                            .ToListAsync();
+                return diamondResults;
             }
             catch (Exception ex)
             {
@@ -88,10 +92,10 @@ namespace Business.Repository
         {
             try
             {
-                // Step 1: Get all DiamondData from stored procedure
-                var diamondDT = await _context.DiamondData
-                    .FromSqlRaw("EXEC SP_SelectAllDiamonds")
-                    .ToListAsync();
+                var diamondDT = await _context
+                                    .Set<DiamondData>()
+                                    .FromSqlRaw($"EXEC SP_SelectAllDiamonds")
+                                    .ToListAsync();
 
                 // Step 2: Group by ShapeId and select the first diamond in each group
                 var shapeWiseDiamonds = diamondDT
@@ -206,16 +210,15 @@ namespace Business.Repository
         {
             try
             {
-                var diamond = _context.DiamondData
-                    .FromSqlRaw($"EXEC SP_GetDiamondDataById {diamondId}")
-                    .AsEnumerable()  // Forces LINQ operations to happen in-memory (on the client side)
-                    .FirstOrDefault();
+                var diamondResults =  _context
+                                    .Set<DiamondData>()
+                                    .FromSqlRaw($"EXEC SP_GetDiamondDataById {diamondId}")
+                                    .FirstOrDefault();
 
-                return diamond;
+                return diamondResults;
             }
             catch (Exception ex)
             {
-                // Optionally log the exception or handle it
                 throw new Exception("An error occurred while fetching the diamond data.", ex);
             }
         }
@@ -224,11 +227,13 @@ namespace Business.Repository
         {
             try
             {
-                var diamond = await _context.DiamondData
-                    .FromSqlRaw($"EXEC SP_GetDiamondHistoryDataById {diamondId}")
-                    .ToListAsync();
+                var diamondResults = await _context
+                                       .Set<DiamondData>()
+                                       .FromSqlRaw($"EXEC SP_GetDiamondHistoryDataById {diamondId}")
+                                       .ToListAsync();
 
-                return diamond;
+                return diamondResults;
+
             }
             catch (Exception ex)
             {
@@ -314,11 +319,12 @@ namespace Business.Repository
         {
             try
             {
-                var diamonds = await _context.DiamondData
-                    .FromSqlRaw("EXEC SP_PendingDiamonds")
-                    .ToListAsync();
+                var diamondDT = await _context
+                                    .Set<DiamondData>()
+                                    .FromSqlRaw($"EXEC SP_PendingDiamonds")
+                                    .ToListAsync();
 
-                return diamonds;
+                return diamondDT;
             }
             catch (Exception ex)
             {
@@ -416,11 +422,12 @@ namespace Business.Repository
         {
             try
             {
-                var diamonds = await _context.DiamondData
-                    .FromSqlRaw($"EXEC SP_SelectDiamondsByStatus {status},{isActive}")
-                    .ToListAsync();
+                var diamondResults = await _context
+                                    .Set<DiamondData>()
+                                    .FromSqlRaw($"EXEC SP_SelectDiamondsByStatus {status},{isActive}")
+                                    .ToListAsync();
 
-                return diamonds;
+                return diamondResults;
             }
             catch (Exception ex)
             {

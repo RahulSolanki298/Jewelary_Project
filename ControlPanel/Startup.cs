@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Models;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace ControlPanel
@@ -118,51 +119,56 @@ namespace ControlPanel
 
 
         // Configure HTTP request pipeline
-        public void Configure(IApplicationBuilder app,
-            IWebHostEnvironment env,
-            IDbInitializer dbInitializer)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDbInitializer dbInitializer)
         {
-            if (env.IsDevelopment())
+            try
             {
-                app.UseDeveloperExceptionPage();
+                if (env.IsDevelopment())
+                {
+                    app.UseDeveloperExceptionPage();
+                }
+                else
+                {
+                    app.UseExceptionHandler("/Home/Error");
+                    app.UseHsts();
+                }
+
+                app.UseHttpsRedirection();
+                app.UseStaticFiles();
+                app.UseRouting();
+                app.UseSession();
+
+                app.Use(async (context, next) =>
+                {
+                    context.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+                    context.Response.Headers["Pragma"] = "no-cache";
+                    context.Response.Headers["Expires"] = "0";
+                    await next();
+                });
+
+                app.UseAuthentication();
+                app.UseAuthorization();
+
+                InitializeDatabase(dbInitializer).GetAwaiter().GetResult();
+
+                app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllerRoute(
+                        name: "areas",
+                        pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+                    endpoints.MapControllerRoute(
+                        name: "default",
+                        pattern: "{controller=Account}/{action=Login}/{id?}");
+                });
             }
-            else
+            catch (Exception ex)
             {
-                app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
+                File.WriteAllText("startup-pipeline-error.log", ex.ToString());
+                throw;
             }
-
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
-            app.UseRouting();
-            app.UseSession();
-
-            app.Use(async (context, next) =>
-            {
-                context.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
-                context.Response.Headers["Pragma"] = "no-cache";
-                context.Response.Headers["Expires"] = "0";
-                await next();
-            });
-
-            app.UseAuthentication();
-            app.UseAuthorization();
-
-            InitializeDatabase(dbInitializer).GetAwaiter().GetResult();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "areas",
-                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Account}/{action=Login}/{id?}");
-            });
-
         }
+
 
         private async Task InitializeDatabase(IDbInitializer dbInitializer)
         {

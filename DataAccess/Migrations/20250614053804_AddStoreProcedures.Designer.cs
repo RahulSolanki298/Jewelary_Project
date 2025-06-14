@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20250609080831_AddStoreProcedure")]
-    partial class AddStoreProcedure
+    [Migration("20250614053804_AddStoreProcedures")]
+    partial class AddStoreProcedures
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,24 @@ namespace DataAccess.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.17")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("DataAccess.Entities.AboutUs", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AboutUs");
+                });
 
             modelBuilder.Entity("DataAccess.Entities.AcceptedVirtualAppointmentData", b =>
                 {
@@ -73,24 +91,6 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AcceptedVirtualAppointmentData");
-                });
-
-            modelBuilder.Entity("DataAccess.Entities.ApplicationPlatforms", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("IsActivated")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("PlatformName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ApplicationPlatforms");
                 });
 
             modelBuilder.Entity("DataAccess.Entities.ApplicationUser", b =>
@@ -1398,6 +1398,9 @@ namespace DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -1452,6 +1455,42 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("FileManager");
+                });
+
+            modelBuilder.Entity("DataAccess.Entities.HomePageSetting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CompanyLogo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Device")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SetSlider1Path")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SetSlider2Path")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SetSlider3Path")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SetVideoPath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isSetCompanySlider")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("isSetVideo")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HomePageSetting");
                 });
 
             modelBuilder.Entity("DataAccess.Entities.LogEntry", b =>
@@ -1661,6 +1700,9 @@ namespace DataAccess.Migrations
                     b.Property<int?>("EventId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("FileHistoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
@@ -1678,9 +1720,6 @@ namespace DataAccess.Migrations
 
                     b.Property<bool?>("IsDelete")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("IsHistoryId")
-                        .HasColumnType("int");
 
                     b.Property<bool?>("IsReadyforShip")
                         .HasColumnType("bit");
@@ -1816,6 +1855,12 @@ namespace DataAccess.Migrations
                     b.Property<int>("CollectionId")
                         .HasColumnType("int");
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("Index")
                         .HasColumnType("int");
 
@@ -1827,6 +1872,12 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("ProductId")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
@@ -1863,6 +1914,12 @@ namespace DataAccess.Migrations
 
                     b.Property<bool?>("IsActivated")
                         .HasColumnType("bit");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -2537,147 +2594,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.ToTable("DiamondColorData");
-                });
-
-            modelBuilder.Entity("Models.DiamondData", b =>
-                {
-                    b.Property<decimal?>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("Carat")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Certificate")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ClarityId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ClarityName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ColorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ColorName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("CutId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CutName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DNA")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("Depth")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("DiamondImagePath")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DiamondVideoPath")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("Discount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int?>("FluorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FluorName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("IconPath")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<bool?>("IsActivated")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("IsSuccess")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("LabId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LabName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LabShape")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Measurement")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("PolishId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PolishName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("Quantity")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("RAP")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("RapAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("RatePct")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("Ratio")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Shade")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ShapeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ShapeName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Step")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StoneId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("SymmetryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SymmetyName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("Table")
-                        .HasPrecision(8, 3)
-                        .HasColumnType("decimal(8,3)");
-
-                    b.Property<int?>("TypeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TypeName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UpdatedDate")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UploadStatus")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UploadedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToTable("Diamond");
                 });
 
             modelBuilder.Entity("Models.DiamondShapeData", b =>

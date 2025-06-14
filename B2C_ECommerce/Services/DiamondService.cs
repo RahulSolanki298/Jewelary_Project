@@ -36,8 +36,6 @@ namespace B2C_ECommerce.Services
             {
                 var data= JsonConvert.SerializeObject(filters);
 
-
-
                 DiamondAllDataDto diamonData = new DiamondAllDataDto();
                 // Construct the SQL parameters
                 var parameters = new[]
@@ -61,7 +59,6 @@ namespace B2C_ECommerce.Services
                     new SqlParameter("@Symmeties", SqlDbType.NVarChar) { Value = filters.Symmeties != null && filters.Symmeties.Any() ? string.Join(",", filters.Symmeties) : (object)DBNull.Value },
                     new SqlParameter("@LabNames", SqlDbType.NVarChar) { Value = filters.LabNames != null && filters.LabNames.Any() ? string.Join(",", filters.LabNames) : (object)DBNull.Value },
                 };
-
                 diamonData.DiamondData = await _context.DiamondData
                     .FromSqlRaw("EXEC SP_GetDiamondDataBY_NEW_DiamondFilters @Shapes, @Colors, @FromCarat, @ToCarat, @FromPrice, @ToPrice, @Cuts, @Clarities, @FromRatio, @ToRatio, @FromTable, @ToTable, @FromDepth, @ToDepth, @Polish, @Fluor, @Symmeties,@LabNames", parameters)
                     .ToListAsync();
@@ -71,6 +68,7 @@ namespace B2C_ECommerce.Services
                 diamonData.DiamondData = diamonData.DiamondData.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
                 return diamonData;
+
             }
             catch (Exception ex)
             {
@@ -79,14 +77,13 @@ namespace B2C_ECommerce.Services
             }
         }
 
-        public DiamondData GetDiamondById(int diamondId)
+        public async Task<DiamondData> GetDiamondById(int diamondId)
         {
             try
             {
-                var diamond = _context.DiamondData
+                var diamond = await _context.Set<DiamondData>()
                     .FromSqlRaw($"EXEC SP_GetDiamondDataById {diamondId}")
-                    .AsEnumerable()  // Forces LINQ operations to happen in-memory (on the client side)
-                    .FirstOrDefault();
+                    .FirstOrDefaultAsync();
 
                 return diamond;
             }

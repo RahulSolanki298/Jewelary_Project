@@ -3,10 +3,24 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataAccess.Migrations
 {
-    public partial class InitialCreateForJewelFacet : Migration
+    public partial class InitialCreateDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "AboutUs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AboutUs", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "AcceptedVirtualAppointmentData",
                 columns: table => new
@@ -31,20 +45,6 @@ namespace DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AcceptedVirtualAppointmentData", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ApplicationPlatforms",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PlatformName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsActivated = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ApplicationPlatforms", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -320,60 +320,6 @@ namespace DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CustomerOrderStatus", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Diamond",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    StoneId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DNA = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Step = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TypeId = table.Column<int>(type: "int", nullable: true),
-                    TypeName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Measurement = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LabShape = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LabId = table.Column<int>(type: "int", nullable: true),
-                    LabName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ShapeId = table.Column<int>(type: "int", nullable: true),
-                    ShapeName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RAP = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    RapAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    Carat = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    ClarityId = table.Column<int>(type: "int", nullable: true),
-                    ClarityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ColorId = table.Column<int>(type: "int", nullable: true),
-                    ColorName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CutId = table.Column<int>(type: "int", nullable: true),
-                    CutName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PolishId = table.Column<int>(type: "int", nullable: true),
-                    PolishName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SymmetryId = table.Column<int>(type: "int", nullable: true),
-                    SymmetyName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FluorId = table.Column<int>(type: "int", nullable: true),
-                    FluorName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    Table = table.Column<decimal>(type: "decimal(8,3)", precision: 8, scale: 3, nullable: true),
-                    Depth = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    Ratio = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    Quantity = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    Shade = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Certificate = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Discount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    RatePct = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    DiamondImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DiamondVideoPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IconPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UploadedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UploadStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UpdatedDate = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsSuccess = table.Column<bool>(type: "bit", nullable: true),
-                    IsActivated = table.Column<bool>(type: "bit", nullable: true)
-                },
-                constraints: table =>
-                {
                 });
 
             migrationBuilder.CreateTable(
@@ -691,6 +637,7 @@ namespace DataAccess.Migrations
                     Discount = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StartDate = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EndDate = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CategoryId = table.Column<int>(type: "int", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -709,6 +656,26 @@ namespace DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_FileManager", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "HomePageSetting",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Device = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CompanyLogo = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    isSetVideo = table.Column<bool>(type: "bit", nullable: false),
+                    SetVideoPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    isSetCompanySlider = table.Column<bool>(type: "bit", nullable: false),
+                    SetSlider1Path = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SetSlider2Path = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SetSlider3Path = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HomePageSetting", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -810,6 +777,10 @@ namespace DataAccess.Migrations
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     IsHomePage = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Index = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -828,6 +799,8 @@ namespace DataAccess.Migrations
                     CollectionImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CategoryId = table.Column<int>(type: "int", nullable: true),
                     IsActivated = table.Column<bool>(type: "bit", nullable: true)
                 },
@@ -1191,7 +1164,7 @@ namespace DataAccess.Migrations
                     UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UploadStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsHistoryId = table.Column<int>(type: "int", nullable: true),
+                    FileHistoryId = table.Column<int>(type: "int", nullable: true),
                     IsDelete = table.Column<bool>(type: "bit", nullable: true),
                     ProductCollectionsId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -1339,10 +1312,10 @@ namespace DataAccess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AcceptedVirtualAppointmentData");
+                name: "AboutUs");
 
             migrationBuilder.DropTable(
-                name: "ApplicationPlatforms");
+                name: "AcceptedVirtualAppointmentData");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -1390,9 +1363,6 @@ namespace DataAccess.Migrations
                 name: "CustomerOrderStatus");
 
             migrationBuilder.DropTable(
-                name: "Diamond");
-
-            migrationBuilder.DropTable(
                 name: "DiamondColorData");
 
             migrationBuilder.DropTable(
@@ -1415,6 +1385,9 @@ namespace DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "FileManager");
+
+            migrationBuilder.DropTable(
+                name: "HomePageSetting");
 
             migrationBuilder.DropTable(
                 name: "LogEntries");

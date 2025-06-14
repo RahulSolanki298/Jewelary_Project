@@ -62,8 +62,6 @@ namespace DataAccess.Data
 
         public DbSet<DiamondProperty> DiamondProperties { get; set; }
 
-        public DbSet<DiamondData> DiamondData { get; set; }
-
         public DbSet<DiamondShapeData> DiamondShapeData { get; set; }
 
         public DbSet<DiamondColorData> DiamondColorData { get; set; }
@@ -88,17 +86,18 @@ namespace DataAccess.Data
 
         public DbSet<ProductHistory> ProductHistory { get; set; }
 
-        public DbSet<ApplicationPlatforms> ApplicationPlatforms { get; set; }
-
         public DbSet<ProductStyleItems> ProductStyleItems { get; set; }
 
         public DbSet<Blogs> Blogs { get; set; }
         public DbSet<HomePageSetting> HomePageSetting { get; set; }
         public DbSet<AboutUs> AboutUs { get; set; }
+
+        public DbSet<DiamondData> DiamondData { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
+            modelBuilder.Entity<DiamondData>().HasNoKey(); // or .ToView("YourView") if needed
             modelBuilder.Entity<DiamondShapeData>().ToTable("DiamondShapeData").HasNoKey();
             modelBuilder.Entity<DiamondColorData>().ToTable("DiamondColorData").HasNoKey();
 
@@ -181,13 +180,6 @@ namespace DataAccess.Data
             modelBuilder.Entity<ProductProperty>()
                 .Property(p => p.Name)
                 .IsRequired();
-
-            modelBuilder.Entity<DiamondData>(e =>
-            {
-                e.ToTable("Diamond");
-                e.HasNoKey();
-                e.Property(d => d.Table).HasPrecision(8, 3); // You can adjust precision/scale as needed
-            });
 
             
 

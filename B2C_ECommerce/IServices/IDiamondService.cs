@@ -8,8 +8,8 @@ namespace B2C_ECommerce.IServices
     public interface IDiamondService
     {
         Task<DiamondAllDataDto> GetDiamondListByFilter(DiamondFilters diamondFilters, int pageNumber = 1, int pageSize = 10);
-        
-        DiamondData GetDiamondById(int diamondId);
+
+        Task<DiamondData> GetDiamondById(int diamondId);
 
         Task<IEnumerable<DiamondShapeData>> GetShapeListAsync();
 
