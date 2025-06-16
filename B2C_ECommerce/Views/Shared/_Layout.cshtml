@@ -238,6 +238,21 @@
         }
 
 
+        function getHomePageNav() {
+           $.ajax({
+            url: '@Url.Action("GetPrograms", "Home")',  // Replace with your actual URL path
+            type: 'GET',
+            success: function(response) {
+                $('#navMenuDynamic').html("");  
+                $('#navMenuDynamic').html(response); 
+            },
+            error: function(xhr, status, error) {
+                console.error("There was an error with the AJAX request: ", error);
+            }
+        });
+
+        }
+
     </script>
 
 

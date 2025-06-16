@@ -131,11 +131,12 @@ namespace B2C_ECommerce.Services
             var diamondColorIds = await _context.Diamonds
                                                 .Select(x => x.ColorId)
                                                 .Distinct()
+                                                .OrderByDescending(x=>x.Value)
                                                 .ToListAsync();
 
             // Step 2: Get corresponding DiamondProperties where Id is in that list
             var result = await _context.DiamondProperties
-                .Where(par => diamondColorIds.Contains(par.Id) && par.IsActivated)
+                .Where(par => diamondColorIds.Contains(par.Id) && par.IsActivated==true)
                 .Select(par => new DiamondPropertyDTO
                 {
                     Id = par.Id,

@@ -18,7 +18,7 @@ namespace B2C_ECommerce.Controllers
         private readonly IBlogRepository _blogRepository;
         private readonly ISettingRepository _settingRepository;
         private readonly IProductPropertyRepository _productPropertyRepository;
-
+        private readonly IProductStyleRepository _productStyles;
         public HomeController(ILogger<HomeController> logger, IBlogRepository blogRepository,ISettingRepository settingRepository
             ,IProductPropertyRepository productPropertyRepository)
         {
@@ -65,6 +65,21 @@ namespace B2C_ECommerce.Controllers
         {
             var response = await _productPropertyRepository.GetMainPropertyList();
             return PartialView("_HomeHeaders", response);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPrograms()
+        {
+            var response = await _productStyles.GetProductStyles();
+            return PartialView("_HomePrograms", response);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetCollection()
+        {
+            var response = await _productStyles.GetProductStyles();
+            return PartialView("_HomeCollection", response);
         }
 
     }

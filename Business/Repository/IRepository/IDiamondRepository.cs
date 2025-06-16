@@ -47,5 +47,7 @@ namespace Business.Repository.IRepository
 
         Task InsertDiamondHistoryFromDiamondAsync(int historyId);
 
+
+
     }
 }

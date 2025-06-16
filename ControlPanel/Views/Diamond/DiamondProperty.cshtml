@@ -4,7 +4,8 @@
     int Index = 1;
 }
 
-<div class="container-fluid mt-4">
+
+<section class="section dashboard">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="h4"><b>Diamond Parameter Master</b></h2>
         <a class="btn btn-theme" href="@Url.Action("AddDiamondProperty", "Diamond")">
@@ -14,10 +15,26 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-6 col-md-12 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-body p-0">
-                    <table class="table table-hover table-bordered mb-0" id="diamondProperty">
+        <div class="col-6">
+            <div class="card recent-sales overflow-auto">
+
+                <div class="filter">
+                    <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                        <li class="dropdown-header text-start">
+                            <h6>Filter</h6>
+                        </li>
+
+                        <li><a class="dropdown-item" href="#">Today</a></li>
+                        <li><a class="dropdown-item" href="#">This Month</a></li>
+                        <li><a class="dropdown-item" href="#">This Year</a></li>
+                    </ul>
+                </div>
+
+                <div class="card-body">
+                    <h5 class="card-title">Main Properties</h5>
+
+                    <table class="table table-borderless datatable mb-0" id="diamondProperty">
                         <thead class="table-light text-center">
                             <tr>
                                 <th scope="col">#</th>
@@ -74,39 +91,37 @@
                             }
                         </tbody>
                     </table>
+
                 </div>
+
             </div>
         </div>
-
-        <div class="col-lg-6 col-md-12" id="propertyDT">
-            <!-- Placeholder for additional property details or forms -->
+        <div class="col-6">
+            <div class="card recent-sales overflow-auto" id="propertyDT">
+            </div>
         </div>
     </div>
-</div>
+</section>
 
-
-
-
-
-@section Scripts{
+@section Scripts {
     <script>
-    $(document).ready(function () {
-        $('.clickable-row').on('click', function () {
-        var propertyName = $(this).data('propertyname'); // Ensure correct casing in data attribute
+            $(document).ready(function () {
+                $('.clickable-row').on('click', function () {
+                var propertyName = $(this).data('propertyname'); // Ensure correct casing in data attribute
 
-        $.ajax({
-            url: '@Url.Action("DiamondPropertyItems", "Diamond")' + '?propertyName=' + encodeURIComponent(propertyName),
-            method: 'GET',
-            contentType: 'application/json',
-            success: function (data) {
-                $("#propertyDT").empty().html(data); // Clear and update content
-            },
-            error: function (xhr, status, error) {
-                console.error('API call failed:', error);
-            }
+                $.ajax({
+                    url: '@Url.Action("DiamondPropertyItems", "Diamond")' + '?propertyName=' + encodeURIComponent(propertyName),
+                    method: 'GET',
+                    contentType: 'application/json',
+                    success: function (data) {
+                        $("#propertyDT").empty().html(data); // Clear and update content
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('API call failed:', error);
+                    }
+                });
+            });
         });
-    });
-});
 
     </script>
 
