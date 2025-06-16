@@ -1169,7 +1169,6 @@ namespace Business.Repository
                         collectionDT = new ProductCollections()
                         {
                             CollectionName = product.CollectionName,
-                            CategoryId = categoryId,
                             IsActivated = true,
                             CreatedDate = DateTime.Now,
                         };

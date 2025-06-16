@@ -146,7 +146,6 @@ namespace Models
         public List<ProductPropertyDTO> CaratSizes { get; set; }
         public List<ProductPropertyDTO> Shapes { get; set; }
         public List<ProductPriceDTO> Prices { get; set; }
-        public List<ProductWeightDTO> Weights { get; set; }
         public List<ProductDTO> RelatedProducts { get; set; }
     }
 }

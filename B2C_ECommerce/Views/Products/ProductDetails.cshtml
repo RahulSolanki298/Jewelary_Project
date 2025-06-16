@@ -278,13 +278,18 @@
                                                                         var centerCarat = !string.IsNullOrWhiteSpace(Model.CenterCaratName) ? Convert.ToDecimal(Model.CenterCaratName) : 0;
                                                                         var total = ctw + centerCarat;
                                                                         var NoOfStones = 0;
-                                                                        foreach (var item in Model.RelatedProducts)
+
+                                                                        @if (Model.RelatedProducts != null)
                                                                         {
-                                                                            if (!string.IsNullOrWhiteSpace(item.NoOfStones.ToString()))
+                                                                            foreach (var item in Model.RelatedProducts)
                                                                             {
-                                                                                NoOfStones += item.NoOfStones.Value;
+                                                                                if (!string.IsNullOrWhiteSpace(item.NoOfStones.ToString()))
+                                                                                {
+                                                                                    NoOfStones += item.NoOfStones.Value;
+                                                                                }
                                                                             }
                                                                         }
+                                                                        
                                                                     }
                                                                     <table class="table table-borderless">
                                                                         <tbody>

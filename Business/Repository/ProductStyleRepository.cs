@@ -48,7 +48,7 @@ namespace Business.Repository
 
         public async Task<List<ProductCollections>> GetProductCollectionsByCategoryId(int categoryId)
         {
-            return await _context.ProductCollections.Where(x => x.CategoryId == categoryId).ToListAsync();
+            return await _context.ProductCollections.ToListAsync();
         }
 
         public async Task<ProductStyles> GetProductStyleById(int id)

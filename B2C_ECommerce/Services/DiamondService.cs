@@ -81,11 +81,13 @@ namespace B2C_ECommerce.Services
         {
             try
             {
-                var diamond = await _context.Set<DiamondData>()
-                    .FromSqlRaw($"EXEC SP_GetDiamondDataById {diamondId}")
-                    .FirstOrDefaultAsync();
+                var param = new SqlParameter("@Id", diamondId);
 
-                return diamond;
+                var diamonds = await _context.DiamondData
+                    .FromSqlRaw("EXEC SP_GetDiamondDataById @Id", param)
+                    .ToListAsync();
+
+                return diamonds.FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -93,6 +95,8 @@ namespace B2C_ECommerce.Services
                 throw new Exception("An error occurred while fetching the diamond data.", ex);
             }
         }
+
+
 
         public async Task<IEnumerable<DiamondData>> GetSelectedDiamondByIds(int[] diamondIds)
         {
@@ -131,7 +135,6 @@ namespace B2C_ECommerce.Services
             var diamondColorIds = await _context.Diamonds
                                                 .Select(x => x.ColorId)
                                                 .Distinct()
-                                                .OrderByDescending(x=>x.Value)
                                                 .ToListAsync();
 
             // Step 2: Get corresponding DiamondProperties where Id is in that list

@@ -1,6 +1,4 @@
-﻿
-
-<header class="header-area">
+﻿<header class="header-area">
     <div class="main-header d-none d-lg-block">
         <div class="header-top bg-gold">
             <div class="container-fluid">
@@ -20,11 +18,11 @@
                                     <ul class="dropdown-list currency-list">
                                         <li><a>$ USD</a></li>
                                         @*<li><a>€ EURO</a></li>
-                                        <li><a>£ GBP</a></li>
-                                        <li><a>¥ JPY</a></li>
-                                        <li><a>$ AUD</a></li>
-                                        <li><a>$ CAD</a></li>
-                                        <li><a>CHF</a></li>*@
+                                            <li><a>£ GBP</a></li>
+                                            <li><a>¥ JPY</a></li>
+                                            <li><a>$ AUD</a></li>
+                                            <li><a>$ CAD</a></li>
+                                            <li><a>CHF</a></li>*@
                                         @*<li><a>₹ INR</a></li>*@
                                     </ul>
                                 </li>
@@ -47,7 +45,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="header-main-area sticky">
             <div class="container-fluid">
                 <div class="row align-items-center position-relative">
@@ -62,7 +60,229 @@
                         <div class="main-menu-area">
                             <div class="main-menu">
                                 <nav class="desktop-menu" id="navMenuDynamic">
-                                    
+                                  
+
+                                    <ul>
+                                        <li class="active position-static">
+                                            <a href="@Url.Action("Index","ProductPrograms",new {type="Solitaire"})">Engagement</a>
+                                            <ul class="megamenu dropdown">
+                                                <li class="mega-title">
+                                                    <span>Shop by Style</span>
+                                                    <ul>
+                                                        @*@foreach (var item in Model)
+                                                            {
+                                                                <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="Solitaire"})">@item.StyleName</a></li>
+                                                            }*@
+
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="Solitaire"})">Solitaire</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="SideStone"})">Side Stone</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="Halo"})">Halo</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="ThreeStone"})">Three Stone</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="HiddenHalo"})">Hidden Halo</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="Vintage"})">Vintage</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="BridalSets"})">Bridal Sets</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="Gemstone"})">Gemstone</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="BadgleyMischka"})"> Badgley Mischka</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="CustomerFavorites"})">Customer Favorites</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li class="mega-title">
+                                                    <span>Shop by Shape</span>
+                                                    <ul>
+                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Princess.svg" style="width:30px;"> Princess</a></li>
+                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Round.svg" style="width:30px;"> Round</a></li>
+                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Radiant.svg" style="width:30px;"> Radiant-Cut</a></li>
+                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Emerald.svg" style="width:30px;"> Emerald</a></li>
+                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Oval.svg" style="width:30px;"> Oval</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li class="mega-title">
+                                                    <span></span>
+                                                    <ul>
+                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Cushion.svg" style="width:30px;"> CushionLong</a></li>
+                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Heart.svg" style="width:30px;"> Heart</a></li>
+                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Marquise.svg" style="width:30px;"> Marquise</a></li>
+                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Square Emerald.svg" style="width:30px;"> Sq.Emerald</a></li>
+                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Asscher.svg" style="width:30px;"> Asscher</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li class="mega-title">
+                                                    <span>Shop by Metal</span>
+                                                    <ul>
+                                                        <li><a href="#"><img src="~/assets/img/icon/yellow-gold-new.svg" style="width:30px;" /> Yellow Gold</a></li>
+                                                        <li><a href="#"><img src="~/assets/img/icon/white-gold-new.svg" style="width:30px;" /> White Gold</a></li>
+                                                        <li><a href="#"><img src="~/assets/img/icon/rose-gold-new.svg" style="width:30px;" /> Rose Gold</a></li>
+                                                        <li><a href="#"><img src="~/assets/img/icon/platinum-new.svg" style="width:30px;" /> Platinum</a></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="position-static">
+                                            <a href="@Url.Action("Index","ProductPrograms",new {type="Bands"})">Wedding</a>
+                                            <ul class="megamenu dropdown">
+                                                <li class="mega-title">
+                                                    <span>Shop by Style</span>
+                                                    <ul>
+                                                        @*@foreach(var item in )*@
+
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="WeddingAndAnniversary"})">Wedding and Anniversary</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="Eternity"})">Eternity</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="3/4 Eternity"})">3/4 Eternity</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="Enhancers"})">Enhancers</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="Curve Bands"})">Curve Bands</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="Open Bands"})">Open Bands</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="DesignYourStack"})">Design Your Stack</a></li>
+                                                        <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="CustomerFavorites"})">Customer Favorites</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li class="mega-title">
+                                                    <span>Shop by Shape</span>
+                                                    <ul>
+                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Princess.svg" style="width:30px;"> Princess</a></li>
+                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Round.svg" style="width:30px;"> Round</a></li>
+                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Radiant.svg" style="width:30px;"> Radiant-Cut</a></li>
+                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Emerald.svg" style="width:30px;"> Emerald</a></li>
+                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Oval.svg" style="width:30px;"> Oval</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li class="mega-title">
+                                                    <span></span>
+                                                    <ul>
+                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Cushion.svg" style="width:30px;"> CushionLong</a></li>
+                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Heart.svg" style="width:30px;"> Heart</a></li>
+                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Marquise.svg" style="width:30px;"> Marquise</a></li>
+                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Square Emerald.svg" style="width:30px;"> Sq.Emerald</a></li>
+                                                        <li><a href="#"><img src="~/assets/img/diamond-svg/Asscher.svg" style="width:30px;"> Asscher</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li class="mega-title">
+                                                    <span>Shop by Metal</span>
+                                                    <ul>
+                                                        <li><a href="#"><img src="~/assets/img/icon/yellow-gold-new.svg" style="width:30px;" /> Yellow Gold</a></li>
+                                                        <li><a href="#"><img src="~/assets/img/icon/white-gold-new.svg" style="width:30px;" /> White Gold</a></li>
+                                                        <li><a href="#"><img src="~/assets/img/icon/rose-gold-new.svg" style="width:30px;" /> Rose Gold</a></li>
+                                                        <li><a href="#"><img src="~/assets/img/icon/platinum-new.svg" style="width:30px;" /> Platinum</a></li>
+                                                    </ul>
+                                                </li>
+
+                                                <li class="mega-title">
+                                                    <span></span>
+                                                    <ul>
+                                                        <li><a href="#"><img src="~/assets/img/Menu-Image.jpg" alt="" /></a></li>
+                                                        <li><a href="#"><img src="~/assets/img/Menu-Image1.jpg" alt="" /></a></li>
+                                                    </ul>
+                                                </li>
+
+                                            </ul>
+                                        </li>
+                                        <li class="position-static">
+                                            <a href="@Url.Action("Index","Products")">Jewelry </a>
+                                            <ul class="megamenu dropdown jewelry-mega-menu-display">
+                                                <li class="mega-title">
+                                                    <span>Rings</span>
+                                                    <ul>
+                                                        <li><a href="#">Fashion</a></li>
+                                                        <li><a href="#">Gemstone</a></li>
+                                                        <li><a href="#">Gold</a></li>
+                                                        <li><a href="#">High Jewelry</a></li>
+                                                        <li><a href="#">Customer Favorites</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li class="mega-title">
+                                                    <span>Earrings</span>
+                                                    <ul>
+                                                        <li><a href="#">Studs</a></li>
+                                                        <li><a href="#">Hoops</a></li>
+                                                        <li><a href="#">Fashion</a></li>
+                                                        <li><a href="#">Jackets</a></li>
+                                                        <li><a href="#">Gemstone</a></li>
+                                                        <li><a href="#">Gold</a></li>
+                                                        <li><a href="#">High Jewelry</a></li>
+                                                        <li><a href="#">Customer Favorites</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li class="mega-title">
+                                                    <span>Necklaces</span>
+                                                    <ul>
+                                                        <li><a href="#">Tennis</a></li>
+                                                        <li><a href="#">Pendants</a></li>
+                                                        <li><a href="#">Fashion</a></li>
+                                                        <li><a href="#">Gemstone</a></li>
+                                                        <li><a href="#">Gold</a></li>
+                                                        <li><a href="#">High Jewelry</a></li>
+                                                        <li><a href="#">Customer Favorites</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li class="mega-title">
+                                                    <span>Bracelets</span>
+                                                    <ul>
+                                                        <li><a href="#">Tennis</a></li>
+                                                        <li><a href="#">Fashion</a></li>
+                                                        <li><a href="#">Bangles</a></li>
+                                                        <li><a href="#">Anklets</a></li>
+                                                        <li><a href="#">Gemstone</a></li>
+                                                        <li><a href="#">Gold</a></li>
+                                                        <li><a href="#">High Jewelry</a></li>
+                                                        <li><a href="#">Customer Favorites</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li class="mega-title">
+                                                    <span>Men's</span>
+                                                    <ul>
+                                                        <li><a href="#">Rings</a></li>
+                                                        <li><a href="#">Earrings</a></li>
+                                                        <li><a href="#">Necklaces</a></li>
+                                                        <li><a href="#">Bracelets</a></li>
+                                                        <li><a href="#">Cufflinks</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li class="megamenu-banners">
+                                                    <a href="#">
+
+                                                        <video autoplay="autoplay" loop="loop" muted="muted" playsinline preload="auto" style="width:170px;height:250px;">
+                                                            <source src="~/assets/img/video/diamonds-jewellery.mp4" type="video/mp4" />
+                                                        </video>
+                                                    </a>
+                                                </li>
+                                            </ul>
+
+                                        </li>
+                                        <li class="position-static">
+                                            <a href="@Url.Action("Index","Diamond")">Diamond </a>
+                                            <ul class="megamenu dropdown">
+                                                <li class="mega-title">
+                                                    <span>Shop by Shape</span>
+                                                    <ul>
+                                                        <li><a href="@Url.Action("Index","Diamond",new { shapeId=457})"><img src="~/assets/img/diamond-svg/Princess.svg" style="width:30px;"> Princess</a></li>
+                                                        <li><a href="@Url.Action("Index","Diamond",new { shapeId=456})"><img src="~/assets/img/diamond-svg/Round.svg" style="width:30px;"> Round</a></li>
+                                                        <li><a href="@Url.Action("Index","Diamond",new { shapeId=464})"><img src="~/assets/img/diamond-svg/Radiant.svg" style="width:30px;"> Radiant-Cut</a></li>
+                                                        <li><a href="@Url.Action("Index","Diamond",new { shapeId=463})"><img src="~/assets/img/diamond-svg/Emerald.svg" style="width:30px;"> Emerald</a></li>
+                                                        <li><a href="@Url.Action("Index","Diamond",new { shapeId=461})"><img src="~/assets/img/diamond-svg/Oval.svg" style="width:30px;"> Oval</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li class="mega-title">
+                                                    <span></span>
+                                                    <ul>
+                                                        <li><a href="@Url.Action("Index","Diamond",new { shapeId=462})"><img src="~/assets/img/diamond-svg/Cushion.svg" style="width:30px;"> CushionLong</a></li>
+                                                        <li><a href="@Url.Action("Index","Diamond",new { shapeId=460})"><img src="~/assets/img/diamond-svg/Heart.svg" style="width:30px;"> Heart</a></li>
+                                                        <li><a href="@Url.Action("Index","Diamond",new { shapeId=458})"><img src="~/assets/img/diamond-svg/Marquise.svg" style="width:30px;"> Marquise</a></li>
+                                                        <li><a href="@Url.Action("Index","Diamond",new { shapeId=465})"><img src="~/assets/img/diamond-svg/Square Emerald.svg" style="width:30px;"> Sq.Emerald</a></li>
+                                                        @*<li><a href="@Url.Action("Index","Diamond",new { shapeId="Asscher"})"><img src="~/assets/img/diamond-svg/Asscher.svg" style="width:30px;"> Asscher</a></li>*@
+                                                    </ul>
+                                                </li>
+                                                <li class="megamenu-banners d-none d-lg-block">
+                                                    <a href="#">
+                                                        <img src="~/assets/img/Menu-Image3.jpg" alt="" />
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        @*<li><a href="#">Custom</a></li>*@
+                                        <li>
+                                            <a href="#">Collection </a>
+                                        </li>
+                                        <li><a href="@Url.Action("Index","Education")">Education</a></li>
+                                    </ul>
                                 </nav>
                                 <!-- main menu navbar end -->
                             </div>
@@ -246,7 +466,7 @@
                                             <li><a href="#"><img src="~/assets/img/icon/platinum-new.svg" style="width:30px;" /> Platinum</a></li>
                                         </ul>
                                     </li>
-                                    
+
                                 </ul>
                             </li>
                             <li class="menu-item-has-children ">
@@ -311,7 +531,7 @@
                                             <li><a href="#">Cufflinks</a></li>
                                         </ul>
                                     </li>
-                                    
+
                                 </ul>
                             </li>
                             <li class="menu-item-has-children ">
@@ -332,7 +552,7 @@
                                             @* <li><a href="#"><img src="~/assets/img/diamond-svg/Asscher.svg" style="width:30px;"> Asscher</a></li> *@
                                         </ul>
                                     </li>
-                                    
+
                                 </ul>
                             </li>
                             @*<li><a href="#">Custom</a></li>*@
@@ -345,59 +565,58 @@
                     <!-- mobile menu navigation end -->
                 </div>
                 <!-- mobile menu end -->
-
                 @* <div class="mobile-settings">
-                    <ul class="nav">
-                        <li>
-                            <div class="dropdown mobile-top-dropdown">
-                                <a href="#" class="dropdown-toggle" id="currency" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Currency
-
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="currency">
-                                    <a class="dropdown-item" href="#">$ USD</a>
-                                    <a class="dropdown-item" href="#">$ EURO</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="dropdown mobile-top-dropdown">
-                                <a href="#" class="dropdown-toggle" id="myaccount" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    My Account
-
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="myaccount">
-                                    <a class="dropdown-item" href="#">my account</a>
-                                    <a class="dropdown-item" href="#"> login</a>
-                                    <a class="dropdown-item" href="#">register</a>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div> *@
-
-                <!-- offcanvas widget area start -->
-               @*  <div class="offcanvas-widget-area">
-                    <div class="off-canvas-contact-widget">
-                        <ul>
+                        <ul class="nav">
                             <li>
-                                <i class="fa fa-mobile"></i>
-                                <a href="#">0123456789</a>
+                                <div class="dropdown mobile-top-dropdown">
+                                    <a href="#" class="dropdown-toggle" id="currency" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Currency
+
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="currency">
+                                        <a class="dropdown-item" href="#">$ USD</a>
+                                        <a class="dropdown-item" href="#">$ EURO</a>
+                                    </div>
+                                </div>
                             </li>
                             <li>
-                                <i class="fa fa-envelope-o"></i>
-                                <a href="#">info@yourdomain.com</a>
+                                <div class="dropdown mobile-top-dropdown">
+                                    <a href="#" class="dropdown-toggle" id="myaccount" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        My Account
+
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="myaccount">
+                                        <a class="dropdown-item" href="#">my account</a>
+                                        <a class="dropdown-item" href="#"> login</a>
+                                        <a class="dropdown-item" href="#">register</a>
+                                    </div>
+                                </div>
                             </li>
                         </ul>
-                    </div>
-                    <div class="off-canvas-social-widget">
-                        <a href="#"><i class="fa fa-facebook"></i></a>
-                        <a href="#"><i class="fa fa-twitter"></i></a>
-                        <a href="#"><i class="fa fa-pinterest-p"></i></a>
-                        <a href="#"><i class="fa fa-linkedin"></i></a>
-                        <a href="#"><i class="fa fa-youtube-play"></i></a>
-                    </div>
-                </div> *@
+                    </div> *@
+
+                <!-- offcanvas widget area start -->
+                @*  <div class="offcanvas-widget-area">
+                        <div class="off-canvas-contact-widget">
+                            <ul>
+                                <li>
+                                    <i class="fa fa-mobile"></i>
+                                    <a href="#">0123456789</a>
+                                </li>
+                                <li>
+                                    <i class="fa fa-envelope-o"></i>
+                                    <a href="#">info@yourdomain.com</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="off-canvas-social-widget">
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                            <a href="#"><i class="fa fa-pinterest-p"></i></a>
+                            <a href="#"><i class="fa fa-linkedin"></i></a>
+                            <a href="#"><i class="fa fa-youtube-play"></i></a>
+                        </div>
+                    </div> *@
                 <!-- offcanvas widget area end -->
             </div>
         </div>

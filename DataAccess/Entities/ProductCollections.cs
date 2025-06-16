@@ -21,8 +21,6 @@ namespace DataAccess.Entities
 
         public DateTime? UpdatedDate { get; set; }
 
-        public int? CategoryId { get; set; }
-
         public bool? IsActivated { get; set; } = false;
 
         public virtual ICollection<Product> Products { get; set; }

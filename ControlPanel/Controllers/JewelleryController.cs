@@ -873,7 +873,7 @@ namespace ControlPanel.Controllers
                 var boundary = HeaderUtilities.RemoveQuotes(MediaTypeHeaderValue.Parse(Request.ContentType).Boundary).Value;
                 var reader = new MultipartReader(boundary, Request.Body);
                 var section = await reader.ReadNextSectionAsync();
-                var shapeList = _productRepository.GetShapeList();
+                var shapeList = await _productRepository.GetShapeList();
 
                 if (section == null)
                     return Json("No file uploaded.");
@@ -909,7 +909,7 @@ namespace ControlPanel.Controllers
                                         styleName = _productRepository.ExtractStyleName(entry.Name);
                                         if (styleName == null) continue;
 
-                                        var dt = shapeList.Result.Where(x => x.SymbolName == styleName.ShapeCode).FirstOrDefault();
+                                        var dt = shapeList.Where(x => x.SymbolName == styleName.ShapeCode).FirstOrDefault();
                                         
                                        var  shape = await _productRepository.GetProductShapeId(styleName.ShapeCode, dt.Id);
                                         if (shape == null) continue;
