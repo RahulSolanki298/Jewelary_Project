@@ -20,12 +20,13 @@ namespace B2C_ECommerce.Controllers
         private readonly IProductPropertyRepository _productPropertyRepository;
         private readonly IProductStyleRepository _productStyles;
         public HomeController(ILogger<HomeController> logger, IBlogRepository blogRepository,ISettingRepository settingRepository
-            ,IProductPropertyRepository productPropertyRepository)
+            ,IProductPropertyRepository productPropertyRepository, IProductStyleRepository productStyles)
         {
             _logger = logger;
             _blogRepository = blogRepository;
             _settingRepository = settingRepository;
             _productPropertyRepository = productPropertyRepository;
+            _productStyles = productStyles;
         }
 
         public IActionResult Index()
@@ -71,7 +72,7 @@ namespace B2C_ECommerce.Controllers
         public async Task<IActionResult> GetPrograms()
         {
             var response = await _productStyles.GetProductStyles();
-            return PartialView("_HomePrograms", response);
+            return PartialView("_NavMenu", response);
         }
 
 

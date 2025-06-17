@@ -59,7 +59,8 @@
 @section Scripts {
 	<script type="text/javascript">
 		$(document).ready(function(){
-			$("#frmRegister #signupForm").on("click","#btnSubmit",function(){
+			$("#frmRegister #signupForm").on("click", "#btnSubmit", function () {
+				debugger;
 				if ($("#signupForm").valid()) {
 				$("#btnSubmit").prop("disabled", true).text("Processing...");
 

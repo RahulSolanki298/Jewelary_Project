@@ -1,51 +1,132 @@
-﻿@model IEnumerable<Models.DiamondData>
+﻿@model Models.WishlistModel
 @using Common;
+@{
+      var secImg = string.Empty;
+      var priImg = string.Empty;
+      var vdoUrl = string.Empty;
+}
 
+<div class="shop-main-wrapper filter-padding">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 text-center">
+                <h2>Wishlist</h2>
+            </div>
+        </div>
+    </div>
+    <hr />
     <div class="custom-container">
         <div class="row">
             <div class="col-lg-12">
-                <!-- Wishlist Table Area -->
-                <div class="cart-table table-responsive">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th class="pro-thumbnail">SrNo.</th>
-                                <th class="pro-title">Images</th>
-                                <th class="pro-price">Product</th>
-                                <th class="pro-quantity">Qty</th>
-                                <th class="pro-quantity">Rate</th>
-                                <th class="pro-subtotal">Add to Cart</th>
-                                <th class="pro-remove">Remove</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @{ 
-                                int index = 1;
-                            }
-                            @foreach (var item in Model)
+                <div class="shop-product-wrapper">
+
+                    <div class="shop-product-wrap grid-view row mbn-30">
+
+
+                        @if (Model != null && Model.Jewelleries != null && Model.Jewelleries.Count() > 0)
                             {
-                            <tr>
-                                <td class="pro-thumbnail">@(index++)</td>
-                                <td class="pro-title">
-                                    <a href="@Url.Action("GetSingleDiamond","Diamond")?diamondId=@item.Id">
-                                        <img class="img-fluid" style="max-width:45px;height:auto;" src="@SD.ShapeImgUrl@item.IconPath" alt="Product">
-                                    </a>
-                                </td>
-                                <td class="pro-price">@item.Carat @item.ColorName @item.ShapeName @item.ClarityName @item.LabName</td>
-                                <td class="pro-quantity">@item.Quantity</td>
-                                <td class="pro-price">@item.Price</td>
-                                <td class="pro-subtotal">
-                                    <a href="#" class="btn btn-sqr btnAddToCard" data-productId="@item.Id">
-                                        Add to
-                                        Cart
-                                    </a>
-                                </td>
-                                <td class="pro-remove"><a href="#" class="remove-from-wishlist" data-productId="@item.Id"><i class="fa fa-trash-o"></i></a></td>
-                            </tr>
+                        @foreach (var item in Model.Jewelleries)
+                                {
+                                    secImg = item.ProductImageVideos.Where(x => x.ImageUrl != null && x.ImageUrl != "-").LastOrDefault()?.ImageUrl;
+                                    if (secImg != null && secImg == "-")
+                                    {
+                                        secImg = item.ProductImageVideos.Where(x => x.ImageUrl != null).FirstOrDefault()?.ImageUrl;
+                                    }
+
+                                    priImg = item.ProductImageVideos.Where(x => x.ImageUrl != null && x.ImageUrl != "-").FirstOrDefault()?.ImageUrl;
+                                    if (priImg != null && priImg == "-")
+                                    {
+                                        priImg = item.ProductImageVideos.Where(x => x.ImageUrl != null).LastOrDefault()?.ImageUrl;
+                                    }
+
+                                        <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6">
+                                            <div class="product-main-box">
+                                                <input type="hidden" class="product-id" value="@item.Id" />
+                                                <div class="float-end p-2 f-16 text-dark remove-product" data-productId="@item.Id" >
+                                                    <i class="fa fa-close"></i>
+                                                </div>
+                                                <div class="product-item">
+                                                    <figure class="product-thumb product-box-with-border media-container">
+                                                        <a class="img-with-bg">
+                                                            <img class="pri-img media-item" style="height:420px;" src="@($"{SD.ImgUrl}/{priImg}")" />
+                                                            <img class="sec-img media-item" style="height:420px;"  src="@($"{SD.ImgUrl}/{secImg}")" />
+                                                        </a>
+                                                    </figure>
+
+                                                    <div class="product-caption text-left product-box-desc">
+                                                        <div class="product-identity">
+                                                            <p class="manufacturer-name"><a href="#" class="pro-title" data-title="@item.Title">@item.Title</a></p>
+                                                        </div>
+                                                        <div class="price-box">
+                                                            <span class="price-regular f-16" data-sku="@item.Sku">$ @item.Price USD</span>
+                                                        </div>
+                                                        <div class="text-center mb-2">
+                                                            <a href="@Url.Action("ProductDetails","Products",new { id= item.Id})" class="btn btn-sm btn-dark btnWishlist">VIEW DETAIL</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                }
+
                             }
-                        </tbody>
-                    </table>
+
+                        @if (Model != null && Model.Diamonds != null && Model.Diamonds.Count() > 0)
+                            {
+                        @foreach (var item in Model.Diamonds)
+                                {
+                        <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6">
+                            <div class="product-main-box">
+                                <input type="hidden" class="diamond-id" value="@item.Id" />
+                                <div class="product-item">
+                                    <figure class="product-thumb product-box-with-border media-container">
+                                        <span class="float-end p-2 f-16 text-dark remove-diamond" data-diamondId="@item.Id">
+                                            <i class="fa fa-close"></i>
+                                        </span>
+                                        <a class="img-with-bg" href="@Url.Action("ProductDetails", "Products", new { id = item.Id })">
+                                            @if (item.DiamondImagePath != null)
+                                                                                {
+                                            <img src="@item.DiamondImagePath" alt="product-details" class="media-item">
+                                                                                }
+                                                                                else if (item.DiamondVideoPath != null)
+                                                                                {
+                                            <iframe src="@item.DiamondVideoPath"
+                                                    style="width:100%; height:420px; padding:5px 5px;"
+                                                    frameborder="0"
+                                                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                                    allowfullscreen>
+                                            </iframe>
+                                                                                }
+                                                                                else
+                                                                                {
+                                            <img src="~/assets/img/no-image-icon-23489.png" alt="product-details">
+                                                                                }
+                                        </a>
+                                    </figure>
+
+                                    <div class="product-caption text-left product-box-desc">
+                                        <div class="product-identity">
+                                            <p class="manufacturer-name"><a href="#" class="pro-title">@item.Carat Carat @item.ShapeName Shape @item.ColorName  @item.ClarityName @item.LabName</a></p>
+                                            @*<p style="font-size:medium;"> ( @item.CutName ) Cut | ( @item.ColorName ) Color | ( @item.ClarityName ) Clarity</p>*@
+                                        </div>
+                                        <div class="price-box">
+                                            <span class="price-regular f-16">$ @item.Price USD</span>
+                                        </div>
+                                        <div class="text-center mb-2">
+                                            <a href="@Url.Action("GetSingleDiamond","Diamond")?diamondId=@item.Id" class="btn btn-sm btn-dark btnWishlist">VIEW DETAIL</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                                }
+
+                            }
+                    </div>
                 </div>
             </div>
         </div>
-    </div>  
+    </div>
+</div>

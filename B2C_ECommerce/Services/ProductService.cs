@@ -1,4 +1,5 @@
 ﻿using B2C_ECommerce.IServices;
+using Business.Repository.IRepository;
 using Common;
 using DataAccess.Data;
 using DataAccess.Entities;
@@ -20,11 +21,14 @@ namespace B2C_ECommerce.Services
     {
         private readonly HttpClient _httpClient;
         private ApplicationDBContext _context;
+        private IProductRepository _productRepository;
         public ProductService(IHttpClientFactory httpClientFactory,
-            ApplicationDBContext context)
+            ApplicationDBContext context,
+            IProductRepository productRepository)
         {
             _httpClient = httpClientFactory.CreateClient("API");
             _context = context;
+            _productRepository = productRepository;
         }
 
         public async Task<List<ProductDTO>> GetProductListByFilter(ProductFilters filters, int pageNumber = 1, int pageSize = 10)
@@ -851,6 +855,15 @@ namespace B2C_ECommerce.Services
 
 
             return productQry;
+        }
+
+        public async Task<IEnumerable<ProductDTO>> GetSelectedProductByIds(string[] productIds)
+        {
+            var response = await _productRepository.GetProductStyleList();
+
+            var filteredProducts = response.Where(x => productIds.Contains(x.Id.ToString())).ToList();
+
+            return filteredProducts;
         }
     }
 }

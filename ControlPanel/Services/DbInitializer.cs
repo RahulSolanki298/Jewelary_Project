@@ -52,6 +52,9 @@ namespace ControlPanel.Services
 
             await SeedDiamondPropertiesAsync();
 
+            //await SeedProductStyles();
+
+            //await SeedProductCollections();
         }
 
         private async Task SeedRolesAsync()
@@ -310,29 +313,30 @@ namespace ControlPanel.Services
                     var lab = await _db.DiamondProperties.Where(x => x.Name == SD.Lab).FirstOrDefaultAsync();
                     var LabDTs = new List<DiamondProperty>
                     {
-                        new DiamondProperty{ Name="IGI",Description="International Gemological Institute",SymbolName="IGI",ParentId=shape.Id,DispOrder=1,IsActivated=true,IconPath="/assets/img/IGI.png"},
-                        new DiamondProperty{ Name="GCAL",SymbolName="Gem Certification & Assurance Lab",ParentId=shape.Id,DispOrder=2,IsActivated=false},
-                        new DiamondProperty{ Name="GIA",SymbolName="Gemological Institute of America",ParentId=shape.Id,DispOrder=3,IsActivated=true,IconPath="/assets/img/diamond-svg/IGI.png"},
-                        new DiamondProperty{ Name="AGS",SymbolName="American Gem Society",ParentId=shape.Id,DispOrder=4,IsActivated=false},
-                        new DiamondProperty{ Name="HRD",SymbolName="Hoge Raad voor Diamant (Belgium)\t",ParentId=shape.Id,DispOrder=5,IsActivated=false},
-                        new DiamondProperty{ Name="EGL",SymbolName = "European Gemological Laboratory\t", ParentId=shape.Id,DispOrder=6,IsActivated=false},
+                        new DiamondProperty{ Name="IGI",Description="International Gemological Institute",SymbolName="IGI",ParentId=lab.Id,DispOrder=1,IsActivated=true,IconPath="/assets/img/IGI.png"},
+                        new DiamondProperty{ Name="GCAL",Description="Gem Certification & Assurance Lab",ParentId=lab.Id,DispOrder=2,IsActivated=false},
+                        new DiamondProperty{ Name="GIA",Description="Gemological Institute of America",SymbolName="GIA",ParentId=lab.Id,DispOrder=3,IsActivated=true,IconPath="/assets/img/diamond-svg/IGI.png"},
+                        new DiamondProperty{ Name="AGS",Description="American Gem Society",ParentId=lab.Id,DispOrder=4,IsActivated=false},
+                        new DiamondProperty{ Name="HRD",Description="Hoge Raad voor Diamant (Belgium)\t",ParentId=lab.Id,DispOrder=5,IsActivated=false},
+                        new DiamondProperty{ Name="EGL",Description = "European Gemological Laboratory\t", ParentId=lab.Id,DispOrder=6,IsActivated=false},
                     };
                     await _db.DiamondProperties.AddRangeAsync(LabDTs);
                     await _db.SaveChangesAsync();
 
+                    var clarity = await _db.DiamondProperties.Where(x => x.Name == SD.Clarity).FirstOrDefaultAsync();
                     var ClarityDTs = new List<DiamondProperty>
                     {
-                        new DiamondProperty { Name = "FL", Description = "Flawless (FL): No inclusions or blemishes visible under 10x magnification.", ParentId = shape.Id, DispOrder = 1, IsActivated = true, IconPath = "/assets/img/clarities/FL.png" },
-                        new DiamondProperty { Name = "IF", Description = "Internally Flawless (IF): No internal inclusions, but may have surface blemishes.", ParentId = shape.Id, DispOrder = 2, IsActivated = true, IconPath = "/assets/img/clarities/IF.png" },
-                        new DiamondProperty { Name = "VVS1", Description = "Very, Very Slightly Included (VVS1): Inclusions are extremely difficult to see under 10x magnification.", ParentId = shape.Id, DispOrder = 3, IsActivated = true, IconPath = "/assets/img/clarities/VVS1.png" },
-                        new DiamondProperty { Name = "VVS2", Description = "Very, Very Slightly Included (VVS2): Inclusions are very difficult to see under 10x magnification.", ParentId = shape.Id, DispOrder = 4, IsActivated = true, IconPath = "/assets/img/clarities/VVS2.png" },
-                        new DiamondProperty { Name = "VS1", Description = "Very Slightly Included (VS1): Inclusions are minor and difficult to detect with 10x magnification.", ParentId = shape.Id, DispOrder = 5, IsActivated = true, IconPath = "/assets/img/clarities/VS1.png" },
-                        new DiamondProperty { Name = "VS2", Description = "Very Slightly Included (VS2): Inclusions are more noticeable under magnification.", ParentId = shape.Id, DispOrder = 6, IsActivated = true, IconPath = "/assets/img/clarities/VS2.png" },
-                        new DiamondProperty { Name = "SI1", Description = "Slightly Included (SI1): Inclusions are noticeable under 10x magnification and may be visible to the naked eye.", ParentId = shape.Id, DispOrder = 7, IsActivated = true, IconPath = "/assets/img/clarities/SI1.png" },
-                        new DiamondProperty { Name = "SI2", Description = "Slightly Included (SI2): Inclusions are visible to the naked eye.", ParentId = shape.Id, DispOrder = 8, IsActivated = true, IconPath = "/assets/img/clarities/SI2.png" },
-                        new DiamondProperty { Name = "I1", Description = "Included (I1): Inclusions are obvious under 10x magnification and may affect the diamond's transparency or brilliance.", ParentId = shape.Id, DispOrder = 9, IsActivated = true, IconPath = "/assets/img/clarities/I1.png" },
-                        new DiamondProperty { Name = "I2", Description = "Included (I2): Inclusions are significant and visible to the naked eye, potentially affecting the diamond’s appearance.", ParentId = shape.Id, DispOrder = 10, IsActivated = true, IconPath = "/assets/img/clarities/I2.png" },
-                        new DiamondProperty { Name = "I3", Description = "Included (I3): Inclusions are so severe that they affect the diamond’s overall appearance, brilliance, and durability.", ParentId = shape.Id, DispOrder = 11, IsActivated = true, IconPath = "/assets/img/clarities/I3.png" }
+                        new DiamondProperty { Name = "FL", Description = "Flawless (FL): No inclusions or blemishes visible under 10x magnification.", ParentId = clarity.Id, DispOrder = 1, IsActivated = true, IconPath = "/assets/img/clarities/FL.png" },
+                        new DiamondProperty { Name = "IF", Description = "Internally Flawless (IF): No internal inclusions, but may have surface blemishes.", ParentId = clarity.Id, DispOrder = 2, IsActivated = true, IconPath = "/assets/img/clarities/IF.png" },
+                        new DiamondProperty { Name = "VVS1", Description = "Very, Very Slightly Included (VVS1): Inclusions are extremely difficult to see under 10x magnification.", ParentId = clarity.Id, DispOrder = 3, IsActivated = true, IconPath = "/assets/img/clarities/VVS1.png" },
+                        new DiamondProperty { Name = "VVS2", Description = "Very, Very Slightly Included (VVS2): Inclusions are very difficult to see under 10x magnification.", ParentId = clarity.Id, DispOrder = 4, IsActivated = true, IconPath = "/assets/img/clarities/VVS2.png" },
+                        new DiamondProperty { Name = "VS1", Description = "Very Slightly Included (VS1): Inclusions are minor and difficult to detect with 10x magnification.", ParentId = clarity.Id, DispOrder = 5, IsActivated = true, IconPath = "/assets/img/clarities/VS1.png" },
+                        new DiamondProperty { Name = "VS2", Description = "Very Slightly Included (VS2): Inclusions are more noticeable under magnification.", ParentId = clarity.Id, DispOrder = 6, IsActivated = true, IconPath = "/assets/img/clarities/VS2.png" },
+                        new DiamondProperty { Name = "SI1", Description = "Slightly Included (SI1): Inclusions are noticeable under 10x magnification and may be visible to the naked eye.", ParentId = clarity.Id, DispOrder = 7, IsActivated = true, IconPath = "/assets/img/clarities/SI1.png" },
+                        new DiamondProperty { Name = "SI2", Description = "Slightly Included (SI2): Inclusions are visible to the naked eye.", ParentId = clarity.Id, DispOrder = 8, IsActivated = true, IconPath = "/assets/img/clarities/SI2.png" },
+                        new DiamondProperty { Name = "I1", Description = "Included (I1): Inclusions are obvious under 10x magnification and may affect the diamond's transparency or brilliance.", ParentId = clarity.Id, DispOrder = 9, IsActivated = true, IconPath = "/assets/img/clarities/I1.png" },
+                        new DiamondProperty { Name = "I2", Description = "Included (I2): Inclusions are significant and visible to the naked eye, potentially affecting the diamond’s appearance.", ParentId = clarity.Id, DispOrder = 10, IsActivated = true, IconPath = "/assets/img/clarities/I2.png" },
+                        new DiamondProperty { Name = "I3", Description = "Included (I3): Inclusions are so severe that they affect the diamond’s overall appearance, brilliance, and durability.", ParentId = clarity.Id, DispOrder = 11, IsActivated = true, IconPath = "/assets/img/clarities/I3.png" }
                     };
                     await _db.DiamondProperties.AddRangeAsync(ClarityDTs);
                     await _db.SaveChangesAsync();
@@ -408,7 +412,6 @@ namespace ControlPanel.Services
             }
         }
 
-
         private async Task SeedProductStyles()
         {
             if (!await _db.ProductStyles.AnyAsync())
@@ -444,6 +447,27 @@ namespace ControlPanel.Services
                     new ProductStyles { StyleName = "Customer Favorites", CategoryId = bands.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
                 };
                 await _db.ProductStyles.AddRangeAsync(categories);
+                await _db.SaveChangesAsync();
+            }
+        }
+
+        private async Task SeedProductCollections()
+        {
+            if (!await _db.ProductCollections.AnyAsync())
+            {
+                var collection = new List<ProductCollections>
+                {
+                    new ProductCollections { CollectionName = "Curve", IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
+                    new ProductCollections { CollectionName = "Muse", IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
+                    new ProductCollections { CollectionName = "Nostalgia", IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
+                    new ProductCollections { CollectionName = "Mosaic", IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
+                    new ProductCollections { CollectionName = "Boundless", IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
+                    new ProductCollections { CollectionName = "Toi Et Moi", IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
+                    new ProductCollections { CollectionName = "Naas", IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
+                    new ProductCollections { CollectionName = "High Jewelry", IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
+                    new ProductCollections { CollectionName = "Aether Diamonds", IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
+                };
+                await _db.ProductCollections.AddRangeAsync(collection);
                 await _db.SaveChangesAsync();
             }
         }

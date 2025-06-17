@@ -9,19 +9,10 @@
                 <ul>
                     @foreach (var item in Model)
                     {
-                        <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="Solitaire"})">@item.StyleName</a></li>
+                        <li>
+                            <a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type=item.Id})">@item.StyleName</a>
+                        </li>
                     }
-
-                   @*  <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="Solitaire"})">Solitaire</a></li>
-                    <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="SideStone"})">Side Stone</a></li>
-                    <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="Halo"})">Halo</a></li>
-                    <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="ThreeStone"})">Three Stone</a></li>
-                    <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="HiddenHalo"})">Hidden Halo</a></li>
-                    <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="Vintage"})">Vintage</a></li>
-                    <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="BridalSets"})">Bridal Sets</a></li>
-                    <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="Gemstone"})">Gemstone</a></li>
-                    <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="BadgleyMischka"})"> Badgley Mischka</a></li>
-                    <li><a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type="CustomerFavorites"})">Customer Favorites</a></li> *@
                 </ul>
             </li>
             <li class="mega-title">

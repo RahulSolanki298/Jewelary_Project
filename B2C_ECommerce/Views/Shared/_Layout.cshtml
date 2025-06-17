@@ -223,16 +223,21 @@
         $(document).ready(function () {
             getWishlistCounter();
             getAddToCardCounter();
+            getHomePageNav();
+
+            
 
         });
         function getWishlistCounter() {
             let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
-            $("#wishlistCounter").text(wishlist.length);
-            $("#wishlistMobileCounter").text(wishlist.length);
+            let ProductWishlist = JSON.parse(localStorage.getItem("ProductWishlist")) || [];
+            $("#wishlistCounter").text(wishlist.length + ProductWishlist.length);
+            $("#wishlistMobileCounter").text(wishlist.length + ProductWishlist.length);
         }
 
         function getAddToCardCounter() {
             let daiamondCard = JSON.parse(localStorage.getItem("diamondCartlist")) || [];
+            let productCart = JSON.parse(localStorage.getItem("productCartlist")) || [];
             $("#addtoCardCounter").text(daiamondCard.length);
             $("#addtoCardMobileCounter").text(daiamondCard.length);
         }

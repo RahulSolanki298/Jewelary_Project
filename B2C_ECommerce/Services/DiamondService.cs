@@ -96,7 +96,7 @@ namespace B2C_ECommerce.Services
             }
         }
 
-
+        
 
         public async Task<IEnumerable<DiamondData>> GetSelectedDiamondByIds(int[] diamondIds)
         {

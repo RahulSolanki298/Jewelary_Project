@@ -84,6 +84,8 @@ namespace B2C_ECommerce
         private void ConfigureRepositories(IServiceCollection services)
         {
             services.AddScoped<ILogEntryRepository, LogEntryRepository>();
+            services.AddScoped<IProductStyleRepository, ProductStyleRepository>();
+            
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<ICategoryRepositry, CategoryRepository>();
             services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();

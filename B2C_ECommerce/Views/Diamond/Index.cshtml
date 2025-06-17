@@ -1180,38 +1180,7 @@
                 return null;
             }
         }
-
-
-
-        // async function getDiamondDataList(diamondFilters, pageNumber = 1, pageSize = 10)
-        //     {
-        //         debugger;
-        //         showLoader();
-        //         return $.ajax({
-        //             url: '@Url.Action("GetDiamondList", "Diamond")', // Change this to your actual route
-        //             type: 'POST',
-        //             data: {
-        //                 diamondFilters: diamondFilters,
-        //                 pageNumber: pageNumber,
-        //                 pageSize: pageSize
-        //             },
-        //             success: function (data) {
-        //                 $('#diamond-list-container').html('');
-        //                 $('#diamond-list-container').html(data);
-        //                 resetCheckBox();
-        //                 updateWishlistUI();
-        //                 hideLoader();
-        //             },
-        //             error: function (error) {
-        //                 console.error('Error fetching data:', error);
-        //                 //   setTimeout(() => {
-        //                 //     hideLoader();
-        //                 // }, 10000);
-        //                 hideLoader();
-        //             }
-
-        //         });
-        //     }
+        
 
         async function loadAllFunctions() {
             debugger;
@@ -1324,7 +1293,6 @@
 
         function updateWishlistUI() {
             let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
-
 
             $('#diamond-list-container #diamondTable tbody .wishlist-toggle').each(function () {
                 let diamondId = Number($(this).data("diamondid"));

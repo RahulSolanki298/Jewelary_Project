@@ -143,32 +143,19 @@
                                 <div class="pt-4">
                                     <h5 class="offer-text"><strong>Carat Weight :</strong> @Model.CaratName</h5>
                                     @*<ul class="size-categories-details">
-                                            @foreach (var item in Model.CaratSizes)
-                                            {
-                                                <li>
-                                                    <a class="text-black-50" href="#" >@item.Name</a>
-                                                </li>
-                                            }
-                                        </ul>*@
+                @foreach (var item in Model.CaratSizes)
+                {
+                    <li>
+                        <a class="text-black-50" href="#" >@item.Name</a>
+                    </li>
+                }
+            </ul>*@
                                     <div class="product-countdown">
 
                                         @foreach (var item in Model.CaratSizes)
                                         {
                                             <div class="single-countdown selectedCaratClick"><span class="single-countdown__time" title="@item.Name">@item.Name</span></div>
                                         }
-                                    </div>
-                                </div>
-
-                                <div class="availability">
-                                    <i class="fa fa-check-circle"></i>
-                                    <span>In stock</span>
-                                </div>
-                                <p class="pro-desc">
-                                    @*@Model.Description*@
-                                </p>
-                                <div class="quantity-cart-box d-flex align-items-center">
-                                    <div class="action_link">
-                                        <a class="btn btn-cart2" href="#">Add to cart</a>
                                     </div>
                                 </div>
                                 <div class="pro-size">
@@ -190,11 +177,18 @@
                                     </select>
                                 </div>
 
-
-                                <div class="useful-links">
-                                    <a href="#" data-bs-toggle="tooltip" title="Compare"><i class="pe-7s-refresh-2"></i>compare</a>
-                                    <a href="#" data-bs-toggle="tooltip" id="btnWishListDT" title="Wishlist"><i class="pe-7s-like"></i>wishlist</a>
+                                <div class="quantity-cart-box d-flex align-items-center">
+                                    <div class="action_link">
+                                        <a class="btn btn-cart2" href="#">Add to cart</a>
+                                    </div>
+                                    <div class="useful-links">
+                                        <a href="#" data-bs-toggle="tooltip" id="btnWishListDT" title="Wishlist"><i class="pe-7s-like"></i>wishlist</a>
+                                    </div>
                                 </div>
+
+
+
+                                
                                 <div class="delivery_date_shortcode">
                                     <h2 class="delivery_msg">Estimated Delivery Date (Working Day)</h2>
                                     <div class="order_steps">

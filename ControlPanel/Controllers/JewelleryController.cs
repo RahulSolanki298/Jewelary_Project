@@ -930,6 +930,11 @@ namespace ControlPanel.Controllers
 
                                         foreach (var pro in prdDesignDT)
                                         {
+
+                                            //var findImgVdo = _productRepository.GetProductImagesVideoById(pro.Id.ToString);
+                                            
+                                            
+                                            
                                             prdDT = new ProductImages
                                             {
                                                 ProductId = pro.Id.ToString(),

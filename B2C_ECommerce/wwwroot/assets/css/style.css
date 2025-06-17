@@ -7891,7 +7891,7 @@ a {
     top: 50%;
     transform: translateY(-50%);
     font-size: 2rem;
-    background: rgba(255, 255, 255, 0.8);
+    /*background: rgba(255, 255, 255, 0.8);*/
     border: none;
     cursor: pointer;
     z-index: 10;
@@ -7900,7 +7900,7 @@ a {
 }
 
     .collection-nav-button:hover {
-        background: rgba(255, 255, 255, 1);
+        /*background: rgba(255, 255, 255, 1);*/
     }
 
     .collection-nav-button.left {

@@ -355,17 +355,17 @@
                     });
 
                     // Set initial values
-                $("#MyProductsImg").on("click", ".metalColor", function (event) {
-                        event.preventDefault();
+                    $("#MyProductsImg").on("click", ".metalColor", function (event) {
+                            event.preventDefault();
 
-                        var productId = $(this).attr('productId');
-                        var metalId = $(this).attr('metalid');
-                        $(".metalColor").removeClass("metalShow");
-                        $(".metalColor").addClass("metalHide");
+                            var productId = $(this).attr('productId');
+                            var metalId = $(this).attr('metalid');
+                            $(".metalColor").removeClass("metalShow");
+                            $(".metalColor").addClass("metalHide");
 
-                        $(this).addClass("metalShow");
-                        GetProductByColorId(productId, metalId);
-                });
+                            $(this).addClass("metalShow");
+                            GetProductByColorId(productId, metalId);
+                    });
 
 
 
@@ -609,15 +609,12 @@
                     .done(function (response) {
                         const $productContainer = $(".product-item").has("[data-sku='" + productId + "']");
                         const baseUrl = '@SD.BaseApiUrl'.replace(/\\/g, '/');
+                                              
 
-                        console.log($(".activemetalname[data-sku='" + productId + "']"));
-                        console.log($(".price-regular[data-sku='" + response.Price + "']"));
-                        console.log($(".price-old[data-sku='" + response.Price + "']"));
+                        //$(".activemetalname[data-sku='" + productId + "']").text(response.colorName);
 
-                        $(".activemetalname[data-sku='" + productId + "']").text(response.colorName);
+                        $productContainer.find(".activemetalname").text(response.colorName);
 
-                        //$(".price-regular[data-sku='" + productId + "']").text(" $ " + response.Price);
-                        //$(".price-old[data-sku='" + productId + "']").html('<del>' + response.unitPrice + '</del>');
 
                         const images = (response.productImageVideos || []).filter(x => x.imageUrl && x.imageUrl !== "-");
                         if (images.length > 0) {
@@ -673,14 +670,9 @@
                         const $productContainer = $(".product-item").has("[data-sku='" + productId + "']");
                         const baseUrl = '@SD.BaseApiUrl'.replace(/\\/g, '/');
 
-                        console.log($(".activemetalname[data-sku='" + productId + "']"));
-                        console.log($(".price-regular[data-sku='" + productId + "']"));
-                        console.log($(".price-old[data-sku='" + productId + "']"));
+                       // $(".activemetalname[data-sku='" + productId + "']").text(response.colorName);
 
-                        $(".activemetalname[data-sku='" + productId + "']").text(response.colorName);
-
-                        //$(".price-regular[data-sku='" + productId + "']").text(response.Price);
-                        //$(".price-old[data-sku='" + productId + "']").html('<del>' + response.unitPrice + '</del>');
+                        $productContainer.find(".activemetalname").text(response.colorName);
 
                         const images = (response.productImageVideos || []).filter(x => x.imageUrl && x.imageUrl !== "-");
                         if (images.length > 0) {
@@ -711,29 +703,14 @@
                     dataType: 'json'
                 })
                     .done(function (response) {
+                        debugger;
                         const $productContainer = $(".product-item").has("[data-sku='" + sku + "']");
                         const baseUrl = '@SD.BaseApiUrl'.replace(/\\/g, '/');
 
-                        //console.log($(".activemetalname[data-sku='" + sku + "']"));
-                        //console.log($(".price-regular[data-sku='" + sku + "']"));
-                        //console.log($(".price-old[data-sku='" + sku + "']"));
+                        $productContainer.find(".pro-title").text(response[0].title);
+                        $productContainer.find(".activemetalname").text(response[0].colorName);
+                        $productContainer.find(".price-regular").text(" $ " + parseFloat(response[0].price).toFixed(2) + " USD ");
 
-                        $(".pro-title[data-title='" + response[0].title + "']");
-                        $(".activemetalname[data-sku='" + sku + "']").text(response[0].colorName);
-
-                        $(".price-regular[data-sku='" + response[0].Price + "']").text(response[0].Price);
-                        /*$(".price-old[data-sku='" + productId + "']").html('<del>' + response.unitPrice + '</del>');*/
-
-                        //const images = (response.productImageVideos || []).filter(x => x.imageUrl && x.imageUrl !== "-");
-                        //if (images.length > 0) {
-                        //    const priImg = baseUrl + '/' + images[0].imageUrl.replace(/\\/g, '/');
-                        //    $productContainer.find('.pri-img').attr('src', priImg).attr('alt', response.colorName + ' - Primary Image');
-                        //}
-
-                        //if (images.length > 1) {
-                        //    const secImg = baseUrl + '/' + images[1].imageUrl.replace(/\\/g, '/');
-                        //    $productContainer.find('.sec-img').attr('src', secImg).attr('alt', response.colorName + ' - Secondary Image');
-                        //}
                     })
                     .fail(function (xhr, status, error) {
                         console.error('AJAX error:', status, error);

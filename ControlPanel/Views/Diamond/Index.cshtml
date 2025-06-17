@@ -306,20 +306,33 @@
                                 cancelButtonText: 'Cancel'
                             }).then((result) => {
                                 if (!result.isConfirmed) return;
+                                 @*@Html.Partial("_Loading")*@
+
 
                                 $.ajax({
                                     url: '@Url.Action("ChangeStatus", "Diamond")',
                                     method: 'POST',
-                                    data: {
-                                        stoneIds: addItems,
-                                        status: newStatus
-                                    },
+                                    //data: {
+                                    //    stoneIds: addItems,
+                                    //    status: newStatus
+                                    //},
+                                    contentType: 'application/json',
+                                    data: JSON.stringify({ stoneIds: addItems, status: newStatus }),
+                                    processData: false,
                                     success: function (response) {
-                                        Swal.fire({
-                                            icon: 'success',
-                                            title: 'Status Updated',
-                                            text: `Products successfully updated to "${newStatus}".`,
-                                        }).then(() => location.reload());
+                                        if (response.success) {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Success',
+                                                text: response.message
+                                            }).then(() => location.reload());
+                                        } else {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Error',
+                                                text: response.message
+                                            });
+                                        }
                                     },
                                     error: function (xhr, status, error) {
                                         Swal.fire({

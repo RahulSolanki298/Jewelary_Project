@@ -26,7 +26,6 @@ namespace ControlPanel
                     }
                     catch (Exception ex)
                     {
-
                         throw;
                     }
                 });

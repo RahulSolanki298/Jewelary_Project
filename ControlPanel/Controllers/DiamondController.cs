@@ -702,27 +702,59 @@ namespace ControlPanel.Controllers
         }
 
 
+        //[HttpPost]
+        //public async Task<IActionResult> ChangeStatus(string[] stoneIds, string status)
+        //{
+        //    var userId = HttpContext.Session.GetString("UserId");
+        //    var user = await _userManager.FindByIdAsync(userId);
+
+        //    if (stoneIds != null && stoneIds.Length > 0)
+        //    {
+        //        var response = await _diamondRepository.UpdateDiamondsStatus(stoneIds, userId, status);
+        //        if (response == true)
+        //        {
+        //            return Json($"Diamonds status have been change successfully. status : {status}");
+        //        }
+        //        else
+        //        {
+        //            return Json($"Diamonds status have been failed for change status. please try again.");
+        //        }
+        //    }
+        //    else
+        //    {
+        //        return Json($"Please select diamonds.");
+        //    }
+
+        //}
+
+
+        public class StoneStatusChangeModel
+        {
+            public string[] StoneIds { get; set; }
+            public string Status { get; set; }
+        }
+
         [HttpPost]
-        public async Task<IActionResult> ChangeStatus(string[] stoneIds, string status)
+        public async Task<IActionResult> ChangeStatus([FromBody] StoneStatusChangeModel model)
         {
             var userId = HttpContext.Session.GetString("UserId");
             var user = await _userManager.FindByIdAsync(userId);
 
-            if (stoneIds.Length > 0)
+            if (model.StoneIds != null && model.StoneIds.Length > 0)
             {
-                var response = await _diamondRepository.UpdateDiamondsStatus(stoneIds, userId, status);
+                var response = await _diamondRepository.UpdateDiamondsStatus(model.StoneIds, userId, model.Status);
                 if (response == true)
                 {
-                    return Json($"Diamonds status have been change successfully. status : {status}");
+                    return Json(new { success = true, message = $"Diamonds status have been changed successfully. status : {model.Status}" });
                 }
                 else
                 {
-                    return Json($"Diamonds status have been failed for change status. please try again.");
+                    return Json(new { success = false, message = "Diamonds status have been failed for change status. please try again." });
                 }
             }
             else
             {
-                return Json($"Please select diamonds.");
+                return Json(new { success = false, message = "Please select diamonds." });
             }
 
         }

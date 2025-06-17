@@ -109,7 +109,7 @@
                         <div class="mb-3">
                             <h6>Note:</h6>
                             <p>
-                                We accept CSV and Excel files for bulk diamond upload.<br />
+                                .xls standard format for diamond.<br />
                                 Excel format:
                                 <a href="~/FileFormats/DiamondFormat.xlsx" class="link-primary" target="_blank" rel="noopener">Download</a>
                             </p>
@@ -334,16 +334,27 @@
                                 $.ajax({
                                     url: '@Url.Action("ChangeStatus", "Diamond")',
                                     method: 'POST',
-                                    data: {
-                                        stoneIds: addItems,
-                                        status: newStatus
-                                    },
+                                    //data: {
+                                    //    stoneIds: addItems,
+                                    //    status: newStatus
+                                    //},
+                                    contentType: 'application/json',
+                                    data: JSON.stringify({ stoneIds: addItems, status: newStatus }),
+                                    processData: false,
                                     success: function (response) {
-                                        Swal.fire({
-                                            icon: 'success',
-                                            title: 'Status Updated',
-                                            text: `Products successfully updated to "${newStatus}".`,
-                                        }).then(() => location.reload());
+                                        if (response.success) {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Success',
+                                                text: response.message
+                                            }).then(() => location.reload());
+                                        } else {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Error',
+                                                text: response.message
+                                            });
+                                        }
                                     },
                                     error: function (xhr, status, error) {
                                         Swal.fire({

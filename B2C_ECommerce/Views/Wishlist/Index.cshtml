@@ -22,15 +22,8 @@
 </div>
 
 
-<div class="custom-container padding-top-20 padding-bottom-20">
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 text-center">
-            <h2>Wishlist</h2>
-        </div>
-    </div>
-</div>
 <!-- wishlist main wrapper start -->
-<div class="wishlist-main-wrapper padding-bottom-30" id="diamondComparisonContent" style="min-height:450px;">
+<div class="wishlist-main-wrapper padding-top-20 padding-bottom-20" id="diamondContent" style="min-height:450px;">
 
 </div>
 
@@ -38,22 +31,16 @@
 {
     <script>
         let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+        let jewelWishlist = JSON.parse(localStorage.getItem("ProductWishlist")) || [];
 
         $(document).ready(function () {
 
             getWishList();
 
-            $('#diamondComparisonContent').on('click', '.remove-from-wishlist', function (e) {
+            $('#diamondContent').on('click', '.remove-diamond', function (e) {
                 e.preventDefault();
 
-                const swalWithBootstrapButtons = Swal.mixin({
-                    //customClass: {
-                    //    confirmButton: "btn btn-success",
-                    //    cancelButton: "btn btn-danger"
-                    //},
-                    //buttonsStyling: false
-                });
-                swalWithBootstrapButtons.fire({
+                Swal.fire({
                     title: "Are you sure?",
                     text: "you want to remove this item from your wishlist?",
                     icon: "warning",
@@ -62,16 +49,16 @@
                     cancelButtonText: "No",
                     reverseButtons: true
                 }).then((result) => {
+                    
                     if (result.isConfirmed) {
-                        var productId = $(this).data('productid');
-
-                        var wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-
-                        wishlist = wishlist.filter(id => String(id) !== String(productId));
+                        var diamondId = $(this).attr('data-diamondId');
+                        debugger;
+                        /*var wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];*/
+                        wishlist = wishlist.filter(id => String(id) !== String(diamondId));
 
                         localStorage.setItem('wishlist', JSON.stringify(wishlist));
 
-                        swalWithBootstrapButtons.fire({
+                        Swal.fire({
                             title: "Deleted!",
                             text: "Product has been removed from wishlist!",
                             icon: "success"
@@ -84,32 +71,61 @@
                 });
             });
 
+            $('#diamondContent').on('click', '.remove-product', function (e) {
+                e.preventDefault();
 
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "you want to remove this item from your wishlist?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, delete it!",
+                    cancelButtonText: "No",
+                    reverseButtons: true
+                }).then((result) => {
+
+                    if (result.isConfirmed) {
+                        var productId = $(this).attr('data-productId');
+                        debugger;
+                        /*var wishlist = JSON.parse(localStorage.getItem('ProductWishlist')) || [];*/
+                        jewelWishlist = jewelWishlist.filter(id => String(id) !== String(productId));
+
+                        localStorage.setItem('ProductWishlist', JSON.stringify(jewelWishlist));
+
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Product has been removed from wishlist!",
+                            icon: "success"
+                        });
+                        toastr.success("Product has been added to your wishlist.", "success");
+                        location.reload();
+                    } else {
+
+                    }
+                });
+            });
 
         });
 
         function getWishList() {
-            if (wishlist.length > 0) {
+            debugger;
+            if (wishlist.length > 0 || jewelWishlist.length > 0) {
                 $.ajax({
                     url: '@Url.Action("GetWishListByIds", "Wishlist")',
                     type: 'GET',
                     data: {
-                        diamondIds: wishlist.join(',')
+                        diamondIds: wishlist.join(','),
+                        productIds: jewelWishlist.join(',')
                     },
                     success: function (data) {
-                        $("#diamondComparisonContent").html('');
-                        $("#diamondComparisonContent").html(data);
+                        $("#diamondContent").html('');
+                        $("#diamondContent").html(data);
                     },
                     error: function (error) {
                         console.error('Error fetching data:', error);
                     }
                 });
-
             }
-            else {
-                //alert("Please select at least one diamond to compare.");
-            }
-
         }
 
     </script>

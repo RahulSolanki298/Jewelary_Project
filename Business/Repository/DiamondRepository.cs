@@ -332,88 +332,165 @@ namespace Business.Repository
             }
         }
 
+        //public async Task<bool> UpdateDiamondsStatus(string[] stoneIds, string userId, string status)
+        //{
+        //    try
+        //    {
+        //        var diamonds = new List<Diamond>();
+        //        var diamondHistorys = new List<DiamondHistory>();
+        //        var diamond = new Diamond();
+        //        var diamondHistory = new DiamondHistory();
+
+        //        for (int i = 0; i < stoneIds.Length; i++)
+        //        {
+        //            diamond = new Diamond();
+        //            diamond = await _context.Diamonds.Where(x => x.StoneId == stoneIds[i].ToString()).FirstOrDefaultAsync();
+        //            if (diamond != null)
+        //            {
+        //                diamond.UploadStatus = status;
+        //                diamond.UpdatedDate = DateTime.Now;
+        //                diamond.UpdatedBy = userId;
+        //                if (diamond.UploadStatus == SD.Active)
+        //                {
+        //                    diamond.IsActivated = true;
+        //                }
+        //                else
+        //                {
+        //                    diamond.IsActivated = false;
+        //                }
+
+        //                diamonds.Add(diamond);
+        //            }
+        //        }
+        //        _context.Diamonds.UpdateRange(diamonds);
+        //        await _context.SaveChangesAsync();
+
+        //        foreach (var item in diamonds)
+        //        {
+        //            diamondHistory = new DiamondHistory()
+        //            {
+        //                DiamondId = item.Id,
+        //                Step = item.Step,
+        //                TypeId = item.TypeId,
+        //                Shade = item.Shade,
+        //                ShapeId = item.ShapeId,
+        //                StoneId = item.StoneId,
+        //                Sku = item.Sku,
+        //                DNA = item.DNA,
+        //                Type = item.Type,
+        //                LabId = item.LabId,
+        //                Carat = item.Carat,
+        //                ColorId = item.ColorId,
+        //                Clarity = item.Clarity,
+        //                CutId = item.CutId,
+        //                PolishId = item.PolishId,
+        //                SymmetryId = item.SymmetryId,
+        //                Flo = item.Flo,
+        //                RAP = item.RAP,
+        //                Discount = item.Discount,
+        //                Price = item.Price,
+        //                Amount = item.Amount,
+        //                Measurement = item.Measurement,
+        //                Ratio = item.Ratio,
+        //                Depth = item.Depth,
+        //                Table = item.Table,
+        //                LabShape = item.LabShape,
+        //                RapAmount = item.RapAmount,
+        //                DiamondVideoPath = item.DiamondVideoPath,
+        //                Certificate = item.Certificate,
+        //                CreatedBy = userId,
+        //                CreatedDate = DateTime.Now,
+        //                UpdatedBy = userId,
+        //                UpdatedDate = DateTime.Now,
+        //                UploadStatus = status,
+        //                IsActivated = item.IsActivated,
+        //            };
+        //            diamondHistorys.Add(diamondHistory);
+        //        }
+        //        await _context.DiamondHistory.AddRangeAsync(diamondHistorys);
+        //        await _context.SaveChangesAsync();
+
+        //        return true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return false;
+        //    }
+        //}
+
         public async Task<bool> UpdateDiamondsStatus(string[] stoneIds, string userId, string status)
         {
             try
             {
-                var diamonds = new List<Diamond>();
-                var diamondHistorys = new List<DiamondHistory>();
-                var diamond = new Diamond();
-                var diamondHistory = new DiamondHistory();
+                // 1. Fetch all diamonds in a single query
+                var diamonds = await _context.Diamonds
+                    .Where(x => stoneIds.Contains(x.StoneId))
+                    .ToListAsync();
 
-                for (int i = 0; i < stoneIds.Length; i++)
+                var now = DateTime.Now;
+
+                // 2. Update diamond entities
+                foreach (var diamond in diamonds)
                 {
-                    diamond = new Diamond();
-                    diamond = await _context.Diamonds.Where(x => x.StoneId == stoneIds[i].ToString()).FirstOrDefaultAsync();
-                    if (diamond != null)
-                    {
-                        diamond.UploadStatus = status;
-                        diamond.UpdatedDate = DateTime.Now;
-                        diamond.UpdatedBy = userId;
-                        if (diamond.UploadStatus == SD.Active)
-                        {
-                            diamond.IsActivated = true;
-                        }
-                        else
-                        {
-                            diamond.IsActivated = false;
-                        }
-
-                        diamonds.Add(diamond);
-                    }
+                    diamond.UploadStatus = status;
+                    diamond.UpdatedDate = now;
+                    diamond.UpdatedBy = userId;
+                    diamond.IsActivated = (status == SD.Active);
                 }
+
+                // 3. Save updated diamonds in batch
                 _context.Diamonds.UpdateRange(diamonds);
                 await _context.SaveChangesAsync();
 
-                foreach (var item in diamonds)
+                // 4. Create history entries in memory
+                var diamondHistories = diamonds.Select(diamond => new DiamondHistory
                 {
-                    diamondHistory = new DiamondHistory()
-                    {
-                        DiamondId = item.Id,
-                        Step = item.Step,
-                        TypeId = item.TypeId,
-                        Shade = item.Shade,
-                        ShapeId = item.ShapeId,
-                        StoneId = item.StoneId,
-                        Sku = item.Sku,
-                        DNA = item.DNA,
-                        Type = item.Type,
-                        LabId = item.LabId,
-                        Carat = item.Carat,
-                        ColorId = item.ColorId,
-                        Clarity = item.Clarity,
-                        CutId = item.CutId,
-                        PolishId = item.PolishId,
-                        SymmetryId = item.SymmetryId,
-                        Flo = item.Flo,
-                        RAP = item.RAP,
-                        Discount = item.Discount,
-                        Price = item.Price,
-                        Amount = item.Amount,
-                        Measurement = item.Measurement,
-                        Ratio = item.Ratio,
-                        Depth = item.Depth,
-                        Table = item.Table,
-                        LabShape = item.LabShape,
-                        RapAmount = item.RapAmount,
-                        DiamondVideoPath = item.DiamondVideoPath,
-                        Certificate = item.Certificate,
-                        CreatedBy = userId,
-                        CreatedDate = DateTime.Now,
-                        UpdatedBy = userId,
-                        UpdatedDate = DateTime.Now,
-                        UploadStatus = status,
-                        IsActivated = item.IsActivated,
-                    };
-                    diamondHistorys.Add(diamondHistory);
-                }
-                await _context.DiamondHistory.AddRangeAsync(diamondHistorys);
+                    DiamondId = diamond.Id,
+                    Step = diamond.Step,
+                    TypeId = diamond.TypeId,
+                    Shade = diamond.Shade,
+                    ShapeId = diamond.ShapeId,
+                    StoneId = diamond.StoneId,
+                    Sku = diamond.Sku,
+                    DNA = diamond.DNA,
+                    Type = diamond.Type,
+                    LabId = diamond.LabId,
+                    Carat = diamond.Carat,
+                    ColorId = diamond.ColorId,
+                    Clarity = diamond.Clarity,
+                    CutId = diamond.CutId,
+                    PolishId = diamond.PolishId,
+                    SymmetryId = diamond.SymmetryId,
+                    Flo = diamond.Flo,
+                    RAP = diamond.RAP,
+                    Discount = diamond.Discount,
+                    Price = diamond.Price,
+                    Amount = diamond.Amount,
+                    Measurement = diamond.Measurement,
+                    Ratio = diamond.Ratio,
+                    Depth = diamond.Depth,
+                    Table = diamond.Table,
+                    LabShape = diamond.LabShape,
+                    RapAmount = diamond.RapAmount,
+                    DiamondVideoPath = diamond.DiamondVideoPath,
+                    Certificate = diamond.Certificate,
+                    CreatedBy = userId,
+                    CreatedDate = now,
+                    UpdatedBy = userId,
+                    UpdatedDate = now,
+                    UploadStatus = status,
+                    IsActivated = diamond.IsActivated,
+                }).ToList();
+
+                // 5. Insert all history entries in one go
+                await _context.DiamondHistory.AddRangeAsync(diamondHistories);
                 await _context.SaveChangesAsync();
 
                 return true;
             }
             catch (Exception ex)
             {
+                // Log the exception (recommended)
                 return false;
             }
         }
