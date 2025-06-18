@@ -291,11 +291,24 @@
                     <div class="col-xl-2 col-lg-3 col-md-3">
                         <div class="header-configure-area">
                             <ul class="nav">
-                                <li class="user-hover">
-                                    <a href="@Url.Action("Index","Account")">
-                                        <i class="pe-7s-user"></i>
-                                    </a>
-                                </li>
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <li class="user-hover dropdown">
+                                        <a href="#"><i class="pe-7s-user"></i></a>
+                                        <ul class="dropdown-menu" style="background-color: white; padding: 10px;">
+                                            <li><span class="dropdown-item-text">@User.Identity.Name</span></li>
+                                            <li><a class="dropdown-item" href="@Url.Action("Logout", "Account")">Logout</a></li>
+                                        </ul>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="user-hover">
+                                        <a href="@Url.Action("Index", "Account")">
+                                            <i class="pe-7s-user"></i>
+                                        </a>
+                                    </li>
+                                }
                                 <li>
                                     <a href="@Url.Action("Index","Wishlist")">
                                         <i class="pe-7s-like"></i>
@@ -303,7 +316,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" class="minicart-btn">
+                                    <a class="minicart-btn" id="Add2CardDisplay" style="cursor: pointer;">
                                         <i class="pe-7s-cart"></i>
                                         <div class="notification" id="addtoCardCounter">0</div>
                                     </a>
@@ -346,7 +359,7 @@
                                     <i class="pe-7s-like"></i>
                                     <div class="notification" id="wishlistMobileCounter">0</div>
                                 </a>
-                                <a href="#" class="minicart-btn">
+                                <a class="minicart-btn" href="@Url.Action("Index","AddToCard")">
                                     <i class="pe-7s-cart"></i>
                                     <div class="notification" id="addtoCardMobileCounter">0</div>
                                 </a>

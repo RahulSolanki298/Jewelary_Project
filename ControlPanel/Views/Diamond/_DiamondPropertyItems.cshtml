@@ -24,13 +24,14 @@
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
                 <th scope="col">Status</th>
+                <th scope="col">Dis.Order</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
         <tbody class="text-center">
-            @if (Model != null && Model.Any(x => x.ParentId == null))
+            @if (Model != null)
             {
-                foreach (var item in Model.Where(x => x.ParentId == null))
+                foreach (var item in Model)
                 {
                     <tr class="clickable-row" data-propertyName="@item.Name">
                         <td>@(index++)</td>
@@ -44,6 +45,9 @@
                             {
                                 <span class="badge bg-secondary">Draft</span>
                             }
+                        </td>
+                        <td>
+                            @item.DispOrder
                         </td>
                         <td>
                             <div class="dropdown">

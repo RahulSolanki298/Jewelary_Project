@@ -44,18 +44,19 @@ namespace Business.Repository
             try
             {
                 var propertyList = await (from prd in _context.ProductProperty
-                                    join main in _context.ProductProperty on prd.ParentId equals main.Id
-                                    where main.Name==propertyName
-                                    select new ProductPropertyDTO
-                                    {
-                                        Id = prd.Id,
-                                        Name = prd.Name,
-                                        Description = prd.Description,
-                                        SymbolName = prd.SymbolName,
-                                        IconPath = prd.IconPath,
-                                        ParentId = main.Id,
-                                        ParentProperty = "-"
-                                    }).ToListAsync();
+                                          join main in _context.ProductProperty on prd.ParentId equals main.Id
+                                          where main.Name == propertyName
+                                          select new ProductPropertyDTO
+                                          {
+                                              Id = prd.Id,
+                                              Name = prd.Name,
+                                              Description = prd.Description,
+                                              SymbolName = prd.SymbolName,
+                                              IconPath = prd.IconPath,
+                                              ParentId = main.Id,
+                                              ParentProperty = "-",
+                                              IsActive = prd.IsActive.HasValue && prd.IsActive != true ? false : true
+                                          }).ToListAsync();
 
                 return propertyList;
 
@@ -323,6 +324,36 @@ namespace Business.Repository
             return priceRange;
         }
 
+        public async Task<bool> SaveBulkProductProperty(List<ProductProperty> productProperties)
+        {
+            try
+            {
+                var proPro = new ProductProperty();
+                var proPros = new List<ProductProperty>();
+                foreach (var item in productProperties)
+                {
+                    proPro = new ProductProperty();
+                    proPro.Id = item.Id;
+                    proPro.IsActive = item.IsActive;
+                    proPro.Name = item.Name;
+                    proPro.ParentId = item.ParentId;
+                    proPro.SymbolName = item.SymbolName;
+                    proPro.IconPath = item.IconPath;
+                    proPro.Description = item.Description;
+                    proPro.DisplayOrder = item.DisplayOrder;
+                    proPros.Add(proPro);
+                }
+
+                _context.ProductProperty.UpdateRange(proPros);
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
 
     }
 }

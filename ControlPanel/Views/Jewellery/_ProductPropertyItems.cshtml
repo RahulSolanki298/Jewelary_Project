@@ -4,20 +4,14 @@
 }
 
 <div class="filter">
-    <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-        <li class="dropdown-header text-start">
-            <h6>Filter</h6>
-        </li>
 
-        <li><a class="dropdown-item" href="#">Today</a></li>
-        <li><a class="dropdown-item" href="#">This Month</a></li>
-        <li><a class="dropdown-item" href="#">This Year</a></li>
-    </ul>
+    <button id="btnEdit" class="btn btn-sm btn-theme">Edit</button>
+    <button id="btnUpdate" class="btn btn-sm btn-theme" style="display:none">Update</button>
 </div>
 <div class="card-body">
     <h5 class="card-title">Properties</h5>
 
+    
     <table class="table table-borderless table-bordered mb-0" id="diamondPropertyItems">
         <thead class="table-light text-center">
             <tr>
@@ -38,24 +32,19 @@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td scope="col">@(index++)</td>
+                        <td scope="col">@(index++)<input type="hidden" class="id"/></td>
                         <td scope="col">
-                            @item.Name
+                            <input type="text" class="propName txtProp" value="@item.Name" disabled="disabled" />
                         </td>
-                        <td scope="col">@item.SymbolName</td>
                         <td scope="col">
-                            @if (item.IsActive)
-                            {
-                                <span class="badge bg-success">Active</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-secondary">Draft</span>
-                            }
+                            <input type="text" class="symbolName txtProp" value="@item.SymbolName" disabled="disabled"/>
                         </td>
-                        <td scope="col">@item.Synonyms</td>
-                        <td scope="col">@item.IconPath</td>
-                        <td scope="col">@item.DispOrder</td>
+                        <td scope="col">
+                            <input type="checkbox" @(item.IsActive != true?"":"checked") class="txtProp" disabled="disabled">
+                        </td>
+                        <td scope="col"><input type="text" class="synonyms txtProp" value="@item.Synonyms" disabled="disabled" /></td>
+                        <td scope="col"><input type="text" class="iconPath txtProp" value="@item.IconPath" disabled="disabled"/></td>
+                        <td scope="col"><input type="text" class="dispOrder txtProp" value="@item.DispOrder" disabled="disabled" /></td>
                         <td scope="col">
                             <div class="dropdown">
                                 <a class="" data-bs-toggle="dropdown" aria-expanded="false">

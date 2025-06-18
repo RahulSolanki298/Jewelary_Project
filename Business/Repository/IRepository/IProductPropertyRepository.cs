@@ -35,8 +35,8 @@ namespace Business.Repository.IRepository
 
         Task<IEnumerable<ProductPropertyDTO>> GetKaratList();
 
-
         Task<IEnumerable<ProductPropertyDTO>> GetPropertyItemsByName(string propertyName);
 
+        Task<bool> SaveBulkProductProperty(List<ProductProperty> productProperties);
     }
 }

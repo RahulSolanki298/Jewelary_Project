@@ -2,72 +2,77 @@
 
 <div class="login-reg-form-wrap sign-up-form">
     <h5>Signup Form</h5>
-    <form id="signupForm" asp-controller="Account" asp-action="RegisterProcess" method="post">
+    <form id="signupForm">
         <!-- First Name -->
         <div class="single-input-item">
-            <label asp-for="FirstName"></label>
-            <input asp-for="FirstName" class="form-control" placeholder="Enter your first name" />
-            <span asp-validation-for="FirstName" class="text-danger"></span>
+            <label for="txtFirstName">First Name</label>
+            <input type="text" id="txtFirstName" name="FirstName" class="form-control" placeholder="Enter your first name" />
+            <span id="errFirstName" class="text-danger"></span>
         </div>
 
         <!-- Middle Name -->
         <div class="single-input-item">
-            <label asp-for="MiddleName"></label>
-            <input asp-for="MiddleName" class="form-control" placeholder="Enter your middle name" />
+            <label for="txtMiddleName">Middle Name</label>
+            <input type="text" id="txtMiddleName" name="MiddleName" class="form-control" placeholder="Enter your middle name" />
+            <span id="errMiddleName" class="text-danger"></span>
         </div>
 
         <!-- Last Name -->
         <div class="single-input-item">
-            <label asp-for="LastName"></label>
-            <input asp-for="LastName" class="form-control" placeholder="Enter your last name" />
-            <span asp-validation-for="LastName" class="text-danger"></span>
+            <label for="txtLastName">Last Name</label>
+            <input type="text" id="txtLastName" name="LastName" class="form-control" placeholder="Enter your last name" />
+            <span id="errLastName" class="text-danger"></span>
         </div>
 
         <!-- Gender -->
         <div class="single-input-item">
-            <label asp-for="Gender"></label>
-            <select asp-for="Gender" class="form-control">
+            <label for="ddlGender">Gender</label>
+            <select id="ddlGender" name="Gender" class="form-control">
+                <option value="">-- Select Gender --</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
-                <option value="">-- Select Gender --</option>
             </select>
+            <span id="errGender" class="text-danger"></span>
         </div>
 
         <!-- Phone Number -->
         <div class="single-input-item">
-            <label asp-for="PhoneNumber"></label>
-            <input asp-for="PhoneNumber" class="form-control" placeholder="Enter your phone number" />
+            <label for="txtPhoneNumber">Phone Number</label>
+            <input type="text" id="txtPhoneNumber" name="PhoneNumber" class="form-control" placeholder="Enter your phone number" />
+            <span id="errPhoneNumber" class="text-danger"></span>
         </div>
 
         <!-- Email -->
         <div class="single-input-item">
-            <label asp-for="EmailId"></label>
-            <input asp-for="EmailId" class="form-control" placeholder="Enter your Email" />
-            <span asp-validation-for="EmailId" class="text-danger"></span>
+            <label for="txtEmailId">Email</label>
+            <input type="email" id="txtEmailId" name="EmailId" class="form-control" placeholder="Enter your Email" />
+            <span id="errEmailId" class="text-danger"></span>
         </div>
 
-        <!-- Password -->
+        <!-- Password and Confirm Password -->
         <div class="row">
             <div class="col-lg-6">
                 <div class="single-input-item">
-                    <label asp-for="TextPassword"></label>
-                    <input asp-for="TextPassword" type="password" class="form-control" placeholder="Enter your Password" />
-                    <span asp-validation-for="TextPassword" class="text-danger"></span>
+                    <label for="txtPassword">Password</label>
+                    <input type="password" id="txtPassword" name="TextPassword" class="form-control" placeholder="Enter your Password" />
+                    <span id="errPassword" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-lg-6">
                 <div class="single-input-item">
-                    <label asp-for="ConfirmPassword"></label>
-                    <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Repeat your Password" />
-                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    <label for="txtConfirmPassword">Confirm Password</label>
+                    <input type="password" id="txtConfirmPassword" name="ConfirmPassword" class="form-control" placeholder="Repeat your Password" />
+                    <span id="errConfirmPassword" class="text-danger"></span>
                 </div>
             </div>
         </div>
 
+        <!-- Submit Button -->
         <div class="single-input-item">
             <button type="submit" id="btnSubmit" class="btn btn-sqr">Register</button>
         </div>
     </form>
+
 </div>
 
 

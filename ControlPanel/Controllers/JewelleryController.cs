@@ -855,7 +855,6 @@ namespace ControlPanel.Controllers
             {
                 string fileName = string.Empty; 
                 int metalId = 0;
-                int shapeId = 0;
                 string extractedFolder = string.Empty;
                 string zipPath = string.Empty;
                 string folderPath = string.Empty;
@@ -1226,6 +1225,34 @@ namespace ControlPanel.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveBulkProductProperty([FromBody]List<ProductProperty> productProperties)
+        {
+            if (productProperties == null || !productProperties.Any())
+            {
+                return BadRequest("No product properties provided.");
+            }
+
+            try
+            {
+                var isSuccess = await _productPropertyRepository.SaveBulkProductProperty(productProperties);
+                if (isSuccess)
+                {
+                    return Json(new { success = true, message = "Product properties have been saved successfully." });
+                }
+                else
+                {
+                    return StatusCode(500, "Failed to save product properties.");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Optionally log the exception here
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
+
 
     }
 }

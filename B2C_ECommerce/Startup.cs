@@ -8,6 +8,7 @@ using DataAccess.Data;
 using DataAccess.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -47,8 +48,9 @@ namespace B2C_ECommerce
             );
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDBContext>()
-                .AddDefaultTokenProviders();
+                    .AddEntityFrameworkStores<ApplicationDBContext>()
+                    .AddDefaultTokenProviders();
+
 
             ConfigureRepositories(services);
 
@@ -78,6 +80,22 @@ namespace B2C_ECommerce
                           .AllowAnyHeader();
                 });
             });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+
+                options.Cookie.Name = "B2C_ECommerce.Auth";
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SameSite = SameSiteMode.Strict;
+
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60); // Session timeout
+                options.SlidingExpiration = true;
+            });
+
 
         }
 

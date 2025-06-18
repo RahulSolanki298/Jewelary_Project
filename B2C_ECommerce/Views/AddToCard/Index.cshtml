@@ -1,0 +1,35 @@
+﻿<div id="AddToCardContent">
+
+</div>
+
+
+@section Scripts{
+    <script>
+        let diamondCardlist = JSON.parse(localStorage.getItem("diamondCartlist")) || [];
+        let jewelCardlist = JSON.parse(localStorage.getItem("jewelCartlist")) || [];
+
+        $(document).ready(function () {
+            getAdd2CardList();
+        });
+        function getAdd2CardList() {
+            debugger;
+            if (wishlist.length > 0 || jewelWishlist.length > 0) {
+                $.ajax({
+                    url: '@Url.Action("GetAdd2CardListByIds", "AddToCard")',
+                    type: 'GET',
+                    data: {
+                        diamondIds: wishlist.join(','),
+                        productIds: jewelWishlist.join(',')
+                    },
+                    success: function (data) {
+                        $("#AddToCardContent").html('');
+                        $("#AddToCardContent").html(data);
+                    },
+                    error: function (error) {
+                        console.error('Error fetching data:', error);
+                    }
+                });
+            }
+        }
+    </script>
+}

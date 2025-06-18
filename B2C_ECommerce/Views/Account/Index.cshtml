@@ -1,130 +1,215 @@
 ﻿@model Models.CustomerLoginRegistrationDto;
 
 <div class="breadcrumb-area">
-	<div class="container">
-		<div class="row">
-			<div class="col-12">
-				<div class="breadcrumb-wrap">
-					<nav aria-label="breadcrumb">
-						<ul class="breadcrumb">
-							<li class="breadcrumb-item"><a href="index.html"><i class="fa fa-home"></i></a></li>
-							<li class="breadcrumb-item active" aria-current="page">
-								My Account
-							</li>
-						</ul>
-					</nav>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumb-wrap">
+                    <nav aria-label="breadcrumb">
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="index.html"><i class="fa fa-home"></i></a></li>
+                            <li class="breadcrumb-item active" aria-current="page">
+                                My Account
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="login-register-wrapper section-padding">
-	<div class="container">
-		@if (TempData["Status"] != null)
-		{
-			if (TempData["Status"] == "Success")
-			{
-				<div class="alert alert-success" role="alert">
-					@TempData["Message"].ToString()
-				</div>
-			}
-			else if (TempData["Status"] == "Error")
-			{
-				<div class="alert alert-danger" role="alert">
-					@TempData["Message"].ToString()
-				</div>
-			}
-		}
-		<div class="card">
-			<div class="card-header text-center">
-				My Account
-			</div>
-			<div class="card-body">
-				<div class="member-area-from-wrap">
-					<div class="row">
-						<div class="col-lg-6" id="frmLoginPartial">
-							@Html.Partial("LoginPartial", Model.CustomerLogin)
-						</div>
-						<div class="col-lg-6" id="frmRegister">
-							@Html.Partial("RegisterPartial", Model.CustomerRegister)
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+    <div class="container">
+        @if (TempData["Status"] != null)
+        {
+            if (TempData["Status"] == "Success")
+            {
+                <div class="alert alert-success" role="alert">
+                    @TempData["Message"].ToString()
+                </div>
+            }
+            else if (TempData["Status"] == "Error")
+            {
+                <div class="alert alert-danger" role="alert">
+                    @TempData["Message"].ToString()
+                </div>
+            }
+        }
+        <div class="card">
+            <div class="card-header text-center">
+                My Account
+            </div>
+            <div class="card-body">
+                <div class="member-area-from-wrap">
+                    <div class="row">
+                        <div class="col-lg-6" id="frmLoginPartial">
+                            @Html.Partial("LoginPartial", Model.CustomerLogin)
+                        </div>
+                        <div class="col-lg-6" id="frmRegister">
+                            @Html.Partial("RegisterPartial", Model.CustomerRegister)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-	</div>
+    </div>
 </div>
 
 @section Scripts {
-	<script type="text/javascript">
+    <script type="text/javascript">
 		$(document).ready(function(){
-			$("#frmRegister #signupForm").on("click", "#btnSubmit", function () {
-				debugger;
-				if ($("#signupForm").valid()) {
-				$("#btnSubmit").prop("disabled", true).text("Processing...");
 
-				var formData = {
-					FirstName: $("#FirstName").val(),
-					MiddleName: $("#MiddleName").val(),
-					LastName: $("#LastName").val(),
-					Gender: $("#Gender").val(),
-					PhoneNumber: $("#PhoneNumber").val(),
-					EmailId: $("#EmailId").val(),
-					TextPassword: $("#TextPassword").val(),
-					ConfirmPassword: $("#ConfirmPassword").val()
-				};
+            $("#signupForm").on("submit", function (e) {
+                debugger;
+                e.preventDefault();
+                if (!$(this).valid()) return;
 
-				$.ajax({
-					type: "POST",
-					url: "/api/auth/register", // Change to your API URL
-					contentType: "application/json",
-					data: JSON.stringify(formData),
-					success: function (response) {
-						alert("Registration Successful!");
-						$("#signupForm")[0].reset();
-					},
-					error: function (xhr) {
-						$("#btnSubmit").prop("disabled", false).text("Register");
+                $("#btnSubmit").prop("disabled", true).text("Processing...");
 
-						var errors = xhr.responseJSON.errors;
-						if (errors) {
-							$.each(errors, function (key, value) {
-								$("#" + key + "Error").html(value);
-							});
-						} else {
-							alert("An error occurred while processing your request.");
-						}
-					}
-				});
-			}
+                var formData = {
+                    FirstName: $("#txtFirstName").val(),
+                    MiddleName: $("#txtMiddleName").val(),
+                    LastName: $("#txtLastName").val(),
+                    Gender: $("#ddlGender").val(),
+                    PhoneNumber: $("#txtPhoneNumber").val(),
+                    EmailId: $("#txtEmailId").val(),
+                    TextPassword: $("#txtPassword").val(),
+                    ConfirmPassword: $("#txtConfirmPassword").val()
+                };
 
-			});
+                $.ajax({
+                    url: "@Url.Action("RegisterProcess", "Account")",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(formData),
+                    success: function (response) {
+                        alert(response.message);
+                        $("#signupForm")[0].reset();
+                        $("#btnSubmit").prop("disabled", false).text("Register");
+                    },
+                    error: function (xhr) {
+                        $("#btnSubmit").prop("disabled", false).text("Register");
 
-			$("#frmRegister #signupForm").validate({
-			rules: {
-				FirstName: { required: true },
-				LastName: { required: true },
-				Gender: { required: true },
-				PhoneNumber: { required: true, digits: true, minlength: 10 },
-				EmailId: { required: true, email: true },
-				TextPassword: { required: true, minlength: 6 },
-				ConfirmPassword: { required: true, equalTo: "#TextPassword" }
-			},
-			messages: {
-				FirstName: { required: "First Name is required" },
-				LastName: { required: "Last Name is required" },
-				Gender: { required: "Please select a gender" },
-				PhoneNumber: { required: "Phone Number is required", digits: "Enter a valid phone number", minlength: "Enter at least 10 digits" },
-				EmailId: { required: "Email is required", email: "Enter a valid email" },
-				TextPassword: { required: "Password is required", minlength: "Password must be at least 6 characters" },
-				ConfirmPassword: { required: "Confirm Password is required", equalTo: "Passwords do not match" }
-			},
-			errorPlacement: function (error, element) {
-				var id = element.attr("id") + "Error";
-				$("#" + id).html(error);
-			}
+                        if (xhr.responseJSON?.errors) {
+                            let errors = xhr.responseJSON.errors;
+                            for (let field in errors) {
+                                $("#err" + field).text(errors[field]);
+                            }
+                        } else {
+                            alert("An unexpected error occurred.");
+                        }
+                    }
+                });
+            });
+
+            $("#signupForm").validate({
+                rules: {
+                    FirstName: { required: true },
+                    LastName: { required: true },
+                    Gender: { required: true },
+                    PhoneNumber: { required: true, digits: true, minlength: 10 },
+                    EmailId: { required: true, email: true },
+                    TextPassword: { required: true, minlength: 6 },
+                    ConfirmPassword: { required: true, equalTo: "#txtPassword" }
+                },
+                messages: {
+                    FirstName: "First name is required",
+                    LastName: "Last name is required",
+                    Gender: "Gender is required",
+                    PhoneNumber: {
+                        required: "Phone number is required",
+                        digits: "Only digits allowed",
+                        minlength: "Enter at least 10 digits"
+                    },
+                    EmailId: {
+                        required: "Email is required",
+                        email: "Enter a valid email"
+                    },
+                    TextPassword: {
+                        required: "Password is required",
+                        minlength: "Minimum 6 characters"
+                    },
+                    ConfirmPassword: {
+                        required: "Confirm your password",
+                        equalTo: "Passwords do not match"
+                    }
+                },
+                errorPlacement: function (error, element) {
+                    var id = element.attr("id");
+                    $("#err" + id.replace("txt", "")).html(error);
+                }
+            });
+
+
+            $("#loginFrm").validate({
+                rules: {
+                    Username: {
+                        required: true,
+                        email: true
+                    },
+                    Password: {
+                        required: true,
+                        minlength: 6
+                    }
+                },
+                messages: {
+                    Username: {
+                        required: "Username is required",
+                        email: "Enter a valid email"
+                    },
+                    Password: {
+                        required: "Password is required",
+                        minlength: "Password must be at least 6 characters"
+                    }
+                },
+                errorPlacement: function (error, element) {
+                    const id = element.attr("id");
+                    $("#lbl" + id.replace("txt", "")).text(error.text());
+                },
+                success: function (label, element) {
+                    const id = $(element).attr("id");
+                    $("#lbl" + id.replace("txt", "")).text("");
+                }
+            });
+
+            $("#loginFrm").on("submit", function (e) {
+                e.preventDefault();
+                $("#lblUsername, #lblPassword").text(""); // Clear errors
+
+                var loginData = {
+                    Username: $("#txtUsername").val(),
+                    Password: $("#txtPassword").val(),
+                    RememberMe: $("#rememberMe").is(":checked")
+                };
+
+                $.ajax({
+                    url: "@Url.Action("LoginProcess", "Account")",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(loginData),
+                    success: function (response) {
+                        if (response.status =="Success") {
+                            window.location.href = "@Url.Action("Index","Home")"; // Redirect on success
+                        } else {
+                            alert(response.message || "Login failed");
+                        }
+                    },
+                    error: function (xhr) {
+                        if (xhr.responseJSON?.errors) {
+                            let errors = xhr.responseJSON.errors;
+                            if (errors.Username) {
+                                $("#lblUsername").text(errors.Username[0]);
+                            }
+                            if (errors.Password) {
+                                $("#lblPassword").text(errors.Password[0]);
+                            }
+                        } else {
+                            alert("Unexpected error occurred.");
+                        }
+                    }
+                });
+            });
 		});
-		});
-	</script>
+    </script>
 }

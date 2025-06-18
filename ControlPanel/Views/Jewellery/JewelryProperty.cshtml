@@ -120,7 +120,69 @@
                         console.error('API call failed:', error);
                     }
                 });
-            });
+
+
+
+
+                });
+
+                $("#propertyDT").on("click", "#btnEdit", function () {
+                    $(".txtProp").prop("disabled", false);
+                    $("#btnEdit").attr("style", "display:none");
+
+                    $("#btnUpdate").removeAttr("style");
+                });
+
+                $("#propertyDT").on("click", "#btnUpdate", function () {
+                     let properties = [];
+
+                    $('#diamondPropertyItems tbody tr').each(function () {
+                        let $row = $(this);
+                        let name = $row.find('.propName').val();
+                        let symbolName = $row.find('.symbolName').val();
+                        let isActive = $row.find('input[type="checkbox"]').is(':checked');
+                        let synonyms = $row.find('.synonyms').val();
+                        let iconPath = $row.find('.iconPath').val();
+                        let dispOrder = $row.find('.dispOrder').val();
+
+                        // You may need to get ID too (add a hidden input or data attribute if it's not already available)
+                        let id = $row.data("id");
+
+                        properties.push({
+                            Id: id, // optional, if you want to support updating
+                            Name: name,
+                            SymbolName: symbolName,
+                            IsActive: isActive,
+                            Synonyms: synonyms,
+                            IconPath: iconPath,
+                            DispOrder: dispOrder
+                        });
+                    });
+
+                // Optional: Validate before sending
+                if (properties.length === 0) {
+                    alert("No data to save.");
+                    return;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("SaveBulkProductProperty", "Jewellery")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(properties),
+                    success: function (res) {
+                        alert(res.message || "Properties saved successfully!");
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                        alert("An error occurred while saving.");
+                    }
+                });
+                    $(".txtProp").prop("disabled", true);
+                    $("#btnEdit").removeAttr("style");
+
+                    $("#btnUpdate").attr("style", "display:none");
+                });
         });
 
     </script>

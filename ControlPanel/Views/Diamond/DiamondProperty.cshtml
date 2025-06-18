@@ -20,20 +20,10 @@
 
                 <div class="filter">
                     <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                        <li class="dropdown-header text-start">
-                            <h6>Filter</h6>
-                        </li>
-
-                        <li><a class="dropdown-item" href="#">Today</a></li>
-                        <li><a class="dropdown-item" href="#">This Month</a></li>
-                        <li><a class="dropdown-item" href="#">This Year</a></li>
-                    </ul>
                 </div>
 
                 <div class="card-body">
                     <h5 class="card-title">Main Properties</h5>
-
                     <table class="table table-borderless datatable mb-0" id="diamondProperty">
                         <thead class="table-light text-center">
                             <tr>
@@ -48,39 +38,39 @@
                             {
                                 foreach (var item in Model.Where(x => x.ParentId == null))
                                 {
-                                    <tr class="clickable-row" data-propertyName="@item.Name">
-                                        <td>@(Index++)</td>
-                                        <td>@item.Name</td>
-                                        <td>
-                                            @if (item.IsActivated)
-                                            {
-                                                <span class="badge bg-success">Active</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="badge bg-secondary">Draft</span>
-                                            }
-                                        </td>
-                                        <td>
-                                            <div class="dropdown">
-                                                <a class="" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="bi bi-three-dots-vertical"></i>
+                            <tr class="clickable-row" data-propertyname="@item.Name">
+                                <td>@(Index++)</td>
+                                <td>@item.Name</td>
+                                <td>
+                                    @if (item.IsActivated)
+                                    {
+                                        <span class="badge bg-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Draft</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <a class="" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="bi bi-three-dots-vertical"></i>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <a class="dropdown-item" href="@Url.Action("AddDiamondProperty", "Diamond", new { pId = item.Id })">
+                                                    <i class="bi bi-pencil-square me-1"></i>Edit
                                                 </a>
-                                                <ul class="dropdown-menu">
-                                                    <li>
-                                                        <a class="dropdown-item" href="@Url.Action("AddDiamondProperty", "Diamond", new { pId = item.Id })">
-                                                            <i class="bi bi-pencil-square me-1"></i>Edit
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item text-danger" href="@Url.Action("DeleteDiamondProperty", "Diamond", new { pId = item.Id })">
-                                                            <i class="bi bi-trash me-1"></i>Delete
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item text-danger" href="@Url.Action("DeleteDiamondProperty", "Diamond", new { pId = item.Id })">
+                                                    <i class="bi bi-trash me-1"></i>Delete
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
                                 }
                             }
                             else
@@ -105,23 +95,23 @@
 
 @section Scripts {
     <script>
-            $(document).ready(function () {
-                $('.clickable-row').on('click', function () {
-                var propertyName = $(this).data('propertyname'); // Ensure correct casing in data attribute
-
+        $(document).on('click', '.clickable-row', function (e) {
+            debugger;
+                if ($(e.target).closest('.dropdown').length > 0) return; // Don't trigger when clicking dropdown
+                var propertyName = $(this).data('propertyname');
                 $.ajax({
                     url: '@Url.Action("DiamondPropertyItems", "Diamond")' + '?propertyName=' + encodeURIComponent(propertyName),
                     method: 'GET',
                     contentType: 'application/json',
                     success: function (data) {
-                        $("#propertyDT").empty().html(data); // Clear and update content
+                        $("#propertyDT").empty().html(data);
                     },
                     error: function (xhr, status, error) {
                         console.error('API call failed:', error);
                     }
                 });
             });
-        });
+
 
     </script>
 

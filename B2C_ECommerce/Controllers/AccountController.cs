@@ -1,5 +1,7 @@
 ﻿using B2C_ECommerce.IServices;
+using DataAccess.Entities;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Models;
@@ -14,11 +16,17 @@ namespace B2C_ECommerce.Controllers
     {
         private readonly IAccountService _accountService;
         private readonly ILogger<AccountController> _logger;
-
-        public AccountController(IAccountService accountService, ILogger<AccountController> logger)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        public AccountController(IAccountService accountService, 
+            ILogger<AccountController> logger, 
+            SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager)
         {
             _accountService = accountService;
             _logger = logger;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public IActionResult Index()
@@ -39,39 +47,50 @@ namespace B2C_ECommerce.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> LoginProcess(CustomerLoginDTO loginDT)
+        public async Task<IActionResult> LoginProcess([FromBody] CustomerLoginDTO loginDT)
         {
             if (ModelState.IsValid)
             {
                 var response = await _accountService.CustomerSignInAsync(loginDT);
 
-                if (response != null && response.IsAuthSuccessful)
+                if (response != null)
                 {
-                    HttpContext.Response.Cookies.Append("Token", response.Token, new CookieOptions
-                    {
-                        HttpOnly = true,
-                        Secure = true,
-                        SameSite = SameSiteMode.Strict,
-                        Expires = DateTimeOffset.UtcNow.AddDays(7)
-                    });
+                    //HttpContext.Response.Cookies.Append("Token", response.Token, new CookieOptions
+                    //{
+                    //    HttpOnly = true,
+                    //    Secure = true,
+                    //    SameSite = SameSiteMode.Strict,
+                    //    Expires = DateTimeOffset.UtcNow.AddDays(7)
+                    //});
 
-                    return RedirectToAction("Index", "Home");
+                    return Json(new { 
+                    Status="Success",
+                    Message= "Login Successfully."
+                    });
                 }
                 else
                 {
-                    TempData["Status"] = "Error";
-                    TempData["Message"] = "Invalid username or password...";
-
-                    return RedirectToAction("Index");
+                    return Json(new
+                    {
+                        Status = "Error",
+                        Message = "Invalid username or password..."
+                    });
                 }
             }
 
-            return RedirectToAction("Index");
+            return Json(new
+            {
+                Status = "Error",
+                Message = "Pleasen enter yourname and password"
+            });
         }
+
+        
+
 
 
         [HttpPost]
-        public async Task<IActionResult> RegisterProcess(CustomerRegisterDTO registerDT)
+        public async Task<IActionResult> RegisterProcess([FromBody] CustomerRegisterDTO registerDT)
         {
             if (ModelState.IsValid)
             {
@@ -88,10 +107,10 @@ namespace B2C_ECommerce.Controllers
 
                 var response = await _accountService.CustomerSignUpAsync(data);
 
-                TempData["Status"] = "Success";
-                TempData["Message"] = "your application has been created successfully.";
-
-                return RedirectToAction("Index");
+                return Json(new {
+                    Status="Success",
+                    Message = "your application has been created successfully.",
+                });
             }
 
             return Json("Index");
@@ -99,14 +118,12 @@ namespace B2C_ECommerce.Controllers
 
 
         [HttpPost]
-        public IActionResult Logout()
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
         {
-            HttpContext.Response.Cookies.Delete("Token");
-
-            TempData.Remove("Token");
-            TempData.Remove("User");
-
+            await _signInManager.SignOutAsync();
             return RedirectToAction("Login", "Account");
         }
+
     }
 }

@@ -64,8 +64,9 @@
 
 </head>
 <body>
-    @Html.Partial("_Header")
-
+    <div id="layout_header">
+        @Html.Partial("_Header")
+    </div>
     <main>
         @RenderBody()
     </main>
@@ -191,7 +192,6 @@
 
 
 
-
     <script src="~/assets/js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="~/assets/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="~/assets/js/vendor/bootstrap.bundle.min.js"></script>
@@ -208,6 +208,7 @@
     <script src="~/assets/js/main.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 
     @*<environment include="Development">
         </environment>*@
@@ -225,9 +226,32 @@
             getAddToCardCounter();
             getHomePageNav();
 
-            
+            $("#layout_header").on("click", "#Add2CardDisplay", function () {
+                debugger;
+                    let diamondCardlist = JSON.parse(localStorage.getItem("diamondCartlist")) || [];
+                    let jewelCardlist = JSON.parse(localStorage.getItem("jewelCartlist")) || [];
 
+                    if (diamondCardlist.length > 0 || jewelCardlist.length > 0) {
+                        $.ajax({
+                            url: '@Url.Action("GetAdd2CardListByIds", "AddToCard")',
+                            type: 'GET',
+                            data: {
+                                diamondIds: diamondCardlist.join(','),
+                                productIds: jewelCardlist.join(',')
+                            },
+                            success: function (data) {
+                                console.log("AJAX success:", data);
+                                $("#layout_header #AddToCardContent").html('');
+                                $("#layout_header #AddToCardContent").html(data);
+                            },
+                            error: function (error) {
+                                console.error('Error fetching data:', error);
+                            }
+                        });
+                    }
+                });
         });
+
         function getWishlistCounter() {
             let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
             let ProductWishlist = JSON.parse(localStorage.getItem("ProductWishlist")) || [];
@@ -235,29 +259,29 @@
             $("#wishlistMobileCounter").text(wishlist.length + ProductWishlist.length);
         }
 
-        function getAddToCardCounter() {
+        function getAddToCardCounter()
+        {
             let daiamondCard = JSON.parse(localStorage.getItem("diamondCartlist")) || [];
             let productCart = JSON.parse(localStorage.getItem("productCartlist")) || [];
-            $("#addtoCardCounter").text(daiamondCard.length);
-            $("#addtoCardMobileCounter").text(daiamondCard.length);
+            $("#addtoCardCounter").text(daiamondCard.length+productCart.length);
+            $("#addtoCardMobileCounter").text(daiamondCard.length + productCart.length);
         }
 
 
-        function getHomePageNav() {
-           $.ajax({
-            url: '@Url.Action("GetPrograms", "Home")',  // Replace with your actual URL path
-            type: 'GET',
-            success: function(response) {
-                $('#navMenuDynamic').html("");  
-                $('#navMenuDynamic').html(response); 
-            },
-            error: function(xhr, status, error) {
-                console.error("There was an error with the AJAX request: ", error);
-            }
-        });
-
+        function getHomePageNav()
+        {
+            $.ajax({
+                url: '@Url.Action("GetPrograms", "Home")',  // Replace with your actual URL path
+                type: 'GET',
+                success: function (response) {
+                    $('#navMenuDynamic').html("");
+                    $('#navMenuDynamic').html(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error("There was an error with the AJAX request: ", error);
+                }
+            });
         }
-
     </script>
 
 
