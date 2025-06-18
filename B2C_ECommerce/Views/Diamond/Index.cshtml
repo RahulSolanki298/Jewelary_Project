@@ -320,7 +320,7 @@
             });
 
                 $("#btnCompareDiamonds").on("click", function () {
-                    debugger;
+                    
                     selectedDiamonds = JSON.parse(localStorage.getItem('selectedDiamonds')) || [];
                     if (selectedDiamonds.length > 0) {
                         $.ajax({
@@ -505,7 +505,7 @@
             }
 
         async function GetCutData() {
-            debugger;
+            
                 try {
                     const response = await $.ajax({
                         url:'@Url.Action("GetCutList", "Diamond")',
@@ -810,7 +810,7 @@
             }
 
         async function GetDepthData() {
-            debugger;
+            
                     try {
                         // Fetching price data from the API
                         const response = await $.ajax({
@@ -1183,7 +1183,7 @@
         
 
         async function loadAllFunctions() {
-            debugger;
+            
                         showLoader();
                         try {
                             await Promise.all([

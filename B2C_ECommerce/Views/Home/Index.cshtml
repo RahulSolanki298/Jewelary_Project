@@ -1055,45 +1055,48 @@
             });
 
 
-            function updateVideoDisplay() {
-                var desktopvideobanner = document.getElementById('desktop-video-banner');
-                var desktopvideophone = document.getElementById('desktop-video-phone');
-
-                // Ensure the videos are muted to allow autoplay on mobile
-                desktopvideobanner.muted = true;
-                desktopvideophone.muted = true;
-
-
-                // Play videos only if the element is available
-                if (desktopvideobanner) {
-                    desktopvideobanner.play();
-                }
-
-
-                if (window.innerWidth <= 1040 && window.innerWidth >= 600) { // Tablet Video Display
-                    $('.desktop-video').show();
-                    $('.phone-video').hide();
-                    desktopvideobanner.play();
-                }
-                else if (window.innerWidth <= 600) { // Mobile Video Display
-                    $('.desktop-video').hide();
-                    $('.phone-video').show();
-
-
-                    if (desktopvideophone) {
-                        desktopvideophone.play();
-                    }
-
-                }
-                else { // Desktop Video Display
-                    $('.desktop-video').show();
-                    $('.phone-video').hide();
-                    desktopvideobanner.play();
-                }
-            }
+           
 
 
         });
+
+
+        function updateVideoDisplay() {
+            var desktopvideobanner = document.getElementById('desktop-video-banner');
+            var desktopvideophone = document.getElementById('desktop-video-phone');
+
+            // Ensure the videos are muted to allow autoplay on mobile
+            desktopvideobanner.muted = true;
+            desktopvideophone.muted = true;
+
+
+            // Play videos only if the element is available
+            if (desktopvideobanner) {
+                desktopvideobanner.play();
+            }
+
+
+            if (window.innerWidth <= 1040 && window.innerWidth >= 600) { // Tablet Video Display
+                $('.desktop-video').show();
+                $('.phone-video').hide();
+                desktopvideobanner.play();
+            }
+            else if (window.innerWidth <= 600) { // Mobile Video Display
+                $('.desktop-video').hide();
+                $('.phone-video').show();
+
+
+                if (desktopvideophone) {
+                    desktopvideophone.play();
+                }
+
+            }
+            else { // Desktop Video Display
+                $('.desktop-video').show();
+                $('.phone-video').hide();
+                desktopvideobanner.play();
+            }
+        }
 
         function showModal() {
             setTimeout(function () {

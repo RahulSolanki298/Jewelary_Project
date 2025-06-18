@@ -45,7 +45,33 @@ namespace B2C_ECommerce.Controllers
                 data.Jewelleries = await _productService.GetSelectedProductByIds(productIdArray);
             }
 
+            return PartialView("~/Views/Shared/_AddToCard.cshtml", data);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ShowAdd2CardListByIds(string diamondIds, string productIds)
+        {
+            AddToCardModal data = new AddToCardModal();
+
+            if (!string.IsNullOrEmpty(diamondIds) && diamondIds.Length > 0)
+            {
+                int[] diamondIdArray = diamondIds.Split(',')
+                                  .Select(id => int.Parse(id))
+                                  .ToArray();
+                data.Diamonds = await _diamondService.GetSelectedDiamondByIds(diamondIdArray);
+            }
+
+            if (!string.IsNullOrEmpty(productIds) && productIds.Length > 0)
+            {
+                string[] productIdArray = productIds.Split(',')
+                                  .Select(id => id)
+                                  .ToArray();
+                data.Jewelleries = await _productService.GetSelectedProductByIds(productIdArray);
+            }
+
             return PartialView("_Add2CardProduct", data);
         }
+
+
     }
 }
