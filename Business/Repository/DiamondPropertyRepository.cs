@@ -371,7 +371,9 @@ namespace Business.Repository
                          SymbolName = x.dimPro.SymbolName,
                          IconPath = x.dimPro.IconPath,
                          ParentId = x.dimPro.ParentId,
-                         IsActivated = x.dimPro.IsActivated
+                         IsActivated = x.dimPro.IsActivated,
+                         DispOrder = x.dimPro.DispOrder,
+                         ColorType=x.dimPro.ColorType
                      }).FirstOrDefaultAsync(x => x.Id == id);
 
             return result;
@@ -476,20 +478,20 @@ namespace Business.Repository
                 parentDT = await _context.DiamondProperties.Where(x => x.Name == propertyName && string.IsNullOrEmpty(x.ParentId.ToString())).FirstOrDefaultAsync();
 
                 diamondProperties = await (from dp in _context.DiamondProperties
-                                                              join main in _context.DiamondProperties.Where(x => x.ParentId == null) on dp.ParentId equals main.Id
-                                                              where dp.ParentId == parentDT.Id
-                                                              select new DiamondPropertyDTO
-                                                              {
-                                                                  Id=dp.Id,
-                                                                  Name=dp.Name,
-                                                                  Description=dp.Description,
-                                                                  ParentId=dp.ParentId,
-                                                                  IconPath=dp.IconPath,
-                                                                  ParentProperty=main.Name,
-                                                                  SymbolName=dp.SymbolName,
-                                                                  DispOrder=dp.DispOrder,
-                                                                  IsActivated=dp.IsActivated
-                                                              }).ToListAsync();
+                                           join main in _context.DiamondProperties.Where(x => x.ParentId == null) on dp.ParentId equals main.Id
+                                           where dp.ParentId == parentDT.Id
+                                           select new DiamondPropertyDTO
+                                           {
+                                               Id = dp.Id,
+                                               Name = dp.Name,
+                                               Description = dp.Description,
+                                               ParentId = dp.ParentId,
+                                               IconPath = dp.IconPath,
+                                               ParentProperty = main.Name,
+                                               SymbolName = dp.SymbolName,
+                                               DispOrder = dp.DispOrder,
+                                               IsActivated = dp.IsActivated
+                                           }).ToListAsync();
 
                 return diamondProperties;
 
