@@ -22,56 +22,29 @@ namespace Business.Repository.IRepository
         Task<bool> SaveNewProductCollectionList(List<ProductDTO> products);
         Task<int> SaveImageVideoPath(string imgVdoPath);
         FileSplitDTO ExtractStyleName(string fileName);
-
         Task<Product> GetProductByDesignNo(string designNo, int metalId);
-
         Task<int> GetKaratId();
-
         Task<List<ProductProperty>> GetKaratList();
-
         Task<bool> UpdateProductDetailsByExcel(List<ProductDTO> products);
-
         Task<ProductDTO> GetProductWithDetails(string productId);
-
         Task<int> GetMetalId(string name);
-
         Task<List<Product>> GetProductDataByDesignNo(string designNo, int metalId);
-
         Task<ProductDTO> GetProductByColorId(string sku, int? colorId = 0, int? caratId = 0);
-
         Task<ProductProperty> GetKaratById(int karatId);
-
         Task<ProductPrices> GetProductPriceData(ProductPriceDTO price);
-
         Task<EventSites> GetEventSitesByName(string name);
-
         Task<ProductWeight> GetProductWeightData(ProductWeightDTO weightDTO);
-
         Task<int> AddProductFileUploadedHistory(ProductFileUploadHistory productFileUpload);
-
         Task<IEnumerable<ProductDTO>> GetProductUploadRequestList();
-
         Task<IEnumerable<ProductDTO>> GetProductPendingList();
-
         Task<IEnumerable<ProductDTO>> GetProductHoldList();
-
-
         Task<IEnumerable<ProductDTO>> GetProductDeActivatedList();
-
         Task<bool> UpdateProductStatus(string[] productIds, string status);
-
         Task<List<ProductImageAndVideoDTO>> GetProductImagesVideos(string productId);
-
         Task<ProductImageAndVideoDTO> GetProductImagesVideoById(int id);
-
         Task<bool> SaveNewProductList(List<ProductDTO> products, string categoryName, string userId, int fileHistoryId);
-
-
         Task<bool>  SaveEarringsList(List<ProductDTO> products, string categoryName, string userId, int fileHistoryId);
-
-
         Task<List<Product>> GetJewelleryDTByDesignNo(string designNo, int metalId, int shapeId);
-
         Task<ProductProperty> GetProductShapeId(string ShapeCode, int shapeId);
     }
 }

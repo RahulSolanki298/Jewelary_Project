@@ -5,6 +5,8 @@ namespace DataAccess.Entities
     public class Product
     {
         public Guid Id { get; set; }
+        public string GroupId { get; set; }
+        public string ProductKey { get; set; } //
         public string DesignNo { get; set; }
         public string ParentDesign { get; set; }
         public string ProductSize { get; set; }

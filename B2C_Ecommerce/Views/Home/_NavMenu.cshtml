@@ -1,4 +1,5 @@
-﻿@model List<DataAccess.Entities.ProductStyles>
+﻿@model Models.NavMenuDTO
+@using Common;
 
 <ul>
     <li class="active position-static">
@@ -7,44 +8,52 @@
             <li class="mega-title">
                 <span>Shop by Style</span>
                 <ul>
-                    @foreach (var item in Model)
+                    @if (Model != null && Model.SubcategoryList.Count() > 0)
                     {
-                        <li>
-                            <a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type=item.Id})">@item.StyleName</a>
-                        </li>
+                        foreach (var item in Model.SubcategoryList)
+                        {
+                            <li>
+                                <a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type=item.Id})">
+                                    <img src="@SD.ImgUrl/@item.ImageFile" style="width:30px;">
+                                    @item.StyleName
+                                </a>
+                            </li>
+                        }
                     }
                 </ul>
             </li>
             <li class="mega-title">
                 <span>Shop by Shape</span>
                 <ul>
-                    <li><a href="#"><img src="~/assets/img/diamond-svg/Princess.svg" style="width:30px;"> Princess</a></li>
-                    <li><a href="#"><img src="~/assets/img/diamond-svg/Round.svg" style="width:30px;"> Round</a></li>
-                    <li><a href="#"><img src="~/assets/img/diamond-svg/Radiant.svg" style="width:30px;"> Radiant-Cut</a></li>
-                    <li><a href="#"><img src="~/assets/img/diamond-svg/Emerald.svg" style="width:30px;"> Emerald</a></li>
-                    <li><a href="#"><img src="~/assets/img/diamond-svg/Oval.svg" style="width:30px;"> Oval</a></li>
+                    @if (Model != null && Model.ProductShapeList.Count() > 0)
+                    {
+                        @for (int i = 0; i < 5; i++)
+                        {
+                            <li><a href="#"><img src="@SD.ImgUrl/@Model.ProductShapeList[i].IconPath" style="width:30px;">@Model.ProductShapeList[i].Name</a></li>
+                        }
+                    }
+
                 </ul>
             </li>
-            <li class="mega-title">
-                <span></span>
-                <ul>
-                    <li><a href="#"><img src="~/assets/img/diamond-svg/Cushion.svg" style="width:30px;"> CushionLong</a></li>
-                    <li><a href="#"><img src="~/assets/img/diamond-svg/Heart.svg" style="width:30px;"> Heart</a></li>
-                    <li><a href="#"><img src="~/assets/img/diamond-svg/Marquise.svg" style="width:30px;"> Marquise</a></li>
-                    <li><a href="#"><img src="~/assets/img/diamond-svg/Square Emerald.svg" style="width:30px;"> Sq.Emerald</a></li>
-                    <li><a href="#"><img src="~/assets/img/diamond-svg/Asscher.svg" style="width:30px;"> Asscher</a></li>
-                </ul>
-            </li>
-            <li class="mega-title">
-                <span>Shop by Metal</span>
-                <ul>
-                    <li><a href="#"><img src="~/assets/img/icon/yellow-gold-new.svg" style="width:30px;" /> Yellow Gold</a></li>
-                    <li><a href="#"><img src="~/assets/img/icon/white-gold-new.svg" style="width:30px;" /> White Gold</a></li>
-                    <li><a href="#"><img src="~/assets/img/icon/rose-gold-new.svg" style="width:30px;" /> Rose Gold</a></li>
-                    <li><a href="#"><img src="~/assets/img/icon/platinum-new.svg" style="width:30px;" /> Platinum</a></li>
-                </ul>
-            </li>
-        </ul>
+        <li class="mega-title">
+            <span></span>
+            <ul>
+                @for (int i = 5; i < 10; i++)
+                {
+                    <li><a href="#"><img src="@SD.ImgUrl/@Model.ProductShapeList[i].IconPath" style="width:30px;"> @Model.ProductShapeList[i].Name</a></li>
+                }
+            </ul>
+        </li>
+        <li class="mega-title">
+            <span>Shop by Metal</span>
+            <ul>
+                <li><a href="#"><img src="~/assets/img/icon/yellow-gold-new.svg" style="width:30px;" /> Yellow Gold</a></li>
+                <li><a href="#"><img src="~/assets/img/icon/white-gold-new.svg" style="width:30px;" /> White Gold</a></li>
+                <li><a href="#"><img src="~/assets/img/icon/rose-gold-new.svg" style="width:30px;" /> Rose Gold</a></li>
+                <li><a href="#"><img src="~/assets/img/icon/platinum-new.svg" style="width:30px;" /> Platinum</a></li>
+            </ul>
+        </li>
+    </ul>
     </li>
     <li class="position-static">
         <a href="@Url.Action("Index","ProductPrograms",new {type="Bands"})">Wedding</a>
@@ -52,8 +61,10 @@
             <li class="mega-title">
                 <span>Shop by Style</span>
                 <ul>
-                    @*@foreach(var item in )*@
+                    @*@if (Model.)
+                    {
 
+                    }*@
                     <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="WeddingAndAnniversary"})">Wedding and Anniversary</a></li>
                     <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="Eternity"})">Eternity</a></li>
                     <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="3/4 Eternity"})">3/4 Eternity</a></li>
@@ -211,4 +222,4 @@
         <a href="#">Collection </a>
     </li>
     <li><a href="@Url.Action("Index","Education")">Education</a></li>
-</ul>
+    </ul>

@@ -56,13 +56,34 @@ namespace Business.Repository
             return await _context.ProductStyles.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<List<ProductStyles>> GetProductStyles()
+        public async Task<List<ProductStyleDTO>> GetProductStyles()
         {
-            var result = new List<ProductStyles>();
-            result = await _context.ProductStyles.ToListAsync();
+            var result = new List<ProductStyleDTO>();
+            result = await (from pst in _context.ProductStyles
+                            select new ProductStyleDTO
+                            {
+                                Id=pst.Id,
+                                VenderId=pst.VenderId,
+                                StyleName=pst.StyleName,
+                                IsActivated=pst.IsActivated
+                            }).ToListAsync();
             return result;
         }
 
+        public async Task<List<ProductCollectionDTO>> GetProductCollections()
+        {
+            var result = new List<ProductCollectionDTO>();
+            result = await (from x in _context.ProductCollections
+                            select new ProductCollectionDTO
+                            {
+                                Id = x.Id,
+                                CollectionImage = x.CollectionImage,
+                                CollectionName = x.CollectionName,
+                                Descriptions = x.Descriptions,
+                                IsActivated = x.IsActivated
+                            }).ToListAsync();
+            return result;
+        }
 
         public async Task<IEnumerable<ProductDTO>> GetProductStyleItemsList()
         {

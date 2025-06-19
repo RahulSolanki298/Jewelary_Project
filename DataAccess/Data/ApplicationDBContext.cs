@@ -93,7 +93,10 @@ namespace DataAccess.Data
         public DbSet<AboutUs> AboutUs { get; set; }
 
         public DbSet<DiamondData> DiamondData { get; set; }
-        
+
+        public DbSet<ProductMaster> ProductMaster { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -181,7 +184,7 @@ namespace DataAccess.Data
                 .Property(p => p.Name)
                 .IsRequired();
 
-            
+
 
         }
 

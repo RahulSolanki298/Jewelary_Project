@@ -45,6 +45,10 @@ namespace Business.Repository
             try
             {
                 // Step 0: Initilize veriable
+                var productMstr = new ProductMaster();
+                string GroupId = string.Empty;
+                string ProductKey = string.Empty;
+
                 var newProduct = new Product();
                 var existingProduct = new Product();
 
@@ -69,7 +73,7 @@ namespace Business.Repository
                 var productList = new List<Product>();
                 var updateList = new List<Product>();
 
-                int colorId, accentId, subCategoryId, categoryId, clarityId, caratId, caratSizeId, shapeId, goldWeightId, goldPurityId = 0;
+                int colorId, subCategoryId, categoryId, clarityId, caratId, caratSizeId, shapeId, goldPurityId = 0;
                 // Step 3: Process each product
                 foreach (var product in products)
                 {
@@ -126,6 +130,10 @@ namespace Business.Repository
                             GoldPurityId = goldPurityId,
                             ProductType = product.ProductType,
                             ShapeId = shapeId,
+                            GroupId=$"{product.Sku}-{product.ColorName}",
+                            WholesaleCost=product.WholesaleCost,
+                            BandWidth=product.BandWidth,
+                            Carat=product.Carat,
                             //AccentStoneShapeId=accentId,
                             Id = Guid.NewGuid()
                         };
@@ -1018,8 +1026,11 @@ namespace Business.Repository
                             FileHistoryId = fileHistoryId,
                             UploadStatus = SD.Pending,
                             IsActivated = false,
-                            IsSuccess = false
+                            IsSuccess = false,
+                            GroupId=$"{product.Sku}_{product.ColorName}",
+                            ProductKey=Guid.NewGuid().ToString()
                         };
+
                         if (caratId > 0)
                         {
                             newProduct.CenterCaratId = caratId;

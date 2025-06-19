@@ -9,6 +9,7 @@ using B2C_ECommerce.Models;
 using Business.Repository.IRepository;
 using DataAccess.Entities;
 using Common;
+using Models;
 
 namespace B2C_ECommerce.Controllers
 {
@@ -19,14 +20,16 @@ namespace B2C_ECommerce.Controllers
         private readonly ISettingRepository _settingRepository;
         private readonly IProductPropertyRepository _productPropertyRepository;
         private readonly IProductStyleRepository _productStyles;
+        private readonly IDiamondPropertyRepository _diamondRepository;
         public HomeController(ILogger<HomeController> logger, IBlogRepository blogRepository,ISettingRepository settingRepository
-            ,IProductPropertyRepository productPropertyRepository, IProductStyleRepository productStyles)
+            ,IProductPropertyRepository productPropertyRepository, IProductStyleRepository productStyles, IDiamondPropertyRepository diamondPropertyRepo)
         {
             _logger = logger;
             _blogRepository = blogRepository;
             _settingRepository = settingRepository;
             _productPropertyRepository = productPropertyRepository;
             _productStyles = productStyles;
+            _diamondRepository = diamondPropertyRepo;
         }
 
         public IActionResult Index()
@@ -71,17 +74,17 @@ namespace B2C_ECommerce.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPrograms()
         {
-            var response = await _productStyles.GetProductStyles();
-            return PartialView("_NavMenu", response);
+            var homeContent = new NavMenuDTO()
+            {
+                SubcategoryList = await _productStyles.GetProductStyles(),
+                ProductCollectionList = await _productStyles.GetProductCollections(),
+                ProductShapeList = _productPropertyRepository.GetProductShapeList().Result.ToList(),
+               // DiamondShapeList = _diamondRepository.GetShapeListAsync().Result.ToList(),
+            };
+            return PartialView("_NavMenu", homeContent);
         }
 
-
-        [HttpGet]
-        public async Task<IActionResult> GetCollection()
-        {
-            var response = await _productStyles.GetProductStyles();
-            return PartialView("_HomeCollection", response);
-        }
+        
 
     }
 }

@@ -26,6 +26,9 @@ namespace Models
         public string StyleImage { get; set; }
 
         public IFormFile ImageFile { get; set; }
+
+
+        public int? CategoryId { get; set; }
     }
 
 }

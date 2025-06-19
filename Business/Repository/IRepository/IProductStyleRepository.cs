@@ -10,7 +10,7 @@ namespace Business.Repository.IRepository
 {
     public interface IProductStyleRepository
     {
-        Task<List<ProductStyles>> GetProductStyles();
+        //Task<List<ProductStyles>> GetProductStyles();
 
         Task<ProductStyles> GetProductStyleById(int id);
 
@@ -25,5 +25,9 @@ namespace Business.Repository.IRepository
         Task<bool> SaveProductStyle(ProductStyleDTO product);
 
         Task<bool> AddOrUpdateBulkProductStyle(BulkUpdateStatusRequest data);
+
+        Task<List<ProductCollectionDTO>> GetProductCollections();
+
+        Task<List<ProductStyleDTO>> GetProductStyles();
     }
 }
