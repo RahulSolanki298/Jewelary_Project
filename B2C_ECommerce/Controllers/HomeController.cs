@@ -71,6 +71,7 @@ namespace B2C_ECommerce.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPrograms()
         {
+
             var response = await _productStyles.GetProductStyles();
             return PartialView("_NavMenu", response);
         }

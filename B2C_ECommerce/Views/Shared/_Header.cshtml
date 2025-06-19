@@ -1,4 +1,6 @@
-﻿<header class="header-area">
+﻿
+
+<header class="header-area">
     <div class="main-header d-none d-lg-block">
         <div class="header-top bg-gold">
             <div class="container-fluid">
@@ -17,13 +19,6 @@
                                     <i class="fa fa-angle-down"></i>
                                     <ul class="dropdown-list currency-list">
                                         <li><a>$ USD</a></li>
-                                        @*<li><a>€ EURO</a></li>
-                                            <li><a>£ GBP</a></li>
-                                            <li><a>¥ JPY</a></li>
-                                            <li><a>$ AUD</a></li>
-                                            <li><a>$ CAD</a></li>
-                                            <li><a>CHF</a></li>*@
-                                        @*<li><a>₹ INR</a></li>*@
                                     </ul>
                                 </li>
 
@@ -33,9 +28,7 @@
                                     <i class="fa fa-angle-down"></i>
                                     <ul class="dropdown-list">
                                         <li><a href="#"><img src="~/assets/img/icon/en.png" alt="English Flag"> English</a></li>
-                                        @*<li><a href="#"><img src="~/assets/img/icon/fr.png" alt="French Flag"> French</a></li>*@
                                         <li><a href="#"><img src="~/assets/img/icon/usa.png" alt="French Flag"> USA</a></li>
-
                                     </ul>
                                 </li>
                             </ul>
@@ -553,6 +546,11 @@
                                     <li class="mega-title menu-item-has-children">
                                         <a href="#">Shop by Shape</a>
                                         <ul class="dropdown">
+                                            @* @foreach (var item in collection)
+                                            {
+                                                
+                                            } *@
+
                                             <li><a href="@Url.Action("Index","Diamond",new { shapeId=457})"><img src="~/assets/img/diamond-svg/Princess.svg" style="width:30px;"> Princess</a></li>
                                             <li><a href="@Url.Action("Index","Diamond",new { shapeId=456})"><img src="~/assets/img/diamond-svg/Round.svg" style="width:30px;"> Round</a></li>
                                             <li><a href="@Url.Action("Index","Diamond",new { shapeId=464})"><img src="~/assets/img/diamond-svg/Radiant.svg" style="width:30px;"> Radiant-Cut</a></li>
