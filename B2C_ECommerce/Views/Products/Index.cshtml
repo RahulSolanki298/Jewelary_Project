@@ -121,93 +121,8 @@
 
                     <hr />
                     <!-- shop product top wrap start -->
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-6 col-sm-6 col-md-2 col-lg-2 mb-4 animate-card clsCategory" data-categoryName="Rings">
-                                <a href="#" class="text-decoration-none text-dark">
-                                    <div class="product-main-box shadow-sm rounded p-2 bg-white h-100 hover-scale">
-                                        <div class="product-item">
-                                            <figure class="product-thumb media-container mb-2">
-                                                <div class="img-with-bg position-relative">
-                                                    <img src="~/assets/img/product-filter-img/Rings.png" alt="Rings" class="img-fluid">
-                                                </div>
-                                            </figure>
-                                            <div class="product-details-des text-center">
-                                                <h5 class="fw-semibold">Rings</h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="col-6 col-sm-6 col-md-2 col-lg-2 mb-4 animate-card clsCategory" data-categoryName="Bands">
-                                <a href="#" class="text-decoration-none text-dark">
-                                    <div class="product-main-box shadow-sm rounded p-2 bg-white h-100 hover-scale">
-                                        <div class="product-item">
-                                            <figure class="product-thumb media-container mb-2">
-                                                <div class="img-with-bg position-relative">
-                                                    <img src="~/assets/img/product-filter-img/Band.png" alt="Bands" class="img-fluid">
-                                                </div>
-                                            </figure>
-                                            <div class="product-details-des text-center">
-                                                <h5 class="fw-semibold">Bands</h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="col-6 col-sm-6 col-md-2 col-lg-2 mb-4 animate-card clsCategory" data-categoryName="Earrings">
-                                <a href="#" class="text-decoration-none text-dark">
-                                    <div class="product-main-box shadow-sm rounded p-2 bg-white h-100 hover-scale">
-                                        <div class="product-item">
-                                            <figure class="product-thumb media-container mb-2">
-                                                <div class="img-with-bg position-relative">
-                                                    <img src="~/assets/img/product-filter-img/Earrings.png" alt="Earrings" class="img-fluid">
-                                                </div>
-                                            </figure>
-                                            <div class="product-details-des text-center">
-                                                <h5 class="fw-semibold">Earrings</h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="col-6 col-sm-6 col-md-2 col-lg-2 mb-4 animate-card clsCategory" data-categoryName="Pendal">
-                                <a href="#" class="text-decoration-none text-dark">
-                                    <div class="product-main-box shadow-sm rounded p-2 bg-white h-100 hover-scale">
-                                        <div class="product-item">
-                                            <figure class="product-thumb media-container mb-2">
-                                                <div class="img-with-bg position-relative">
-                                                    <img src="~/assets/img/product-filter-img/Pendal.png" alt="Pendal" class="img-fluid">
-                                                </div>
-                                            </figure>
-                                            <div class="product-details-des text-center">
-                                                <h5 class="fw-semibold">Pendals</h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="col-6 col-sm-6 col-md-2 col-lg-2 mb-4 animate-card clsCategory" data-categoryName="Bangle">
-                                <a href="#" class="text-decoration-none text-dark">
-                                    <div class="product-main-box shadow-sm rounded p-2 bg-white h-100 hover-scale">
-                                        <div class="product-item">
-                                            <figure class="product-thumb media-container mb-2">
-                                                <div class="img-with-bg position-relative">
-                                                    <img src="~/assets/img/product-filter-img/Bangle.png" alt="Bangle" class="img-fluid">
-                                                </div>
-                                            </figure>
-                                            <div class="product-details-des text-center">
-                                                <h5 class="fw-semibold">Bangles</h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
+                    <div class="container" id="allcategories">
+                        
                     </div>
 
                     <!-- product item list wrapper start -->
@@ -580,8 +495,8 @@
         }
 
 
-    async function loadAllFunctions() {
-        debugger;
+            async function loadAllFunctions() {
+                debugger;
                 showLoader();
                 try
                 {
@@ -760,6 +675,26 @@
             } else {
                 console.warn("shapeList not found inside MyProductsImg");
             }
+        }
+
+        //allcategories
+        function displayCategories(){
+                $.ajax({
+                        url: '@Url.Action("GetProductDetailsByShapeId", "Products")',
+                        data: {
+                            sku: sku,
+                            shapeId: parseInt(shapeId),
+                            colorId: parseInt(colorId)
+                        },
+                        type: 'GET',
+                        dataType: 'json'
+                    }).done(function (response) {
+                             $("#allcategories").html("");
+                             $("#allcategories").html(response);
+                    })
+                .fail(function (xhr, status, error) {
+                    console.error('AJAX error:', status, error);
+                });
         }
 
     </script>

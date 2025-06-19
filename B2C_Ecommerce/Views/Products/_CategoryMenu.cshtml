@@ -1,0 +1,24 @@
+﻿@model List<DataAccess.Entities.Category>
+@using Common;
+<div class="row">
+    @foreach (var item in Model)
+    {
+         <div class="col-6 col-sm-6 col-md-2 col-lg-2 mb-4 animate-card clsCategory" data-categoryName="@item.Name">
+            <a href="#" class="text-decoration-none text-dark">
+                <div class="product-main-box shadow-sm rounded p-2 bg-white h-100 hover-scale">
+                    <div class="product-item">
+                        <figure class="product-thumb media-container mb-2">
+                            <div class="img-with-bg position-relative">
+                                <img src="@SD.ImgUrl/@item.CategoryImage" alt="@item.Name" class="img-fluid">
+                            </div>
+                        </figure>
+                        <div class="product-details-des text-center">
+                            <h5 class="fw-semibold">@item.Name</h5>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    }
+
+</div>

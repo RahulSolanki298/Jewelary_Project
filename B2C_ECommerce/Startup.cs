@@ -81,20 +81,34 @@ namespace B2C_ECommerce
                 });
             });
 
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.LoginPath = "/Account/Login";
-                options.LogoutPath = "/Account/Logout";
-                options.AccessDeniedPath = "/Account/AccessDenied";
+            services.AddAuthentication("MyCookieAuth")
+                    .AddCookie("MyCookieAuth", options =>
+                    {
+                        options.Cookie.Name = "JewelFacetCookie";
+                        options.LoginPath = "/Account/Login";
+                        options.LogoutPath = "/Account/Logout";
+                        options.AccessDeniedPath = "/Account/AccessDenied";
+                        options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                        options.SlidingExpiration = true;
+                    });
 
-                options.Cookie.Name = "B2C_ECommerce.Auth";
-                options.Cookie.HttpOnly = true;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.Cookie.SameSite = SameSiteMode.Strict;
+            services.AddAuthorization();
 
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(60); // Session timeout
-                options.SlidingExpiration = true;
-            });
+
+            //services.ConfigureApplicationCookie(options =>
+            //{
+            //    options.LoginPath = "/Account/Login";
+            //    options.LogoutPath = "/Account/Logout";
+            //    options.AccessDeniedPath = "/Account/AccessDenied";
+
+            //    options.Cookie.Name = "B2C_ECommerce.Auth";
+            //    options.Cookie.HttpOnly = true;
+            //    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            //    options.Cookie.SameSite = SameSiteMode.Strict;
+
+            //    options.ExpireTimeSpan = TimeSpan.FromMinutes(60); // Session timeout
+            //    options.SlidingExpiration = true;
+            //});
 
 
         }

@@ -1,11 +1,15 @@
 ﻿using B2C_ECommerce.IServices;
 using DataAccess.Entities;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Graph.Models;
 using Models;
 using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 
@@ -55,13 +59,17 @@ namespace B2C_ECommerce.Controllers
 
                 if (response != null)
                 {
-                    //HttpContext.Response.Cookies.Append("Token", response.Token, new CookieOptions
-                    //{
-                    //    HttpOnly = true,
-                    //    Secure = true,
-                    //    SameSite = SameSiteMode.Strict,
-                    //    Expires = DateTimeOffset.UtcNow.AddDays(7)
-                    //});
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, response.userDTO.FirstName+" "+response.userDTO.LastName),
+                        new Claim(ClaimTypes.NameIdentifier, response.userDTO.Id.ToString()) // 👈 UserId here
+                    };
+
+                    var identity = new ClaimsIdentity(claims, "MyCookieAuth");
+                    var principal = new ClaimsPrincipal(identity);
+
+                    await HttpContext.SignInAsync("MyCookieAuth", principal);
+
 
                     return Json(new { 
                     Status="Success",

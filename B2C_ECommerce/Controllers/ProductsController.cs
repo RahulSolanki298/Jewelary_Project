@@ -62,8 +62,6 @@ namespace B2C_ECommerce.Controllers
         public async Task<IActionResult> ProductDetailsByColorId(string sku, int? colorId = 0)
         {
             var jsonResult = await _productRepository.GetProductsByColorId(sku, colorId);
-
-
             return Json(jsonResult);
         }
 
