@@ -69,7 +69,12 @@ namespace DataAccess.Entities
         public DateTime? UpdatedDate { get; set; }
         public string UploadStatus { get; set; }  //  Requested, Accepted, Rejected
         public int? FileUploadHistoryId { get; set; }
+
         public bool? IsDelete { get; set; }
+
+        public string GroupId { get; set; }
+
+        public string ProductKey { get; set; }
 
         [ForeignKey("FileUploadHistoryId")]
         public virtual ProductFileUploadHistory ProductFileUploadHistory { get; set; }

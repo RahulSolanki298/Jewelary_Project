@@ -71,5 +71,6 @@ namespace DataAccess.Entities
         public int? FileHistoryId { get; set; }
         public bool? IsDelete { get; set; }
 
+
     }
 }

@@ -56,9 +56,16 @@ namespace ControlPanel.Controllers
                 var user = await _userManager.FindByNameAsync(model.UserName);
                 var roles = await _userManager.GetRolesAsync(user);
 
-                HttpContext.Session.SetString("UserId", user.Id);
-                HttpContext.Session.SetString("UserRoles", JsonSerializer.Serialize(roles));
+                // Store user data in cookies (you may want to encrypt or secure this in production)
+                var options = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true, // use true in production with HTTPS
+                    Expires = DateTimeOffset.UtcNow.AddHours(1)
+                };
 
+                Response.Cookies.Append("UserId", user.Id, options);
+                Response.Cookies.Append("UserRoles", JsonSerializer.Serialize(roles), options);
 
                 // Generate OTP
                 //var otp = new Random().Next(100000, 999999).ToString();

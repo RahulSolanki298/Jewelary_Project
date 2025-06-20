@@ -124,7 +124,14 @@ namespace ControlPanel.Controllers
             List<ProductDTO> pendants = new List<ProductDTO>();
             List<ProductDTO> bracelets = new List<ProductDTO>();
 
-            var userId = HttpContext.Session.GetString("UserId");
+            // Get user ID from cookie
+            var userId = HttpContext.Request.Cookies["UserId"];
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Json("User is not logged in or cookie expired.");
+            }
+
             var user = await _userManager.FindByIdAsync(userId);
 
             if (string.IsNullOrEmpty(productsJson))
@@ -139,28 +146,49 @@ namespace ControlPanel.Controllers
                 UploadedBy = userId,
                 IsSuccess = 1
             };
-            int uploadHistoryId = await _productRepository.AddProductFileUploadedHistory(uploadHistory);
 
+            int uploadHistoryId = await _productRepository.AddProductFileUploadedHistory(uploadHistory);
 
             var products = JsonConvert.DeserializeObject<List<ProductDTO>>(productsJson);
 
             var categoryList = products.GroupBy(p => p.CategoryName)
-                                            .Select(g => g.First())
-                                            .ToList();
-
+                                       .Select(g => g.First())
+                                       .ToList();
 
             foreach (var wkSheet in categoryList)
             {
-                if (wkSheet.CategoryName.Trim().ToLower() == "rings") { ringProducts = products.Where(x => x.CategoryName == "Rings").ToList(); await _productRepository.SaveNewProductList(ringProducts, "Rings", userId, uploadHistoryId); }
-                else if (wkSheet.CategoryName.Trim().ToLower() == "bands") { weddings = products.Where(x => x.CategoryName == "Bands").ToList(); await _productRepository.SaveNewProductList(weddings, "Bands", userId, uploadHistoryId); }
-                else if (wkSheet.CategoryName.Trim().ToLower() == "earrings") { earrings = products.Where(x => x.CategoryName == "Earrings").ToList(); await _productRepository.SaveNewProductList(earrings, "Earrings", userId, uploadHistoryId); }
-                else if (wkSheet.CategoryName.Trim().ToLower() == "pendants") { pendants = products.Where(x => x.CategoryName == "Pendants").ToList(); await _productRepository.SaveNewProductList(pendants, "Pendants", userId, uploadHistoryId); }
-                else if (wkSheet.CategoryName.Trim().ToLower() == "bracelets") { bracelets = products.Where(x => x.CategoryName == "Bracelets").ToList(); await _productRepository.SaveNewProductList(bracelets, "Bracelets", userId, uploadHistoryId); }
-            }
+                string category = wkSheet.CategoryName.Trim().ToLower();
 
+                if (category == "rings")
+                {
+                    ringProducts = products.Where(x => x.CategoryName == "Rings").ToList();
+                    await _productRepository.SaveNewProductList(ringProducts, "Rings", userId, uploadHistoryId);
+                }
+                else if (category == "bands")
+                {
+                    weddings = products.Where(x => x.CategoryName == "Bands").ToList();
+                    await _productRepository.SaveNewProductList(weddings, "Bands", userId, uploadHistoryId);
+                }
+                else if (category == "earrings")
+                {
+                    earrings = products.Where(x => x.CategoryName == "Earrings").ToList();
+                    await _productRepository.SaveNewProductList(earrings, "Earrings", userId, uploadHistoryId);
+                }
+                else if (category == "pendants")
+                {
+                    pendants = products.Where(x => x.CategoryName == "Pendants").ToList();
+                    await _productRepository.SaveNewProductList(pendants, "Pendants", userId, uploadHistoryId);
+                }
+                else if (category == "bracelets")
+                {
+                    bracelets = products.Where(x => x.CategoryName == "Bracelets").ToList();
+                    await _productRepository.SaveNewProductList(bracelets, "Bracelets", userId, uploadHistoryId);
+                }
+            }
 
             return Json("AI transforms data migration Successfully.");
         }
+
 
 
         #region Rings Data
