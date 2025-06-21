@@ -39,7 +39,7 @@ namespace B2C_ECommerce.Controllers
                 string[] productIdArray = productIds.Split(',')
                                   .Select(id => id)
                                   .ToArray();
-                data.Jewelleries = await _productService.GetSelectedProductByIds(productIdArray);
+               // data.Jewelleries = await _productService.GetSelectedProductByIds(productIdArray);
             }
             
             return PartialView("_WishlistDiamonds", data);

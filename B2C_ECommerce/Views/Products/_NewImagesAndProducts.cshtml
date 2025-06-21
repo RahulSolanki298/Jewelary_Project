@@ -32,7 +32,7 @@
                 <input type="hidden" class="product-id" value="@item.Id" />
                 <div class="product-item">
                     <figure class="product-thumb product-box-with-border media-container">
-                        <a class="img-with-bg" href="@Url.Action("ProductDetails", "Products", new { id = item.Id })">
+                        <a class="img-with-bg" href="@Url.Action("ProductDetails", "Products", new { productKey = item.ProductKey })">
                             <img class="pri-img media-item" src="@($"{SD.ImgUrl}/{priImg}")" />
                             <img class="sec-img media-item" src="@($"{SD.ImgUrl}/{secImg}")" />
 

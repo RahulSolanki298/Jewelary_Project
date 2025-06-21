@@ -3,36 +3,10 @@
 @using Models;
 @{
     string defaultImage = string.Empty;
-    var ringCount = Model.
-            Where(x=>x.CategoryName==SD.Rings)
-            .GroupBy(p => p.CategoryName)
-            .Select(g => g.Count())
-            .Sum();
-
-    var pendantCount = Model.
-           Where(x => x.CategoryName == SD.Pendants)
-           .GroupBy(p => p.CategoryName)
-           .Select(g => g.Count())
-           .Sum();
-
-    var earringsCount = Model.
-           Where(x => x.CategoryName == SD.Earrings)
-           .GroupBy(p => p.CategoryName)
-           .Select(g => g.Count())
-           .Sum();
-
-    var bandsCount = Model.
-           Where(x => x.CategoryName == SD.Bands)
-           .GroupBy(p => p.CategoryName)
-           .Select(g => g.Count())
-           .Sum();
-
-    var braceletsCount = Model.
-           Where(x => x.CategoryName == SD.Bracelets)
-           .GroupBy(p => p.CategoryName)
-           .Select(g => g.Count())
-           .Sum();
-
+     var ringCount = Model
+             .GroupBy(p => p.CategoryId)
+             .Select(g => g.Count())
+             .Sum();
 }
 <style>
     .card-deck {
@@ -90,6 +64,7 @@
 
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="#" data-status="Activated">Activated</a></li>
+                    <li><a class="dropdown-item" href="#" data-status="Deactivated">Deactivated</a></li>
                     <li><a class="dropdown-item" href="#" data-status="Hold">Hold</a></li>
                 </ul>
 
@@ -106,20 +81,16 @@
                 </a>
             </li>
             <li class="nav-item" role="presentation">
-                <a class="nav-link" id="bands-tab" data-bs-toggle="tab" href="#bandList" role="tab" aria-controls="bandList" aria-selected="false">
-                    Bands <span class="badge badge-light bg-dark ml-2 ringcount">
-                       @bandsCount
-                    </span>
-                </a>
+                <a class="nav-link" id="bands-tab" data-bs-toggle="tab" href="#bandList" role="tab" aria-controls="bandList" aria-selected="false">Bands <span class="badge badge-light bg-dark ml-2 ringcount">0</span></a>
             </li>
             <li class="nav-item" role="presentation">
-                <a class="nav-link" id="earrings-tab" data-bs-toggle="tab" href="#earringList" role="tab" aria-controls="earringList" aria-selected="false">Earrings <span class="badge badge-light bg-dark ml-2 ringcount">@earringsCount</span></a>
+                <a class="nav-link" id="earrings-tab" data-bs-toggle="tab" href="#earringList" role="tab" aria-controls="earringList" aria-selected="false">Earrings <span class="badge badge-light bg-dark ml-2 ringcount">0</span></a>
             </li>
             <li class="nav-item" role="presentation">
-                <a class="nav-link" id="pendant-tab" data-bs-toggle="tab" tabindex="-1" href="#pendantList" role="tab" aria-controls="pandantList" aria-disabled="false">Pendant <span class="badge badge-light bg-dark ml-2 ringcount">@pendantCount</span></a>
+                <a class="nav-link" id="pendant-tab" data-bs-toggle="tab" tabindex="-1" href="#pendantList" role="tab" aria-controls="pandantList" aria-disabled="false">Pendant <span class="badge badge-light bg-dark ml-2 ringcount"></span></a>
             </li>
             <li class="nav-item" role="presentation">
-                <a class="nav-link" id="bracelets-tab" data-bs-toggle="tab" tabindex="-1" href="#braceletsList" role="tab" aria-controls="braceletList" aria-disabled="false">Bracelet <span class="badge badge-light bg-dark ml-2 ringcount">@braceletsCount</span></a>
+                <a class="nav-link" id="bracelets-tab" data-bs-toggle="tab" tabindex="-1" href="#braceletsList" role="tab" aria-controls="braceletList" aria-disabled="false">Bracelet <span class="badge badge-light bg-dark ml-2 ringcount"></span></a>
             </li>
         </ul>
     </div>

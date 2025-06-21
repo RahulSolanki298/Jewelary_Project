@@ -1,5 +1,38 @@
-﻿@model IEnumerable<Models.ProductDTO>
+﻿@model IEnumerable<ProductMasterDTO>
 @using Common;
+@using Models;
+@{
+    string defaultImage = string.Empty;
+    var ringCount = Model.
+            Where(x => x.CategoryName == SD.Rings)
+            .GroupBy(p => p.CategoryName)
+            .Select(g => g.Count())
+            .Sum();
+
+    var pendantCount = Model.
+           Where(x => x.CategoryName == SD.Pendants)
+           .GroupBy(p => p.CategoryName)
+           .Select(g => g.Count())
+           .Sum();
+
+    var earringsCount = Model.
+           Where(x => x.CategoryName == SD.Earrings)
+           .GroupBy(p => p.CategoryName)
+           .Select(g => g.Count())
+           .Sum();
+
+    var bandsCount = Model.
+           Where(x => x.CategoryName == SD.Bands)
+           .GroupBy(p => p.CategoryName)
+           .Select(g => g.Count())
+           .Sum();
+
+    var braceletsCount = Model.
+           Where(x => x.CategoryName == SD.Bracelets)
+           .GroupBy(p => p.CategoryName)
+           .Select(g => g.Count())
+           .Sum();
+}
 <style>
     .card-deck {
         display: flex;
@@ -42,16 +75,12 @@
 </style>
 
 
-@{
-    string defaultImage = string.Empty;
-}
-
 <section class="section">
     <div class="row mb-2">
-        <div class="col-lg-6">
-            <h4><b>Hold Product (Category Wise)</b></h4>
+        <div class="col-lg-8">
+            <h4> <b>Product Hold </b></h4>
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-4">
             <div class="btn-group dropup float-end">
                 <a class="" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="bi bi-three-dots-vertical"></i>
@@ -65,34 +94,41 @@
 
             </div>
         </div>
-
     </div>
     <div class="row mb-2">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
-                <a class="nav-link active" id="rings-tab" data-bs-toggle="tab" href="#ringList" role="tab" aria-controls="ringList" aria-selected="true">Rings <span class="badge badge-light bg-dark ml-2 ringcount">@Model.Where(x => x.CategoryName == @SD.Rings && x.UploadStatus == SD.Hold).GroupBy(x => x.VenderStyle).Count()</span></a>
+                <a class="nav-link active" id="rings-tab" data-bs-toggle="tab" href="#ringList" role="tab" aria-controls="ringList" aria-selected="true">
+                    Rings <span class="badge badge-light bg-dark ml-2 ringcount">
+                        @ringCount
+                    </span>
+                </a>
             </li>
             <li class="nav-item" role="presentation">
-                <a class="nav-link" id="bands-tab" data-bs-toggle="tab" href="#bandList" role="tab" aria-controls="bandList" aria-selected="false">Bands <span class="badge badge-light bg-dark ml-2 ringcount">@Model.Where(x => x.CategoryName == @SD.Bands && x.UploadStatus == SD.Hold).GroupBy(x => x.VenderStyle).Count()</span></a>
+                <a class="nav-link" id="bands-tab" data-bs-toggle="tab" href="#bandList" role="tab" aria-controls="bandList" aria-selected="false">
+                    Bands <span class="badge badge-light bg-dark ml-2 ringcount">
+                        @bandsCount
+                    </span>
+                </a>
             </li>
             <li class="nav-item" role="presentation">
-                <a class="nav-link" id="earrings-tab" data-bs-toggle="tab" href="#earringList" role="tab" aria-controls="earringList" aria-selected="false">Earrings <span class="badge badge-light bg-dark ml-2 ringcount">@Model.Where(x => x.CategoryName == @SD.Earrings && x.UploadStatus == SD.Hold).GroupBy(x => x.VenderStyle).Count()</span></a>
+                <a class="nav-link" id="earrings-tab" data-bs-toggle="tab" href="#earringList" role="tab" aria-controls="earringList" aria-selected="false">Earrings <span class="badge badge-light bg-dark ml-2 ringcount">@earringsCount</span></a>
             </li>
             <li class="nav-item" role="presentation">
-                <a class="nav-link" id="pendant-tab" data-bs-toggle="tab" tabindex="-1" href="#pendantList" role="tab" aria-controls="pandantList" aria-disabled="false">Pendant <span class="badge badge-light bg-dark ml-2 ringcount">@Model.Where(x => x.CategoryName == @SD.Pendants && x.UploadStatus == SD.Hold).GroupBy(x => x.VenderStyle).Count()</span></a>
+                <a class="nav-link" id="pendant-tab" data-bs-toggle="tab" tabindex="-1" href="#pendantList" role="tab" aria-controls="pandantList" aria-disabled="false">Pendant <span class="badge badge-light bg-dark ml-2 ringcount">@pendantCount</span></a>
             </li>
             <li class="nav-item" role="presentation">
-                <a class="nav-link" id="bracelets-tab" data-bs-toggle="tab" tabindex="-1" href="#braceletsList" role="tab" aria-controls="braceletList" aria-disabled="false">Bracelet <span class="badge badge-light bg-dark ml-2 ringcount">@Model.Where(x => x.CategoryName == @SD.Bracelets && x.UploadStatus == SD.Hold).GroupBy(x => x.VenderStyle).Count()</span></a>
+                <a class="nav-link" id="bracelets-tab" data-bs-toggle="tab" tabindex="-1" href="#braceletsList" role="tab" aria-controls="braceletList" aria-disabled="false">Bracelet <span class="badge badge-light bg-dark ml-2 ringcount">@braceletsCount</span></a>
             </li>
         </ul>
     </div>
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="ringList" role="tabpanel" aria-labelledby="rings-tab">
-            <table class="table table-hover table-bordered mb-0 RequestedListTable table-responsive" id="ringTable">
+            <table class="table table-hover table-bordered mb-0 table-responsive" id="ringTable">
                 <thead>
                     <tr>
-                        <th scope="col"><input type="checkbox" class="chkId" id="chkAllIds" /></th>
-                        <th scope="col">Image</th>
+                        <th scope="col"><input type="checkbox" class="chkId" id="chkRingsIds" /></th>
+                        <th scope="col">Images</th>
                         <th scope="col">Status</th>
                         <th scope="col">Title</th>
                         <th scope="col">Vender</th>
@@ -124,64 +160,68 @@
 
                         @foreach (var item in Model.Where(x => x.CategoryName == SD.Rings))
                         {
-                           
-                    <tr>
-                        <td scope="col"><input type="checkbox" class="chkId" value="@item.Id" /></td>
-                        <td scope="col">
-                            <div class="image-row">
-                                @if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
-                                {
-                                    foreach (var imgVdo in item.ProductImageVideos)
-                                    {
-                                        if (!string.IsNullOrEmpty(imgVdo.ImageUrl) && imgVdo.ImageUrl != "-")
+                            var product = item.ProductItems.Where(x => x.ProductKey == item.ProductKey).FirstOrDefault();
+
+                            <tr>
+                                <td scope="col">
+                                    <input type="checkbox" class="chkId" value="@item.Id" />
+                                </td>
+                                <td scope="col">
+                                    <div class="image-row">
+                                        @if (product.ProductImageVideos != null && product.ProductImageVideos.Count > 0)
                                         {
-                                            <a class="showImgs" data-productid="@item.Id">
-                                                <img src="@SD.ImgUrl/@imgVdo.ImageUrl" alt="Image" class="thumb-img" />
-                                            </a>
+                                            foreach (var imgVdo in product.ProductImageVideos)
+                                            {
+                                                if (!string.IsNullOrEmpty(imgVdo.ImageUrl) && imgVdo.ImageUrl != "-")
+                                                {
+                                                    <a class="showImgs" data-productKey="@item.ProductKey">
+                                                        <img src="@SD.ImgUrl/@imgVdo.ImageUrl" alt="Image" class="thumb-img" />
+                                                    </a>
+                                                }
+                                                else if (!string.IsNullOrEmpty(imgVdo.VideoUrl) && imgVdo.VideoUrl != "-")
+                                                {
+                                                    <a class="showImgs" data-productKey="@item.ProductKey">
+                                                        <img src="@SD.ImgUrl/assets/img/video-icon.svg" alt="Video" class="thumb-img" />
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <a>
+                                                        <img src="@SD.ImgUrl/assets/img/no-image.png" alt="No image" class="thumb-img" />
+                                                    </a>
+                                                }
+                                            }
                                         }
-                                        else if (!string.IsNullOrEmpty(imgVdo.VideoUrl) && imgVdo.VideoUrl != "-")
-                                        {
-                                            <a class="showImgs" data-productid="@item.Id">
-                                                <img src="@SD.ImgUrl/assets/img/video-icon.svg" alt="Video" class="thumb-img" />
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            <a>
-                                                <img src="@SD.ImgUrl/assets/img/no-image.png" alt="No image" class="thumb-img" />
-                                            </a>
-                                        }
-                                    }
-                                }
-                            </div>
-                        </td>
-                        <td scope="col">@item.UploadStatus</td>
-                        <td scope="col">
-                            <h5>@item.Title</h5>
-                            <textarea asp-for="@item.Description" disabled name="Description" class="product-input form-control" rows="3" style="width:250px;"></textarea>
-                        </td>
-                        <td scope="col">@item.VenderName</td>
-                        <td scope="col">@item.Sku</td>
-                        <td scope="col">@item.ColorName</td>
-                        <td scope="col">@item.Diameter</td>
-                        <td scope="col">@item.Length</td>
-                        <td scope="col">@item.BandWidth</td>
-                        <td scope="col">@item.GoldWeight</td>
-                        <td scope="col">@item.CTW</td>
-                        <td scope="col">@item.CenterShapeName</td>
-                        <td scope="col">@item.CenterCaratName</td>
-                        <td scope="col">@item.Certificate</td>
-                        <td scope="col">@item.Karat</td>
-                        <td scope="col">@item.Price</td>
-                        <td scope="col">@item.WholesaleCost</td>
-                        <td scope="col">@item.AccentStoneShapeName</td>
-                        <td scope="col">@item.MMSize</td>
-                        <td scope="col">@item.DiaWT</td>
-                        <td scope="col">@item.NoOfStones</td>
-                        <td scope="col">@item.Grades</td>
-                        <td scope="col">@item.UpdatedPersonName</td>
-                        <td scope="col">@item.DisplayDate</td>
-                    </tr>
+                                    </div>
+                                </td>
+
+                                <td scope="col">@product.UploadStatus</td>
+                                <td scope="col">
+                                    <h5>@product.Title</h5>
+                                    <textarea asp-for="@product.Description" disabled name="Description" class="product-input form-control" rows="3" style="width:250px;"></textarea>
+                                </td>
+                                <td scope="col">@product.VenderName</td>
+                                <td scope="col">@product.Sku</td>
+                                <td scope="col">@product.ColorName</td>
+                                <td scope="col">@product.Diameter</td>
+                                <td scope="col">@product.Length</td>
+                                <td scope="col">@product.BandWidth</td>
+                                <td scope="col">@product.GoldWeight</td>
+                                <td scope="col">@product.CTW</td>
+                                <td scope="col">@product.CenterShapeName</td>
+                                <td scope="col">@product.CenterCaratName</td>
+                                <td scope="col">@product.Certificate</td>
+                                <td scope="col">@product.Karat</td>
+                                <td scope="col">@product.Price</td>
+                                <td scope="col">@product.WholesaleCost</td>
+                                <td scope="col">@product.AccentStoneShapeName</td>
+                                <td scope="col">@product.MMSize</td>
+                                <td scope="col">@product.DiaWT</td>
+                                <td scope="col">@product.NoOfStones</td>
+                                <td scope="col">@product.Grades</td>
+                                <td scope="col">@product.UpdatedPersonName</td>
+                                <td scope="col">@product.DisplayDate</td>
+                            </tr>
                         }
                     }
                     else
@@ -194,11 +234,11 @@
             </table>
         </div>
         <div class="tab-pane fade" id="bandList" role="tabpanel" aria-labelledby="bands-tab">
-            <table class="table table-hover table-bordered mb-0 RequestedListTable table-responsive" id="bandTable">
+            <table class="table table-hover table-bordered mb-0 table-responsive" id="bandTable">
                 <thead>
                     <tr>
-                        <th scope="col"><input type="checkbox" class="chkId" id="chkAllIds" /></th>
-                        <th scope="col">Image</th>
+                        <th scope="col"><input type="checkbox" class="chkId" id="chkBandIds" /></th>
+                        <th scope="col">Images</th>
                         <th scope="col">Status</th>
                         <th scope="col">Title</th>
                         <th scope="col">Vender</th>
@@ -220,7 +260,6 @@
                         <th scope="col">Dia.Wt</th>
                         <th scope="col">No.Of.Stones</th>
                         <th scope="col">Grades</th>
-
                         <th scope="col">User</th>
                         <th scope="col">Date</th>
                     </tr>
@@ -228,66 +267,71 @@
                 <tbody>
                     @if (Model != null)
                     {
+
                         @foreach (var item in Model.Where(x => x.CategoryName == SD.Bands))
                         {
+                            var product = item.ProductItems.Where(x => x.ProductKey == item.ProductKey).FirstOrDefault();
 
-                    <tr>
-                        <td scope="col"><input type="checkbox" class="chkId" value="@item.Id" /></td>
-                        <td scope="col">
-                            <div class="image-row">
-                                @if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
-                                {
-                                    foreach (var imgVdo in item.ProductImageVideos)
-                                    {
-                                        if (!string.IsNullOrEmpty(imgVdo.ImageUrl) && imgVdo.ImageUrl != "-")
+                            <tr>
+                                <td scope="col">
+                                    <input type="checkbox" class="chkId" value="@item.Id" />
+                                </td>
+                                <td scope="col">
+                                    <div class="image-row">
+                                        @if (product.ProductImageVideos != null && product.ProductImageVideos.Count > 0)
                                         {
-                                            <a class="showImgs" data-productid="@item.Id">
-                                                <img src="@SD.ImgUrl/@imgVdo.ImageUrl" alt="Image" class="thumb-img" />
-                                            </a>
+                                            foreach (var imgVdo in product.ProductImageVideos)
+                                            {
+                                                if (!string.IsNullOrEmpty(imgVdo.ImageUrl) && imgVdo.ImageUrl != "-")
+                                                {
+                                                    <a class="showImgs" data-productKey="@item.ProductKey">
+                                                        <img src="@SD.ImgUrl/@imgVdo.ImageUrl" alt="Image" class="thumb-img" />
+                                                    </a>
+                                                }
+                                                else if (!string.IsNullOrEmpty(imgVdo.VideoUrl) && imgVdo.VideoUrl != "-")
+                                                {
+                                                    <a class="showImgs" data-productKey="@item.ProductKey">
+                                                        <img src="@SD.ImgUrl/assets/img/video-icon.svg" alt="Video" class="thumb-img" />
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <a>
+                                                        <img src="@SD.ImgUrl/assets/img/no-image.png" alt="No image" class="thumb-img" />
+                                                    </a>
+                                                }
+                                            }
                                         }
-                                        else if (!string.IsNullOrEmpty(imgVdo.VideoUrl) && imgVdo.VideoUrl != "-")
-                                        {
-                                            <a class="showImgs" data-productid="@item.Id">
-                                                <img src="@SD.ImgUrl/assets/img/video-icon.svg" alt="Video" class="thumb-img" />
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            <a>
-                                                <img src="@SD.ImgUrl/assets/img/no-image.png" alt="No image" class="thumb-img" />
-                                            </a>
-                                        }
-                                    }
-                                }
-                            </div>
-                        </td>
-                        <td scope="col">@item.UploadStatus</td>
-                        <td scope="col">
-                            <h5>@item.Title</h5>
-                            <textarea asp-for="@item.Description" disabled name="Description" class="product-input form-control" rows="3" style="width:250px;"></textarea>
-                        </td>
-                        <td scope="col">@item.VenderName</td>
-                        <td scope="col">@item.Sku</td>
-                        <td scope="col">@item.ColorName</td>
-                        <td scope="col">@item.Diameter</td>
-                        <td scope="col">@item.Length</td>
-                        <td scope="col">@item.BandWidth</td>
-                        <td scope="col">@item.GoldWeight</td>
-                        <td scope="col">@item.CTW</td>
-                        <td scope="col">@item.CenterShapeName</td>
-                        <td scope="col">@item.CenterCaratName</td>
-                        <td scope="col">@item.Certificate</td>
-                        <td scope="col">@item.Karat</td>
-                        <td scope="col">@item.Price</td>
-                        <td scope="col">@item.WholesaleCost</td>
-                        <td scope="col">@item.AccentStoneShapeName</td>
-                        <td scope="col">@item.MMSize</td>
-                        <td scope="col">@item.DiaWT</td>
-                        <td scope="col">@item.NoOfStones</td>
-                        <td scope="col">@item.Grades</td>
-                        <td scope="col">@item.UpdatedPersonName</td>
-                        <td scope="col">@item.DisplayDate</td>
-                    </tr>
+                                    </div>
+                                </td>
+
+                                <td scope="col">@product.UploadStatus</td>
+                                <td scope="col">
+                                    <h5>@product.Title</h5>
+                                    <textarea asp-for="@product.Description" disabled name="Description" class="product-input form-control" rows="3" style="width:250px;"></textarea>
+                                </td>
+                                <td scope="col">@product.VenderName</td>
+                                <td scope="col">@product.Sku</td>
+                                <td scope="col">@product.ColorName</td>
+                                <td scope="col">@product.Diameter</td>
+                                <td scope="col">@product.Length</td>
+                                <td scope="col">@product.BandWidth</td>
+                                <td scope="col">@product.GoldWeight</td>
+                                <td scope="col">@product.CTW</td>
+                                <td scope="col">@product.CenterShapeName</td>
+                                <td scope="col">@product.CenterCaratName</td>
+                                <td scope="col">@product.Certificate</td>
+                                <td scope="col">@product.Karat</td>
+                                <td scope="col">@product.Price</td>
+                                <td scope="col">@product.WholesaleCost</td>
+                                <td scope="col">@product.AccentStoneShapeName</td>
+                                <td scope="col">@product.MMSize</td>
+                                <td scope="col">@product.DiaWT</td>
+                                <td scope="col">@product.NoOfStones</td>
+                                <td scope="col">@product.Grades</td>
+                                <td scope="col">@product.UpdatedPersonName</td>
+                                <td scope="col">@product.DisplayDate</td>
+                            </tr>
                         }
                     }
                     else
@@ -300,11 +344,11 @@
             </table>
         </div>
         <div class="tab-pane fade" id="earringList" role="tabpanel" aria-labelledby="earrings-tab">
-            <table class="table table-hover table-bordered mb-0 RequestedListTable table-responsive" id="EarringTable">
+            <table class="table table-hover table-bordered mb-0 table-responsive" id="EarringTable">
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Image</th>
+                        <th scope="col"><input type="checkbox" class="chkId" id="chkEarringIds" /></th>
+                        <th scope="col">Images</th>
                         <th scope="col">Status</th>
                         <th scope="col">Title</th>
                         <th scope="col">Vender</th>
@@ -326,7 +370,6 @@
                         <th scope="col">Dia.Wt</th>
                         <th scope="col">No.Of.Stones</th>
                         <th scope="col">Grades</th>
-
                         <th scope="col">User</th>
                         <th scope="col">Date</th>
                     </tr>
@@ -334,86 +377,88 @@
                 <tbody>
                     @if (Model != null)
                     {
-                        foreach (var item in Model.Where(x => x.CategoryName == SD.Earrings))
-                        {
 
-                    <tr>
-                        <td><input type="checkbox" class="chkId" value="@item.Id" /></td>
-                        <td scope="col">
-                            <div class="image-row">
-                                @if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
-                                {
-                                    foreach (var imgVdo in item.ProductImageVideos)
-                                    {
-                                        if (!string.IsNullOrEmpty(imgVdo.ImageUrl) && imgVdo.ImageUrl != "-")
+                        @foreach (var item in Model.Where(x => x.CategoryName == SD.Earrings))
+                        {
+                            var product = item.ProductItems.Where(x => x.ProductKey == item.ProductKey).FirstOrDefault();
+
+                            <tr>
+                                <td scope="col">
+                                    <input type="checkbox" class="chkId" value="@item.Id" />
+                                </td>
+                                <td scope="col">
+                                    <div class="image-row">
+                                        @if (product.ProductImageVideos != null && product.ProductImageVideos.Count > 0)
                                         {
-                                            <a class="showImgs" data-productid="@item.Id">
-                                                <img src="@SD.ImgUrl/@imgVdo.ImageUrl" alt="Image" class="thumb-img" />
-                                            </a>
+                                            foreach (var imgVdo in product.ProductImageVideos)
+                                            {
+                                                if (!string.IsNullOrEmpty(imgVdo.ImageUrl) && imgVdo.ImageUrl != "-")
+                                                {
+                                                    <a class="showImgs" data-productKey="@item.ProductKey">
+                                                        <img src="@SD.ImgUrl/@imgVdo.ImageUrl" alt="Image" class="thumb-img" />
+                                                    </a>
+                                                }
+                                                else if (!string.IsNullOrEmpty(imgVdo.VideoUrl) && imgVdo.VideoUrl != "-")
+                                                {
+                                                    <a class="showImgs" data-productKey="@item.ProductKey">
+                                                        <img src="@SD.ImgUrl/assets/img/video-icon.svg" alt="Video" class="thumb-img" />
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <a>
+                                                        <img src="@SD.ImgUrl/assets/img/no-image.png" alt="No image" class="thumb-img" />
+                                                    </a>
+                                                }
+                                            }
                                         }
-                                        else if (!string.IsNullOrEmpty(imgVdo.VideoUrl) && imgVdo.VideoUrl != "-")
-                                        {
-                                            <a class="showImgs" data-productid="@item.Id">
-                                                <img src="@SD.ImgUrl/assets/img/video-icon.svg" alt="Video" class="thumb-img" />
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            <a>
-                                                <img src="@SD.ImgUrl/assets/img/no-image.png" alt="No image" class="thumb-img" />
-                                            </a>
-                                        }
-                                    }
-                                }
-                            </div>
-                        </td>
-                        <td scope="col">@item.UploadStatus</td>
-                        <td scope="col">
-                            <h5>@item.Title</h5>
-                            <textarea asp-for="@item.Description" disabled name="Description" class="product-input form-control" rows="3" style="width:250px;"></textarea>
-                        </td>
-                        <td scope="col">@item.VenderName</td>
-                        <td scope="col">@item.Sku</td>
-                        <td scope="col">@item.ColorName</td>
-                        <td scope="col">@item.Diameter</td>
-                        <td scope="col">@item.Length</td>
-                        <td scope="col">@item.BandWidth</td>
-                        <td scope="col">@item.GoldWeight</td>
-                        <td scope="col">@item.CTW</td>
-                        <td scope="col">@item.CenterShapeName</td>
-                        <td scope="col">@item.CenterCaratName</td>
-                        <td scope="col">@item.Certificate</td>
-                        <td scope="col">@item.Karat</td>
-                        <td scope="col">@item.Price</td>
-                        <td scope="col">@item.WholesaleCost</td>
-                        <td scope="col">@item.AccentStoneShapeName</td>
-                        <td scope="col">@item.MMSize</td>
-                        <td scope="col">@item.DiaWT</td>
-                        <td scope="col">@item.NoOfStones</td>
-                        <td scope="col">@item.Grades</td>
-                        <td scope="col">@item.UpdatedPersonName</td>
-                        <td scope="col">@item.DisplayDate</td>
-                    </tr>
+                                    </div>
+                                </td>
+
+                                <td scope="col">@product.UploadStatus</td>
+                                <td scope="col">
+                                    <h5>@product.Title</h5>
+                                    <textarea asp-for="@product.Description" disabled name="Description" class="product-input form-control" rows="3" style="width:250px;"></textarea>
+                                </td>
+                                <td scope="col">@product.VenderName</td>
+                                <td scope="col">@product.Sku</td>
+                                <td scope="col">@product.ColorName</td>
+                                <td scope="col">@product.Diameter</td>
+                                <td scope="col">@product.Length</td>
+                                <td scope="col">@product.BandWidth</td>
+                                <td scope="col">@product.GoldWeight</td>
+                                <td scope="col">@product.CTW</td>
+                                <td scope="col">@product.CenterShapeName</td>
+                                <td scope="col">@product.CenterCaratName</td>
+                                <td scope="col">@product.Certificate</td>
+                                <td scope="col">@product.Karat</td>
+                                <td scope="col">@product.Price</td>
+                                <td scope="col">@product.WholesaleCost</td>
+                                <td scope="col">@product.AccentStoneShapeName</td>
+                                <td scope="col">@product.MMSize</td>
+                                <td scope="col">@product.DiaWT</td>
+                                <td scope="col">@product.NoOfStones</td>
+                                <td scope="col">@product.Grades</td>
+                                <td scope="col">@product.UpdatedPersonName</td>
+                                <td scope="col">@product.DisplayDate</td>
+                            </tr>
                         }
                     }
                     else
                     {
                         <tr>
-
-                            <td colspan="25">No data found</td>
-
+                            <td colspan="25"> No data found</td>
                         </tr>
                     }
                 </tbody>
-
             </table>
         </div>
         <div class="tab-pane fade" id="pendantList" role="tabpanel" aria-labelledby="pandant-tab">
-            <table class="table table-hover table-bordered mb-0 RequestedListTable table-responsive" id="PendantTable">
+            <table class="table table-hover table-bordered mb-0 table-responsive" id="PendantTable">
                 <thead>
                     <tr>
-                        <th scope="col"><input type="checkbox" class="chkId" id="chkAllIds" /></th>
-                        <th scope="col">Image</th>
+                        <th scope="col"><input type="checkbox" class="chkId" id="chkPendantIds" /></th>
+                        <th scope="col">Images</th>
                         <th scope="col">Status</th>
                         <th scope="col">Title</th>
                         <th scope="col">Vender</th>
@@ -435,7 +480,6 @@
                         <th scope="col">Dia.Wt</th>
                         <th scope="col">No.Of.Stones</th>
                         <th scope="col">Grades</th>
-
                         <th scope="col">User</th>
                         <th scope="col">Date</th>
                     </tr>
@@ -443,86 +487,88 @@
                 <tbody>
                     @if (Model != null)
                     {
-                        foreach (var item in Model.Where(x => x.CategoryName == SD.Pendants))
-                        {
 
-                    <tr>
-                        <td><input type="checkbox" class="chkId" value="@item.Id" /></td>
-                        <td scope="col">
-                            <div class="image-row">
-                                @if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
-                                {
-                                    foreach (var imgVdo in item.ProductImageVideos)
-                                    {
-                                        if (!string.IsNullOrEmpty(imgVdo.ImageUrl) && imgVdo.ImageUrl != "-")
+                        @foreach (var item in Model.Where(x => x.CategoryName == SD.Pendants))
+                        {
+                            var product = item.ProductItems.Where(x => x.ProductKey == item.ProductKey).FirstOrDefault();
+
+                            <tr>
+                                <td scope="col">
+                                    <input type="checkbox" class="chkId" value="@item.Id" />
+                                </td>
+                                <td scope="col">
+                                    <div class="image-row">
+                                        @if (product.ProductImageVideos != null && product.ProductImageVideos.Count > 0)
                                         {
-                                            <a class="showImgs" data-productid="@item.Id">
-                                                <img src="@SD.ImgUrl/@imgVdo.ImageUrl" alt="Image" class="thumb-img" />
-                                            </a>
+                                            foreach (var imgVdo in product.ProductImageVideos)
+                                            {
+                                                if (!string.IsNullOrEmpty(imgVdo.ImageUrl) && imgVdo.ImageUrl != "-")
+                                                {
+                                                    <a class="showImgs" data-productKey="@item.ProductKey">
+                                                        <img src="@SD.ImgUrl/@imgVdo.ImageUrl" alt="Image" class="thumb-img" />
+                                                    </a>
+                                                }
+                                                else if (!string.IsNullOrEmpty(imgVdo.VideoUrl) && imgVdo.VideoUrl != "-")
+                                                {
+                                                    <a class="showImgs" data-productKey="@item.ProductKey">
+                                                        <img src="@SD.ImgUrl/assets/img/video-icon.svg" alt="Video" class="thumb-img" />
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <a>
+                                                        <img src="@SD.ImgUrl/assets/img/no-image.png" alt="No image" class="thumb-img" />
+                                                    </a>
+                                                }
+                                            }
                                         }
-                                        else if (!string.IsNullOrEmpty(imgVdo.VideoUrl) && imgVdo.VideoUrl != "-")
-                                        {
-                                            <a class="showImgs" data-productid="@item.Id">
-                                                <img src="@SD.ImgUrl/assets/img/video-icon.svg" alt="Video" class="thumb-img" />
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            <a>
-                                                <img src="@SD.ImgUrl/assets/img/no-image.png" alt="No image" class="thumb-img" />
-                                            </a>
-                                        }
-                                    }
-                                }
-                            </div>
-                        </td>
-                        <td scope="col">@item.UploadStatus</td>
-                        <td scope="col">
-                            <h5>@item.Title</h5>
-                            <textarea asp-for="@item.Description" disabled name="Description" class="product-input form-control" rows="3" style="width:250px;"></textarea>
-                        </td>
-                        <td scope="col">@item.VenderName</td>
-                        <td scope="col">@item.Sku</td>
-                        <td scope="col">@item.ColorName</td>
-                        <td scope="col">@item.Diameter</td>
-                        <td scope="col">@item.Length</td>
-                        <td scope="col">@item.BandWidth</td>
-                        <td scope="col">@item.GoldWeight</td>
-                        <td scope="col">@item.CTW</td>
-                        <td scope="col">@item.CenterShapeName</td>
-                        <td scope="col">@item.CenterCaratName</td>
-                        <td scope="col">@item.Certificate</td>
-                        <td scope="col">@item.Karat</td>
-                        <td scope="col">@item.Price</td>
-                        <td scope="col">@item.WholesaleCost</td>
-                        <td scope="col">@item.AccentStoneShapeName</td>
-                        <td scope="col">@item.MMSize</td>
-                        <td scope="col">@item.DiaWT</td>
-                        <td scope="col">@item.NoOfStones</td>
-                        <td scope="col">@item.Grades</td>
-                        <td scope="col">@item.UpdatedPersonName</td>
-                        <td scope="col">@item.DisplayDate</td>
-                    </tr>
+                                    </div>
+                                </td>
+
+                                <td scope="col">@product.UploadStatus</td>
+                                <td scope="col">
+                                    <h5>@product.Title</h5>
+                                    <textarea asp-for="@product.Description" disabled name="Description" class="product-input form-control" rows="3" style="width:250px;"></textarea>
+                                </td>
+                                <td scope="col">@product.VenderName</td>
+                                <td scope="col">@product.Sku</td>
+                                <td scope="col">@product.ColorName</td>
+                                <td scope="col">@product.Diameter</td>
+                                <td scope="col">@product.Length</td>
+                                <td scope="col">@product.BandWidth</td>
+                                <td scope="col">@product.GoldWeight</td>
+                                <td scope="col">@product.CTW</td>
+                                <td scope="col">@product.CenterShapeName</td>
+                                <td scope="col">@product.CenterCaratName</td>
+                                <td scope="col">@product.Certificate</td>
+                                <td scope="col">@product.Karat</td>
+                                <td scope="col">@product.Price</td>
+                                <td scope="col">@product.WholesaleCost</td>
+                                <td scope="col">@product.AccentStoneShapeName</td>
+                                <td scope="col">@product.MMSize</td>
+                                <td scope="col">@product.DiaWT</td>
+                                <td scope="col">@product.NoOfStones</td>
+                                <td scope="col">@product.Grades</td>
+                                <td scope="col">@product.UpdatedPersonName</td>
+                                <td scope="col">@product.DisplayDate</td>
+                            </tr>
                         }
                     }
                     else
                     {
                         <tr>
-
-                            <td colspan="25">No data found</td>
-
+                            <td colspan="25"> No data found</td>
                         </tr>
                     }
                 </tbody>
-
             </table>
         </div>
         <div class="tab-pane fade" id="braceletsList" role="tabpanel" aria-labelledby="bracelets-tab">
-            <table class="table table-hover table-bordered mb-0 RequestedListTable table-responsive" id="BraceletsTable">
+            <table class="table table-hover table-bordered mb-0 table-responsive" id="BraceletsTable">
                 <thead>
                     <tr>
-                        <th scope="col"><input type="checkbox" class="chkId" id="chkAllIds" /></th>
-                        <th scope="col">Image</th>
+                        <th scope="col"><input type="checkbox" class="chkId" id="chkBraceletIds" /></th>
+                        <th scope="col">Images</th>
                         <th scope="col">Status</th>
                         <th scope="col">Title</th>
                         <th scope="col">Vender</th>
@@ -544,7 +590,6 @@
                         <th scope="col">Dia.Wt</th>
                         <th scope="col">No.Of.Stones</th>
                         <th scope="col">Grades</th>
-
                         <th scope="col">User</th>
                         <th scope="col">Date</th>
                     </tr>
@@ -552,172 +597,248 @@
                 <tbody>
                     @if (Model != null)
                     {
-                        foreach (var item in Model.Where(x => x.CategoryName == SD.Bracelets))
+
+                        @foreach (var item in Model.Where(x => x.CategoryName == SD.Bracelets))
                         {
+                            var product = item.ProductItems.Where(x => x.ProductKey == item.ProductKey).FirstOrDefault();
 
-                            
-                    <tr>
-                        <td><input type="checkbox" class="chkId" value="@item.Id" /></td>
-                        <td scope="col">
-                            <div class="image-row">
-                                @if (item.ProductImageVideos != null && item.ProductImageVideos.Count > 0)
-                                {
-                                    foreach (var imgVdo in item.ProductImageVideos)
-                                    {
-                                        if (!string.IsNullOrEmpty(imgVdo.ImageUrl) && imgVdo.ImageUrl != "-")
+                            <tr>
+                                <td scope="col">
+                                    <input type="checkbox" class="chkId" value="@item.Id" />
+                                </td>
+                                <td scope="col">
+                                    <div class="image-row">
+                                        @if (product.ProductImageVideos != null && product.ProductImageVideos.Count > 0)
                                         {
-                                            <a class="showImgs" data-productid="@item.Id">
-                                                <img src="@SD.ImgUrl/@imgVdo.ImageUrl" alt="Image" class="thumb-img" />
-                                            </a>
+                                            foreach (var imgVdo in product.ProductImageVideos)
+                                            {
+                                                if (!string.IsNullOrEmpty(imgVdo.ImageUrl) && imgVdo.ImageUrl != "-")
+                                                {
+                                                    <a class="showImgs" data-productKey="@item.ProductKey">
+                                                        <img src="@SD.ImgUrl/@imgVdo.ImageUrl" alt="Image" class="thumb-img" />
+                                                    </a>
+                                                }
+                                                else if (!string.IsNullOrEmpty(imgVdo.VideoUrl) && imgVdo.VideoUrl != "-")
+                                                {
+                                                    <a class="showImgs" data-productKey="@item.ProductKey">
+                                                        <img src="@SD.ImgUrl/assets/img/video-icon.svg" alt="Video" class="thumb-img" />
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <a>
+                                                        <img src="@SD.ImgUrl/assets/img/no-image.png" alt="No image" class="thumb-img" />
+                                                    </a>
+                                                }
+                                            }
                                         }
-                                        else if (!string.IsNullOrEmpty(imgVdo.VideoUrl) && imgVdo.VideoUrl != "-")
-                                        {
-                                            <a class="showImgs" data-productid="@item.Id">
-                                                <img src="@SD.ImgUrl/assets/img/video-icon.svg" alt="Video" class="thumb-img" />
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            <a>
-                                                <img src="@SD.ImgUrl/assets/img/no-image.png" alt="No image" class="thumb-img" />
-                                            </a>
-                                        }
-                                    }
-                                }
-                            </div>
-                        </td>
-                        <td scope="col">@item.UploadStatus</td>
-                        <td scope="col">
-                            <h5>@item.Title</h5>
-                            <textarea asp-for="@item.Description" disabled name="Description" class="product-input form-control" rows="3" style="width:250px;"></textarea>
-                        </td>
-                        <td scope="col">@item.VenderName</td>
-                        <td scope="col">@item.Sku</td>
-                        <td scope="col">@item.ColorName</td>
-                        <td scope="col">@item.Diameter</td>
-                        <td scope="col">@item.Length</td>
-                        <td scope="col">@item.BandWidth</td>
-                        <td scope="col">@item.GoldWeight</td>
-                        <td scope="col">@item.CTW</td>
-                        <td scope="col">@item.CenterShapeName</td>
-                        <td scope="col">@item.CenterCaratName</td>
-                        <td scope="col">@item.Certificate</td>
-                        <td scope="col">@item.Karat</td>
-                        <td scope="col">@item.Price</td>
-                        <td scope="col">@item.WholesaleCost</td>
-                        <td scope="col">@item.AccentStoneShapeName</td>
-                        <td scope="col">@item.MMSize</td>
-                        <td scope="col">@item.DiaWT</td>
-                        <td scope="col">@item.NoOfStones</td>
-                        <td scope="col">@item.Grades</td>
-                        <td scope="col">@item.UpdatedPersonName</td>
-                        <td scope="col">@item.DisplayDate</td>
+                                    </div>
+                                </td>
 
-                    </tr>
+                                <td scope="col">@product.UploadStatus</td>
+                                <td scope="col">
+                                    <h5>@product.Title</h5>
+                                    <textarea asp-for="@product.Description" disabled name="Description" class="product-input form-control" rows="3" style="width:250px;"></textarea>
+                                </td>
+                                <td scope="col">@product.VenderName</td>
+                                <td scope="col">@product.Sku</td>
+                                <td scope="col">@product.ColorName</td>
+                                <td scope="col">@product.Diameter</td>
+                                <td scope="col">@product.Length</td>
+                                <td scope="col">@product.BandWidth</td>
+                                <td scope="col">@product.GoldWeight</td>
+                                <td scope="col">@product.CTW</td>
+                                <td scope="col">@product.CenterShapeName</td>
+                                <td scope="col">@product.CenterCaratName</td>
+                                <td scope="col">@product.Certificate</td>
+                                <td scope="col">@product.Karat</td>
+                                <td scope="col">@product.Price</td>
+                                <td scope="col">@product.WholesaleCost</td>
+                                <td scope="col">@product.AccentStoneShapeName</td>
+                                <td scope="col">@product.MMSize</td>
+                                <td scope="col">@product.DiaWT</td>
+                                <td scope="col">@product.NoOfStones</td>
+                                <td scope="col">@product.Grades</td>
+                                <td scope="col">@product.UpdatedPersonName</td>
+                                <td scope="col">@product.DisplayDate</td>
+                            </tr>
                         }
                     }
                     else
                     {
                         <tr>
-
-                            <td colspan="25">No data found</td>
-
+                            <td colspan="25"> No data found</td>
                         </tr>
                     }
                 </tbody>
-
             </table>
         </div>
     </div>
 </section>
+
+
+
+
 <div class="modal fade" id="modalImages" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
 
 </div>
 
+
+
+
 @section Scripts {
     <script>
-    $(document).ready(function () {
+                $(document).ready(function () {
 
-        // Handle Select All checkboxes per table
-        $('table.RequestedListTable thead input[type="checkbox"]').on('change', function () {
-            let table = $(this).closest('table');
-            let isChecked = $(this).is(':checked');
-            table.find('tbody input.chkId').prop('checked', isChecked);
-            updateSelectedIds();
-        });
-
-        // Handle individual checkbox change
-        $('table.RequestedListTable tbody').on('change', '.chkId', function () {
-            let table = $(this).closest('table');
-            let allChecked = table.find('tbody .chkId').length === table.find('tbody .chkId:checked').length;
-            table.find('thead input[type="checkbox"]').prop('checked', allChecked);
-            updateSelectedIds();
-        });
-
-        // Dropdown item click for status update
-        $('.dropdown-item').on('click', function (e) {
-            e.preventDefault();
-
-            let status = $(this).data('status');
-            let productIds = $('#txtProductIds').val();
-
-            if (!productIds) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'No items selected',
-                    text: 'Please select at least one product to update the status.',
-                });
-                return;
-            }
-
-            // Show confirmation dialog
-            Swal.fire({
-                title: 'Are you sure?',
-                text: `Do Want to change status for Product? Product Status : "${status}".`,
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, update it!',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    let idsArray = productIds.split(',');
-
-                    $.ajax({
-                        url: '@Url.Action("ChangeStatus", "Jewellery")',
-                        method: 'POST',
-                        data: {
-                            pIds: idsArray,
-                            status: status
-                        },
-                        success: function (response) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Updated',
-                                text: `Products updated to "${status}" successfully.`,
-                                timer: 2000,
-                                showConfirmButton: false
-                            }).then(() => {
-                                location.reload();
-                            });
-                        },
-                        error: function (xhr, status, error) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: 'An error occurred while updating the products.',
-                            });
-                            console.error(error);
-                        }
-                    });
+            // Generalized Checkbox Logic
+            const checkboxConfig = [
+                {
+                    selectAllId: '#chkRingsIds',
+                    tableId: '#ringTable',
+                    updateFn: updateRingSelectedIds
+                },
+                {
+                    selectAllId: '#chkBandIds',
+                    tableId: '#bandTable',
+                    updateFn: updateBandSelectedIds
+                },
+                {
+                    selectAllId: '#chkEarringIds',
+                    tableId: '#EarringTable',
+                    updateFn: updateEarringSelectedIds
+                },
+                {
+                    selectAllId: '#chkPendantIds',
+                    tableId: '#PendantTable',
+                    updateFn: updatePendantSelectedIds
+                },
+                {
+                    selectAllId: '#chkBraceletIds',
+                    tableId: '#BraceletsTable',
+                    updateFn: updateBraceletsSelectedIds
                 }
+            ];
+
+            checkboxConfig.forEach(({ selectAllId, tableId, updateFn }) => {
+                // 'Select All' Checkbox
+                $(selectAllId).on('change', function () {
+                    const isChecked = $(this).is(':checked');
+                    $(`${tableId} .chkId`).not(this).prop('checked', isChecked);
+                    updateFn();
+                });
+
+                // Individual Checkbox Change
+                $(tableId).on('change', '.chkId', function () {
+                    const allChecked = $(`${tableId} .chkId`).length === $(`${tableId} .chkId:checked`).length;
+                    $(selectAllId).prop('checked', allChecked);
+                    updateFn();
+                });
+            });
+
+            // Status Update Button Click
+                    $(document).ready(function () {
+
+
+
+                        $('.dropdown-item').on('click', function (e) {
+                            debugger;
+                            e.preventDefault();
+
+                            const newStatus = $(this).data('status');
+                            const selectedProductIds = $('#txtProductIds').val();
+
+                            if (!selectedProductIds) {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'No items selected',
+                                    text: 'Please select at least one product to update the status.',
+                                });
+                                return;
+                            }
+
+                            Swal.fire({
+                                title: 'Are you sure?',
+                                text: `Do Want to change status for Product? Product Status : "${newStatus}".`,
+                                icon: 'question',
+                                showCancelButton: true,
+                                confirmButtonText: 'Yes, update it!',
+                                cancelButtonText: 'Cancel'
+                            }).then((result) => {
+                                if (!result.isConfirmed) return;
+
+                                const productIdArray = selectedProductIds.split(',').map(id => id.trim()).filter(Boolean);
+
+                                if (productIdArray.length === 0) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Invalid IDs',
+                                        text: 'Could not parse any valid product IDs.',
+                                    });
+                                    return;
+                                }
+
+                                $.ajax({
+                                    url: '@Url.Action("ChangeStatus", "Jewellery")',
+                                    method: 'POST',
+                                    data: {
+                                        pIds: productIdArray,
+                                        status: newStatus
+                                    },
+                                    success: function (response) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Status Updated',
+                                            text: `Products successfully updated to "${newStatus}".`,
+                                        }).then(() => location.reload());
+                                    },
+                                    error: function (xhr, status, error) {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Update Failed',
+                                            text: 'An error occurred while updating the product status.',
+                                        });
+                                        console.error('AJAX Error:', { status, error, xhr });
+                                    }
+                                });
+                            });
+                        });
             });
 
 
+            // ID Getters & Updaters
+            function updateRingSelectedIds() {
+                updateSelectedIds(getSelectedIds('#ringTable'));
+            }
 
+            function updateBandSelectedIds() {
+                updateSelectedIds(getSelectedIds('#bandTable'));
+            }
 
-        });
-        $("#modalImages").on("click", ".popupImgs", function () {
-              debugger;
+            function updateEarringSelectedIds() {
+                updateSelectedIds(getSelectedIds('#EarringTable'));
+            }
+
+            function updatePendantSelectedIds() {
+                updateSelectedIds(getSelectedIds('#PendantTable'));
+            }
+
+            function updateBraceletsSelectedIds() {
+                updateSelectedIds(getSelectedIds('#BraceletsTable'));
+            }
+
+            function getSelectedIds(tableId) {
+                let ids = [];
+                $(`${tableId} .chkId:checked`).each(function () {
+                    ids.push($(this).val());
+                });
+                return ids;
+            }
+
+            function updateSelectedIds(ids) {
+                $('#txtProductIds').val(ids.join(','));
+            }
+
+            $("#modalImages").on("click", ".popupImgs", function () {
                const id = $(this).attr("id");
 
                 $.ajax({
@@ -725,7 +846,7 @@
                     type: "GET",
                     success: function (data) {
                         console.log(data.imageUrl);
-                        if (data.imageUrl && data.imageUrl !== "-") {
+                       if (data.imageUrl && data.imageUrl !== "-") {
                             $("#mainImg").attr("src", '@SD.ImgUrl/' + data.imageUrl).show();
                             $("#mainVideo").hide();
                         }
@@ -746,21 +867,16 @@
                 });
             });
 
-        // Utility: Update hidden input with selected IDs from active tab
-        function updateSelectedIds() {
-            let activeTable = $('.tab-pane.active table');
-            let ids = [];
-            activeTable.find('tbody .chkId:checked').each(function () {
-                ids.push($(this).val());
-            });
-            $('#txtProductIds').val(ids.join(','));
-        }
 
-         $(document).on("click", ".showImgs", function (e) {
-            const productId = $(this).data("productid");
+
+
+        });
+
+        $(document).on("click", ".showImgs", function (e) {
+            const productId = $(this).attr("data-productKey");
 
             $.ajax({
-                url: `@Url.Action("JewelryProductImages", "Jewellery")?productId=${productId}`,
+                url: `@Url.Action("JewelryProductImages", "Jewellery")?productKey=${productId}`,
                 type: "GET",
                 success: function (data) {
                     // Assuming you have a modal or container to show the images
@@ -772,7 +888,8 @@
                 }
             });
         });
-    });
-    </script>
 
+
+
+    </script>
 }

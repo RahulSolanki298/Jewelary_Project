@@ -604,9 +604,33 @@ namespace ControlPanel.Controllers
         [HttpGet]
         public async Task<IActionResult> RequestedProductList()
         {
-            var productList = await _productRepository.GetProductPendingList();
-            return View(productList);
+            try
+            {
+                var productList = await _productRepository.GetProductPendingList();
+                return View("~/Views/Jewellery/RequestedNewProductList.cshtml", productList);
+            }
+            catch (Exception ex)
+            {
+               // _logger.LogError(ex, "Error loading product list.");
+                return StatusCode(500, "Internal Server Error");
+            }
         }
+
+        //[HttpGet]
+        //public async Task<IActionResult> RequestedNewProductList()
+        //{
+        //    try
+        //    {
+        //        var productList = await _productRepository.GetProductNewPendingList();
+        //        return View(productList);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // _logger.LogError(ex, "Error loading product list.");
+        //        return StatusCode(500, "Internal Server Error");
+        //    }
+        //}
+
 
         [HttpGet]
         public async Task<IActionResult> HoldProductList()
@@ -626,12 +650,13 @@ namespace ControlPanel.Controllers
         [HttpPost]
         public async Task<IActionResult> ChangeStatus(string[] pIds, string status)
         {
+            var userId = HttpContext.Request.Cookies["UserId"];
             if (pIds == null || pIds.Length == 0 || string.IsNullOrWhiteSpace(status))
             {
                 return Json("Invalid input: Product IDs and status are required.");
             }
 
-            bool isUpdated = await _productRepository.UpdateProductStatus(pIds, status);
+            bool isUpdated = await _productRepository.UpdateProductStatus(pIds, status, userId);
 
             string message = isUpdated
                 ? "Product status has been successfully updated."
@@ -655,9 +680,9 @@ namespace ControlPanel.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> JewelryProductImages(string productId)
+        public async Task<IActionResult> JewelryProductImages(string productKey)
         {
-            var jewelryImgList = await _productRepository.GetProductImagesVideos(productId);
+            var jewelryImgList = await _productRepository.GetProductImagesVideos(productKey);
             return PartialView("~/Views/Jewellery/_ImagesDisplayModal.cshtml", jewelryImgList);
         }
 
@@ -947,6 +972,20 @@ namespace ControlPanel.Controllers
                                         prdDesignDT = await _productRepository.GetJewelleryDTByDesignNo(styleName.DesignNo, metalId,shape.Id);
                                         if (prdDesignDT.Count == 0) continue;
 
+                                        prdDesignDT = prdDesignDT
+                                                                         .GroupBy(p => new
+                                                                         {
+                                                                             p.ProductKey,
+                                                                             p.CenterShapeId,
+                                                                             p.ColorId,
+                                                                             p.Sku
+                                                                         })
+                                                                         .Select(g => g.First())
+                                                                         .ToList();
+
+
+
+
                                         folderPath = Path.Combine(extractedFolder, styleName.DesignNo);
                                         Directory.CreateDirectory(folderPath);
 
@@ -959,12 +998,9 @@ namespace ControlPanel.Controllers
                                         {
 
                                             //var findImgVdo = _productRepository.GetProductImagesVideoById(pro.Id.ToString);
-                                            
-                                            
-                                            
                                             prdDT = new ProductImages
                                             {
-                                                ProductId = pro.Id.ToString(),
+                                                ProductId = pro.ProductKey,
                                                 MetalId = metalId,
                                                 Sku = styleName.DesignNo,
                                                 ShapeId = shape.Id,

@@ -58,16 +58,24 @@ namespace Business.Repository
 
         public async Task<List<ProductStyleDTO>> GetProductStyles()
         {
-            var result = new List<ProductStyleDTO>();
-            result = await (from pst in _context.ProductStyles
-                            select new ProductStyleDTO
-                            {
-                                Id=pst.Id,
-                                VenderId=pst.VenderId,
-                                StyleName=pst.StyleName,
-                                IsActivated=pst.IsActivated
-                            }).ToListAsync();
-            return result;
+            try
+            {
+               var result = await (from pst in _context.ProductStyles
+                                select new ProductStyleDTO
+                                {
+                                    Id = pst.Id,
+                                    VenderId = pst.VenderId,
+                                    StyleName = pst.StyleName,
+                                    IsActivated = pst.IsActivated,
+                                }).ToListAsync();
+                return result;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            
         }
 
         public async Task<List<ProductCollectionDTO>> GetProductCollections()

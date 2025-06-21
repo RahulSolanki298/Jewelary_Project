@@ -52,9 +52,9 @@ namespace B2C_ECommerce.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> ProductDetails(string id)
+        public async Task<IActionResult> ProductDetails(string productKey)
         {
-            var result = await _productRepository.GetProductByProductId(id);
+            var result = await _productRepository.GetProductByProductId(productKey);
             return View(result);
         }
 

@@ -1,12 +1,10 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
-namespace DataAccess.Entities
+namespace Models
 {
-    public class ProductMaster
+    public class ProductMasterDTO
     {
-        public int Id { get; set; } //
-
-        public int CategoryId { get; set; }
+        public int Id { get; set; }
 
         public string ColorName { get; set; }
 
@@ -14,18 +12,16 @@ namespace DataAccess.Entities
 
         public string ProductKey { get; set; } //  PLDR-381-SE-Y
 
+        public int CategoryId { get; set; }
+        
+        public string CategoryName { get; set; }
+
         public bool IsActive { get; set; }
 
         public string ProductStatus { get; set; }  // Hold -- Deactived -- Active
 
         public bool IsSale { get; set; } = false;
 
-        public string CreatedBy { get; set; }
-
-        public DateTime? CreatedDate { get; set; }
-
-        public string UpdatedBy { get; set; }
-
-        public DateTime? UpdatedDate { get; set; }
+        public List<ProductDTO> ProductItems { get; set; }
     }
 }

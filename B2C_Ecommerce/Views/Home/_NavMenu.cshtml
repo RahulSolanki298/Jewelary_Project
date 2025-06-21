@@ -27,9 +27,14 @@
                 <ul>
                     @if (Model != null && Model.ProductShapeList.Count() > 0)
                     {
-                        @for (int i = 0; i < 5; i++)
+                        int cnt = 0;
+                        foreach (var item in @Model.ProductShapeList)
                         {
-                            <li><a href="#"><img src="@SD.ImgUrl/@Model.ProductShapeList[i].IconPath" style="width:30px;">@Model.ProductShapeList[i].Name</a></li>
+                            if (cnt < 5)
+                            {
+                                <li><a href="#"><img src="@SD.ImgUrl/@item.IconPath" style="width:30px;">@item.Name</a></li>
+                                cnt++;
+                            }
                         }
                     }
 
@@ -38,9 +43,17 @@
         <li class="mega-title">
             <span></span>
             <ul>
-                @for (int i = 5; i < 10; i++)
+                @if (Model != null && Model.ProductShapeList.Count() > 0)
                 {
-                    <li><a href="#"><img src="@SD.ImgUrl/@Model.ProductShapeList[i].IconPath" style="width:30px;"> @Model.ProductShapeList[i].Name</a></li>
+                    int cnt = 0;
+                    foreach (var item in @Model.ProductShapeList)
+                    {
+                        if (cnt < 5)
+                        {
+                            <li><a href="#"><img src="@SD.ImgUrl/@item.IconPath" style="width:30px;">@item.Name</a></li>
+                            cnt++;
+                        }
+                    }
                 }
             </ul>
         </li>

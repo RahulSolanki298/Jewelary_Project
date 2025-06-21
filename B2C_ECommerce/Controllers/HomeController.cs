@@ -73,12 +73,13 @@ namespace B2C_ECommerce.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetPrograms()
+        
         {
             var homeContent = new NavMenuDTO()
             {
                 SubcategoryList = await _productStyles.GetProductStyles(),
                 ProductCollectionList = await _productStyles.GetProductCollections(),
-                ProductShapeList = _productPropertyRepository.GetProductShapeList().Result.ToList(),
+                ProductShapeList = await _productPropertyRepository.GetProductShapeList(),
                // DiamondShapeList = _diamondRepository.GetShapeListAsync().Result.ToList(),
             };
             return PartialView("_NavMenu", homeContent);

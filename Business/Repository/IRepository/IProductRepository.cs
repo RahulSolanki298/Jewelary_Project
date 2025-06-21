@@ -12,7 +12,7 @@ namespace Business.Repository.IRepository
         Task<List<ProductProperty>> GetShapeList();
         Task<List<ProductProperty>> GetClarityList();
         Task<IEnumerable<ProductDTO>> GetProductCollectionList();
-        Task<IEnumerable<ProductDTO>> GetProductStyleList();
+        Task<IEnumerable<ProductMasterDTO>> GetProductStyleList();
         Task<bool> SaveProductList(List<ProductDTO> products);
         Task<bool> SaveProductCollectionList(List<ProductDTO> products);
         Task<List<ProductProperty>> GetGoldWeightList();
@@ -36,15 +36,17 @@ namespace Business.Repository.IRepository
         Task<ProductWeight> GetProductWeightData(ProductWeightDTO weightDTO);
         Task<int> AddProductFileUploadedHistory(ProductFileUploadHistory productFileUpload);
         Task<IEnumerable<ProductDTO>> GetProductUploadRequestList();
-        Task<IEnumerable<ProductDTO>> GetProductPendingList();
-        Task<IEnumerable<ProductDTO>> GetProductHoldList();
-        Task<IEnumerable<ProductDTO>> GetProductDeActivatedList();
-        Task<bool> UpdateProductStatus(string[] productIds, string status);
-        Task<List<ProductImageAndVideoDTO>> GetProductImagesVideos(string productId);
+        Task<IEnumerable<ProductMasterDTO>> GetProductHoldList();
+        Task<bool> UpdateProductStatus(string[] productIds, string status,string userId);
         Task<ProductImageAndVideoDTO> GetProductImagesVideoById(int id);
         Task<bool> SaveNewProductList(List<ProductDTO> products, string categoryName, string userId, int fileHistoryId);
         Task<bool>  SaveEarringsList(List<ProductDTO> products, string categoryName, string userId, int fileHistoryId);
         Task<List<Product>> GetJewelleryDTByDesignNo(string designNo, int metalId, int shapeId);
         Task<ProductProperty> GetProductShapeId(string ShapeCode, int shapeId);
+        Task<IEnumerable<ProductMasterDTO>> GetProductPendingList();
+        Task<List<ProductImageAndVideoDTO>> GetProductImagesVideos(string productKey);
+
+        Task<IEnumerable<ProductMasterDTO>> GetProductDeActivatedList();
+
     }
 }

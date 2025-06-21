@@ -17,19 +17,19 @@
             <div class="col-12">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link txt-dark active" id="rings-tab" data-bs-toggle="tab" href="#ringList" role="tab" aria-controls="ringList" aria-selected="true">Rings <span class="badge badge-light bg-dark ml-2 ringcount">@Model.Where(x => x.CategoryName == @SD.Rings).GroupBy(x => x.VenderStyle).Count()</span></a>
+                        <a class="nav-link txt-dark active" id="rings-tab" data-bs-toggle="tab" href="#ringList" role="tab" aria-controls="ringList" aria-selected="true">Rings <span class="badge badge-light bg-dark ml-2 ringcount">@Model.Where(x => x.CategoryName == @SD.Rings).GroupBy(x => x.GroupId).Count()</span></a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link txt-dark" id="bands-tab" data-bs-toggle="tab" href="#bandList" role="tab" aria-controls="bandList" aria-selected="false">Bands <span class="badge badge-light bg-dark ml-2 bandscount">@Model.Where(x => x.CategoryName == @SD.Bands).GroupBy(x => x.VenderStyle).Count()</span></a>
+                        <a class="nav-link txt-dark" id="bands-tab" data-bs-toggle="tab" href="#bandList" role="tab" aria-controls="bandList" aria-selected="false">Bands <span class="badge badge-light bg-dark ml-2 bandscount">@Model.Where(x => x.CategoryName == @SD.Bands).GroupBy(x => x.GroupId).Count()</span></a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link txt-dark" id="earrings-tab" data-bs-toggle="tab" href="#earringList" role="tab" aria-controls="earringList" aria-selected="false">Earrings <span class="badge badge-light bg-dark ml-2 earringscount">@Model.Where(x => x.CategoryName == @SD.Earrings).GroupBy(x => x.VenderStyle).Count()</span></a>
+                        <a class="nav-link txt-dark" id="earrings-tab" data-bs-toggle="tab" href="#earringList" role="tab" aria-controls="earringList" aria-selected="false">Earrings <span class="badge badge-light bg-dark ml-2 earringscount">@Model.Where(x => x.CategoryName == @SD.Earrings).GroupBy(x => x.GroupId).Count()</span></a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link txt-dark" id="pendant-tab" data-bs-toggle="tab" tabindex="-1" href="#pendantList" role="tab" aria-controls="pandantList" aria-disabled="false">Pendant List <span class="badge badge-light bg-dark ml-2 pendantcount">@Model.Where(x => x.CategoryName == @SD.Pendants).GroupBy(x => x.VenderStyle).Count()</span></a>
+                        <a class="nav-link txt-dark" id="pendant-tab" data-bs-toggle="tab" tabindex="-1" href="#pendantList" role="tab" aria-controls="pandantList" aria-disabled="false">Pendant List <span class="badge badge-light bg-dark ml-2 pendantcount">@Model.Where(x => x.CategoryName == @SD.Pendants).GroupBy(x => x.GroupId).Count()</span></a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link txt-dark" id="bracelets-tab" data-bs-toggle="tab" tabindex="-1" href="#braceletsList" role="tab" aria-controls="braceletsList" aria-disabled="false">Bracelet List <span class="badge badge-light bg-dark ml-2 braceletcount">@Model.Where(x => x.CategoryName == @SD.Bracelets).GroupBy(x => x.VenderStyle).Count()</span></a>
+                        <a class="nav-link txt-dark" id="bracelets-tab" data-bs-toggle="tab" tabindex="-1" href="#braceletsList" role="tab" aria-controls="braceletsList" aria-disabled="false">Bracelet List <span class="badge badge-light bg-dark ml-2 braceletcount">@Model.Where(x => x.CategoryName == @SD.Bracelets).GroupBy(x => x.GroupId).Count()</span></a>
                     </li>
                     <li class="nav-item" role="presentation">
                         <a class="nav-link  txt-dark" id="images-tab" data-bs-toggle="tab" tabindex="-1" href="#images" role="tab" aria-controls="images" aria-disabled="false">Images & Video</a>

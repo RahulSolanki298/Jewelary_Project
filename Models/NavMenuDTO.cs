@@ -6,11 +6,12 @@ namespace Models
 {
     public class NavMenuDTO
     {
-        public List<CategoryDTO> CategoryList { get; set; }
-        public List<ProductStyleDTO> SubcategoryList { get; set; }
-        public List<ProductCollectionDTO> ProductCollectionList { get; set; }
-        public List<ProductPropertyDTO> ProductShapeList { get; set; }
-        public List<DiamondPropertyDTO> DiamondShapeList { get; set; }
+        public IEnumerable<CategoryDTO> CategoryList { get; set; }
+        public IEnumerable<ProductStyleDTO> SubcategoryList { get; set; }
+        public IEnumerable<ProductCollectionDTO> ProductCollectionList { get; set; }
+        public IEnumerable<ProductPropertyDTO> ProductShapeList { get; set; }
+        public IEnumerable<DiamondPropertyDTO> DiamondShapeList { get; set; }
     }
+
 
 }
