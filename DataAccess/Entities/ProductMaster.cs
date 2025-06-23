@@ -8,11 +8,15 @@ namespace DataAccess.Entities
 
         public int CategoryId { get; set; }
 
+        public int ColorId { get; set; }
+
         public string ColorName { get; set; }
+
+        public string Sku { get; set; }
 
         public string GroupId { get; set; }  //  PLDR-381-SE
 
-        public string ProductKey { get; set; } //  PLDR-381-SE-Y
+        public string ProductKey { get; set; } 
 
         public bool IsActive { get; set; }
 

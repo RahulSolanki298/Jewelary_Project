@@ -19,14 +19,11 @@ namespace B2C_ECommerce.Services
 {
     public class ProductService : IProductService
     {
-        private readonly HttpClient _httpClient;
         private ApplicationDBContext _context;
         private IProductRepository _productRepository;
-        public ProductService(IHttpClientFactory httpClientFactory,
-            ApplicationDBContext context,
+        public ProductService(ApplicationDBContext context,
             IProductRepository productRepository)
         {
-            _httpClient = httpClientFactory.CreateClient("API");
             _context = context;
             _productRepository = productRepository;
         }
@@ -867,18 +864,18 @@ namespace B2C_ECommerce.Services
 
                 // Wrap in one ProductMasterDTO
                 return new List<ProductMasterDTO>
-        {
-            new ProductMasterDTO
-            {
-                Id = 0,
-                ProductKey = "",
-                ProductStatus = null,
-                GroupId = null,
-                IsActive = true,
-                IsSale = false,
-                ProductItems = products
-            }
-        };
+                        {
+                            new ProductMasterDTO
+                            {
+                                Id = 0,
+                                ProductKey = "",
+                                ProductStatus = null,
+                                GroupId = null,
+                                IsActive = true,
+                                IsSale = false,
+                                ProductItems = products
+                            }
+                        };
             }
         }
 

@@ -80,7 +80,8 @@ namespace B2C_ECommerce.Controllers
                 SubcategoryList = await _productStyles.GetProductStyles(),
                 ProductCollectionList = await _productStyles.GetProductCollections(),
                 ProductShapeList = await _productPropertyRepository.GetProductShapeList(),
-               // DiamondShapeList = _diamondRepository.GetShapeListAsync().Result.ToList(),
+                DiamondShapeList = await _diamondRepository.GetShapeListAsync(),
+                CategoryList=await _productPropertyRepository.GetProductCategoryList(),
             };
             return PartialView("_NavMenu", homeContent);
         }

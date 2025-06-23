@@ -3,7 +3,7 @@
 
 <ul>
     <li class="active position-static">
-        <a href="@Url.Action("Index","ProductPrograms",new {type="Solitaire"})">Engagement</a>
+        <a href="@Url.Action("Index","Product",new {type="Solitaire"})">Engagement</a>
         <ul class="megamenu dropdown">
             <li class="mega-title">
                 <span>Shop by Style</span>
@@ -50,7 +50,7 @@
                     {
                         if (cnt < 5)
                         {
-                            <li><a href="#"><img src="@SD.ImgUrl/@item.IconPath" style="width:30px;">@item.Name</a></li>
+                                <li><a href="@Url.Action("GetProductListByFilter","Products")"><img src="@SD.ImgUrl/@item.IconPath" style="width:30px;">@item.Name</a></li>
                             cnt++;
                         }
                     }
@@ -74,39 +74,46 @@
             <li class="mega-title">
                 <span>Shop by Style</span>
                 <ul>
-                    @*@if (Model.)
+                   @if (Model != null)
                     {
-
-                    }*@
-                    <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="WeddingAndAnniversary"})">Wedding and Anniversary</a></li>
-                    <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="Eternity"})">Eternity</a></li>
-                    <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="3/4 Eternity"})">3/4 Eternity</a></li>
-                    <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="Enhancers"})">Enhancers</a></li>
-                    <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="Curve Bands"})">Curve Bands</a></li>
-                    <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="Open Bands"})">Open Bands</a></li>
-                    <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="DesignYourStack"})">Design Your Stack</a></li>
-                    <li><a href="@Url.Action("Index","ProductPrograms",new { programName="Wedding",type="CustomerFavorites"})">Customer Favorites</a></li>
+                        foreach (var item in Model.SubcategoryList.Where(x=>x.IsActivated==true))
+                        {
+                            <li><a href="@Url.Action("Index","Product",new { programName="Wedding",type="WeddingAndAnniversary"})">@item.StyleName</a></li>
+                        }
+                    }
                 </ul>
             </li>
             <li class="mega-title">
                 <span>Shop by Shape</span>
                 <ul>
-                    <li><a href="#"><img src="~/assets/img/diamond-svg/Princess.svg" style="width:30px;"> Princess</a></li>
-                    <li><a href="#"><img src="~/assets/img/diamond-svg/Round.svg" style="width:30px;"> Round</a></li>
-                    <li><a href="#"><img src="~/assets/img/diamond-svg/Radiant.svg" style="width:30px;"> Radiant-Cut</a></li>
-                    <li><a href="#"><img src="~/assets/img/diamond-svg/Emerald.svg" style="width:30px;"> Emerald</a></li>
-                    <li><a href="#"><img src="~/assets/img/diamond-svg/Oval.svg" style="width:30px;"> Oval</a></li>
+                    @for (int i = 0; i < 5; i++)
+                    {
+                        foreach (var prodt in Model.ProductShapeList)
+                        {
+                            <li>
+                                <a href="#">
+                                    <img src="@SD.ImgUrl/@prodt.IconPath" style="width:30px;">
+                                </a>
+                            </li>
+                        }
+                    }
                 </ul>
             </li>
             <li class="mega-title">
                 <span></span>
                 <ul>
-                    <li><a href="#"><img src="~/assets/img/diamond-svg/Cushion.svg" style="width:30px;"> CushionLong</a></li>
-                    <li><a href="#"><img src="~/assets/img/diamond-svg/Heart.svg" style="width:30px;"> Heart</a></li>
-                    <li><a href="#"><img src="~/assets/img/diamond-svg/Marquise.svg" style="width:30px;"> Marquise</a></li>
-                    <li><a href="#"><img src="~/assets/img/diamond-svg/Square Emerald.svg" style="width:30px;"> Sq.Emerald</a></li>
-                    <li><a href="#"><img src="~/assets/img/diamond-svg/Asscher.svg" style="width:30px;"> Asscher</a></li>
-                </ul>
+                    @for (int i = 6; i < 10; i++)
+                    {
+                        foreach (var prodt in Model.ProductShapeList)
+                        {
+                            <li>
+                                <a href="#">
+                                    <img src="@SD.ImgUrl/@prodt.IconPath" style="width:30px;">
+                                </a>
+                            </li>
+                        }
+                    }
+                  </ul>
             </li>
             <li class="mega-title">
                 <span>Shop by Metal</span>

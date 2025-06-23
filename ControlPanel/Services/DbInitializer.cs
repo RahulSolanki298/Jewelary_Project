@@ -52,9 +52,11 @@ namespace ControlPanel.Services
 
             await SeedDiamondPropertiesAsync();
 
-            //await SeedProductStyles();
+            await SeedHeaders();
 
-            //await SeedProductCollections();
+            await SeedProductStyles();
+
+            await SeedProductCollections();
         }
 
         private async Task SeedRolesAsync()
@@ -425,7 +427,7 @@ namespace ControlPanel.Services
                 var bangle= await _db.Category.Where(x=>x.Name==SD.Bangle).FirstOrDefaultAsync();
 
 
-                var categories = new List<ProductStyles>
+                var stylesDT = new List<ProductStyles>
                 {
                     new ProductStyles { StyleName = "Solitaire", CategoryId = ring.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
                     new ProductStyles { StyleName = "Side Stone", CategoryId = ring.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
@@ -446,7 +448,7 @@ namespace ControlPanel.Services
                     new ProductStyles { StyleName = "Design Your Stack", CategoryId = bands.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
                     new ProductStyles { StyleName = "Customer Favorites", CategoryId = bands.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
                 };
-                await _db.ProductStyles.AddRangeAsync(categories);
+                await _db.ProductStyles.AddRangeAsync(stylesDT);
                 await _db.SaveChangesAsync();
             }
         }
@@ -468,6 +470,22 @@ namespace ControlPanel.Services
                     new ProductCollections { CollectionName = "Aether Diamonds", IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
                 };
                 await _db.ProductCollections.AddRangeAsync(collection);
+                await _db.SaveChangesAsync();
+            }
+        }
+
+        private async Task SeedHeaders()
+        {
+            if (!await _db.HomePageSetting.AnyAsync())
+            {
+                var collection = new HomePageSetting
+                {
+                    CompanyLogo = "/assets/img/Jewelfacets_Logos_Blue.png", 
+                    Device=SD.WebDevice,
+                    isSetVideo=true,
+                    SetVideoPath = "/assets/video/jewel-facet-banner.mp4"
+                };
+                await _db.HomePageSetting.AddRangeAsync(collection);
                 await _db.SaveChangesAsync();
             }
         }

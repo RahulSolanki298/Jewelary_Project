@@ -37,9 +37,9 @@ namespace B2C_ECommerce.Controllers
             //productFilters.CollectionList = (await _productRepository.GetSubcategoryList());
             var shapes = (await _productRepository.GetShapeList());
             productFilters.Shapes = shapes.ToList();
-            var priceDT = await _productRepository.GetProductPriceRangeData();
-            productFilters.FromPrice = priceDT.MinPrice;
-            productFilters.ToPrice = priceDT.MaxPrice;
+            //var priceDT = await _productRepository.GetProductPriceRangeData();
+            //productFilters.FromPrice = priceDT.MinPrice;
+            //productFilters.ToPrice = priceDT.MaxPrice;
 
             return PartialView("_ProductFilterBar", productFilters);
         }

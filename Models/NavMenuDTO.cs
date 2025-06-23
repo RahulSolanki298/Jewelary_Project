@@ -10,7 +10,7 @@ namespace Models
         public IEnumerable<ProductStyleDTO> SubcategoryList { get; set; }
         public IEnumerable<ProductCollectionDTO> ProductCollectionList { get; set; }
         public IEnumerable<ProductPropertyDTO> ProductShapeList { get; set; }
-        public IEnumerable<DiamondPropertyDTO> DiamondShapeList { get; set; }
+        public IEnumerable<DiamondShapeData> DiamondShapeList { get; set; }
     }
 
 
