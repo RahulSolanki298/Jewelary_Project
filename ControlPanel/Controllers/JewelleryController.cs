@@ -906,6 +906,7 @@ namespace ControlPanel.Controllers
         {
             try
             {
+                List<string> styleErr = new List<string>();
                 string fileName = string.Empty; 
                 int metalId = 0;
                 string extractedFolder = string.Empty;
@@ -959,7 +960,10 @@ namespace ControlPanel.Controllers
                                         entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
                                     {
                                         styleName = _productRepository.ExtractStyleName(entry.Name);
-                                        if (styleName == null) continue;
+                                        if (styleName == null) 
+                                        {
+                                            styleErr.Add($"Design Name :{entry.Name} is not found.");
+                                        };
 
                                         var dt = shapeList.Where(x => x.SymbolName == styleName.ShapeCode).FirstOrDefault();
                                         
@@ -973,15 +977,15 @@ namespace ControlPanel.Controllers
                                         if (prdDesignDT.Count == 0) continue;
 
                                         prdDesignDT = prdDesignDT
-                                                                         .GroupBy(p => new
-                                                                         {
-                                                                             p.ProductKey,
-                                                                             p.CenterShapeId,
-                                                                             p.ColorId,
-                                                                             p.Sku
-                                                                         })
-                                                                         .Select(g => g.First())
-                                                                         .ToList();
+                                                                 .GroupBy(p => new
+                                                                 {
+                                                                     p.ProductKey,
+                                                                     p.CenterShapeId,
+                                                                     p.ColorId,
+                                                                     p.Sku
+                                                                 })
+                                                                 .Select(g => g.First())
+                                                                 .ToList();
 
 
 

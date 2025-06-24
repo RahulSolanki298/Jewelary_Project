@@ -29,9 +29,15 @@
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    <label class="control-label">Style Image</label>
+                                    <label class="control-label">Style Image (Icon Images)</label>
                                     <input asp-for="ImageFile" class="form-control" type="file" />
                                     <span asp-validation-for="ImageFile" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="control-label">Cover Page Image</label>
+                                    <input asp-for="CoverPageFile" class="form-control" type="file" />
+                                    <span asp-validation-for="CoverPageFile" class="text-danger"></span>
                                 </div>
 
                                 <div class="form-check mb-3">

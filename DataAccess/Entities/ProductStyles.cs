@@ -14,6 +14,8 @@ namespace DataAccess.Entities
 
         public string StyleImage { get; set; }
 
+        public string CoverPageImage { get; set; }
+
         public DateTime CreatedDate { get; set; } = DateTime.Now;
 
         public DateTime? UpdatedDate { get; set; }

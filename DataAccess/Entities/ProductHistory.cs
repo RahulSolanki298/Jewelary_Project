@@ -76,7 +76,6 @@ namespace DataAccess.Entities
 
         public string ProductKey { get; set; }
 
-        [ForeignKey("FileUploadHistoryId")]
-        public virtual ProductFileUploadHistory ProductFileUploadHistory { get; set; }
+       
     }
 }

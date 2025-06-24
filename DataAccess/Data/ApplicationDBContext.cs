@@ -95,6 +95,7 @@ namespace DataAccess.Data
         public DbSet<DiamondData> DiamondData { get; set; }
 
         public DbSet<ProductMaster> ProductMaster { get; set; }
+        public DbSet<ProductMasterHistory> ProductMasterHistory { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

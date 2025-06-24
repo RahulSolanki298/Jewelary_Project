@@ -83,6 +83,7 @@ namespace ControlPanel.Controllers
                     dt.StyleName = data.StyleName;
                     dt.VenderId = data.VenderId;
                     dt.StyleImage = data.StyleImage;
+                    dt.CoverPageImage = data.CoverPageImage;
                     dt.IsActivated = data.IsActivated;
                     dt.UpdatedDate = DateTime.Now;
                     return View(data);
@@ -112,6 +113,23 @@ namespace ControlPanel.Controllers
 
                     // Save just the file name or relative path for DB
                     productStyles.StyleImage = Path.Combine("images", "styles", uniqueFileName);
+                }
+
+                if (productStyles.CoverPageFile != null && productStyles.CoverPageFile.Length > 0)
+                {
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "styles");
+                    Directory.CreateDirectory(uploadsFolder); // Ensure folder exists
+
+                    var uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(productStyles.CoverPageFile.FileName);
+                    var cvfilePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    using (var stream = new FileStream(cvfilePath, FileMode.Create))
+                    {
+                        await productStyles.CoverPageFile.CopyToAsync(stream);
+                    }
+
+                    // Save just the file name or relative path for DB
+                    productStyles.CoverPageImage = Path.Combine("images", "styles", uniqueFileName);
                 }
 
                 var result = await _productStyles.SaveProductStyle(productStyles);

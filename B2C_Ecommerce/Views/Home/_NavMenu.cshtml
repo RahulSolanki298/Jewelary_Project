@@ -1,6 +1,12 @@
 ﻿@model Models.NavMenuDTO
 @using Common;
 
+@{
+    var firstHalf = Model.ProductShapeList.Take(5).ToList();
+    var secondHalf = Model.ProductShapeList.Skip(5).Take(5).ToList();
+}
+
+
 <ul>
     <li class="active position-static">
         <a href="@Url.Action("Index","Product",new {type="Solitaire"})">Engagement</a>
@@ -25,48 +31,34 @@
             <li class="mega-title">
                 <span>Shop by Shape</span>
                 <ul>
-                    @if (Model != null && Model.ProductShapeList.Count() > 0)
+                    @foreach (var item in firstHalf)
                     {
-                        int cnt = 0;
-                        foreach (var item in @Model.ProductShapeList)
-                        {
-                            if (cnt < 5)
-                            {
-                                <li><a href="#"><img src="@SD.ImgUrl/@item.IconPath" style="width:30px;">@item.Name</a></li>
-                                cnt++;
-                            }
-                        }
+                        <li><a href="#"><img src="@SD.ImgUrl/@item.IconPath" style="width:30px;">@item.Name</a></li>
                     }
-
                 </ul>
             </li>
-        <li class="mega-title">
-            <span></span>
-            <ul>
-                @if (Model != null && Model.ProductShapeList.Count() > 0)
-                {
-                    int cnt = 0;
-                    foreach (var item in @Model.ProductShapeList)
+            <li class="mega-title">
+                <span></span>
+                <ul>
+                    @if (Model != null && Model.ProductShapeList.Count() > 0)
                     {
-                        if (cnt < 5)
+                        @foreach (var item in secondHalf)
                         {
-                                <li><a href="@Url.Action("GetProductListByFilter","Products")"><img src="@SD.ImgUrl/@item.IconPath" style="width:30px;">@item.Name</a></li>
-                            cnt++;
+                            <li><a href="#"><img src="@SD.ImgUrl/@item.IconPath" style="width:30px;">@item.Name</a></li>
                         }
                     }
-                }
-            </ul>
-        </li>
-        <li class="mega-title">
-            <span>Shop by Metal</span>
-            <ul>
-                <li><a href="#"><img src="~/assets/img/icon/yellow-gold-new.svg" style="width:30px;" /> Yellow Gold</a></li>
-                <li><a href="#"><img src="~/assets/img/icon/white-gold-new.svg" style="width:30px;" /> White Gold</a></li>
-                <li><a href="#"><img src="~/assets/img/icon/rose-gold-new.svg" style="width:30px;" /> Rose Gold</a></li>
-                <li><a href="#"><img src="~/assets/img/icon/platinum-new.svg" style="width:30px;" /> Platinum</a></li>
-            </ul>
-        </li>
-    </ul>
+                </ul>
+            </li>
+            <li class="mega-title">
+                <span>Shop by Metal</span>
+                <ul>
+                    <li><a href="#"><img src="~/assets/img/icon/yellow-gold-new.svg" style="width:30px;" /> Yellow Gold</a></li>
+                    <li><a href="#"><img src="~/assets/img/icon/white-gold-new.svg" style="width:30px;" /> White Gold</a></li>
+                    <li><a href="#"><img src="~/assets/img/icon/rose-gold-new.svg" style="width:30px;" /> Rose Gold</a></li>
+                    <li><a href="#"><img src="~/assets/img/icon/platinum-new.svg" style="width:30px;" /> Platinum</a></li>
+                </ul>
+            </li>
+        </ul>
     </li>
     <li class="position-static">
         <a href="@Url.Action("Index","ProductPrograms",new {type="Bands"})">Wedding</a>
@@ -74,9 +66,9 @@
             <li class="mega-title">
                 <span>Shop by Style</span>
                 <ul>
-                   @if (Model != null)
+                    @if (Model != null)
                     {
-                        foreach (var item in Model.SubcategoryList.Where(x=>x.IsActivated==true))
+                        foreach (var item in Model.SubcategoryList.Where(x => x.IsActivated == true))
                         {
                             <li><a href="@Url.Action("Index","Product",new { programName="Wedding",type="WeddingAndAnniversary"})">@item.StyleName</a></li>
                         }
@@ -113,7 +105,7 @@
                             </li>
                         }
                     }
-                  </ul>
+                </ul>
             </li>
             <li class="mega-title">
                 <span>Shop by Metal</span>
@@ -242,4 +234,4 @@
         <a href="#">Collection </a>
     </li>
     <li><a href="@Url.Action("Index","Education")">Education</a></li>
-    </ul>
+</ul>

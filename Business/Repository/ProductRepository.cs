@@ -1062,6 +1062,8 @@ namespace Business.Repository
                     if (productMst == null)
                     {
                         productMst = new ProductMaster();
+                        productMst.FileHistoryId= fileHistoryId;
+                        productMst.ColorId = colorId;
                         productMst.ColorName = product.ColorName;
                         productMst.GroupId = PreGroupId;
                         productMst.ProductStatus = SD.Pending;
@@ -1072,7 +1074,26 @@ namespace Business.Repository
                         productMst.UpdatedDate = DateTime.Now;
                         productMst.CategoryId = categoryId;
                         productMst.IsActive = false;
+                        productMst.Sku = newProduct.Sku;
                         await _context.ProductMaster.AddAsync(productMst);
+                        await _context.SaveChangesAsync();
+
+
+                       var productHMst = new ProductMasterHistory();
+                        productHMst.ProductMasterId = productMst.Id;
+                        productMst.ColorId = colorId;
+                        productHMst.ColorName = product.ColorName;
+                        productHMst.GroupId = PreGroupId;
+                        productHMst.ProductStatus = SD.Pending;
+                        productHMst.ProductKey = productMst.ProductKey;
+                        productHMst.CreatedBy = userId;
+                        productHMst.CreatedDate = DateTime.Now;
+                        productHMst.UpdatedBy = userId;
+                        productHMst.UpdatedDate = DateTime.Now;
+                        productHMst.CategoryId = categoryId;
+                        productHMst.IsActive = false;
+                        productHMst.Sku = newProduct.Sku;
+                        await _context.ProductMasterHistory.AddAsync(productHMst);
                         await _context.SaveChangesAsync();
                     }
 
@@ -1492,6 +1513,18 @@ namespace Business.Repository
             {
                 DesignNo = $"{parts[0]}-{parts[1]}"
             };
+
+            var IsVerify = _context.Product.Where(x => x.Sku == dtImgVideo.DesignNo).FirstOrDefault();
+            if (IsVerify==null)
+            {
+                dtImgVideo.DesignNo = $"{dtImgVideo.DesignNo}-{parts[2]}";
+                var dtDesign = _context.Product.Where(x => x.Sku == dtImgVideo.DesignNo).FirstOrDefault();
+
+                if (dtDesign==null)
+                {
+                    return new FileSplitDTO();
+                }
+            }
 
             string shapePart = parts[2];
             dtImgVideo.ShapeCode = shapePart.ToString();

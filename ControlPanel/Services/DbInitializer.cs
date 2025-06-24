@@ -399,8 +399,8 @@ namespace ControlPanel.Services
                         new ProductProperty{ Name="GCAL",Description="Gem Certification & Assurance Lab",ParentId=lab.Id,DisplayOrder=2,IsActive=false},
                         new ProductProperty{ Name="GIA",Description="Gemological Institute of America",SymbolName="GIA",ParentId=lab.Id,DisplayOrder=3,IsActive=true,IconPath="/assets/img/diamond-svg/IGI.png"},
                         new ProductProperty{ Name="AGS",Description="American Gem Society",ParentId=lab.Id,DisplayOrder=4,IsActive=false},
-                        new ProductProperty{ Name="HRD",Description="Hoge Raad voor Diamant (Belgium)\t",ParentId=lab.Id,DisplayOrder=5,IsActive=false},
-                        new ProductProperty{ Name="EGL",Description = "European Gemological Laboratory\t", ParentId=lab.Id,DisplayOrder=6,IsActive=false},
+                        new ProductProperty{ Name="HRD",Description="Hoge Raad voor Diamant (Belgium)",ParentId=lab.Id,DisplayOrder=5,IsActive=false},
+                        new ProductProperty{ Name="EGL",Description = "European Gemological Laboratory", ParentId=lab.Id,DisplayOrder=6,IsActive=false},
                     };
                     await _db.ProductProperty.AddRangeAsync(LabDTs);
                     await _db.SaveChangesAsync();
@@ -426,7 +426,6 @@ namespace ControlPanel.Services
                 var bracelet= await _db.Category.Where(x=>x.Name==SD.Bracelets).FirstOrDefaultAsync();
                 var bangle= await _db.Category.Where(x=>x.Name==SD.Bangle).FirstOrDefaultAsync();
 
-
                 var stylesDT = new List<ProductStyles>
                 {
                     new ProductStyles { StyleName = "Solitaire", CategoryId = ring.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
@@ -439,14 +438,15 @@ namespace ControlPanel.Services
                     new ProductStyles { StyleName = "Gemstone", CategoryId = ring.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
                     new ProductStyles { StyleName = "Customer Favorites", CategoryId = ring.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
 
-                    new ProductStyles { StyleName = "Wedding and Anniversary", CategoryId = bands.Id ,IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
-                    new ProductStyles { StyleName = "Eternity", CategoryId = bands.Id ,IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
-                    new ProductStyles { StyleName = "3/4 Eternity", CategoryId = bands.Id ,IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
-                    new ProductStyles { StyleName = "Enhancers", CategoryId = bands.Id ,IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
-                    new ProductStyles { StyleName = "Curve Bands", CategoryId = bands.Id ,IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
-                    new ProductStyles { StyleName = "Open Bands", CategoryId = bands.Id ,IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
-                    new ProductStyles { StyleName = "Design Your Stack", CategoryId = bands.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
-                    new ProductStyles { StyleName = "Customer Favorites", CategoryId = bands.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
+
+                    //new ProductStyles { StyleName = "Wedding and Anniversary", CategoryId = bands.Id ,IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
+                    //new ProductStyles { StyleName = "Eternity", CategoryId = bands.Id ,IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
+                    //new ProductStyles { StyleName = "3/4 Eternity", CategoryId = bands.Id ,IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
+                    //new ProductStyles { StyleName = "Enhancers", CategoryId = bands.Id ,IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
+                    //new ProductStyles { StyleName = "Curve Bands", CategoryId = bands.Id ,IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
+                    //new ProductStyles { StyleName = "Open Bands", CategoryId = bands.Id ,IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
+                    //new ProductStyles { StyleName = "Design Your Stack", CategoryId = bands.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
+                    //new ProductStyles { StyleName = "Customer Favorites", CategoryId = bands.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
                 };
                 await _db.ProductStyles.AddRangeAsync(stylesDT);
                 await _db.SaveChangesAsync();

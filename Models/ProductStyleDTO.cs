@@ -27,6 +27,9 @@ namespace Models
 
         public IFormFile ImageFile { get; set; }
 
+        public string CoverPageImage { get; set; }
+
+        public IFormFile CoverPageFile { get; set; }
 
         public int? CategoryId { get; set; }
     }

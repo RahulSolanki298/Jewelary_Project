@@ -2160,8 +2160,6 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FileUploadHistoryId");
-
                     b.ToTable("ProductHistory");
                 });
 
@@ -2229,6 +2227,9 @@ namespace DataAccess.Migrations
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("FileHistoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("GroupId")
                         .HasColumnType("nvarchar(max)");
 
@@ -2256,6 +2257,60 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ProductMaster");
+                });
+
+            modelBuilder.Entity("DataAccess.Entities.ProductMasterHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ColorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ColorName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("GroupId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSale")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ProductKey")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductMasterId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProductStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sku")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductMasterHistory");
                 });
 
             modelBuilder.Entity("DataAccess.Entities.ProductPrices", b =>
@@ -2355,6 +2410,9 @@ namespace DataAccess.Migrations
 
                     b.Property<int?>("CategoryId")
                         .HasColumnType("int");
+
+                    b.Property<string>("CoverPageImage")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -2822,15 +2880,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.Entities.ProductCollections", null)
                         .WithMany("Products")
                         .HasForeignKey("ProductCollectionsId");
-                });
-
-            modelBuilder.Entity("DataAccess.Entities.ProductHistory", b =>
-                {
-                    b.HasOne("DataAccess.Entities.ProductFileUploadHistory", "ProductFileUploadHistory")
-                        .WithMany()
-                        .HasForeignKey("FileUploadHistoryId");
-
-                    b.Navigation("ProductFileUploadHistory");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

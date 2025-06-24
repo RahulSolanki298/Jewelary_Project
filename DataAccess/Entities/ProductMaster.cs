@@ -31,5 +31,7 @@ namespace DataAccess.Entities
         public string UpdatedBy { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
+
+        public int? FileHistoryId { get; set; }
     }
 }
