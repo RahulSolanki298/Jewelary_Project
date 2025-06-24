@@ -118,6 +118,7 @@ namespace ControlPanel.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveAllProduct(string productsJson)
         {
+            ProductUploadResult productUploadResults = new ProductUploadResult();
             List<ProductDTO> ringProducts = new List<ProductDTO>();
             List<ProductDTO> weddings = new List<ProductDTO>();
             List<ProductDTO> earrings = new List<ProductDTO>();
@@ -162,31 +163,61 @@ namespace ControlPanel.Controllers
                 if (category == "rings")
                 {
                     ringProducts = products.Where(x => x.CategoryName == "Rings").ToList();
-                    await _productRepository.SaveNewProductList(ringProducts, "Rings", userId, uploadHistoryId);
+                    var ringResp=  await _productRepository.SaveNewProductList(ringProducts, "Rings", userId, uploadHistoryId);
+                    if (ringResp != null && ringResp.Errors.Count > 0)
+                    {
+                        return Json(ringResp);
+                    }
+                    productUploadResults = ringResp;
                 }
                 else if (category == "bands")
                 {
                     weddings = products.Where(x => x.CategoryName == "Bands").ToList();
-                    await _productRepository.SaveNewProductList(weddings, "Bands", userId, uploadHistoryId);
+                    var bandResp = await _productRepository.SaveNewProductList(weddings, "Bands", userId, uploadHistoryId);
+                    if (bandResp != null && bandResp.Errors.Count > 0)
+                    {
+                        return Json(bandResp);
+                    }
+                    productUploadResults = bandResp;
+
                 }
                 else if (category == "earrings")
                 {
                     earrings = products.Where(x => x.CategoryName == "Earrings").ToList();
-                    await _productRepository.SaveNewProductList(earrings, "Earrings", userId, uploadHistoryId);
+                    var errResp=  await _productRepository.SaveNewProductList(earrings, "Earrings", userId, uploadHistoryId);
+                    if (errResp != null && errResp.Errors.Count > 0)
+                    {
+                        return Json(errResp);
+                    }
+                    productUploadResults = errResp;
+
                 }
                 else if (category == "pendants")
                 {
                     pendants = products.Where(x => x.CategoryName == "Pendants").ToList();
-                    await _productRepository.SaveNewProductList(pendants, "Pendants", userId, uploadHistoryId);
+                    var pendResp = await _productRepository.SaveNewProductList(pendants, "Pendants", userId, uploadHistoryId);
+                    if (pendResp != null && pendResp.Errors.Count > 0)
+                    {
+                        return Json(pendResp);
+                    }
+                    productUploadResults = pendResp;
+
                 }
                 else if (category == "bracelets")
                 {
                     bracelets = products.Where(x => x.CategoryName == "Bracelets").ToList();
-                    await _productRepository.SaveNewProductList(bracelets, "Bracelets", userId, uploadHistoryId);
+                    var braceResp= await _productRepository.SaveNewProductList(bracelets, "Bracelets", userId, uploadHistoryId);
+                    if (braceResp != null && braceResp.Errors.Count > 0)
+                    {
+                        return Json(braceResp);
+                    }
+                    productUploadResults = braceResp;
+
                 }
             }
-
-            return Json("AI transforms data migration Successfully.");
+            productUploadResults.Message = "AI transforms data migration Successfully.";
+            //return Json("No Data Found...AI transforms data migration Failed.");
+            return Json(productUploadResults);
         }
 
 

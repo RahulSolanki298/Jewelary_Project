@@ -60,6 +60,7 @@
                         $("#divExcelUpload").hide();
                         $("#ImportProductList").html("");
                         $("#ImportProductList").html(response);
+
                         Swal.fire({
                             title: response.message || 'Product File Uploaded Successfully.',
                             icon: "success",
@@ -127,11 +128,22 @@
                     success: function (response) {
                         $("#btnSaveRings").hide();
                         $("#btnEditRings").hide();
-                        Swal.fire({
-                            title: response.message || 'Product Rings Saved Successfully!',
+
+                        if(response.isSuccess){
+                            Swal.fire({
+                            title: response.message,
                             icon: "success",
                             draggable: true
                         });
+                        }else{
+                             Swal.fire({
+                                     title: 'Failed to save product.',
+                                     icon: "error",
+                                     html: `<ul style="text-align: left;">${response.errors.map(err => `<li>${err}</li>`).join('')}</ul>`,
+                                     draggable: true
+                             });
+                        }
+                        
                         $(".ringcount").removeClass("bg-dark");
                         $(".ringcount").addClass("bg-success");
                     },

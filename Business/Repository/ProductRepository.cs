@@ -10,6 +10,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Tavis.UriTemplates;
 
 namespace Business.Repository
 {
@@ -934,13 +935,16 @@ namespace Business.Repository
             }
         }
 
-        public async Task<bool> SaveNewProductList(List<ProductDTO> products, string categoryName, string userId, int fileHistoryId)
+        public async Task<ProductUploadResult> SaveNewProductList(List<ProductDTO> products, string categoryName, string userId, int fileHistoryId)
         {
+            var result = new ProductUploadResult(); // Result object to store success/failure data
             try
             {
                 // Step 0: Initialize variables
+
                 var productStyleName = new ProductStyleDTO();
                 var styleList = new List<ProductStyleItems>();
+                var errorList = new List<string>();
                 var existingProduct = new Product();
                 var colors = await GetColorList();
                 var categories = await _context.Category.ToListAsync();
@@ -982,10 +986,12 @@ namespace Business.Repository
                         fileHistoryId = product.FileHistoryId.Value;
                     }
 
-                    if (string.IsNullOrEmpty(product.ColorName)
+                    if (string.IsNullOrEmpty(product.Sku)
+                        || string.IsNullOrEmpty(product.ColorName)
                         || string.IsNullOrEmpty(categoryName)
                         || string.IsNullOrEmpty(product.Karat))
                     {
+                        errorList.Add($"{product.Sku} is failed to added. invalid data.");
                         continue;
                     }
 
@@ -1057,12 +1063,12 @@ namespace Business.Repository
                         PreGroupId = string.Concat(product.Sku, "_", product.CenterShapeName);
                     }
 
-                    var productMst = await _context.ProductMaster.FirstOrDefaultAsync(x => x.GroupId == PreGroupId && x.ColorName==product.ColorName);
+                    var productMst = await _context.ProductMaster.FirstOrDefaultAsync(x => x.GroupId == PreGroupId && x.ColorName == product.ColorName);
 
                     if (productMst == null)
                     {
                         productMst = new ProductMaster();
-                        productMst.FileHistoryId= fileHistoryId;
+                        productMst.FileHistoryId = fileHistoryId;
                         productMst.ColorId = colorId;
                         productMst.ColorName = product.ColorName;
                         productMst.GroupId = PreGroupId;
@@ -1079,7 +1085,7 @@ namespace Business.Repository
                         await _context.SaveChangesAsync();
 
 
-                       var productHMst = new ProductMasterHistory();
+                        var productHMst = new ProductMasterHistory();
                         productHMst.ProductMasterId = productMst.Id;
                         productMst.ColorId = colorId;
                         productHMst.ColorName = product.ColorName;
@@ -1135,6 +1141,8 @@ namespace Business.Repository
                             existingProduct.AccentStoneShapeId = AshapeId;
                         }
                         ExistingProductList.Add(existingProduct);
+                        result.SuccessCount++;
+
                     }
                     else
                     {
@@ -1189,6 +1197,7 @@ namespace Business.Repository
                         }
 
                         productList.Add(newProduct);
+                        result.SuccessCount++;
                     }
 
                     var styleDT = await _context.ProductStyles.Where(x => x.StyleName == product.StyleName).FirstOrDefaultAsync();
@@ -1205,11 +1214,11 @@ namespace Business.Repository
                         await _context.ProductStyles.AddAsync(styleDT);
                         await _context.SaveChangesAsync();
                     }
-                    
+
                     if (styleDT != null)
                     {
-                        var productStyleItem = await _context.ProductStyleItems.Where(x => x.StyleId == styleDT.Id 
-                                                                                && x.ProductId==productMst.ProductKey).FirstOrDefaultAsync();
+                        var productStyleItem = await _context.ProductStyleItems.Where(x => x.StyleId == styleDT.Id
+                                                                                && x.ProductId == productMst.ProductKey).FirstOrDefaultAsync();
 
                         if (!string.IsNullOrEmpty(product.StyleName))
                         {
@@ -1231,14 +1240,14 @@ namespace Business.Repository
                             CollectionName = product.CollectionName,
                             IsActivated = true,
                             CreatedDate = DateTime.Now,
-                            
+
                         };
                         await _context.ProductCollections.AddAsync(collectionDT);
                         await _context.SaveChangesAsync();
                     }
                     if (collectionDT != null)
                     {
-                        var productCollectionItem = await _context.ProductCollectionItems.Where(x => x.CollectionId == collectionDT.Id  && x.ProductId==product.ProductKey).FirstOrDefaultAsync();
+                        var productCollectionItem = await _context.ProductCollectionItems.Where(x => x.CollectionId == collectionDT.Id && x.ProductId == product.ProductKey).FirstOrDefaultAsync();
                         if (productCollectionItem == null && !string.IsNullOrEmpty(newProduct.Id.ToString()))
                         {
                             productCollectionItem = new ProductCollectionItems();
@@ -1307,8 +1316,8 @@ namespace Business.Repository
                         UploadStatus = product.UploadStatus,
                         IsActivated = product.IsActivated,
                         IsSuccess = product.IsSuccess,
-                        GroupId=product.GroupId,
-                        ProductKey=product.ProductKey
+                        GroupId = product.GroupId,
+                        ProductKey = product.ProductKey
 
                     };
                     HistoryProductList.Add(historyResult);
@@ -1322,6 +1331,8 @@ namespace Business.Repository
 
                 var success = await _context.Product.Where(x => x.FileHistoryId == fileHistoryId && x.IsSuccess == true).ToListAsync();
                 var fail = await _context.Product.Where(x => x.FileHistoryId == fileHistoryId && x.IsSuccess == false).ToListAsync();
+                result.FailureCount = fail.Count();
+                result.SuccessCount = success.Count();
 
                 var history = await _context.ProductFileUploadHistory.Where(x => x.Id == fileHistoryId).FirstOrDefaultAsync();
 
@@ -1334,13 +1345,14 @@ namespace Business.Repository
                     await _context.SaveChangesAsync();
                 }
 
-
-                return true;
+                result.IsSuccess = true;
+                return result;
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
-                return false;
+                result.IsSuccess = false;
+                result.Errors.Add($"Exception: {ex.Message}");
+                return result;
             }
         }
 
@@ -1515,12 +1527,12 @@ namespace Business.Repository
             };
 
             var IsVerify = _context.Product.Where(x => x.Sku == dtImgVideo.DesignNo).FirstOrDefault();
-            if (IsVerify==null)
+            if (IsVerify == null)
             {
                 dtImgVideo.DesignNo = $"{dtImgVideo.DesignNo}-{parts[2]}";
                 var dtDesign = _context.Product.Where(x => x.Sku == dtImgVideo.DesignNo).FirstOrDefault();
 
-                if (dtDesign==null)
+                if (dtDesign == null)
                 {
                     return new FileSplitDTO();
                 }
@@ -2231,7 +2243,7 @@ namespace Business.Repository
         //    return productDTOList;
         //}
 
-        
+
 
         public async Task<IEnumerable<ProductMasterDTO>> GetProductDeActivatedList()
         {
@@ -2574,7 +2586,7 @@ namespace Business.Repository
                 from size in sizeGroup.DefaultIfEmpty()
                 join ashape in _context.ProductProperty on product.AccentStoneShapeId equals ashape.Id into ashapeGroup
                 from ashape in ashapeGroup.DefaultIfEmpty()
-                select new 
+                select new
                 {
                     proMstr.Id,
                     proMstr.ProductKey,
@@ -2586,21 +2598,21 @@ namespace Business.Repository
                     Shape = shape,
                     Clarity = clarity,
                     CenterCarat = size,
-                    CenterShape=shape,
+                    CenterShape = shape,
                     AccentShape = ashape
                 }).ToListAsync();
 
             var grouped = pendingProducts
-                .GroupBy(x => new { x.Id, x.ProductKey,x.Category })
+                .GroupBy(x => new { x.Id, x.ProductKey, x.Category })
                 .Select(g => new ProductMasterDTO
                 {
                     Id = g.Key.Id,
-                    ProductKey=g.Key.ProductKey,
-                    CategoryId=g.Key.Category.Id,
-                    CategoryName=g.Key.Category.Name,
+                    ProductKey = g.Key.ProductKey,
+                    CategoryId = g.Key.Category.Id,
+                    CategoryName = g.Key.Category.Name,
                     ProductItems = g.Select(x => new ProductDTO
                     {
-                        Id=x.Product.Id,
+                        Id = x.Product.Id,
                         Title = x.Product.Title,
                         BandWidth = x.Product.BandWidth,
                         Length = x.Product.Length,
@@ -2648,8 +2660,8 @@ namespace Business.Repository
                         UpdatedDate = x.Product.UpdatedDate,
                         DisplayDate = x.Product.UpdatedDate?.ToString("dd/MM/yyyy hh:mm tt"),
                         UpdatedPersonName = x.User.FirstName,
-                        ProductKey=x.Product.ProductKey,
-                        GroupId=x.Product.GroupId
+                        ProductKey = x.Product.ProductKey,
+                        GroupId = x.Product.GroupId
                     }).ToList()
                 })
                 .OrderByDescending(x => x.ProductItems.First().Sku)

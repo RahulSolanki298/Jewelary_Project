@@ -565,165 +565,155 @@ namespace B2C_ECommerce.Services
 
         private async Task<IEnumerable<ProductMasterDTO>> GetProductStyleList()
         {
-
+            // Step 1: Fetch the ProductMasterDTO list
             var productMstList = await (from proMst in _context.ProductMaster
                                         join cat in _context.Category on proMst.CategoryId equals cat.Id
                                         join color in _context.ProductProperty on proMst.ColorId equals color.Id
+                                        where proMst.IsActive == true && proMst.ProductStatus == "Activated"
                                         select new ProductMasterDTO
                                         {
-                                            Id= proMst.Id,
-                                            CategoryId= proMst.CategoryId,
-                                            CategoryName=cat.Name,
-                                            ColorId=proMst.ColorId,
-                                            ColorName=color.Name,
-                                            GroupId=proMst.GroupId, 
-                                            IsActive=proMst.IsActive,
-                                            IsSale=proMst.IsSale,
-                                            ProductKey=proMst.ProductKey,
-                                            ProductStatus=proMst.ProductStatus,
-                                        }).Where(x=>x.IsActive==true && x.ProductStatus== "Activated").ToListAsync();
+                                            Id = proMst.Id,
+                                            CategoryId = proMst.CategoryId,
+                                            CategoryName = cat.Name,
+                                            ColorId = proMst.ColorId,
+                                            ColorName = color.Name,
+                                            GroupId = proMst.GroupId,
+                                            IsActive = proMst.IsActive,
+                                            IsSale = proMst.IsSale,
+                                            ProductKey = proMst.ProductKey,
+                                            ProductStatus = proMst.ProductStatus,
+                                            ProductItems = new List<ProductDTO>()
+                                        }).ToListAsync();
 
+            // Step 2: Fetch all product details and properties (metals, carat sizes, shapes) in bulk
+            var productKeys = productMstList.Select(p => p.ProductKey).ToList();
+
+            var productDetails = await (from product in _context.Product
+                                        join krt in _context.ProductProperty on product.KaratId equals krt.Id
+                                        join cat in _context.Category on product.CategoryId equals cat.Id
+                                        join color in _context.ProductProperty on product.ColorId equals color.Id into colorGroup
+                                        from color in colorGroup.DefaultIfEmpty()
+                                        join clarity in _context.ProductProperty on product.ClarityId equals clarity.Id into clarityGroup
+                                        from clarity in clarityGroup.DefaultIfEmpty()
+                                        join size in _context.ProductProperty on product.CenterCaratId equals size.Id into sizeGroup
+                                        from size in sizeGroup.DefaultIfEmpty()
+                                        where product.IsActivated == true && product.UploadStatus == SD.Active && productKeys.Contains(product.ProductKey)
+                                        select new ProductDTO
+                                        {
+                                            Id = product.Id,
+                                            Title = product.Title,
+                                            Sku = product.Sku,
+                                            ProductKey = product.ProductKey,
+                                            CategoryId = product.CategoryId,
+                                            CategoryName = cat.Name,
+                                            ColorId = color != null ? color.Id : (int?)null,
+                                            ColorName = color.Name,
+                                            ClarityId = clarity != null ? clarity.Id : (int?)null,
+                                            ClarityName = clarity.Name,
+                                            UnitPrice = product.UnitPrice,
+                                            Price = product.Price,
+                                            IsActivated = product.IsActivated,
+                                            CaratSizeId = product.CaratSizeId,
+                                            Description = product.Description,
+                                            VenderName = product.Vendor,
+                                            Grades = product.Grades,
+                                            IsReadyforShip = product.IsReadyforShip,
+                                            VenderStyle = product.VenderStyle,
+                                            CenterCaratId = size.Id,
+                                            CenterCaratName = size.Name,
+                                            Quantity = product.Quantity,
+                                            KaratId = krt != null ? krt.Id : (int?)null,
+                                            Karat = krt.Name,
+                                            ProductType = cat.ProductType,
+                                            GroupId = product.GroupId
+                                        }).ToListAsync();
+
+            // Step 3: Prepare product properties (metals, carat sizes, shapes) for each SKU
+            var metals = await (from col in _context.ProductProperty
+                                join prod in _context.Product on col.Id equals prod.ColorId
+                                join colN in _context.ProductProperty on col.ParentId equals colN.Id
+                                where colN.Name == SD.Metal && productKeys.Contains(prod.ProductKey) && prod.IsActivated
+                                select new { prod.Sku, col.Id, col.Name, col.SymbolName, col.Synonyms, col.IsActive })
+                                .Distinct()
+                                .ToListAsync();
+
+            var caratSizes = await (from col in _context.ProductProperty
+                                    join prod in _context.Product on col.Id equals prod.CenterCaratId
+                                    join colN in _context.ProductProperty on col.ParentId equals colN.Id
+                                    where colN.Name == SD.CaratSize && productKeys.Contains(prod.ProductKey) && prod.IsActivated
+                                    select new { prod.Sku, col.Id, col.Name, col.IsActive })
+                                    .Distinct()
+                                    .ToListAsync();
+
+            var shapes = await (from col in _context.ProductProperty
+                                join prod in _context.Product on col.Id equals prod.CenterShapeId
+                                join colN in _context.ProductProperty on col.ParentId equals colN.Id
+                                where colN.Name == SD.Shape && productKeys.Contains(prod.ProductKey) && prod.IsActivated
+                                select new { prod.Sku, col.Id, col.Name, col.IconPath, col.Synonyms, col.IsActive })
+                                .Distinct()
+                                .ToListAsync();
+
+            // Step 4: Fetch product images and videos in bulk
+            var productImages = await _context.ProductImages
+                                              .Where(x => productKeys.Contains(x.ProductId))
+                                              .ToListAsync();
+
+            var fileManager = await _context.FileManager.ToListAsync();
+
+            // Step 5: Map product details to ProductMasterDTO
             foreach (var productMstItm in productMstList)
             {
-                var prodDT = await (from product in _context.Product
-                                                 join krt in _context.ProductProperty on product.KaratId equals krt.Id
-                                                 join cat in _context.Category on product.CategoryId equals cat.Id
-                                                 join color in _context.ProductProperty on product.ColorId equals color.Id into colorGroup
-                                                 from color in colorGroup.DefaultIfEmpty()
-                                                 //join shape in _context.ProductProperty on product.CenterShapeId equals shape.Id into shapeGroup
-                                                 //from shape in shapeGroup.DefaultIfEmpty()
-                                                 join clarity in _context.ProductProperty on product.ClarityId equals clarity.Id into clarityGroup
-                                                 from clarity in clarityGroup.DefaultIfEmpty()
-                                                 join size in _context.ProductProperty on product.CenterCaratId equals size.Id into sizeGroup
-                                                 from size in sizeGroup.DefaultIfEmpty()
-                                                 select new ProductDTO
-                                                 {
-                                                     Id = product.Id,
-                                                     Title = product.Title,
-                                                     EventId = product.EventId,
-                                                     BandWidth = product.BandWidth,
-                                                     Length = product.Length,
-                                                     CaratName = product.Carat,
-                                                     CategoryId = cat != null ? cat.Id : (int?)null,
-                                                     CategoryName = cat.Name,
-                                                     ColorId = color != null ? color.Id : (int?)null,
-                                                     ColorName = color.Name,
-                                                     ClarityId = clarity != null ? clarity.Id : (int?)null,
-                                                     ClarityName = clarity.Name,
-                                                     //ShapeName = shape.Name,
-                                                     //CenterShapeName = shape.Name,
-                                                     UnitPrice = product.UnitPrice,
-                                                     Price = product.Price,
-                                                     IsActivated = product.IsActivated,
-                                                     CaratSizeId = product.CaratSizeId,
-                                                     Description = product.Description,
-                                                     Sku = product.Sku,
-                                                     ProductType = cat.ProductType,
-                                                     VenderName = product.Vendor,
-                                                     Grades = product.Grades,
-                                                     GoldWeight = product.GoldWeight,
-                                                     IsReadyforShip = product.IsReadyforShip,
-                                                     VenderStyle = product.VenderStyle,
-                                                     CenterCaratId = size.Id,
-                                                     //CenterShapeId = shape != null ? shape.Id : (int?)null,
-                                                     CenterCaratName = size.Name,
-                                                     Quantity = product.Quantity,
-                                                     KaratId = krt != null ? krt.Id : (int?)null,
-                                                     Karat = krt.Name,
-                                                     ProductKey = product.ProductKey,
-                                                     GroupId = product.GroupId,
-                                                     IsSuccess = product.IsSuccess
-                                                 }).Where(x => x.IsActivated==true && x.UploadStatus==SD.Active && x.ProductKey== productMstItm.ProductKey).ToListAsync();
-
+                var prodDT = productDetails.Where(p => p.ProductKey == productMstItm.ProductKey).ToList();
                 productMstItm.ProductItems.AddRange(prodDT);
-                
 
-                var groupedProducts = productMstItm.ProductItems.GroupBy(p => p.Sku);
-
-                foreach (var grp in groupedProducts)
+                foreach (var product in productMstItm.ProductItems)
                 {
-                    var firstProduct = grp.First();
+                    // Add metals, carat sizes, and shapes to the product
+                    product.Metals = metals.Where(m => m.Sku == product.Sku)
+                                           .Select(m => new ProductPropertyDTO
+                                           {
+                                               Id = m.Id,
+                                               Name = m.Name,
+                                               SymbolName = m.SymbolName,
+                                               Synonyms = m.Synonyms,
+                                               IsActive = m.IsActive.Value
+                                           }).ToList();
 
-                    var metals = await (from col in _context.ProductProperty
-                                        join prod in _context.Product on col.Id equals prod.ColorId
-                                        join colN in _context.ProductProperty on col.ParentId equals colN.Id
-                                        where colN.Name == SD.Metal && prod.Sku == firstProduct.Sku && prod.IsActivated != false
-                                        select new ProductPropertyDTO
-                                        {
-                                            Id = col.Id,
-                                            Name = col.Name,
-                                            SymbolName = col.SymbolName,
-                                            Synonyms = col.Synonyms,
-                                            IsActive = col.IsActive.HasValue ? col.IsActive.Value : false
-                                        }).Distinct().ToListAsync();
+                    product.CaratSizes = caratSizes.Where(cs => cs.Sku == product.Sku)
+                                                   .Select(cs => new ProductPropertyDTO
+                                                   {
+                                                       Id = cs.Id,
+                                                       Name = cs.Name,
+                                                       IsActive = cs.IsActive.Value
+                                                   }).ToList();
 
-                    var caratSizes = await (from col in _context.ProductProperty
-                                            join prod in _context.Product on col.Id equals prod.CenterCaratId
-                                            join colN in _context.ProductProperty on col.ParentId equals colN.Id
-                                            where colN.Name == SD.CaratSize && prod.Sku == firstProduct.Sku && prod.IsActivated != false
-                                            select new ProductPropertyDTO
-                                            {
-                                                Id = col.Id,
-                                                Name = col.Name,
-                                                IsActive = col.IsActive.HasValue ? col.IsActive.Value : false
-                                            }).Distinct().ToListAsync();
+                    product.Shapes = shapes.Where(s => s.Sku == product.Sku)
+                                           .Select(s => new ProductPropertyDTO
+                                           {
+                                               Id = s.Id,
+                                               Name = s.Name,
+                                               IconPath = s.IconPath,
+                                               Synonyms = s.Synonyms,
+                                               IsActive = s.IsActive.Value
+                                           }).ToList();
 
-                    var shapes = await (from col in _context.ProductProperty
-                                        join prod in _context.Product on col.Id equals prod.CenterShapeId
-                                        join colN in _context.ProductProperty on col.ParentId equals colN.Id
-                                        where colN.Name == SD.Shape && prod.Sku == firstProduct.Sku && prod.IsActivated != false
-                                        select new ProductPropertyDTO
-                                        {
-                                            Id = col.Id,
-                                            Name = col.Name,
-                                            IconPath = col.IconPath,
-                                            Synonyms = col.Synonyms,
-                                            IsActive = col.IsActive.HasValue ? col.IsActive.Value : false
-                                        }).Distinct().ToListAsync();
+                    // Add product images and videos
+                    var imageVideoList = productImages.Where(img => img.ProductId == product.ProductKey.ToString())
+                                                      .Select(image => new ProductImageAndVideoDTO
+                                                      {
+                                                          ImageUrl = fileManager.FirstOrDefault(x => x.Id == image.ImageLgId)?.FileUrl ?? "-",
+                                                          VideoUrl = fileManager.FirstOrDefault(x => x.Id == image.VideoId)?.FileUrl ?? "-",
+                                                          IsDefault = image.IsDefault
+                                                      }).ToList();
 
-
-
-
-                    // Step 4: Get the product images for the first product
-                    var productImages = await _context.ProductImages
-                                        .Where(x => x.ProductId == firstProduct.ProductKey.ToString())
-                                        .ToListAsync();
-
-                    var imageVideoList = new List<ProductImageAndVideoDTO>();
-
-                    foreach (var image in productImages)
-                    {
-                        var imageUrl = _context.FileManager.FirstOrDefault(x => x.Id == image.ImageLgId)?.FileUrl ?? "-";
-                        var videoUrl = _context.FileManager.FirstOrDefault(x => x.Id == image.VideoId)?.FileUrl ?? "-";
-
-                        var imageVideo = new ProductImageAndVideoDTO
-                        {
-                            ImageUrl = string.IsNullOrWhiteSpace(imageUrl) ? null : imageUrl,
-                            VideoUrl = string.IsNullOrWhiteSpace(videoUrl) ? null : videoUrl,
-                            IsDefault = image.IsDefault,
-                        };
-
-                        imageVideoList.Add(imageVideo);
-                    }
-
-                    // Assign to all grouped items (or just the first one if you prefer)
-                    foreach (var product in grp)
-                    {
-                        product.ProductImageVideos = imageVideoList;
-                    }
-
+                    product.ProductImageVideos = imageVideoList;
                 }
-
-
             }
 
-
-
-           
-
-            // Return products where there are product images/videos
+            // Step 6: Return the optimized list
             return productMstList;
         }
+
 
 
         public async Task<List<ProductMasterDTO>> GetJewelleryByShapeColorId(string sku, int colorId, int? shapeId = 0)
