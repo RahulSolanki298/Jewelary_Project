@@ -4,6 +4,32 @@
 @{
     ViewData["Title"] = "GetSingleDiamond";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    <style>
+        .footer-add-to-cart {
+            z-index: 9999;
+        }
+
+        .btn-theme {
+            background-color: #151542;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+            .btn-theme:hover {
+                background-color: #151542;
+                color: #fff;
+            }
+
+        .btn-big {
+            font-size: 2rem;
+            padding: 1.5rem 3rem;
+            width: 100%;
+            text-transform: uppercase;
+        }
+    
+    </style>
 }
 
 <div class="shop-main-wrapper section-padding pb-0">
@@ -331,6 +357,31 @@
                             allowfullscreen=""
                             style="width:100%; height:100vh; border:none;"></iframe>
                 </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="footer-add-to-cart fixed-bottom bg-white shadow-lg border-top px-3 py-3">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <!-- Column 1: Establish Date -->
+            <div class="col-12 col-md-3 mb-2 mb-md-0 text-md-start text-center">
+                <small class="text-muted">Estimated Ship Date. @DateTime.Now.ToString("yyyy")</small>
+                <div><strong class="text-dark">$@Model.Price USD</strong></div>
+            </div>
+
+            <!-- Column 2: Info Text -->
+            <div class="col-12 col-md-6 text-center">
+                <div class="text-muted small">Starting at $64/mo or 0% APR with Affirm. <a href="#" class="text-theme">Prequalify now</a></div>
+                <div class="text-muted small">No credit? Pay over time. <a href="#" class="text-theme">Estimate Payment</a></div>
+                <div class="text-muted small">Earn 5% cashback on this purchase. <a href="#" class="text-theme">Learn more</a> about GB Club</div>
+            </div>
+
+            <!-- Column 3: Add to Cart -->
+            <div class="col-12 col-md-3 text-md-end text-center mt-2 mt-md-0">
+                <a href="#" class="btn btn-theme btn-lg fs-3 px-5 py-3 w-100 text-uppercase">Add to Bag</a>
 
             </div>
         </div>

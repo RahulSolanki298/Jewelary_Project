@@ -115,7 +115,7 @@
 
                     productDTO.push(product);
                 });
-                var formData = new FormData();
+                var formData = new FormData();  
                 formData.append("productsJson", JSON.stringify(productDTO));
 
                 // Send AJAX request
@@ -126,10 +126,12 @@
                     contentType: false,
                     data: formData,
                     success: function (response) {
-                        $("#btnSaveRings").hide();
-                        $("#btnEditRings").hide();
+                        
 
                         if(response.isSuccess){
+                            $("#btnSaveRings").hide();
+                            $("#btnEditRings").hide();
+
                             Swal.fire({
                             title: response.message,
                             icon: "success",

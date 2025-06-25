@@ -978,6 +978,7 @@ namespace Business.Repository
                 var newProduct = new Product();
                 var productStyleList = new List<ProductStyleDTO>();
                 var productCollectionList = new List<ProductCollectionItems>();
+                var productMst = new ProductMaster();
 
                 foreach (var product in products)
                 {
@@ -1063,9 +1064,26 @@ namespace Business.Repository
                         PreGroupId = string.Concat(product.Sku, "_", product.CenterShapeName);
                     }
 
-                    var productMst = await _context.ProductMaster.FirstOrDefaultAsync(x => x.GroupId == PreGroupId && x.ColorName == product.ColorName);
+                    var productDTMst = await (from prd in _context.Product
+                                            join proMst in _context.ProductMaster on prd.ProductKey equals proMst.ProductKey
+                                            join cat in _context.Category on prd.CategoryId equals cat.Id
+                                            join col in _context.ProductProperty on prd.ColorId equals col.Id
+                                            where proMst.GroupId==PreGroupId && prd.ShapeId==shapeId
+                                            select new ProductMasterDTO
+                                            {
+                                                Id = proMst.Id,
+                                                ProductKey = proMst.ProductKey,
+                                                CategoryId = proMst.CategoryId,
+                                                CategoryName = cat.Name,
+                                                ColorId = proMst.ColorId,
+                                                ColorName = col.Name,
+                                                GroupId = proMst.GroupId,
+                                                IsActive = proMst.IsActive,
+                                                IsSale = proMst.IsSale
+                                            }).FirstOrDefaultAsync();
 
-                    if (productMst == null)
+
+                    if (productDTMst == null)
                     {
                         productMst = new ProductMaster();
                         productMst.FileHistoryId = fileHistoryId;
@@ -1104,7 +1122,7 @@ namespace Business.Repository
                     }
 
                     existingProduct = existingProducts
-                        .FirstOrDefault(x => x.GroupId == productMst.GroupId && x.ProductKey == productMst.ProductKey);
+                        .FirstOrDefault(x => x.GroupId == productDTMst.GroupId && x.ProductKey == productDTMst.ProductKey);
 
                     if (existingProduct != null)
                     {
@@ -1180,8 +1198,8 @@ namespace Business.Repository
                             UploadStatus = SD.Pending,
                             IsActivated = false,
                             IsSuccess = true,
-                            GroupId = productMst.GroupId,
-                            ProductKey = productMst.ProductKey,
+                            GroupId = productDTMst != null ? productDTMst.GroupId : productMst.GroupId,
+                            ProductKey = productDTMst != null ? productDTMst.ProductKey : productMst.ProductKey,
                         };
                         if (caratId > 0)
                         {
@@ -1218,7 +1236,7 @@ namespace Business.Repository
                     if (styleDT != null)
                     {
                         var productStyleItem = await _context.ProductStyleItems.Where(x => x.StyleId == styleDT.Id
-                                                                                && x.ProductId == productMst.ProductKey).FirstOrDefaultAsync();
+                                                                                && x.ProductId == productDTMst.ProductKey).FirstOrDefaultAsync();
 
                         if (!string.IsNullOrEmpty(product.StyleName))
                         {
