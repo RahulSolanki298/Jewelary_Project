@@ -28,19 +28,25 @@
             width: 100%;
             text-transform: uppercase;
         }
-    
     </style>
 }
 
 <div class="shop-main-wrapper section-padding pb-0">
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <!-- product details wrapper start -->
             <div class="col-lg-12 order-1 order-lg-2">
                 <!-- product details inner end -->
                 <div class="product-details-inner">
                     <div class="row">
-                        <div class="col-lg-5">
+                        <div class="col-lg-12">
+                            <p>
+                                Home | Search Lab Grown Diamonds
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
                             <div class="product-large-slider">
                                 <div class="pro-large-img img-zoom">
                                     @if (Model.DiamondImagePath != null)
@@ -49,12 +55,17 @@
                                     }
                                     else if (Model.DiamondVideoPath != null)
                                     {
+                                        <a href="#" id="AddToWishList" class="float-end" data-diamondId="@Model.Id">
+                                            <img src="@SD.ShapeImgUrl/assets/img/Heart-Unchecked.png" class="img-fluid heart-unchecked" style="width:25px;height:25px;" />
+                                            <img src="@SD.ShapeImgUrl/assets/img/Heart-Checked.png" class="img-fluid heart-checked" style="width:25px;height:25px;display:none;" />
+                                        </a>
                                         <iframe src="@Model.DiamondVideoPath"
                                                 style="width:100%; height:420px; padding:5px 5px;"
                                                 frameborder="0"
                                                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                                                 allowfullscreen>
                                         </iframe>
+
                                     }
                                     else
                                     {
@@ -63,11 +74,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-7">
+                        <div class="col-lg-6">
                             <div class="product-details-des">
                                 @* <div class="manufacturer-name">
-                                    <a href="#">@Model.LabShape</a>
-                                </div> *@
+                                        <a href="#">@Model.LabShape</a>
+                                    </div> *@
                                 <h3 class="product-name"> @Model.Carat Carat @Model.ShapeName Shape @Model.ColorName  @Model.ClarityName @Model.LabName</h3>
                                 <p style="font-size:medium;"> ( @Model.CutName ) Cut | ( @Model.ColorName ) Color | ( @Model.ClarityName ) Clarity</p>
 
@@ -94,15 +105,15 @@
                                 <hr />
 
                                 @*<div class="ratings d-flex">
-                                    <span><i class="fa fa-star-o"></i></span>
-                                    <span><i class="fa fa-star-o"></i></span>
-                                    <span><i class="fa fa-star-o"></i></span>
-                                    <span><i class="fa fa-star-o"></i></span>
-                                    <span><i class="fa fa-star-o"></i></span>
-                                    <div class="pro-review">
-                                        <span>1 Reviews</span>
-                                    </div>
-                                </div>*@
+                                        <span><i class="fa fa-star-o"></i></span>
+                                        <span><i class="fa fa-star-o"></i></span>
+                                        <span><i class="fa fa-star-o"></i></span>
+                                        <span><i class="fa fa-star-o"></i></span>
+                                        <span><i class="fa fa-star-o"></i></span>
+                                        <div class="pro-review">
+                                            <span>1 Reviews</span>
+                                        </div>
+                                    </div>*@
 
                                 <div class="manufacturer-name">
                                     <h5>Short Description</h5>
@@ -117,14 +128,10 @@
                                 <div class="d-flex">
                                     <div class="action_link">
                                         @* <a class="btn btn-cart2" href="#">Add to cart</a> *@
-                                        <button class="btn btn-cart2" id="btnAdd2Cart" data-diamondId="@Model.Id">Add to cart</button>
+                                        @*<button class="btn btn-cart2" id="btnAdd2Cart" data-diamondId="@Model.Id">Add to cart</button>*@
                                     </div>
                                     <div class="useful-links mb-0" style="margin-left:10px;">
-                                        <a href="#" id="AddToWishList" data-diamondId="@Model.Id">
-                                            <img src="@SD.ShapeImgUrl/assets/img/Heart-Unchecked.png" class="img-fluid heart-unchecked" style="width:25px;height:25px;" />
-                                            <img src="@SD.ShapeImgUrl/assets/img/Heart-Checked.png" class="img-fluid heart-checked" style="width:25px;height:25px;display:none;" />
-                                            wishlist
-                                        </a>
+
                                     </div>
                                 </div>
 
@@ -174,169 +181,119 @@
                         </div>
                     </div>
                 </div>
-                <!-- product details inner end -->
-                <!-- product details reviews start -->
-                <div class="product-details-reviews padding-top-20 padding-bottom-20">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="product-review-info">
-                                <ul class="nav review-tab">
-                                    <li>
-                                        <a class="active" data-bs-toggle="tab" href="#tab_one">description</a>
-                                    </li>
-                                    <li>
-                                        <a data-bs-toggle="tab" href="#tab_two">Diamond Information</a>
-                                    </li>
-                                    <li>
-                                        <a data-bs-toggle="tab" href="#tab_three">reviews (1)</a>
-                                    </li>
-                                </ul>
-                                <div class="tab-content reviews-tab">
-                                    <div class="tab-pane fade show active" id="tab_one">
-                                        <div class="tab-one">
-                                            <p>
-                                                This <b>@Model.Carat</b> carat <b>@Model.ShapeName</b> shape lab grown diamond has <b>@Model.ColorName</b> color, <b>@Model.ClarityName</b> clarity, <b>@Model.CutName</b> cut and is certified by <b>@Model.LabName</b>.
-
-                                            </p>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="product-details-reviews section-padding pb-0 ">
+            <div class="row">
+                <div class="col-lg-12">
+                    <!-- Description Section -->
+                    <div class="card border-0 my-4">
+                        <div class="card-body">
+                            <h3 class="card-title mb-3 d-flex align-items-center">
+                                Description
+                            </h3>
+                            <p class="card-text text-secondary" style="font-size: 1.1rem; line-height: 1.6;" id="txtDescription">
+                                This <b>@Model.Carat</b> carat <b>@Model.ShapeName</b> shape lab grown diamond has <b>@Model.ColorName</b> color, <b>@Model.ClarityName</b> clarity, <b>@Model.CutName</b> cut and is certified by <b>@Model.LabName</b>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4" />
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <div class="accordion" id="detailsAccordion">
+                                <div class="accordion-item border-0">
+                                    <div class="row collapsed simple-toggle" data-bs-toggle="collapse"
+                                         data-bs-target="#collapseDetails" aria-expanded="false" aria-controls="collapseDetails">
+                                        <div class="col-xx-11 col-xl-11 col-lg-11 col-md-11">
+                                            <h3>Diamond Information</h3>
+                                        </div>
+                                        <div class="col-xx-1 col-xl-1 col-lg-1 col-md-1 text-end">
+                                            <h3 id="toggleIcon" class="me-2 toggle-icon fs-4 text-dark">+</h3>
                                         </div>
                                     </div>
-                                    <div class="tab-pane fade" id="tab_two">
-                                        <div class="row">
-                                            <div class="col-xl-12 p-1">
-                                                <table class="table table-bordered table-responsive">
-                                                    <tbody>
+                                    <div id="collapseDetails" class="accordion-collapse collapse" aria-labelledby="headingDetails" data-bs-parent="#detailsAccordion">
+                                        <div class="accordion-body">
+                                            <div class="row g-4">
+                                                <!-- Item Details -->
+                                                <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12">
+                                                    <div class="card border-0">
+                                                        <div class="card-body">
+                                                            <h5 class="text-center mb-3">Item Details</h5>
+                                                            <table class="table table-bordered table-responsive">
+                                                                <tbody>
 
-                                                        <tr>
-                                                            <th>Shape :</th>
-                                                            <td>@Model.ShapeName</td>
-                                                            <th>Carat Weight :</th>
-                                                            <td>@Model.Carat</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Color :</th>
-                                                            <td>@Model.ColorName</td>
-                                                            <th>Clarity :</th>
-                                                            <td>@Model.ClarityName</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Cut Grade :</th>
-                                                            <td>@Model.CutName</td>
-                                                            <th>Fluorescence :</th>
-                                                            <td>@Model.FluorName</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Depth :</th>
-                                                            <td>@Model.Depth %</td>
-                                                            <th>Table :</th>
-                                                            <td>@Model.Table %</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Polish :</th>
-                                                            <td>@Model.PolishName</td>
-                                                            <th>Symmetry :</th>
-                                                            <td>@Model.SymmetyName</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Certification :</th>
-                                                            <td>@Model.LabName</td>
-                                                            <th>Measurements :</th>
-                                                            <td>@Model.Measurement</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                                                    <tr>
+                                                                        <th>Shape :</th>
+                                                                        <td>@Model.ShapeName</td>
+                                                                        <th>Carat Weight :</th>
+                                                                        <td>@Model.Carat</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Color :</th>
+                                                                        <td>@Model.ColorName</td>
+                                                                        <th>Clarity :</th>
+                                                                        <td>@Model.ClarityName</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Cut Grade :</th>
+                                                                        <td>@Model.CutName</td>
+                                                                        <th>Fluorescence :</th>
+                                                                        <td>@Model.FluorName</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Depth :</th>
+                                                                        <td>@Model.Depth %</td>
+                                                                        <th>Table :</th>
+                                                                        <td>@Model.Table %</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Polish :</th>
+                                                                        <td>@Model.PolishName</td>
+                                                                        <th>Symmetry :</th>
+                                                                        <td>@Model.SymmetyName</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Certification :</th>
+                                                                        <td>@Model.LabName</td>
+                                                                        <th>Measurements :</th>
+                                                                        <td>@Model.Measurement</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> <!-- End row -->
                                         </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="tab_three">
-                                        <form action="#" class="review-form">
-                                            <h5>1 review for <span>Chaz Kangeroo</span></h5>
-                                            <div class="total-reviews">
-                                                <div class="rev-avatar">
-                                                    <img src="~/assets/img/about/avatar.jpg" alt="">
-                                                </div>
-                                                <div class="review-box">
-                                                    <div class="ratings">
-                                                        <span class="good"><i class="fa fa-star"></i></span>
-                                                        <span class="good"><i class="fa fa-star"></i></span>
-                                                        <span class="good"><i class="fa fa-star"></i></span>
-                                                        <span class="good"><i class="fa fa-star"></i></span>
-                                                        <span><i class="fa fa-star"></i></span>
-                                                    </div>
-                                                    <div class="post-author">
-                                                        <p><span>admin -</span> 30 Mar, 2019</p>
-                                                    </div>
-                                                    <p>
-                                                        Aliquam fringilla euismod risus ac bibendum. Sed sit
-                                                        amet sem varius ante feugiat lacinia. Nunc ipsum nulla,
-                                                        vulputate ut venenatis vitae, malesuada ut mi. Quisque
-                                                        iaculis, dui congue placerat pretium, augue erat
-                                                        accumsan lacus
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <div class="col">
-                                                    <label class="col-form-label">
-                                                        <span class="text-danger">*</span>
-                                                        Your Name
-                                                    </label>
-                                                    <input type="text" class="form-control" required="">
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <div class="col">
-                                                    <label class="col-form-label">
-                                                        <span class="text-danger">*</span>
-                                                        Your Email
-                                                    </label>
-                                                    <input type="email" class="form-control" required="">
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <div class="col">
-                                                    <label class="col-form-label">
-                                                        <span class="text-danger">*</span>
-                                                        Your Review
-                                                    </label>
-                                                    <textarea class="form-control" required=""></textarea>
-                                                    <div class="help-block pt-10">
-                                                        <span class="text-danger">Note:</span>
-                                                        HTML is not translated!
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <div class="col">
-                                                    <label class="col-form-label">
-                                                        <span class="text-danger">*</span>
-                                                        Rating
-                                                    </label>
-                                                    &nbsp;&nbsp;&nbsp; Bad&nbsp;
-                                                    <input type="radio" value="1" name="rating">
-                                                    &nbsp;
-                                                    <input type="radio" value="2" name="rating">
-                                                    &nbsp;
-                                                    <input type="radio" value="3" name="rating">
-                                                    &nbsp;
-                                                    <input type="radio" value="4" name="rating">
-                                                    &nbsp;
-                                                    <input type="radio" value="5" name="rating" checked="">
-                                                    &nbsp;Good
-                                                </div>
-                                            </div>
-                                            <div class="buttons">
-                                                <button class="btn btn-sqr" type="submit">Continue</button>
-                                            </div>
-                                        </form> <!-- end of review-form -->
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- product details reviews end -->
             </div>
-            <!-- product details wrapper end -->
+            <hr class="my-4" />
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="my-3 p-3 bg-body rounded shadow-sm text-center">
+                        <h2 class="mb-2">Customer Reviews</h2>
+                        <h3 class="mb-1">
+                            4.8
+                            <small class="text-muted ms-2">25 reviews</small>
+                        </h3>
+                        <div class="text-warning fs-4">
+                            ★★★★★
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -381,8 +338,7 @@
 
             <!-- Column 3: Add to Cart -->
             <div class="col-12 col-md-3 text-md-end text-center mt-2 mt-md-0">
-                <a href="#" class="btn btn-theme btn-lg fs-3 px-5 py-3 w-100 text-uppercase">Add to Bag</a>
-
+                <a href="#" class="btn btn-theme btn-lg fs-3 px-5 py-3 w-100 text-uppercase" id="btnAdd2Cart" data-diamondId="@Model.Id">Add to Bag</a>
             </div>
         </div>
     </div>
@@ -395,7 +351,19 @@
 
 
         $(function () {
-        updateWishlistUI();
+            updateWishlistUI();
+
+            var $footerCartBar = $('.footer-add-to-cart');
+            var $mainFooter = $('#mainFooter');
+            if ($mainFooter.length === 0) {
+                $mainFooter = $('footer, .site-footer, .page-footer, .container-fluid').last();
+                $mainFooter.attr('id', 'mainFooter');
+            }
+            toggleCartBar(); // Initial check
+
+            $(window).on('scroll resize', function () {
+                toggleCartBar();
+            });
         });
 
         $(document).on("click", ".clsCertificate", function (e) {
@@ -424,16 +392,16 @@
                 wishlist = wishlist.filter(id => id !== diamondId);
                 localStorage.setItem("wishlist", JSON.stringify(wishlist));
 
-                 $(".heart-unchecked").show();
-                 $(".heart-checked").hide();
+                $(".heart-unchecked").show();
+                $(".heart-checked").hide();
 
                 toastr.warning("Product has been removed from your wishlist.");
             } else {
                 wishlist.push(diamondId);
                 localStorage.setItem("wishlist", JSON.stringify(wishlist));
 
-                 $(".heart-unchecked").hide();
-                 $(".heart-checked").show();
+                $(".heart-unchecked").hide();
+                $(".heart-checked").show();
 
                 //alert("Product has been added to your wishlist.");
                 toastr.success("Product has been added to your wishlist.");
@@ -442,25 +410,24 @@
             updateWishlistUI();
         });
 
-         $(document).on("click", "#btnAdd2Cart", function (e) {
-             debugger;
+        $(document).on("click", "#btnAdd2Cart", function (e) {
+            debugger;
             e.preventDefault();
 
             let diamondId = $(this).data("diamondid");
             let diamondcartlist = JSON.parse(localStorage.getItem("diamondCartlist")) || [];
 
             if (diamondcartlist.includes(diamondId)) {
-                 diamondcartlist = diamondcartlist.filter(id => id !== diamondId);
-                 localStorage.setItem("diamondCartlist", JSON.stringify(diamondcartlist));
+                diamondcartlist = diamondcartlist.filter(id => id !== diamondId);
+                localStorage.setItem("diamondCartlist", JSON.stringify(diamondcartlist));
 
-                 alert("Product has been removed from your cartlist.");
+                alert("Product has been removed from your cartlist.");
             }
-            else
-            {
-                 diamondcartlist.push(diamondId);
-                 localStorage.setItem("diamondCartlist", JSON.stringify(diamondcartlist));
+            else {
+                diamondcartlist.push(diamondId);
+                localStorage.setItem("diamondCartlist", JSON.stringify(diamondcartlist));
 
-                 alert("Product has been added to your cartlist.");
+                alert("Product has been added to your cartlist.");
             }
             getcartlistCounter();
             updatecartlistUI();
@@ -493,14 +460,25 @@
         }
 
         function getcartlistCounter() {
-                let cardlist = JSON.parse(localStorage.getItem("diamondCartlist")) || [];
-                $("#addtoCardCounter").text(cardlist.length);
+            let cardlist = JSON.parse(localStorage.getItem("diamondCartlist")) || [];
+            $("#addtoCardCounter").text(cardlist.length);
             $("#addtoCardMobileCounter").text(daiamondCard.length);
 
-         }
+        }
 
-         function updatecartlistUI() {
+        function updatecartlistUI() {
             let cardlist = JSON.parse(localStorage.getItem("diamondCartlist")) || [];
+        }
+
+        function toggleCartBar() {
+            var windowBottom = $(window).scrollTop() + $(window).height();
+            var footerTop = $mainFooter.offset().top;
+
+            if (windowBottom >= footerTop - 10) {
+                $footerCartBar.fadeOut();
+            } else {
+                $footerCartBar.fadeIn();
+            }
         }
 
     </script>

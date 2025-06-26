@@ -7,6 +7,8 @@ namespace Models
     {
         public Guid Id { get; set; }
 
+        public string Type { get; set; }
+
         public DateTime? ProductDate { get; set; }
 
         public string VenderId { get; set; }
@@ -164,6 +166,9 @@ namespace Models
         public string GroupId { get; set; }
 
         public string ProductKey { get; set; }
+
+        public bool? Status { get; set; }
+        public string Message { get; set; }
 
 
         public List<ProductImageAndVideoDTO> ProductImageVideos { get; set; }

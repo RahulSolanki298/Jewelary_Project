@@ -28,19 +28,18 @@ namespace Business.Repository
             var groupedProducts = await (
      from cols in _context.ProductCollectionItems
      join product in _context.Product
-         on cols.ProductId equals product.Id.ToString() // Assuming ProductId in ProductStyleItems is string GUID
+         on cols.ProductId equals product.Id.ToString() 
      where product.UploadStatus == SD.Activated
+     join prodMst in _context.ProductMaster on product.ProductKey equals prodMst.ProductKey
      join cat in _context.Category on product.CategoryId equals cat.Id
      join krt in _context.ProductProperty on product.KaratId equals krt.Id
-     join color in _context.ProductProperty on product.ColorId equals color.Id into colorGroup
-     from color in colorGroup.DefaultIfEmpty()
+     join color in _context.ProductProperty on product.ColorId equals color.Id 
      join shape in _context.ProductProperty on product.CenterShapeId equals shape.Id into shapeGroup
      from shape in shapeGroup.DefaultIfEmpty()
      join clarity in _context.ProductProperty on product.ClarityId equals clarity.Id into clarityGroup
      from clarity in clarityGroup.DefaultIfEmpty()
      join size in _context.ProductProperty on product.CenterCaratId equals size.Id into sizeGroup
      from size in sizeGroup.DefaultIfEmpty()
-
      select new ProductDTO
      {
          Id = product.Id,
@@ -74,7 +73,8 @@ namespace Business.Repository
          KaratId = krt.Id,
          Karat = krt.Name,
          UploadStatus = product.UploadStatus,
-         ProductDate = product.UpdatedDate
+         ProductDate = product.UpdatedDate,
+         ProductKey=prodMst.ProductKey
      })
      .OrderByDescending(x => x.Sku)
      .ToListAsync();
@@ -195,11 +195,8 @@ namespace Business.Repository
                     productDTO.ProductImageVideos.Add(imageVideo);
                 }
 
-                // Add the productDTO to the result list
                 productDTOList.Add(productDTO);
             }
-
-            // Return products where there are product images/videos
             return productDTOList;
         }
     }

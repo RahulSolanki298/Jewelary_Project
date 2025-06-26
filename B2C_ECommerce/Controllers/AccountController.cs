@@ -9,7 +9,9 @@ using Microsoft.Graph.Models;
 using Models;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 
@@ -93,8 +95,12 @@ namespace B2C_ECommerce.Controllers
             });
         }
 
-        
-
+        [HttpGet]
+        public async Task<IActionResult> RegisterProcess()
+        {
+            var response = new CustomerRegisterDTO();
+            return View(response);
+        }
 
 
         [HttpPost]
@@ -102,6 +108,26 @@ namespace B2C_ECommerce.Controllers
         {
             if (ModelState.IsValid)
             {
+                var captchaResponse = Request.Form["g-recaptcha-response"];
+                var secretKey = "6LdSim0rAAAAACrck7la2MF-t4OtK92wK3J9wkK5";
+
+                using var client = new HttpClient();
+                var postData = new Dictionary<string, string>
+                {
+                    { "secret", secretKey },
+                    { "response", captchaResponse }
+                };
+
+                var response = await client.PostAsync("https://www.google.com/recaptcha/api/siteverify", new FormUrlEncodedContent(postData));
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                var captchaResult = JsonSerializer.Deserialize<GoogleCaptchaResponse>(responseContent);
+
+                if (captchaResult?.Success != true)
+                {
+                    ModelState.AddModelError("", "Captcha verification failed.");
+                    return View(registerDT);
+                }
 
                 var data = new UserRequestDTO()
                 {
@@ -113,11 +139,11 @@ namespace B2C_ECommerce.Controllers
                     ConfirmPassword = registerDT.ConfirmPassword
                 };
 
-                var response = await _accountService.CustomerSignUpAsync(data);
+                var result = await _accountService.CustomerSignUpAsync(data);
 
                 return Json(new {
                     Status="Success",
-                    Message = "your application has been created successfully.",
+                    Message = $"{data.FirstName} {data.LastName} has been created successfully.",
                 });
             }
 

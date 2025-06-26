@@ -1,27 +1,29 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Business.Repository.IRepository;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace ControlPanel.Controllers
 {
     public class ProductCollectionsController : Controller
     {
-        public ProductCollectionsController()
+        private readonly ICollectionRepository _collectionRepo;
+        public ProductCollectionsController(ICollectionRepository collectionRepository)
         {
+            _collectionRepo = collectionRepository;
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> Index()
-        //{
-        //    var result = await _productStyles.GetProductStyles();
-        //    return View(result);
-        //}
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var result = await _collectionRepo.GetProductCollections();
+            return View(result);
+        }
 
-        //GetProductStyleItemsList
-        //[HttpGet]
-        //public async Task<IActionResult> GetProductStyleItems()
-        //{
-        //    var result = await _productStyles.GetProductStyleItemsList();
-        //    return PartialView("_ProductStyleItemList", result);
-        //}
+        [HttpGet]
+        public async Task<IActionResult> GetProductCollectionItems()
+        {
+            var result = await _collectionRepo.GetProductCollectionItemsList();
+            return PartialView("_ProductCollectionItemList", result);
+        }
     }
 }

@@ -1904,11 +1904,20 @@ namespace DataAccess.Migrations
                     b.Property<string>("CollectionName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CoverPageImage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CoverPageTitle")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Descriptions")
                         .HasColumnType("nvarchar(max)");
@@ -2414,11 +2423,20 @@ namespace DataAccess.Migrations
                     b.Property<string>("CoverPageImage")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CoverPageTitle")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool?>("IsActivated")
                         .HasColumnType("bit");
+
+                    b.Property<string>("ProductType")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StyleImage")
                         .HasColumnType("nvarchar(max)");

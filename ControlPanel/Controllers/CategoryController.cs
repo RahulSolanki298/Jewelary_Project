@@ -47,12 +47,8 @@ namespace ControlPanel.Controllers
                 var data = await _productStyleRepository.GetProductStyleByCategoryId(categoryId);
                 return PartialView("_GetProductStyleList", data);
             }
-            else if (type == "collections")
-            {
-                var data = await _productStyleRepository.GetProductCollectionsByCategoryId(categoryId);
-                return PartialView("_GetProductCollectionList", data);
-            }
-            return null;   
+
+            return null;
         }
         
         [HttpGet]

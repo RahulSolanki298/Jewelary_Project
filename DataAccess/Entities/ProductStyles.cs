@@ -16,11 +16,17 @@ namespace DataAccess.Entities
 
         public string CoverPageImage { get; set; }
 
+        public string CoverPageTitle { get; set; }
+
+        public string Description { get; set; }
+
         public DateTime CreatedDate { get; set; } = DateTime.Now;
 
         public DateTime? UpdatedDate { get; set; }
 
         public bool? IsActivated { get; set; } = false;
+
+        public string ProductType { get; set; }// Wedding, Engagement
 
     }
 }

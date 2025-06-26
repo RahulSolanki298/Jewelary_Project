@@ -516,7 +516,7 @@ namespace Business.Repository
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+               // Console.Error.WriteLine($"An error occurred: {ex.Message}");
                 return false;
             }
         }
@@ -941,7 +941,6 @@ namespace Business.Repository
             try
             {
                 // Step 0: Initialize variables
-
                 var productStyleName = new ProductStyleDTO();
                 var styleList = new List<ProductStyleItems>();
                 var errorList = new List<string>();
@@ -979,7 +978,17 @@ namespace Business.Repository
                 var productStyleList = new List<ProductStyleDTO>();
                 var productCollectionList = new List<ProductCollectionItems>();
                 var productMst = new ProductMaster();
-
+                string productKey = string.Empty;
+                var groupedProducts = products
+                                          .Where(p => !string.IsNullOrEmpty(p.Sku))
+                                          .GroupBy(p =>
+                                          {
+                                              var skuParts = p.Sku.Split('-');
+                                              return skuParts.Length >= 2
+                                                  ? $"{skuParts[0]}-{skuParts[1]}" // PLDR-374
+                                                  : p.Sku;
+                                          })
+                                          .ToList();
                 foreach (var product in products)
                 {
                     if (fileHistoryId == 0)
@@ -992,8 +1001,10 @@ namespace Business.Repository
                         || string.IsNullOrEmpty(categoryName)
                         || string.IsNullOrEmpty(product.Karat))
                     {
-                        errorList.Add($"{product.Sku} is failed to added. invalid data.");
-                        continue;
+                        result.IsSuccess = false;
+                        result.Errors = $"{product.Sku} is failed to added. invalid data.";
+                        return result;
+
                     }
 
                     caratId = GetProductCarat(product.CenterCaratName);
@@ -1002,9 +1013,12 @@ namespace Business.Repository
                     AshapeId = AshapeDict.GetValueOrDefault(product.AccentStoneShapeName);
                     karatId = KaratDict.GetValueOrDefault(product.Karat);
 
-                    if (string.IsNullOrWhiteSpace(product.Title) || string.IsNullOrWhiteSpace(product.ColorName) || string.IsNullOrWhiteSpace(product.Sku) || product.Price == null)
+                    if (string.IsNullOrWhiteSpace(product.Title) ||
+                        string.IsNullOrWhiteSpace(product.ColorName) ||
+                        string.IsNullOrWhiteSpace(product.Sku) ||
+                        product.Price == null)
                     {
-                        newProduct = new Product
+                        newProduct = new Product    
                         {
                             Title = $"{product.Title}",
                             WholesaleCost = product.WholesaleCost,
@@ -1031,6 +1045,7 @@ namespace Business.Repository
                             Diameter = product.Diameter,
                             Id = Guid.NewGuid(),
                             UpdatedDate = DateTime.Now,
+                            ProductDate=DateTime.Now,
                             UpdatedBy = userId,
                             CreatedBy = userId,
                             CreatedDate = DateTime.Now,
@@ -1039,7 +1054,7 @@ namespace Business.Repository
                             IsActivated = false,
                             IsSuccess = false,
                             GroupId = $"{product.Sku}_{product.ColorName}",
-                            ProductKey = Guid.NewGuid().ToString()
+                            Type = product.Type
                         };
 
                         if (caratId > 0)
@@ -1058,29 +1073,29 @@ namespace Business.Repository
                         productList.Add(newProduct);
                         continue;
                     }
-
+                    
                     if (PreGroupId != string.Concat(product.Sku, "_", product.CenterShapeName))
                     {
                         PreGroupId = string.Concat(product.Sku, "_", product.CenterShapeName);
                     }
 
                     var productDTMst = await (from prd in _context.Product
-                                            join proMst in _context.ProductMaster on prd.ProductKey equals proMst.ProductKey
-                                            join cat in _context.Category on prd.CategoryId equals cat.Id
-                                            join col in _context.ProductProperty on prd.ColorId equals col.Id
-                                            where proMst.GroupId==PreGroupId && prd.ShapeId==shapeId
-                                            select new ProductMasterDTO
-                                            {
-                                                Id = proMst.Id,
-                                                ProductKey = proMst.ProductKey,
-                                                CategoryId = proMst.CategoryId,
-                                                CategoryName = cat.Name,
-                                                ColorId = proMst.ColorId,
-                                                ColorName = col.Name,
-                                                GroupId = proMst.GroupId,
-                                                IsActive = proMst.IsActive,
-                                                IsSale = proMst.IsSale
-                                            }).FirstOrDefaultAsync();
+                                              join proMst in _context.ProductMaster on prd.ProductKey equals proMst.ProductKey
+                                              join cat in _context.Category on prd.CategoryId equals cat.Id
+                                              join col in _context.ProductProperty on prd.ColorId equals col.Id
+                                              where proMst.GroupId == PreGroupId && prd.ShapeId == shapeId && prd.Sku == product.Sku
+                                              select new ProductMasterDTO
+                                              {
+                                                  Id = proMst.Id,
+                                                  ProductKey = proMst.ProductKey,
+                                                  CategoryId = proMst.CategoryId,
+                                                  CategoryName = cat.Name,
+                                                  ColorId = proMst.ColorId,
+                                                  ColorName = col.Name,
+                                                  GroupId = proMst.GroupId,
+                                                  IsActive = proMst.IsActive,
+                                                  IsSale = proMst.IsSale,
+                                              }).FirstOrDefaultAsync();
 
 
                     if (productDTMst == null)
@@ -1090,18 +1105,17 @@ namespace Business.Repository
                         productMst.ColorId = colorId;
                         productMst.ColorName = product.ColorName;
                         productMst.GroupId = PreGroupId;
-                        productMst.ProductStatus = SD.Pending;
                         productMst.ProductKey = Guid.NewGuid().ToString();
+                        productMst.ProductStatus = SD.Pending;
                         productMst.CreatedBy = userId;
                         productMst.CreatedDate = DateTime.Now;
                         productMst.UpdatedBy = userId;
                         productMst.UpdatedDate = DateTime.Now;
                         productMst.CategoryId = categoryId;
                         productMst.IsActive = false;
-                        productMst.Sku = newProduct.Sku;
+                        productMst.Sku = product.Sku;
                         await _context.ProductMaster.AddAsync(productMst);
                         await _context.SaveChangesAsync();
-
 
                         var productHMst = new ProductMasterHistory();
                         productHMst.ProductMasterId = productMst.Id;
@@ -1109,7 +1123,14 @@ namespace Business.Repository
                         productHMst.ColorName = product.ColorName;
                         productHMst.GroupId = PreGroupId;
                         productHMst.ProductStatus = SD.Pending;
-                        productHMst.ProductKey = productMst.ProductKey;
+                        if (productMst.Sku != product.Sku)
+                        {
+                            productMst.ProductKey = Guid.NewGuid().ToString();
+                        }
+                        else
+                        {
+                            productHMst.ProductKey = productMst.ProductKey;
+                        }
                         productHMst.CreatedBy = userId;
                         productHMst.CreatedDate = DateTime.Now;
                         productHMst.UpdatedBy = userId;
@@ -1121,8 +1142,18 @@ namespace Business.Repository
                         await _context.SaveChangesAsync();
                     }
 
-                    existingProduct = existingProducts
-                        .FirstOrDefault(x => x.GroupId == productDTMst.GroupId && x.ProductKey == productDTMst.ProductKey);
+                    if (productDTMst != null)
+                    {
+                        existingProduct = existingProducts
+                      .FirstOrDefault(x => x.GroupId == productDTMst.GroupId && x.ProductKey == productDTMst.ProductKey);
+
+                    }
+                    else
+                    {
+                        existingProduct = existingProducts
+                      .FirstOrDefault(x => x.GroupId == productMst.GroupId && x.ProductKey == productMst.ProductKey);
+
+                    }
 
                     if (existingProduct != null)
                     {
@@ -1145,6 +1176,7 @@ namespace Business.Repository
                         existingProduct.UpdatedBy = userId;
                         existingProduct.UpdatedDate = DateTime.Now;
                         existingProduct.FileHistoryId = fileHistoryId;
+                        existingProduct.Type = product.Type;
                         if (caratId > 0)
                         {
                             existingProduct.CenterCaratId = caratId;
@@ -1159,7 +1191,7 @@ namespace Business.Repository
                             existingProduct.AccentStoneShapeId = AshapeId;
                         }
                         ExistingProductList.Add(existingProduct);
-                        result.SuccessCount++;
+                        result.NoOfProducts++;
 
                     }
                     else
@@ -1200,6 +1232,9 @@ namespace Business.Repository
                             IsSuccess = true,
                             GroupId = productDTMst != null ? productDTMst.GroupId : productMst.GroupId,
                             ProductKey = productDTMst != null ? productDTMst.ProductKey : productMst.ProductKey,
+                            Type = product.Type,
+                            ProductDate = DateTime.Now,
+
                         };
                         if (caratId > 0)
                         {
@@ -1215,7 +1250,7 @@ namespace Business.Repository
                         }
 
                         productList.Add(newProduct);
-                        result.SuccessCount++;
+                        result.NoOfProducts++;
                     }
 
                     var styleDT = await _context.ProductStyles.Where(x => x.StyleName == product.StyleName).FirstOrDefaultAsync();
@@ -1228,6 +1263,7 @@ namespace Business.Repository
                             IsActivated = true,
                             CreatedDate = DateTime.Now,
                             UpdatedDate = DateTime.Now,
+                            
                         };
                         await _context.ProductStyles.AddAsync(styleDT);
                         await _context.SaveChangesAsync();
@@ -1235,8 +1271,7 @@ namespace Business.Repository
 
                     if (styleDT != null)
                     {
-                        var productStyleItem = await _context.ProductStyleItems.Where(x => x.StyleId == styleDT.Id
-                                                                                && x.ProductId == productDTMst.ProductKey).FirstOrDefaultAsync();
+                        var productStyleItem = await _context.ProductStyleItems.Where(x => x.StyleId == styleDT.Id && x.ProductId == product.Id.ToString()).FirstOrDefaultAsync();
 
                         if (!string.IsNullOrEmpty(product.StyleName))
                         {
@@ -1247,6 +1282,8 @@ namespace Business.Repository
                             productStyleItem.IsActive = true;
 
                             styleList.Add(productStyleItem);
+                            result.NoOfStyles++;
+
                         }
                     }
 
@@ -1279,6 +1316,7 @@ namespace Business.Repository
                             productCollectionItem.UpdatedDate = DateTime.Now;
 
                             productCollectionList.Add(productCollectionItem);
+                            result.NoOfStyles++;
                         }
 
                     }
@@ -1335,7 +1373,9 @@ namespace Business.Repository
                         IsActivated = product.IsActivated,
                         IsSuccess = product.IsSuccess,
                         GroupId = product.GroupId,
-                        ProductKey = product.ProductKey
+                        ProductKey = product.ProductKey,
+                        Type = product.Type,
+                        ProductDate = DateTime.Now,
 
                     };
                     HistoryProductList.Add(historyResult);
@@ -1347,29 +1387,22 @@ namespace Business.Repository
                     await _context.SaveChangesAsync();
                 }
 
-                var success = await _context.Product.Where(x => x.FileHistoryId == fileHistoryId && x.IsSuccess == true).ToListAsync();
-                var fail = await _context.Product.Where(x => x.FileHistoryId == fileHistoryId && x.IsSuccess == false).ToListAsync();
-                result.FailureCount = fail.Count();
-                result.SuccessCount = success.Count();
-
                 var history = await _context.ProductFileUploadHistory.Where(x => x.Id == fileHistoryId).FirstOrDefaultAsync();
 
                 if (history != null)
                 {
-                    history.NoOfSuccess = success.Count();
-                    history.NoOfFailed = fail.Count();
-
                     _context.ProductFileUploadHistory.Update(history);
                     await _context.SaveChangesAsync();
                 }
 
                 result.IsSuccess = true;
+                result.Message = "AI transforms data migration Successfully.";
                 return result;
             }
             catch (Exception ex)
             {
                 result.IsSuccess = false;
-                result.Errors.Add($"Exception: {ex.Message}");
+                result.Errors = $"Exception: {ex.Message}";
                 return result;
             }
         }

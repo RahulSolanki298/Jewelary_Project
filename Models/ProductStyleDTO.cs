@@ -32,6 +32,10 @@ namespace Models
         public IFormFile CoverPageFile { get; set; }
 
         public int? CategoryId { get; set; }
+
+        public string? CategoryName { get; set; }
+
+        public string CoverPageTitle { get; set; }
     }
 
 }

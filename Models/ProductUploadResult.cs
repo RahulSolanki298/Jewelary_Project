@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Models
+﻿namespace Models
 {
     public class ProductUploadResult
     {
         public bool IsSuccess { get; set; }
-
+        public int NoOfProducts { get; set; } = 0;
+        public int NoOfStyles { get; set; } = 0;
+        public int NoOfCollections { get; set; } = 0;
         public string Message { get; set; }
-        public int SuccessCount { get; set; }
-        public int FailureCount { get; set; }
-        public List<string> Errors { get; set; } = new List<string>();
+        public string Errors { get; set; }
     }
 }

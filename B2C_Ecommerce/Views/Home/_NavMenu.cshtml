@@ -4,28 +4,57 @@
 @{
     var firstHalf = Model.ProductShapeList.Take(5).ToList();
     var secondHalf = Model.ProductShapeList.Skip(5).Take(5).ToList();
+
+    var firstDHalf = Model.DiamondShapeList.Take(5).ToList();
+    var secondDHalf = Model.DiamondShapeList.Skip(5).Take(5).ToList();
+
+    var firstShapeHalf = Model.SubcategoryList.Take(5).ToList();
+    var secondShapeHalf = Model.SubcategoryList.Skip(5).Take(5).ToList();
+
+    var firstSubCatHalf = Model.SubcategoryList.Where(x => x.CategoryName == SD.Bands).Take(5).ToList();
+    var secondSubCatHalf = Model.SubcategoryList.Where(x => x.CategoryName == SD.Bands).Skip(5).Take(5).ToList();
 }
 
 
 <ul>
     <li class="active position-static">
-        <a href="@Url.Action("Index","Product",new {type="Solitaire"})">Engagement</a>
+        <a href="@Url.Action("Index","Product")">Engagement</a>
         <ul class="megamenu dropdown">
             <li class="mega-title">
                 <span>Shop by Style</span>
                 <ul>
-                    @if (Model != null && Model.SubcategoryList.Count() > 0)
-                    {
-                        foreach (var item in Model.SubcategoryList)
-                        {
+                    <li class="mega-title">
+                        <ul>
+                            @foreach (var item in firstShapeHalf)
+                            {
                             <li>
-                                <a href="@Url.Action("Index","ProductPrograms",new {programName="Engagement",type=item.Id})">
-                                    <img src="@SD.ImgUrl/@item.ImageFile" style="width:30px;">
+                                <a href="@Url.Action("Index","Products",new {type="Engagement",styleId=item.Id})">
+                                    <img src="@SD.ImgUrl/@item.StyleImage" style="width:40px;">
                                     @item.StyleName
                                 </a>
                             </li>
-                        }
-                    }
+                            }
+                        </ul>
+                    </li>
+
+                </ul>
+            </li>
+            <li>
+                <ul>
+                    <li class="mega-title">
+                        <span></span>
+                        <ul>
+                            @foreach (var item in secondShapeHalf)
+                            {
+                            <li>
+                                <a href="@Url.Action("Index","Products",new {type="Engagement",styleName=item.Id})">
+                                    <img src="@SD.ImgUrl/@item.StyleImage" style="width:40px;">
+                                    @item.StyleName
+                                </a>
+                            </li>
+                            }
+                        </ul>
+                    </li>
                 </ul>
             </li>
             <li class="mega-title">
@@ -33,7 +62,7 @@
                 <ul>
                     @foreach (var item in firstHalf)
                     {
-                        <li><a href="#"><img src="@SD.ImgUrl/@item.IconPath" style="width:30px;">@item.Name</a></li>
+                    <li><a href="#"><img src="@SD.ImgUrl/@item.IconPath" style="width:40px;"> @item.Name</a></li>
                     }
                 </ul>
             </li>
@@ -42,9 +71,9 @@
                 <ul>
                     @if (Model != null && Model.ProductShapeList.Count() > 0)
                     {
-                        @foreach (var item in secondHalf)
+                    @foreach (var item in secondHalf)
                         {
-                            <li><a href="#"><img src="@SD.ImgUrl/@item.IconPath" style="width:30px;">@item.Name</a></li>
+                    <li><a href="#"><img src="@SD.ImgUrl/@item.IconPath" style="width:40px;"> @item.Name</a></li>
                         }
                     }
                 </ul>
@@ -61,7 +90,7 @@
         </ul>
     </li>
     <li class="position-static">
-        <a href="@Url.Action("Index","ProductPrograms",new {type="Bands"})">Wedding</a>
+        <a href="@Url.Action("Index","Products",new {type="Bands"})">Wedding</a>
         <ul class="megamenu dropdown">
             <li class="mega-title">
                 <span>Shop by Style</span>
@@ -70,7 +99,7 @@
                     {
                         foreach (var item in Model.SubcategoryList.Where(x => x.IsActivated == true))
                         {
-                            <li><a href="@Url.Action("Index","Product",new { programName="Wedding",type="WeddingAndAnniversary"})">@item.StyleName</a></li>
+                    <li><a href="@Url.Action("Index","Products",new { type="Wedding",styleName=item.StyleName})">@item.StyleName</a></li>
                         }
                     }
                 </ul>
@@ -80,7 +109,7 @@
                 <ul>
                     @foreach (var item in firstHalf)
                     {
-                        <li><a href="#"><img src="@SD.ImgUrl/@item.IconPath" style="width:30px;">@item.Name</a></li>
+                    <li><a href="#"><img src="@SD.ImgUrl/@item.IconPath" style="width:40px;"> @item.Name</a></li>
                     }
                 </ul>
             </li>
@@ -89,7 +118,7 @@
                 <ul>
                     @foreach (var item in secondHalf)
                     {
-                        <li><a href="#"><img src="@SD.ImgUrl/@item.IconPath" style="width:30px;">@item.Name</a></li>
+                    <li><a href="#"><img src="@SD.ImgUrl/@item.IconPath" style="width:40px;"> @item.Name</a></li>
                     }
                 </ul>
             </li>
@@ -119,59 +148,46 @@
             <li class="mega-title">
                 <span>Rings</span>
                 <ul>
-                    <li><a href="#">Fashion</a></li>
-                    <li><a href="#">Gemstone</a></li>
-                    <li><a href="#">Gold</a></li>
-                    <li><a href="#">High Jewelry</a></li>
-                    <li><a href="#">Customer Favorites</a></li>
+                    @foreach (var item in Model.SubcategoryList.Where(x => x.CategoryName == SD.Rings))
+                    {
+                    <li><a href="#">@item.CategoryName</a></li>
+                    }
                 </ul>
             </li>
             <li class="mega-title">
                 <span>Earrings</span>
                 <ul>
-                    <li><a href="#">Studs</a></li>
-                    <li><a href="#">Hoops</a></li>
-                    <li><a href="#">Fashion</a></li>
-                    <li><a href="#">Jackets</a></li>
-                    <li><a href="#">Gemstone</a></li>
-                    <li><a href="#">Gold</a></li>
-                    <li><a href="#">High Jewelry</a></li>
-                    <li><a href="#">Customer Favorites</a></li>
+                    @foreach (var item in Model.SubcategoryList.Where(x => x.CategoryName == SD.Earrings))
+                    {
+                    <li><a href="#">@item.StyleName</a></li>
+                    }
                 </ul>
             </li>
             <li class="mega-title">
                 <span>Necklaces</span>
                 <ul>
-                    <li><a href="#">Tennis</a></li>
-                    <li><a href="#">Pendants</a></li>
-                    <li><a href="#">Fashion</a></li>
-                    <li><a href="#">Gemstone</a></li>
-                    <li><a href="#">Gold</a></li>
-                    <li><a href="#">High Jewelry</a></li>
-                    <li><a href="#">Customer Favorites</a></li>
+                    @foreach (var item in Model.SubcategoryList.Where(x => x.CategoryName == SD.Nackleces))
+                    {
+                    <li><a href="#">@item.StyleName</a></li>
+                    }
                 </ul>
             </li>
             <li class="mega-title">
                 <span>Bracelets</span>
                 <ul>
-                    <li><a href="#">Tennis</a></li>
-                    <li><a href="#">Fashion</a></li>
-                    <li><a href="#">Bangles</a></li>
-                    <li><a href="#">Anklets</a></li>
-                    <li><a href="#">Gemstone</a></li>
-                    <li><a href="#">Gold</a></li>
-                    <li><a href="#">High Jewelry</a></li>
-                    <li><a href="#">Customer Favorites</a></li>
+                    @foreach (var item in Model.SubcategoryList.Where(x => x.CategoryName == SD.Bracelets))
+                    {
+                    <li><a href="#">@item.StyleName</a></li>
+                    }
                 </ul>
             </li>
             <li class="mega-title">
                 <span>Men's</span>
                 <ul>
-                    <li><a href="#">Rings</a></li>
-                    <li><a href="#">Earrings</a></li>
-                    <li><a href="#">Necklaces</a></li>
-                    <li><a href="#">Bracelets</a></li>
-                    <li><a href="#">Cufflinks</a></li>
+                    @foreach (var item in Model.CategoryList)
+                    {
+                    <li><a href="#">@item.Name</a></li>
+                    }
                 </ul>
             </li>
             <li class="megamenu-banners">
@@ -191,21 +207,19 @@
             <li class="mega-title">
                 <span>Shop by Shape</span>
                 <ul>
-                    <li><a href="@Url.Action("Index","Diamond",new { shapeId=457})"><img src="~/assets/img/diamond-svg/Princess.svg" style="width:30px;"> Princess</a></li>
-                    <li><a href="@Url.Action("Index","Diamond",new { shapeId=456})"><img src="~/assets/img/diamond-svg/Round.svg" style="width:30px;"> Round</a></li>
-                    <li><a href="@Url.Action("Index","Diamond",new { shapeId=464})"><img src="~/assets/img/diamond-svg/Radiant.svg" style="width:30px;"> Radiant-Cut</a></li>
-                    <li><a href="@Url.Action("Index","Diamond",new { shapeId=463})"><img src="~/assets/img/diamond-svg/Emerald.svg" style="width:30px;"> Emerald</a></li>
-                    <li><a href="@Url.Action("Index","Diamond",new { shapeId=461})"><img src="~/assets/img/diamond-svg/Oval.svg" style="width:30px;"> Oval</a></li>
+                    @foreach (var item in firstDHalf)
+                    {
+                    <li><a href="@Url.Action("Index","Diamond",new { shapeId=item.Id})"><img src="@SD.ImgUrl/@item.IconPath" style="width:40px;"> @item.Name</a></li>
+                    }
                 </ul>
             </li>
             <li class="mega-title">
                 <span></span>
                 <ul>
-                    <li><a href="@Url.Action("Index","Diamond",new { shapeId=462})"><img src="~/assets/img/diamond-svg/Cushion.svg" style="width:30px;"> CushionLong</a></li>
-                    <li><a href="@Url.Action("Index","Diamond",new { shapeId=460})"><img src="~/assets/img/diamond-svg/Heart.svg" style="width:30px;"> Heart</a></li>
-                    <li><a href="@Url.Action("Index","Diamond",new { shapeId=458})"><img src="~/assets/img/diamond-svg/Marquise.svg" style="width:30px;"> Marquise</a></li>
-                    <li><a href="@Url.Action("Index","Diamond",new { shapeId=465})"><img src="~/assets/img/diamond-svg/Square Emerald.svg" style="width:30px;"> Sq.Emerald</a></li>
-                    @*<li><a href="@Url.Action("Index","Diamond",new { shapeId="Asscher"})"><img src="~/assets/img/diamond-svg/Asscher.svg" style="width:30px;"> Asscher</a></li>*@
+                    @foreach (var item in secondDHalf)
+                    {
+                    <li><a href="@Url.Action("Index","Diamond",new { shapeId=item.Id})"><img src="@SD.ImgUrl/@item.IconPath" style="width:40px;"> @item.Name</a></li>
+                    }
                 </ul>
             </li>
             <li class="megamenu-banners d-none d-lg-block">
@@ -216,8 +230,90 @@
         </ul>
     </li>
     @*<li><a href="#">Custom</a></li>*@
-    <li>
-        <a href="#">Collection </a>
+    @*<li>
+        <ul class="megamenu dropdown">
+            <li class="mega-title">
+
+
+            </li>
+            <li class="megamenu-banners d-none d-lg-block">
+                <a href="#">
+                    <img src="~/assets/img/Menu-Image3.jpg" alt="" />
+                </a>
+            </li>
+        </ul>
+    </li>*@
+    <li class="position-static">
+        <a href="@Url.Action("Index","Products")">Collection </a>
+        <ul class="megamenu dropdown jewelry-mega-menu-display">
+            <li class="mega-title">
+                <span>Shop by Collection</span>
+                <ul>
+                    @foreach (var item in Model.ProductCollectionList)
+                    {
+                    <li><a href="@Url.Action("Index","Diamond",new { shapeId=item.Id})">@item.CollectionName</a></li>
+                    }
+                </ul>
+            </li>
+            <li class="mega-title">
+                <span>Earrings</span>
+                <ul>
+                    @foreach (var item in Model.SubcategoryList.Where(x => x.CategoryName == SD.Earrings))
+                    {
+                    <li><a href="#">@item.StyleName</a></li>
+                    }
+                </ul>
+            </li>
+            <li class="mega-title">
+                <span>Necklaces</span>
+                <ul>
+                    @foreach (var item in Model.SubcategoryList.Where(x => x.CategoryName == SD.Nackleces))
+                    {
+                    <li><a href="#">@item.StyleName</a></li>
+                    }
+                </ul>
+            </li>
+            <li class="mega-title">
+                <span>Bracelets</span>
+                <ul>
+                    @foreach (var item in Model.SubcategoryList.Where(x => x.CategoryName == SD.Bracelets))
+                    {
+                    <li><a href="#">@item.StyleName</a></li>
+                    }
+                </ul>
+            </li>
+            <li class="mega-title">
+                <span>Men's</span>
+                <ul>
+                    @foreach (var item in Model.CategoryList)
+                    {
+                    <li><a href="#">@item.Name</a></li>
+                    }
+                </ul>
+            </li>
+            <li class="megamenu-banners">
+                <a href="#">
+                    <video autoplay="autoplay" loop="loop" muted="muted" playsinline preload="auto" style="width:170px;height:250px;">
+                        <source src="~/assets/img/video/diamonds-jewellery.mp4" type="video/mp4" />
+                    </video>
+                </a>
+            </li>
+        </ul>
+
     </li>
+    @*<li class="position-static">
+        <a href="@Url.Action("Index","Products")">Collection </a>
+        <ul class="megamenu dropdown jewelry-mega-menu-display">
+            <li class="mega-title">
+                <span>Shop by Collection</span>
+                <ul>
+                    @foreach (var item in Model.ProductCollectionList)
+                    {
+                    <li><a href="@Url.Action("Index","Diamond",new { shapeId=item.Id})">@item.CollectionName</a></li>
+                    }
+                </ul>
+            </li>
+        </ul>
+    </li>*@
     <li><a href="@Url.Action("Index","Education")">Education</a></li>
 </ul>

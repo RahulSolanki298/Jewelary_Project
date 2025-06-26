@@ -7,8 +7,9 @@ namespace B2C_ECommerce.IServices
 {
     public interface IProductService
     {
-        Task<IEnumerable<ProductMasterDTO>> GetProductListByFilter(ProductFilters filters, int pageNumber = 1, int pageSize = 10);
+        //Task<IEnumerable<ProductMasterDTO>> GetProductListByFilter(ProductFilters filters, int pageNumber = 1, int pageSize = 10);
         //Task<List<ProductDTO>> GetProductListByFilter(ProductFilters productFilters, int pageNumber = 1, int pageSize = 10);
+        Task<List<ProductDTO>> GetProductListByFilter(ProductFilters filters, int pageNumber = 1, int pageSize = 10);
         Task<List<SubCategoryDTO>> GetSubcategoryList();
         Task<List<CategoryDTO>> GetCategoriesList();
         Task<ProductDTO> GetProductByProductId(string productId);
@@ -17,7 +18,11 @@ namespace B2C_ECommerce.IServices
         Task<List<ProductPropertyDTO>> GetProductColorList();
         Task<List<ProductPropertyDTO>> GetShapeList();
         Task<IEnumerable<ProductMasterDTO>> GetSelectedProductByIds(string[] productIds);
-
         Task<List<ProductMasterDTO>> GetJewelleryByShapeColorId(string sku, int colorId, int? shapeId = 0);
+        Task<List<ProductStyles>> ProductStyleDataList();
+        Task<List<ProductCollections>> ProductCollectionDataList();
+
+        Task<List<ProductStyleDTO>> ProgramStylesList();
+        Task<List<ProductCollectionDTO>> ProductCollectionList();
     }
 }

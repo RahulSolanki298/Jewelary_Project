@@ -86,7 +86,12 @@ namespace B2C_ECommerce.Controllers
             return PartialView("_NavMenu", homeContent);
         }
 
-        
+        [HttpGet]
+        public async Task<IActionResult> GetDiamondList()
+        {
+            var DiamondShapeList = await _diamondRepository.GetShapeListAsync();
+            return PartialView("_DiamondList",DiamondShapeList);
+        }
 
     }
 }

@@ -13,6 +13,8 @@ namespace DataAccess.Entities
 
         public string CollectionImage { get; set; }
 
+        public string CoverPageImage { get; set; }
+
         public DateTime? CreatedDate { get; set; }
 
         public string CreatedBy { get; set; }
@@ -22,6 +24,10 @@ namespace DataAccess.Entities
         public DateTime? UpdatedDate { get; set; }
 
         public bool? IsActivated { get; set; } = false;
+
+        public string CoverPageTitle { get; set; }
+
+        public string Description { get; set; }
 
         public virtual ICollection<Product> Products { get; set; }
     }

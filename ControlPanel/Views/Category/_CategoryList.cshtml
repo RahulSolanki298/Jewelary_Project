@@ -32,7 +32,7 @@
                                         <tr class="clickable-row" data-property-name="@item.Name">
                                             <td>@(index++)</td>
                                             <td>
-                                                <img src="@($"{SD.ImgUrl}/{item.CategoryImage}")" alt="@item.Name Image" style="height:100px;" loading="lazy" />
+                                                <img src="@($"{SD.ImgUrl}/{item.CategoryImage}")" alt="@item.Name Image" style="height:100px;width:200px;" loading="lazy" />
                                             </td>
                                             <td>@item.Name</td>
                                             <td>@(item.IsActivated ? "Active" : "Inactive")</td>
@@ -45,11 +45,6 @@
                                                         <li>
                                                             <a class="dropdown-item show-property" data-type="styles" data-category-id="@item.Id">
                                                                 <i class="bi bi-pencil-square me-1"></i>Show Styles
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="dropdown-item show-property" data-type="collections" data-category-id="@item.Id">
-                                                                <i class="bi bi-pencil-square me-1"></i>Show Collections
                                                             </a>
                                                         </li>
                                                         <li>

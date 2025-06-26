@@ -66,6 +66,9 @@ namespace Business.Repository
                                     Id = pst.Id,
                                     VenderId = pst.VenderId,
                                     StyleName = pst.StyleName,
+                                    CoverPageImage=pst.CoverPageImage,
+                                    StyleImage=pst.StyleImage,
+                                    CategoryId=pst.CategoryId,
                                     IsActivated = pst.IsActivated,
                                 }).ToListAsync();
                 return result;
@@ -98,8 +101,9 @@ namespace Business.Repository
             var groupedProducts = await (
                          from style in _context.ProductStyleItems
                          join product in _context.Product
-                             on style.ProductId equals product.Id.ToString() // Assuming ProductId in ProductStyleItems is string GUID
+                             on style.ProductId equals product.Id.ToString() 
                          where product.UploadStatus == SD.Activated && style.IsActive
+                         join proMst in _context.ProductMaster on product.ProductKey equals proMst.ProductKey
                          join cat in _context.Category on product.CategoryId equals cat.Id
                          join krt in _context.ProductProperty on product.KaratId equals krt.Id
                          join color in _context.ProductProperty on product.ColorId equals color.Id into colorGroup
@@ -110,7 +114,6 @@ namespace Business.Repository
                          from clarity in clarityGroup.DefaultIfEmpty()
                          join size in _context.ProductProperty on product.CenterCaratId equals size.Id into sizeGroup
                          from size in sizeGroup.DefaultIfEmpty()
-
                          select new ProductDTO
                          {
                              Id = product.Id,
@@ -144,7 +147,8 @@ namespace Business.Repository
                              KaratId = krt.Id,
                              Karat = krt.Name,
                              UploadStatus = product.UploadStatus,
-                             ProductDate = product.UpdatedDate
+                             ProductDate = product.UpdatedDate,
+                             ProductKey=proMst.ProductKey
                          })
                          .OrderByDescending(x => x.Sku)
                          .ToListAsync();
@@ -265,15 +269,14 @@ namespace Business.Repository
                     productDTO.ProductImageVideos.Add(imageVideo);
                 }
 
-                // Add the productDTO to the result list
+                // Add the productDTO to the result list    
                 productDTOList.Add(productDTO);
             }
 
             // Return products where there are product images/videos
             return productDTOList;
         }
-
-
+        
         public async Task<bool> SaveProductStyle(ProductStyleDTO product)
         {
             try

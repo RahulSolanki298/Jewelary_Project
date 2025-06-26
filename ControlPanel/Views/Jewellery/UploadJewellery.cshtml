@@ -61,16 +61,29 @@
                         $("#ImportProductList").html("");
                         $("#ImportProductList").html(response);
 
-                        Swal.fire({
-                            title: response.message || 'Product File Uploaded Successfully.',
-                            icon: "success",
-                            draggable: true
-                        });
+                        //if (response.isSuccess) {
+                        //    Swal.fire({
+                        //        title: 'Upload Successful!',
+                        //        html: `<b>${response.message}</b>`,
+                        //        icon: 'success'
+                        //    });
+                        //} else {
+                        //    Swal.fire({
+                        //        title: 'Upload Failed!',
+                        //        html: `<b>${response.message}</b><br/><pre>${response.errors}</pre>`,
+                        //        icon: 'error'
+                        //    });
+                        //}
+                        
                     },
                     error: function (xhr, status, error) {
                         $('#loader').hide();
                         $('#uploadBtn').prop('disabled', false).text('Upload');
-                        alert('Upload failed: ' + xhr.responseText);
+                        Swal.fire({
+                            title: 'Upload Failed!',
+                            html: `<b>${xhr.responseText}</b><br/><pre>${error.errorMessage}</pre>`,
+                            icon: 'error'
+                        });
                     }
                 });
             });
@@ -111,6 +124,7 @@
                         Diameter: row.find('input[name="Diameter"]').val(),
                         StyleName: row.find('input[name="StyleName"]').val(),
                         CollectionName: row.find('input[name="CollectionName"]').val(),
+                        Type: row.find('input[name="Type"]').val(),
                     };
 
                     productDTO.push(product);
@@ -193,6 +207,7 @@
                         Diameter: row.find('input[name="Diameter"]').val(),
                         StyleName: row.find('input[name="StyleName"]').val(),
                         CollectionName: row.find('input[name="CollectionName"]').val(),
+                        Type: row.find('input[name="Type"]').val(),
                     };
 
                     productDTO.push(product);
@@ -263,6 +278,7 @@
                         Diameter: row.find('input[name="Diameter"]').val(),
                         StyleName: row.find('input[name="StyleName"]').val(),
                         CollectionName: row.find('input[name="CollectionName"]').val(),
+                        Type: row.find('input[name="Type"]').val(),
                     };
 
                     productDTO.push(product);
@@ -333,6 +349,7 @@
                         Diameter: row.find('input[name="Diameter"]').val(),
                         StyleName: row.find('input[name="StyleName`"]').val(),
                         CollectionName: row.find('input[name="CollectionName"]').val(),
+                        Type: row.find('input[name="Type"]').val(),
                     };
 
                     productDTO.push(product);
@@ -403,6 +420,7 @@
                         Diameter: row.find('input[name="Diameter"]').val(),
                         StyleName: row.find('input[name="StyleName`"]').val(),
                         CollectionName: row.find('input[name="CollectionName"]').val(),
+                        Type: row.find('input[name="Type"]').val(),
                     };
 
                     productDTO.push(product);

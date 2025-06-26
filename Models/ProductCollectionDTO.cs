@@ -7,6 +7,7 @@
         public string Descriptions { get; set; }
         public string CollectionImage { get; set; }
         public bool? IsActivated { get; set; } = false;
-
+        public bool IsCategory { get; set; }
+        public string CategoryName { get; set; }
     }
 }

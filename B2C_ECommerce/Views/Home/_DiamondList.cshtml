@@ -1,0 +1,14 @@
+﻿@model IEnumerable<Models.DiamondShapeData>
+@using Common;
+<div class="diamond-grid">
+    <!-- Product Item 1 -->
+    @foreach (var item in Model)
+    {
+        <div class="diamond-item">
+            <a href="@Url.Action("Index","Diamond",new { shapeId=item.Id})">
+                <img src="@SD.ImgUrl/@item.IconPath" class="diamond-icon" alt="Princess Diamond">
+                <h5>@item.Name</h5>
+            </a>
+        </div>
+    }
+</div>

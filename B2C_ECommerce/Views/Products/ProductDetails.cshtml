@@ -625,9 +625,9 @@
                                 <a href="compare.html" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to Compare"><i class="pe-7s-refresh-2"></i></a>
                                 <a href="#" data-bs-toggle="modal" data-bs-target="#quick_view"><span data-bs-toggle="tooltip" data-bs-placement="left" title="Quick View"><i class="pe-7s-search"></i></span></a>
                             </div>
-                            <div class="cart-hover">
+                            @*<div class="cart-hover">
                                 <button class="btn btn-cart">add to cart</button>
-                            </div>
+                            </div>*@
                         </figure>
                         <div class="product-caption text-center">
                             <div class="product-identity">
@@ -677,9 +677,9 @@
                                 <a href="compare.html" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to Compare"><i class="pe-7s-refresh-2"></i></a>
                                 <a href="#" data-bs-toggle="modal" data-bs-target="#quick_view"><span data-bs-toggle="tooltip" data-bs-placement="left" title="Quick View"><i class="pe-7s-search"></i></span></a>
                             </div>
-                            <div class="cart-hover">
+                            @*<div class="cart-hover">
                                 <button class="btn btn-cart">add to cart</button>
-                            </div>
+                            </div>*@
                         </figure>
                         <div class="product-caption text-center">
                             <div class="product-identity">
@@ -716,19 +716,19 @@
 </section>
 
 <!-- Fixed Footer Add to Cart Bar -->
-<div class="footer-add-to-cart fixed-bottom bg-white shadow-lg border-top d-flex justify-content-between align-items-center px-3 py-2">
-    <div>
-        <strong>@Model.Title</strong> <br />
-        <span class="text-muted">$@Model.Price USD</span>
+    <div id="footerCartBar" class="footer-add-to-cart fixed-bottom bg-white shadow-lg border-top px-3 py-3">
+        <div>
+            <strong>@Model.Title</strong> <br />
+            <span class="text-muted">$@Model.Price USD</span>
+        </div>
+        <a href="#" class="btn btn-theme px-4 py-2">Add to Cart</a>
     </div>
-    <a href="#" class="btn btn-theme px-4 py-2">Add to Cart</a>
-</div>
 
 
-@section Scripts {
-    <script src="~/assets/js/plugins/lightslider.js"></script>
+    @section Scripts {
+        <script src="~/assets/js/plugins/lightslider.js"></script>
 
-    <script>
+        <script>
 
         let vSlider;
         let resizeTimeout;
@@ -861,73 +861,73 @@
                 console.error("AJAX Error:", status, error);
             });
         }
-    </script>
+        </script>
 
 
 
-    @*  <script>
-            $(function () {
-              var zoomed = false;
-              var isDragging = false;
-              var lastX, lastY;
-              var posX = 0, posY = 0;
+        @*  <script>
+                $(function () {
+                  var zoomed = false;
+                  var isDragging = false;
+                  var lastX, lastY;
+                  var posX = 0, posY = 0;
 
-              var $img = $('.zoom-images');
+                  var $img = $('.zoom-images');
 
-              $img.on('click', function (e) {
-                  debugger;
-                if (!zoomed) {
-                  zoomed = true;
-                  $(this).css('cursor', 'grab');
-                  $(this).css('transform', 'scale(2)');
-                } else {
-                  zoomed = false;
-                  $(this).css('cursor', 'zoom-in');
-                  $(this).css({
-                    transform: 'scale(1)',
-                    top: 0,
-                    left: 0
-                  });
-                  posX = posY = 0;
-                }
-              });
-
-              $img.on('mousedown', function (e) {
-                if (!zoomed) return;
-                isDragging = true;
-                lastX = e.pageX;
-                lastY = e.pageY;
-                $(this).css('cursor', 'grabbing');
-              });
-
-              $(document).on('mousemove', function (e) {
-                if (isDragging && zoomed) {
-                  var dx = e.pageX - lastX;
-                  var dy = e.pageY - lastY;
-
-                  posX += dx;
-                  posY += dy;
-
-                  $img.css({
-                    top: posY + 'px',
-                    left: posX + 'px'
+                  $img.on('click', function (e) {
+                      debugger;
+                    if (!zoomed) {
+                      zoomed = true;
+                      $(this).css('cursor', 'grab');
+                      $(this).css('transform', 'scale(2)');
+                    } else {
+                      zoomed = false;
+                      $(this).css('cursor', 'zoom-in');
+                      $(this).css({
+                        transform: 'scale(1)',
+                        top: 0,
+                        left: 0
+                      });
+                      posX = posY = 0;
+                    }
                   });
 
-                  lastX = e.pageX;
-                  lastY = e.pageY;
-                }
-              });
+                  $img.on('mousedown', function (e) {
+                    if (!zoomed) return;
+                    isDragging = true;
+                    lastX = e.pageX;
+                    lastY = e.pageY;
+                    $(this).css('cursor', 'grabbing');
+                  });
 
-              $(document).on('mouseup', function () {
-                if (zoomed) {
-                  isDragging = false;
-                  $img.css('cursor', 'grab');
-                }
-              });
-            });
-        </script> *@
+                  $(document).on('mousemove', function (e) {
+                    if (isDragging && zoomed) {
+                      var dx = e.pageX - lastX;
+                      var dy = e.pageY - lastY;
 
-<script>
+                      posX += dx;
+                      posY += dy;
+
+                      $img.css({
+                        top: posY + 'px',
+                        left: posX + 'px'
+                      });
+
+                      lastX = e.pageX;
+                      lastY = e.pageY;
+                    }
+                  });
+
+                  $(document).on('mouseup', function () {
+                    if (zoomed) {
+                      isDragging = false;
+                      $img.css('cursor', 'grab');
+                    }
+                  });
+                });
+            </script> *@
+
+        <script>
         $(function () {
             var zoomed = false;
             var isDragging = false;
@@ -986,6 +986,11 @@
             });
 
             $(document).ready(function () {
+                var $footer = $('#mainFooter');
+                var $cartBar = $('#footerCartBar');
+
+                checkFooterVisibility();
+
                 $(".shapeDT").click(function () {
                     var sku = $(this).attr('sku');
                     var shapeId = $(this).attr('shapeId');
@@ -995,6 +1000,22 @@
 
             });
 
+            function checkFooterVisibility() {
+                var windowBottom = $(window).scrollTop() + $(window).height();
+                var footerTop = $footer.offset().top;
+
+                if (windowBottom >= footerTop) {
+                    // Footer is in view
+                    $cartBar.hide();
+                } else {
+                    // Footer is out of view
+                    $cartBar.show();
+                }
+            }
+
+            $(window).on('scroll resize', function () {
+                checkFooterVisibility();
+            });
 
             function GetProductByShapeId(sku, shapeId, colorId) {
                 $.ajax({
@@ -1059,19 +1080,19 @@
                     });
             }
         });
-</script>
-    <script>
-        const collapseEl = document.getElementById('collapseDetails');
-        const toggleIcon = document.getElementById('toggleIcon');
+        </script>
+        <script>
+            const collapseEl = document.getElementById('collapseDetails');
+            const toggleIcon = document.getElementById('toggleIcon');
 
-        collapseEl.addEventListener('show.bs.collapse', function () {
-            toggleIcon.textContent = '−'; // Use minus symbol
-        });
+            collapseEl.addEventListener('show.bs.collapse', function () {
+                toggleIcon.textContent = '−'; // Use minus symbol
+            });
 
-        collapseEl.addEventListener('hide.bs.collapse', function () {
-            toggleIcon.textContent = '+'; // Use plus symbol
-        });
-    </script>
+            collapseEl.addEventListener('hide.bs.collapse', function () {
+                toggleIcon.textContent = '+'; // Use plus symbol
+            });
+        </script>
 
 
-}
+    }

@@ -1,4 +1,7 @@
 ﻿@using Common
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+
 <section class="section">
     <div class="row mb-2">
         <div class="col-lg-6">
@@ -23,37 +26,77 @@
     </div>
 </section>
 
-<div class="modal fade" id="showFileUpload" tabindex="-1" data-bs-backdrop="false">
+@*<div class="modal fade" id="showFileUpload" tabindex="-1" data-bs-backdrop="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="uploadForm" asp-controller="Jewellery" asp-action="ExcelUpload" method="post" enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Upload Excel</h5>
+                        <a class="text-danger" data-bs-dismiss="modal" aria-label="Close" id="btnClose">X</a>
+                    </div>
+                    <div class="modal-body">
+                        @if (TempData["UploadSuccess"] != null)
+                        {
+                        <div class="alert alert-success">@TempData["UploadSuccess"]</div>
+                        }
+                        @if (TempData["UploadError"] != null)
+                        {
+                        <div class="alert alert-danger">@TempData["UploadError"]</div>
+                        }
+                        <div class="mb-3">
+                            <label for="excelFile" class="form-label">Select Excel or CSV File</label>
+                            <input type="file" class="form-control" id="excelFile" name="file" accept=".xls,.xlsx,.csv" required>
+                        </div>
+                        <div id="loader" style="display:none;">
+                            <span class="spinner-border text-primary" role="status"></span> Uploading...
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>*@
+
+<div class="modal fade" id="showFileUpload" tabindex="-1" data-bs-backdrop="static">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content animate__animated animate__fadeInDown">
             <form id="uploadForm" asp-controller="Jewellery" asp-action="ExcelUpload" method="post" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h5 class="modal-title">Upload Excel</h5>
-                    <a class="text-danger" data-bs-dismiss="modal" aria-label="Close" id="btnClose">X</a>
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="fas fa-file-upload me-2"></i> Upload Excel or CSV File</h5>
+                    <a class="text-white fs-5" data-bs-dismiss="modal" aria-label="Close" id="btnClose"><i class="fas fa-times-circle"></i></a>
                 </div>
                 <div class="modal-body">
                     @if (TempData["UploadSuccess"] != null)
                     {
-                    <div class="alert alert-success">@TempData["UploadSuccess"]</div>
+                        <div class="alert alert-success">@TempData["UploadSuccess"]</div>
                     }
                     @if (TempData["UploadError"] != null)
                     {
-                    <div class="alert alert-danger">@TempData["UploadError"]</div>
+                        <div class="alert alert-danger">@TempData["UploadError"]</div>
                     }
                     <div class="mb-3">
-                        <label for="excelFile" class="form-label">Select Excel or CSV File</label>
+                        <label for="excelFile" class="form-label fw-bold">Select File</label>
                         <input type="file" class="form-control" id="excelFile" name="file" accept=".xls,.xlsx,.csv" required>
                     </div>
                     <div id="loader" style="display:none;">
-                        <span class="spinner-border text-primary" role="status"></span> Uploading...
+                        <div class="spinner-border text-primary mb-2" role="status"></div>
+                        Uploading your file... 🎉
+                        <div class="confetti"></div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
+                        <i class="fas fa-times-circle me-1"></i> Close
+                    </button>
+                    <button id="uploadBtn" type="submit" class="btn btn-success">
+                        <i class="fas fa-upload me-1"></i> Upload
+                    </button>
                 </div>
             </form>
-
         </div>
     </div>
 </div>

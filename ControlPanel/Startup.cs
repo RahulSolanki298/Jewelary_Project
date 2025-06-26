@@ -65,6 +65,8 @@ namespace ControlPanel
             services.AddScoped<IDiamondPropertyRepository, DiamondPropertyRepository>();
             services.AddScoped<IProductStyleRepository, ProductStyleRepository>();
             services.AddScoped<ISettingRepository, SettingRepository>();
+            services.AddScoped<ICollectionRepository, CollectionRepository>();
+            
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDBContext>()
                 .AddDefaultTokenProviders();

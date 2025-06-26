@@ -1,5 +1,4 @@
 ﻿@model Models.ProductStyleDTO
-
 @{
     ViewData["Title"] = "Product Styles";
 
@@ -9,7 +8,7 @@
 <div class="container-fluid mt-4">
     <div class="row">
         <div class="col">
-            <h4 class="text-uppercase fw-bold border-bottom pb-2">@ViewData["Title"]</h4>
+            <h4 class="text-uppercase fw-bold border-bottom pb-2">Product Styles</h4>
         </div>
     </div>
     <div class="row justify-content-center mt-3">
@@ -40,19 +39,47 @@
                                     <span asp-validation-for="CoverPageFile" class="text-danger"></span>
                                 </div>
 
+                                <div class="form-group mb-3">
+                                    <label class="control-label">Cover Page Image</label>
+                                    <input asp-for="CoverPageFile" class="form-control" type="file" />
+                                    <span asp-validation-for="CoverPageFile" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="control-label">Cover Page Title</label>
+                                    <input asp-for="CoverPageTitle" class="form-control" type="file" />
+                                    <span asp-validation-for="CoverPageTitle" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="control-label">Category</label>
+                                    <select id="CategoryId" class="form-control">
+                                        <option value="">-- Select Category --</option>
+                                        @foreach (var item in @ViewBag.CategoryList)
+                                        {
+                                            if (Model.CategoryId == item.Id)
+                                            {
+                                                <option value="@item.Id" selected="selected">@item.Name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.Id">@item.Name</option>
+                                            }
+                                        }
+                                    </select>
+                                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+                                </div>
+
                                 <div class="form-check mb-3">
                                     <input class="form-check-input" type="checkbox" @(Model.IsActivated != true ? "" : "checked") />
                                     <input type="hidden" asp-for="IsActivated" />
                                     <label class="form-check-label">Active</label>
                                 </div>
-
                                 <div class="form-check mb-3">
                                     <button type="submit" class="btn btn-theme mt-2">Submit</button>
                                     <a href="@Url.Action("Index","Category")" class="btn btn-danger mt-2">Back to Category</a>
                                 </div>
-
                             </form>
-
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-4">
                             <div>
@@ -63,7 +90,6 @@
                                 else
                                 {
                                     <img src="~/assets/img/no-image.png" id="imagePreview" class="img-fluid img-responsive img-thumbnail" />
-
                                 }
                             </div>
                         </div>

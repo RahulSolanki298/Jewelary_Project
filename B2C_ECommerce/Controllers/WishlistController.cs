@@ -23,7 +23,7 @@ namespace B2C_ECommerce.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetWishListByIds(string diamondIds,string productIds)
-            {
+        {
             WishlistModel data = new WishlistModel();
 
             if (!string.IsNullOrEmpty(diamondIds) &&  diamondIds.Length > 0)

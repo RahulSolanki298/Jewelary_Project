@@ -164,7 +164,7 @@ namespace ControlPanel.Controllers
                 {
                     ringProducts = products.Where(x => x.CategoryName == "Rings").ToList();
                     var ringResp=  await _productRepository.SaveNewProductList(ringProducts, "Rings", userId, uploadHistoryId);
-                    if (ringResp != null && ringResp.Errors.Count > 0)
+                    if (ringResp != null)
                     {
                         return Json(ringResp);
                     }
@@ -174,7 +174,7 @@ namespace ControlPanel.Controllers
                 {
                     weddings = products.Where(x => x.CategoryName == "Bands").ToList();
                     var bandResp = await _productRepository.SaveNewProductList(weddings, "Bands", userId, uploadHistoryId);
-                    if (bandResp != null && bandResp.Errors.Count > 0)
+                    if (bandResp != null)
                     {
                         return Json(bandResp);
                     }
@@ -185,7 +185,7 @@ namespace ControlPanel.Controllers
                 {
                     earrings = products.Where(x => x.CategoryName == "Earrings").ToList();
                     var errResp=  await _productRepository.SaveNewProductList(earrings, "Earrings", userId, uploadHistoryId);
-                    if (errResp != null && errResp.Errors.Count > 0)
+                    if (errResp != null)
                     {
                         return Json(errResp);
                     }
@@ -196,7 +196,7 @@ namespace ControlPanel.Controllers
                 {
                     pendants = products.Where(x => x.CategoryName == "Pendants").ToList();
                     var pendResp = await _productRepository.SaveNewProductList(pendants, "Pendants", userId, uploadHistoryId);
-                    if (pendResp != null && pendResp.Errors.Count > 0)
+                    if (pendResp != null)
                     {
                         return Json(pendResp);
                     }
@@ -207,7 +207,7 @@ namespace ControlPanel.Controllers
                 {
                     bracelets = products.Where(x => x.CategoryName == "Bracelets").ToList();
                     var braceResp= await _productRepository.SaveNewProductList(bracelets, "Bracelets", userId, uploadHistoryId);
-                    if (braceResp != null && braceResp.Errors.Count > 0)
+                    if (braceResp != null)
                     {
                         return Json(braceResp);
                     }

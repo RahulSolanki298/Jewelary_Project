@@ -32,96 +32,8 @@
         </div>
 
         <div class="row">
-            <!-- Left side for the diamond category image -->
-            @*<div class="col-lg-4">
-                    <div class="text-center mb-4">
-                        <img src="~/assets/img/banner/Sustainable_Diamond_Banner.png" class="img-fluid img-thumbnail category-image" alt="Diamonds" style="max-width: 100%; height: auto;">
-                    </div>
-                </div>*@
-
-            <!-- Right side for the diamond shape icons -->
-            <div class="col-lg-12">
-                <div class="diamond-grid">
-                    <!-- Product Item 1 -->
-                    <div class="diamond-item">
-                        <a href="@Url.Action("Index","Diamond",new { shapeId=457})">
-                            <img src="~/assets/img/diamond-svg/Princess.svg" class="diamond-icon" alt="Princess Diamond">
-                            <h5>Princess</h5>
-                        </a>
-                    </div>
-
-                    <!-- Product Item 2 -->
-                    <div class="diamond-item">
-                        <a href="@Url.Action("Index","Diamond",new { shapeId=456})">
-                            <img src="~/assets/img/diamond-svg/Round.svg" class="diamond-icon" alt="Round Diamond">
-                            <h5>Round</h5>
-                        </a>
-                    </div>
-
-                    <!-- Product Item 3 -->
-                    <div class="diamond-item">
-                        <a href="@Url.Action("Index","Diamond",new { shapeId=464})">
-                            <img src="~/assets/img/diamond-svg/Radiant.svg" class="diamond-icon" alt="Radiant Cut Diamond">
-                            <h5>Radiant-Cut</h5>
-                        </a>
-                    </div>
-
-                    <!-- Product Item 4 -->
-                    <div class="diamond-item">
-                        <a href="@Url.Action("Index","Diamond",new { shapeId=463})">
-                            <img src="~/assets/img/diamond-svg/Emerald.svg" class="diamond-icon" alt="Emerald Diamond">
-                            <h5>Emerald</h5>
-                        </a>
-                    </div>
-
-                    <!-- Product Item 5 -->
-                    <div class="diamond-item">
-                        <a href="@Url.Action("Index","Diamond",new { shapeId=461})">
-                            <img src="~/assets/img/diamond-svg/Oval.svg" class="diamond-icon" alt="Oval Diamond">
-                            <h5>Oval</h5>
-                        </a>
-                    </div>
-
-                    <!-- Product Item 6 -->
-                    <div class="diamond-item">
-                        <a href="@Url.Action("Index","Diamond",new { shapeId=462})">
-                            <img src="~/assets/img/diamond-svg/Cushion.svg" class="diamond-icon" alt="Cushion Long Diamond">
-                            <h5>CushionLong</h5>
-                        </a>
-                    </div>
-
-                    <!-- Product Item 7 -->
-                    <div class="diamond-item">
-                        <a href="@Url.Action("Index","Diamond",new { shapeId=460})">
-                            <img src="~/assets/img/diamond-svg/Heart.svg" class="diamond-icon" alt="Heart Diamond">
-                            <h5>Heart</h5>
-                        </a>
-                    </div>
-
-                    <!-- Product Item 8 -->
-                    <div class="diamond-item">
-                        <a href="@Url.Action("Index","Diamond",new { shapeId=458})">
-                            <img src="~/assets/img/diamond-svg/Marquise.svg" class="diamond-icon" alt="Marquise Diamond">
-                            <h5>Marquise</h5>
-                        </a>
-                    </div>
-
-                    <!-- Product Item 9 -->
-                    <div class="diamond-item">
-                        <a href="@Url.Action("Index","Diamond",new { shapeId=465})">
-                            <img src="~/assets/img/diamond-svg/Square Emerald.svg" class="diamond-icon" alt="Square Emerald Diamond">
-                            <h5>Sq.Emerald</h5>
-                        </a>
-                    </div>
-
-                    <!-- Product Item 10 -->
-                    <div class="diamond-item">
-                        <a href="@Url.Action("Index","Diamond",new { shapeId="Asscher"})">
-                            <img src="~/assets/img/diamond-svg/Asscher.svg" class="diamond-icon" alt="Asscher Diamond">
-                            <h5>Asscher</h5>
-                        </a>
-                    </div>
-                </div>
+            <div class="col-lg-12" id="diamondIds">
+                
             </div>
         </div>
     </div>
@@ -1012,6 +924,7 @@
             showHeader();
             showModal();
             blogList();
+            GetDiamondList();
 
 
             $("#closeButton").click(function(){
@@ -1049,13 +962,12 @@
             });
 
             updateVideoDisplay();
-
             $(window).resize(function () {
                 updateVideoDisplay();
             });
 
 
-           
+
 
 
         });
@@ -1152,6 +1064,21 @@
                 success: function (data) {
                     $('#homeHeader').html('');
                     $('#homeHeader').html(data);
+                },
+                error: function (error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        }
+
+
+        function GetDiamondList() {
+             $.ajax({
+               url: '@Url.Action("GetDiamondList", "Home")',
+                type: 'Get',
+                success: function (data) {
+                    $('#diamondIds').html('');
+                    $('#diamondIds').html(data);
                 },
                 error: function (error) {
                     console.error('Error fetching data:', error);

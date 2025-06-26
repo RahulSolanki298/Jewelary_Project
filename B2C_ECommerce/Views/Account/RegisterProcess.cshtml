@@ -1,0 +1,95 @@
+﻿@model Models.CustomerRegisterDTO
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+
+
+    <section>
+        <div class="listingpage">
+            <div class="home-giftbanner-main position-relative left-text-banner">
+                <a href="#" aria-label="" class="d-block">
+                    <div class="ole-image-banner thumb text-center ">
+                        <img src="~/assets/img/banner/filter-cover-image.jpg" class="filter-top-image" alt="" title="" />
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+    <div class="container mt-4">
+        <div class="login-reg-form-wrap sign-up-form">
+            <h5 class="mb-3">
+                Create Your Club Account
+            </h5>
+
+            <form id="signupForm" asp-controller="Account" asp-action="RegisterProcess" method="post" novalidate class="row g-3">
+
+                <!-- Validation Summary -->
+                <div asp-validation-summary="ModelOnly" class="text-danger col-12"></div>
+
+                <!-- First Name -->
+                <div class="col-md-4">
+                    <input asp-for="FirstName" class="form-control" placeholder="First Name" />
+                    <span asp-validation-for="FirstName" class="text-danger small"></span>
+                </div>
+
+                <!-- Middle Name -->
+                <div class="col-md-4">
+                    <input asp-for="MiddleName" class="form-control" placeholder="Middle Name" />
+                    <span asp-validation-for="MiddleName" class="text-danger small"></span>
+                </div>
+
+                <!-- Last Name -->
+                <div class="col-md-4">
+                    <input asp-for="LastName" class="form-control" placeholder="Last Name" />
+                    <span asp-validation-for="LastName" class="text-danger small"></span>
+                </div>
+
+                <!-- Gender -->
+                <div class="col-md-4">
+                    <select asp-for="Gender" class="form-control">
+                        <option value="">Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                    <span asp-validation-for="Gender" class="text-danger small"></span>
+                </div>
+
+                <!-- Phone Number -->
+                <div class="col-md-4">
+                    <input asp-for="PhoneNumber" class="form-control" placeholder="Phone Number" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                </div>
+
+                <!-- Email -->
+                <div class="col-md-4">
+                    <input asp-for="EmailId" class="form-control" placeholder="Email" />
+                    <span asp-validation-for="EmailId" class="text-danger small"></span>
+                </div>
+
+                <!-- Password -->
+                <div class="col-md-6">
+                    <input asp-for="TextPassword" type="password" class="form-control" placeholder="Password" />
+                    <span asp-validation-for="TextPassword" class="text-danger small"></span>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="col-md-6">
+                    <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm Password" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                </div>
+
+                <!-- Google reCAPTCHA -->
+                <div class="col-12">
+                    <div class="g-recaptcha" data-sitekey="6LdSim0rAAAAAOhx96SORgQc1BA6v1j3srlg_9lk"></div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary w-100">Register</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>

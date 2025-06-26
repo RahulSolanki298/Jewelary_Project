@@ -118,6 +118,7 @@ namespace ControlPanel.Services
                 var categories = new List<Category>
                 {
                     new Category { Name = "Rings", ProductType = "Diamond",IsActivated=true },
+                    new Category { Name = "Bands", ProductType = "Diamond",IsActivated=true },
                     new Category { Name = "Earrings", ProductType = "Diamond",IsActivated=true },
                     new Category { Name = "Nackleces", ProductType = "Diamond",IsActivated=true },
                     new Category { Name = "Pendants", ProductType = "Diamond",IsActivated=true },
@@ -164,18 +165,6 @@ namespace ControlPanel.Services
                     await _db.ProductProperty.AddRangeAsync(metalDTs);
                     await _db.SaveChangesAsync();
 
-
-                    // Add Clarity
-                    //var clarity = await _db.ProductProperty.Where(x => x.Name == SD.Clarity).FirstOrDefaultAsync();
-                    //var ClarityDTs = new List<ProductProperty>
-                    //{
-                    //    new ProductProperty{ Name="White",ParentId=clarity.Id,SymbolName="white",DisplayOrder=1,IsActive=true,Synonyms="W,white,WG,White"},
-                    //    new ProductProperty{ Name="Yellow",ParentId=clarity.Id,SymbolName="yellow",DisplayOrder=1,IsActive=true,Synonyms="Y,Yellow,yellow,YG"},
-                    //    new ProductProperty{ Name="Rose",ParentId=clarity.Id,SymbolName="rose",DisplayOrder=1,IsActive=true,Synonyms="rose,RG,Rose"},
-                    //    new ProductProperty{ Name="E-F",ParentId=clarity.Id,SymbolName="E-F",DisplayOrder=1,IsActive=true,Synonyms="E-F"},
-                    //};
-                    //await _db.ProductProperty.AddRangeAsync(ClarityDTs);
-                    //await _db.SaveChangesAsync();
 
                     // Add Metals
                     var shape = await _db.ProductProperty.Where(x => x.Name == SD.Shape).FirstOrDefaultAsync();
@@ -418,27 +407,30 @@ namespace ControlPanel.Services
         {
             if (!await _db.ProductStyles.AnyAsync())
             {
-                var ring= await _db.Category.Where(x=>x.Name==SD.Rings).FirstOrDefaultAsync();
-                var bands= await _db.Category.Where(x=>x.Name==SD.Bands).FirstOrDefaultAsync();
-                var earring= await _db.Category.Where(x=>x.Name==SD.Earrings).FirstOrDefaultAsync();
-                var nacklece= await _db.Category.Where(x=>x.Name==SD.Nackleces).FirstOrDefaultAsync();
-                var pendant= await _db.Category.Where(x=>x.Name==SD.Pendants).FirstOrDefaultAsync();
-                var bracelet= await _db.Category.Where(x=>x.Name==SD.Bracelets).FirstOrDefaultAsync();
-                var bangle= await _db.Category.Where(x=>x.Name==SD.Bangle).FirstOrDefaultAsync();
+                var ring = await _db.Category.Where(x => x.Name == SD.Rings).FirstOrDefaultAsync();
+                var bands = await _db.Category.Where(x => x.Name == SD.Bands).FirstOrDefaultAsync();
+                var earring = await _db.Category.Where(x => x.Name == SD.Earrings).FirstOrDefaultAsync();
+                var nacklece = await _db.Category.Where(x => x.Name == SD.Nackleces).FirstOrDefaultAsync();
+                var pendant = await _db.Category.Where(x => x.Name == SD.Pendants).FirstOrDefaultAsync();
+                var bracelet = await _db.Category.Where(x => x.Name == SD.Bracelets).FirstOrDefaultAsync();
+                var bangle = await _db.Category.Where(x => x.Name == SD.Bangle).FirstOrDefaultAsync();
 
                 var stylesDT = new List<ProductStyles>
                 {
-                    new ProductStyles { StyleName = "Solitaire", CategoryId = ring.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
-                    new ProductStyles { StyleName = "Side Stone", CategoryId = ring.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
-                    new ProductStyles { StyleName = "Halo", CategoryId = ring.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
-                    new ProductStyles { StyleName = "Three Stone", CategoryId = ring.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
-                    new ProductStyles { StyleName = "Hidden Halo", CategoryId = ring.Id ,IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
-                    new ProductStyles { StyleName = "Vintage", CategoryId = ring.Id ,IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
-                    new ProductStyles { StyleName = "Bridal Sets", CategoryId = ring.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
-                    new ProductStyles { StyleName = "Gemstone", CategoryId = ring.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
-                    new ProductStyles { StyleName = "Customer Favorites", CategoryId = ring.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
-
-
+                    new ProductStyles { StyleName = "Solitaire",StyleImage="/assets/icons/solitaire.png" ,CategoryId = ring.Id >0?ring.Id : null ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
+                    new ProductStyles { StyleName = "Side Stone",StyleImage="/assets/icons/side-stone.png" , CategoryId = ring.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
+                    new ProductStyles { StyleName = "Halo",StyleImage="/assets/icons/halo.png" , CategoryId = ring.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
+                    new ProductStyles { StyleName = "Three Stone",StyleImage="/assets/icons/three-stone.png" , CategoryId = ring.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
+                    new ProductStyles { StyleName = "Hidden Halo",StyleImage="/assets/icons/hidden-halo.png" , CategoryId = ring.Id ,IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
+                    new ProductStyles { StyleName = "Vintage",StyleImage="/assets/icons/vintage.png" , CategoryId = ring.Id ,IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
+                    new ProductStyles { StyleName = "Bridal Sets",StyleImage="/assets/icons/bridal-sets.png" , CategoryId = ring.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
+                    new ProductStyles { StyleName = "Fashion-bracelet",StyleImage="/assets/icons/fashion-bracelet.png" , CategoryId = bracelet.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
+                    new ProductStyles { StyleName = "Fashion-Earring",StyleImage="/assets/icons/fashion-earring.png" , CategoryId = earring.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
+                    new ProductStyles { StyleName = "Fashion-Ring",StyleImage="/assets/icons/fashion-ring.png" , CategoryId = ring.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
+                    new ProductStyles { StyleName = "Hidden-halo",StyleImage="/assets/icons/hidden-halo.png" , CategoryId = ring.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
+                    new ProductStyles { StyleName = "Eternity-Bands-Small",StyleImage="/assets/icons/eternity-bands-small.png" , CategoryId = bands.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
+                    new ProductStyles { StyleName = "Eternity-ring",StyleImage="/assets/icons/hidden-ring.png" , CategoryId = ring.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
+                    
                     //new ProductStyles { StyleName = "Wedding and Anniversary", CategoryId = bands.Id ,IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
                     //new ProductStyles { StyleName = "Eternity", CategoryId = bands.Id ,IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
                     //new ProductStyles { StyleName = "3/4 Eternity", CategoryId = bands.Id ,IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
@@ -480,9 +472,9 @@ namespace ControlPanel.Services
             {
                 var collection = new HomePageSetting
                 {
-                    CompanyLogo = "/assets/img/Jewelfacets_Logos_Blue.png", 
-                    Device=SD.WebDevice,
-                    isSetVideo=true,
+                    CompanyLogo = "/assets/img/Jewelfacets_Logos_Blue.png",
+                    Device = SD.WebDevice,
+                    isSetVideo = true,
                     SetVideoPath = "/assets/video/jewel-facet-banner.mp4"
                 };
                 await _db.HomePageSetting.AddRangeAsync(collection);

@@ -8,6 +8,7 @@ using System.Linq;
 using System;
 using System.Threading.Tasks;
 using System.IO;
+using System.Collections.Generic;
 
 namespace ControlPanel.Controllers
 {
@@ -15,11 +16,13 @@ namespace ControlPanel.Controllers
     {
         private readonly IProductStyleRepository _productStyles;
         private readonly IProductRepository _productRepository;
+        private readonly ICategoryRepositry _categoryRepository;
         public ProductStylesController(IProductStyleRepository productStyles,
-            IProductRepository productRepository)
+            IProductRepository productRepository, ICategoryRepositry categoryRepositry)
         {
             _productStyles = productStyles;
             _productRepository = productRepository;
+            _categoryRepository = categoryRepositry;
         }
 
         [HttpGet]
@@ -37,13 +40,23 @@ namespace ControlPanel.Controllers
             return PartialView("_ProductStyleItemList", result);
         }
 
+
         [HttpGet]
-        public async Task<IActionResult> ShowAllPoducts()
+        public async Task<IActionResult> ShowAllProducts()
         {
-            ViewBag.StyleList = await _productStyles.GetProductStyles();
-            var productList = await _productRepository.GetProductStyleList();
-            return PartialView("_JewelleryDataList", productList);
+            try
+            {
+                ViewBag.StyleList = await _productStyles.GetProductStyles();
+                var productList = await _productRepository.GetProductStyleList();
+                return PartialView("_JewelleryDataList", productList ?? new List<ProductMasterDTO>());
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, ex.Message);
+            }
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -73,20 +86,21 @@ namespace ControlPanel.Controllers
         public async Task<IActionResult> UpsertStyle(int? styleId = 0)
         {
             var result = new ProductStyleDTO();
+            ViewBag.CategoryList = await _categoryRepository.GetCategoryList();
             if (styleId.HasValue && styleId.Value > 0)
             {
                 var data = await _productStyles.GetProductStyleById(styleId.Value);
                 if (data != null)
                 {
-                    var dt = new ProductStyleDTO();
-                    dt.Id = data.Id;
-                    dt.StyleName = data.StyleName;
-                    dt.VenderId = data.VenderId;
-                    dt.StyleImage = data.StyleImage;
-                    dt.CoverPageImage = data.CoverPageImage;
-                    dt.IsActivated = data.IsActivated;
-                    dt.UpdatedDate = DateTime.Now;
-                    return View(data);
+                    result.Id = data.Id;
+                    result.StyleName = data.StyleName;
+                    result.VenderId = data.VenderId;
+                    result.StyleImage = data.StyleImage;
+                    result.CoverPageImage = data.CoverPageImage;
+                    result.IsActivated = data.IsActivated;
+                    result.UpdatedDate = DateTime.Now;
+                    result.CategoryId = data.CategoryId;
+                    return View(result);
                 }
             }
             return View(result);

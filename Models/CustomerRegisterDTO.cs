@@ -37,6 +37,9 @@ namespace Models
         public bool IsBusinessAccount { get; set; } = false;
 
         public string ActivationStatus { get; set; }
-        
+
+        [Required]
+        public string RecaptchaToken { get; set; }
+
     }
 }
