@@ -4,6 +4,7 @@ using ControlPanel.Services;
 using ControlPanel.Services.IServices;
 using DataAccess.Data;
 using DataAccess.Entities;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -86,7 +87,12 @@ namespace ControlPanel
             services.AddAuthorization();
 
             // MVC & Razor
-            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
+            services.AddControllersWithViews()
+                        .AddViewOptions(options =>
+                        {
+                            options.HtmlHelperOptions.ClientValidationEnabled = true;
+                        });
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -96,31 +102,6 @@ namespace ControlPanel
             });
         }
 
-        private void ConfigureFormOptions(IServiceCollection services)
-        {
-            // Configure Kestrel limits
-            services.Configure<KestrelServerOptions>(options =>
-            {
-                options.Limits.MaxRequestBodySize = 10L * 1024 * 1024 * 1024; // 10 GB
-            });
-
-            // Configure IIS limits
-            services.Configure<IISServerOptions>(options =>
-            {
-                options.MaxRequestBodySize = 10L * 1024 * 1024 * 1024; // 10 GB
-            });
-
-            // Configure form upload limits
-            services.Configure<FormOptions>(options =>
-            {
-                options.ValueLengthLimit = int.MaxValue;
-                options.MultipartBodyLengthLimit = 10L * 1024 * 1024 * 1024; // 10 GB
-                options.MemoryBufferThreshold = int.MaxValue;
-            });
-        }
-
-
-        // Configure HTTP request pipeline
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDbInitializer dbInitializer)
         {
             try
@@ -140,13 +121,22 @@ namespace ControlPanel
                 app.UseRouting();
                 app.UseSession();
 
+                //app.Use(async (context, next) =>
+                //{
+                //    context.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+                //    context.Response.Headers["Pragma"] = "no-cache";
+                //    context.Response.Headers["Expires"] = "0";
+                //    await next();
+                //});
+
                 app.Use(async (context, next) =>
                 {
-                    context.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
-                    context.Response.Headers["Pragma"] = "no-cache";
-                    context.Response.Headers["Expires"] = "0";
+                    context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+                    context.Response.Headers.Add("X-Frame-Options", "DENY");
+                    context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
                     await next();
                 });
+
 
                 app.UseAuthentication();
                 app.UseAuthorization();

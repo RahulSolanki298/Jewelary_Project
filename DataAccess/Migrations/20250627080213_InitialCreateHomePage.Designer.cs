@@ -4,14 +4,16 @@ using DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250627080213_InitialCreateHomePage")]
+    partial class InitialCreateHomePage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1501,31 +1503,7 @@ namespace DataAccess.Migrations
                     b.Property<string>("SetVideoPath")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Slider1MetaUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Slider1Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Slider2MetaUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Slider2Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Slider3MetaUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Slider3Title")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("StylesIds")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("VdoMetaUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("VdoTitle")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isSetCompanySlider")

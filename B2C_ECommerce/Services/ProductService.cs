@@ -888,14 +888,15 @@ namespace B2C_ECommerce.Services
                                   join cat in _context.Category on proSt.CategoryId equals cat.Id
                                   select new ProductStyleDTO
                                   {
-                                      CategoryId=cat.Id,
-                                      CategoryName=cat.Name,
-                                      IsActivated= proSt.IsActivated,
-                                      StyleName=proSt.StyleName,
-                                      Id=proSt.Id,
-                                      CoverPageImage=proSt.CoverPageImage,
-                                      CreatedDate=proSt.CreatedDate,
-                                      UpdatedDate=proSt.UpdatedDate
+                                      CategoryId = cat.Id,
+                                      CategoryName = cat.Name,
+                                      IsActivated = proSt.IsActivated,
+                                      StyleName = proSt.StyleName,
+                                      StyleImage=proSt.StyleImage,
+                                      Id = proSt.Id,
+                                      CoverPageImage = proSt.CoverPageImage,
+                                      CreatedDate = proSt.CreatedDate,
+                                      UpdatedDate = proSt.UpdatedDate
                                   }).ToListAsync();
 
             return response;
@@ -968,6 +969,7 @@ namespace B2C_ECommerce.Services
                                       Karat = krt.Name,
                                       ProductKey = product.ProductKey,
                                       GroupId = product.GroupId,
+                                      Type = product.Type,
                                       IsSuccess = product.IsSuccess
                                   }).Where(x => x.IsActivated).ToListAsync();
 
@@ -1057,7 +1059,7 @@ namespace B2C_ECommerce.Services
                     VenderName = firstProduct.VenderName,
                     WholesaleCost = firstProduct.WholesaleCost,
                     ProductImageVideos = new List<ProductImageAndVideoDTO>(),
-
+                    Type = firstProduct.Type
                 };
 
                 //  await _context.ProductPrices.Where(x => x.ProductId == firstProduct.Id.ToString()).ToListAsync();

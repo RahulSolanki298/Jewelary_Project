@@ -24,7 +24,7 @@ namespace B2C_ECommerce.Controllers
             {
                 ViewBag.Title = "Engagement";
                 var styleList = await _productRepository.ProgramStylesList();
-                productStyleColl.StyleList = styleList.Where(x => x.Id == Convert.ToInt32(styleId)).ToList();
+                productStyleColl.StyleList = styleList.Where(x=>x.IsActivated==true).ToList();
                 productStyleColl.IsStyle = true;
                 return View(productStyleColl);
             }

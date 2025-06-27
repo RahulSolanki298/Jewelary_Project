@@ -63,18 +63,24 @@ namespace ControlPanel.Controllers
         [HttpPost]
         public async Task<IActionResult> ExcelUpload(IFormFile file)
         {
+            var productResp = new ProductMstResponse();
             var productUpload = new List<ProductDTO>();
 
             if (file == null || file.Length == 0)
             {
-                ViewBag.Error = "No file uploaded.";
-                return PartialView("_JewelleryList", productUpload);
+                productResp = new ProductMstResponse(); 
+                productResp.Status = false;
+                productResp.Message= "No file uploaded.";
+                
+                return PartialView("_JewelleryList", productResp);
             }
 
             if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
             {
-                ViewBag.Error = "Invalid file format. Please upload an Excel (.xlsx) file.";
-                return PartialView("_ExcelUploadList", productUpload);
+                productResp = new ProductMstResponse();
+                productResp.Status = false;
+                productResp.Message = "Invalid file format. Please upload an Excel (.xlsx) file.";
+                return PartialView("_ExcelUploadList", productResp);
             }
 
             try
@@ -108,10 +114,12 @@ namespace ControlPanel.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.Error = $"An error occurred while processing the Excel file: {ex.Message}";
+                productResp = new ProductMstResponse();
+                productResp.Status = false;
+                productResp.Message = $"An error occurred while processing the Excel file: {ex.Message}";
             }
 
-            return PartialView("_ExcelUploadList", productUpload);
+            return PartialView("_ExcelUploadList", productResp);
         }
 
 
@@ -266,7 +274,10 @@ namespace ControlPanel.Controllers
                     Description = worksheet.Cells[row, 30].Text,
                 };
 
-                if (!string.IsNullOrWhiteSpace(product.Title) && !string.IsNullOrWhiteSpace(product.VenderName) && !string.IsNullOrWhiteSpace(product.VenderStyle) && !string.IsNullOrWhiteSpace(product.Sku))
+                if (!string.IsNullOrWhiteSpace(product.Title) 
+                    && !string.IsNullOrWhiteSpace(product.VenderName) 
+                    && !string.IsNullOrWhiteSpace(product.VenderStyle) 
+                    && !string.IsNullOrWhiteSpace(product.Sku))
                 {
                     tempProducts = new ProductDTO();
                     tempProducts = product;
@@ -300,6 +311,7 @@ namespace ControlPanel.Controllers
                     product.UnitPrice = product.Price == 0 ? tempProducts.UnitPrice : product.UnitPrice;
                     product.Description = string.IsNullOrWhiteSpace(product.Description) ? tempProducts.Description : product.Description;
                     product.WholesaleCost = string.IsNullOrWhiteSpace(product.WholesaleCost.ToString()) ? tempProducts.WholesaleCost : product.WholesaleCost;
+                    product.Type = product.Type != null ? tempProducts.Type : product.Type;
                     products.Add(product);
                     newProductList = CreateRingVariantsFromColor(product);
                     tempProductList.AddRange(newProductList);
@@ -881,7 +893,7 @@ namespace ControlPanel.Controllers
                             Diameter = baseProduct.Diameter,
                             StyleName=baseProduct.StyleName,
                             CollectionName=baseProduct.CollectionName,
-                            
+                            Type=baseProduct.Type
                         });
                     }
                 }
@@ -925,9 +937,7 @@ namespace ControlPanel.Controllers
                     });
                 }
             }
-
-
-
+            
             return result;
         }
 

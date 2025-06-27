@@ -35,7 +35,7 @@ namespace ControlPanel.Controllers
         public async Task<IActionResult> CreateHome(int? id)
         {
             var home = new HomePageSetting();
-            if (home != null)
+            if (id.HasValue && id.Value > 0)
             {
                 home = await _settingRepository.GetHomePageSetting(id.Value);
             }

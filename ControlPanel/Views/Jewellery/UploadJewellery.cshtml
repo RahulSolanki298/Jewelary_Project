@@ -13,18 +13,19 @@
         }
 
 
-        <form id="uploadForm" asp-controller="Jewellery" asp-action="ExcelUpload" method="post" enctype="multipart/form-data">
-            <div class="mb-4">
-                <label for="excelFile" class="form-label fw-bold">Select Excel or CSV File</label>
-                <input type="file" class="form-control form-control-lg" id="excelFile" name="file" accept=".xls,.xlsx,.csv" required>
-            </div>
+    <form id="uploadForm" asp-controller="Jewellery" asp-action="ExcelUpload" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <div class="mb-4">
+            <label for="excelFile" class="form-label fw-bold">Select Excel or CSV File</label>
+            <input type="file" class="form-control form-control-lg" id="excelFile" name="file" accept=".xls,.xlsx,.csv" required>
+        </div>
 
-            <div id="loader-overlay" class="text-center mt-4" style="display:none;">
-                <img src="~/assets/loader/JF-WEB-LOADER.gif" style="width:100px;" alt="Loading..." />
-            </div>
+        <div id="loader-overlay" class="text-center mt-4" style="display:none;">
+            <img src="~/assets/loader/JF-WEB-LOADER.gif" style="width:100px;" alt="Loading..." />
+        </div>
 
-            <button id="uploadBtn" type="submit" class="btn btn-theme w-100">Upload File</button>
-        </form>
+        <button id="uploadBtn" type="submit" class="btn btn-theme w-100">Upload File</button>
+    </form>
         <div class="container md-4">
             <h6>Note: <span> .xls standard format for jewelery. Excel format: <a href="~/FileFormats/JewelleryFormat.xlsx" class="link-primary" target="_blank" rel="noopener">Download</a></span></h6>
         </div>
@@ -664,7 +665,6 @@
             });
 
             $('#ImportProductList').on('submit', '#uploadForm', function (e) {
-                debugger;
                     e.preventDefault();
 
                     var formData = new FormData(this);
@@ -679,11 +679,11 @@
                             processData: false,
                             success: function (response) {
                                 debugger;
-                                //Swal.fire({
-                                //    title: response,
-                                //    icon: "success",
-                                //    draggable: true
-                                //});
+                                Swal.fire({
+                                    title: response,
+                                    icon: "success",
+                                    draggable: true
+                                });
                                 window.location.replace("@Url.Action("ThankYouForUploaded","Jewellery")");
 
                             },

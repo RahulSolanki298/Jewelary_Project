@@ -3,112 +3,420 @@
 @{
     ViewData["Title"] = "Home Page Setting";
 }
+<div class="modal-dialog modal-fullscreen">
+    <div class="modal-content rounded-4 shadow">
+        <div class="modal-header bg-dark text-white">
+            <h5 class="modal-title text-dark">Website Configuration</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4 py-3">
+            <ul class="nav nav-pills mb-4 nav-fill gap-2 p-1 bg-light rounded-3 shadow-sm" id="tabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link text-dark" id="slider-tab" data-bs-toggle="pill" data-bs-target="#slider" type="button">Main Slider / Video</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link text-dark" id="category-tab" data-bs-toggle="pill" data-bs-target="#category" type="button">Category</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link text-dark" id="subcategory-tab" data-bs-toggle="pill" data-bs-target="#subcategory" type="button">SubCategory</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link text-dark" id="collection-tab" data-bs-toggle="pill" data-bs-target="#collection" type="button">Collection</button>
+                </li>
+            </ul>
+            <div class="tab-content" id="tabContent">
+                <div class="tab-pane fade show active" id="slider" role="tabpanel">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-7 col-md-7 col-sm-12">
+                                <form asp-action="SaveHomePageSetting" asp-controller="Setting" method="post" enctype="multipart/form-data">
+                                    <div class="modal-header bg-theme">
+                                         <h5 id="exampleModalLabel">Setup Website Main Slider / Video Content</h5>
+                                    </div>
+                                    <div class="container mt-5">
+                                        <div id="deviceSection" class="mb-4">
+                                            <div class="row">
+                                                <div class="col-xl-8 col-md-4 col-lg-4 col-xl-4">
+                                                    <label><b>Select Device</b></label>
+                                                    <select asp-for="Device" id="Device" class="form-control mb-2">
+                                                        <option>@SD.WebDevice</option>
+                                                        <option>@SD.AndroidDevice</option>
+                                                        <option>@SD.IOsDevice</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="homeSection" class="mb-4">
+                                            <div class="row">
+                                                <div class="col-xl-8 col-md-8 col-lg-8">
+                                                    <label><b>Company Logo</b></label>
+                                                    <input type="hidden" class="form-control mb-2" asp-for="Id" />
+                                                    <input type="file" class="form-control mb-2" asp-for="CompanyLogoFile" accept="image/*" />
+                                                </div>
+                                                <div class="col-xl-4 col-md-4 col-lg-4">
+                                                    <div>
+                                                        <img src="@(Model?.CompanyLogo != null ? Model.CompanyLogo.ToString() : "/assets/img/Jewelfacets_Logos_Blue.png")" style="width: 120px;" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" id="toggleVideo" name="isSetVideo" value="true" @(Model?.isSetVideo == true ? "checked" : "") />
+                                            <label class="form-check-label" for="toggleVideo"><b>Set Company Video</b></label>
+                                        </div>
+                                        <div id="videoSection" class="mb-4" style="@(Model?.isSetVideo == true ? "" : "display: none;")">
+                                            <div class="row">
+                                                <div class="col-xl-8 col-md-8 col-lg-8">
+                                                    <label class="form-label" for="VideoFile"><b>Upload Company Video</b></label>
+                                                    <input type="file" class="form-control mb-2" asp-for="VideoFile" accept="video/*" />
+                                                </div>
+                                                <div class="col-xl-4 col-md-4 col-lg-4">
+                                                    <div>
+                                                        <img src="@(Model?.SetVideoPath != null ? "/assets/img/video-icon.svg" : "/assets/img/no-image.png")" style="width: 120px;" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xl-8 col-md-8 col-lg-8">
+                                                    <label><b>Video Title</b></label>
+                                                    <input type="text" class="form-control mb-2" id="VdoTitle" asp-for="VdoTitle" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xl-8 col-md-8 col-lg-8">
+                                                    <label><b>Video Meta Url</b></label>
+                                                    <input type="text" class="form-control mb-2" id="VdoMetaUrl" asp-for="VdoMetaUrl" />
+                                                </div>
+                                            </div>
 
-<!-- Include Bootstrap CSS only if not already present in layout -->
-<div class="modal-dialog modal-lg">
-    <!-- modal-lg for larger size -->
-    <div class="modal-content">
-        <form asp-action="SaveHomePageSetting" asp-controller="Setting" method="post" enctype="multipart/form-data">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Setup Website Main Slider / Video Content</h5>
-                @*<h4 class="text-uppercase fw-bold border-bottom"></h4>*@
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="container mt-5">
-                    
-                    <div id="deviceSection" class="mb-4">
-                        <div class="row">
-                            <div class="col-xl-12 col-md-12 col-lg-12">
-                                <label>Select Device</label>
-                                <select asp-for="Device" id="Device" class="form-control mb-2">
-                                    <option>@SD.WebDevice</option>
-                                    <option>@SD.AndroidDevice</option>
-                                    <option>@SD.IOsDevice</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="homeSection" class="mb-4">
-                        <div class="row">
-                            <div class="col-xl-8 col-md-8 col-lg-8">
-                                <label>Company Logo</label>
-                                <input type="hidden" class="form-control mb-2" asp-for="Id" />
-                                <input type="file" class="form-control mb-2" asp-for="CompanyLogoFile" accept="image/*" />
-                            </div>
-                            <div class="col-xl-4 col-md-4 col-lg-4">
-                                <div>
-                                    <img src="@(Model?.CompanyLogo != null ? Model.CompanyLogo.ToString() : "/assets/img/Jewelfacets_Logos_Blue.png")" style="width: 120px;" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-check form-switch mb-3">
-                        <input class="form-check-input" type="checkbox" id="toggleVideo" name="isSetVideo" value="true" @(Model?.isSetVideo == true ? "checked" : "") />
-                        <label class="form-check-label" for="toggleVideo">Set Company Video</label>
-                    </div>
-                    <div id="videoSection" class="mb-4" style="@(Model?.isSetVideo == true ? "" : "display: none;")">
-                        <div class="row">
-                            <div class="col-xl-8 col-md-8 col-lg-8">
-                                <label class="form-label" for="VideoFile">Upload Company Video</label>
-                                <input type="file" class="form-control mb-2" asp-for="VideoFile" accept="video/*" />
-                            </div>
-                            <div class="col-xl-4 col-md-4 col-lg-4">
-                                <div>
-                                    <img src="@(Model?.SetVideoPath != null ? "/assets/img/video-icon.svg" : "/assets/img/no-image.png")" style="width: 120px;" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-check form-switch mb-3">
-                        <input class="form-check-input" type="checkbox" id="toggleSlider" name="isSetCompanySlider" value="true" @(Model?.isSetCompanySlider == true ? "checked" : "") />
-                        <label class="form-check-label" for="toggleSlider">Set Company Image Slider</label>
-                    </div>
+                                        </div>
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" id="toggleSlider" name="isSetCompanySlider" value="true" @(Model?.isSetCompanySlider == true ? "checked" : "") />
+                                            <label class="form-check-label" for="toggleSlider"><b>Set Company Image Slider</b></label>
+                                        </div>
+                                        <div id="sliderSection" style="@(Model?.isSetCompanySlider == true ? "" : "display: none;")">
+                                            <div class="row">
+                                                <div class="col-xl-8 col-md-8 col-lg-8">
+                                                    <label><b>Upload Image 1</b></label>
+                                                    <input type="file" class="form-control mb-2" asp-for="Image1Path" accept="image/*" />
+                                                </div>
+                                                <div class="col-xl-4 col-md-4 col-lg-4">
+                                                    <div>
+                                                        <img src="@(!string.IsNullOrEmpty(Model?.SetSlider1Path) ? $"{SD.ImgUrl}/{Model?.SetSlider1Path}" : "/assets/img/no-image.png")" style="width: 120px;" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xl-8 col-md-8 col-lg-8">
+                                                    <label><b>Slider 1 Title</b></label>
+                                                    <input type="text" class="form-control mb-2" id="Slider1Title" asp-for="Slider1Title" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xl-8 col-md-8 col-lg-8">
+                                                    <label><b>Slider 1 Meta Url</b></label>
+                                                    <input type="text" class="form-control mb-2" id="Slider1MetaUrl" asp-for="Slider1MetaUrl" />
+                                                </div>
+                                            </div>
 
-                    <!-- Image Upload Section -->
-                    <div id="sliderSection" style="@(Model?.isSetCompanySlider == true ? "" : "display: none;")">
-                        <div class="row">
-                            <div class="col-xl-8 col-md-8 col-lg-8">
-                                <label for="Image@iPath">Upload Image 1</label>
-                                <input type="file" class="form-control mb-2" asp-for="Image1Path" accept="image/*" />
+                                            <div class="row">
+                                                <div class="col-xl-8 col-md-8 col-lg-8">
+                                                    <label for="Image@iPath"><b>Upload Image 2</b></label>
+                                                    <input type="file" class="form-control mb-2" asp-for="Image2Path" accept="image/*" />
+                                                </div>
+                                                <div class="col-xl-4 col-md-4 col-lg-4">
+                                                    <div>
+                                                        <img src="@(Model?.SetSlider2Path != null ? $"{SD.ImgUrl}/{Model?.SetSlider2Path}" : "/assets/img/no-image.png")" style="width: 120px;" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xl-8 col-md-8 col-lg-8">
+                                                    <label><b>Slider 2 Title</b></label>
+                                                    <input type="text" class="form-control mb-2" id="Slider2Title" asp-for="Slider2Title" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xl-8 col-md-8 col-lg-8">
+                                                    <label><b>Slider 2 Meta Url</b></label>
+                                                    <input type="text" class="form-control mb-2" id="Slider2MetaUrl" asp-for="Slider2MetaUrl" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xl-8 col-md-8 col-lg-8">
+                                                    <label for="Image@iPath"><b>Upload Image 3</b></label>
+                                                    <input type="file" class="form-control mb-2" asp-for="Image3Path" accept="image/*" />
+                                                </div>
+                                                <div class="col-xl-4 col-md-4 col-lg-4">
+                                                    <div>
+                                                        <img src="@(!string.IsNullOrEmpty(Model.SetSlider3Path) ? $"{SD.ImgUrl}/{Model?.SetSlider3Path}" : "/assets/img/no-image.png")" style="width: 120px;" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xl-8 col-md-8 col-lg-8">
+                                                    <label><b>Slider 3 Title</b></label>
+                                                    <input type="text" class="form-control mb-2" id="Slider3MetaUrl" asp-for="Slider3Title" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xl-8 col-md-8 col-lg-8">
+                                                    <label><b>Slider 3 Meta Url</b></label>
+                                                    <input type="text" class="form-control mb-2" id="Slider3MetaUrl" asp-for="Slider3MetaUrl" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-theme mt-2">Save</button>
+                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </form>
                             </div>
-                            <div class="col-xl-4 col-md-4 col-lg-4">
-                                <div>
-                                    <img src="@(Model?.SetSlider1Path != null ? $"{SD.ImgUrl}/{Model?.SetSlider1Path}" : "/assets/img/no-image.png")" style="width: 120px;" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xl-8 col-md-8 col-lg-8">
-                                <label for="Image@iPath">Upload Image 2</label>
-                                <input type="file" class="form-control mb-2" asp-for="Image2Path" accept="image/*" />
-                            </div>
-                            <div class="col-xl-4 col-md-4 col-lg-4">
-                                <div>
-                                    <img src="@(Model?.SetSlider2Path != null ? $"{SD.ImgUrl}/{Model?.SetSlider2Path}" : "/assets/img/no-image.png")" style="width: 120px;" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xl-8 col-md-8 col-lg-8">
-                                <label for="Image@iPath">Upload Image 3</label>
-                                <input type="file" class="form-control mb-2" asp-for="Image3Path" accept="image/*" />
-                            </div>
-                            <div class="col-xl-4 col-md-4 col-lg-4">
-                                <div>
-                                    <img src="@(Model?.SetSlider3Path != null ? $"{SD.ImgUrl}/{Model?.SetSlider3Path}" : "/assets/img/no-image.png")" style="width: 120px;" />
+                            <div class="col-lg-5 col-md-5 col-sm-12 mb-4">
+                                <div class="card shadow border-0">
+                                    <div class="card-body text-center p-3">
+                                        <a href="http://godhaniinfotech.org" target="_blank">
+            <img src="@Url.Content($"{SD.ImgUrl}/assets/img/FrountEnd.png")"
+                 alt="Frontend Preview"
+                 class="img-fluid rounded preview-img large-img" style="height:700px;">
+        </a>
+                                        @*<iframe id="certIframe"
+                                                src="http://godhaniinfotech.org"
+                                                allowfullscreen="yes"
+                                                style="width:100%; height:100vh; border:none;"></iframe>*@
+
+                                    </div>
+                                    <div class="card-footer text-center bg-light">
+                                        <a href="http://godhaniinfotech.org" target="_blank"><small class="text-muted">Homepage Preview</small></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-theme mt-2">Save</button>
+                </div>
 
+                <!-- Category Tab -->
+                <div class="tab-pane fade" id="category" role="tabpanel">
+                    <div id="CategoryList" class="section">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card recent-sales overflow-auto">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h5 class="modal-title" id="exampleModalLabel">Setup Website category on home page</h5>
+                                        <div class="filter">
+                                            <a class="icon" href="#" data-bs-toggle="dropdown">
+                                                <i class="bi bi-three-dots"></i>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                                <li class="dropdown-header">
+                                                    <h6>Filter</h6>
+                                                </li>
+                                                <li><a class="dropdown-item" href="#">Add Category</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <h5 class="card-title">Category</h5>
+                                        <table class="table table-borderless datatable">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">Customer</th>
+                                                    <th scope="col">Product</th>
+                                                    <th scope="col">Price</th>
+                                                    <th scope="col">Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row"><a href="#">#2457</a></th>
+                                                    <td>Brandon Jacob</td>
+                                                    <td><a href="#" class="text-primary">At praesentium minu</a></td>
+                                                    <td>$64</td>
+                                                    <td><span class="badge bg-success">Approved</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row"><a href="#">#2147</a></th>
+                                                    <td>Bridie Kessler</td>
+                                                    <td><a href="#" class="text-primary">Blanditiis dolor omnis similique</a></td>
+                                                    <td>$47</td>
+                                                    <td><span class="badge bg-warning">Pending</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row"><a href="#">#2049</a></th>
+                                                    <td>Ashleigh Langosh</td>
+                                                    <td><a href="#" class="text-primary">At recusandae consectetur</a></td>
+                                                    <td>$147</td>
+                                                    <td><span class="badge bg-success">Approved</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row"><a href="#">#2644</a></th>
+                                                    <td>Angus Grady</td>
+                                                    <td><a href="#" class="text-primar">Ut voluptatem id earum et</a></td>
+                                                    <td>$67</td>
+                                                    <td><span class="badge bg-danger">Rejected</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row"><a href="#">#2644</a></th>
+                                                    <td>Raheem Lehner</td>
+                                                    <td><a href="#" class="text-primary">Sunt similique distinctio</a></td>
+                                                    <td>$165</td>
+                                                    <td><span class="badge bg-success">Approved</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SubCategory Tab -->
+                <div class="tab-pane fade" id="subcategory" role="tabpanel">
+                    <div id="SubcategoryList">
+                        <div class="card recent-sales overflow-auto">
+                            <div class="card-header">
+                                <div class="filter">
+                                    <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow dropdown-menu-end">
+                                        <li class="dropdown-header text-start">
+                                            <h6>Filter</h6>
+                                        </li>
+                                        <li><a class="dropdown-item" href="#">Add Subcategory</a></li>
+                                        <li><a class="dropdown-item" href="#">This Month</a></li>
+                                        <li><a class="dropdown-item" href="#">This Year</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title"> Sub Category <span>| Today</span></h5>
+                                <table class="table table-borderless datatable">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Customer</th>
+                                            <th scope="col">Product</th>
+                                            <th scope="col">Price</th>
+                                            <th scope="col">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row"><a href="#">#2457</a></th>
+                                            <td>Brandon Jacob</td>
+                                            <td><a href="#" class="text-primary">At praesentium minu</a></td>
+                                            <td>$64</td>
+                                            <td><span class="badge bg-success">Approved</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row"><a href="#">#2147</a></th>
+                                            <td>Bridie Kessler</td>
+                                            <td><a href="#" class="text-primary">Blanditiis dolor omnis similique</a></td>
+                                            <td>$47</td>
+                                            <td><span class="badge bg-warning">Pending</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row"><a href="#">#2049</a></th>
+                                            <td>Ashleigh Langosh</td>
+                                            <td><a href="#" class="text-primary">At recusandae consectetur</a></td>
+                                            <td>$147</td>
+                                            <td><span class="badge bg-success">Approved</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row"><a href="#">#2644</a></th>
+                                            <td>Angus Grady</td>
+                                            <td><a href="#" class="text-primar">Ut voluptatem id earum et</a></td>
+                                            <td>$67</td>
+                                            <td><span class="badge bg-danger">Rejected</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row"><a href="#">#2644</a></th>
+                                            <td>Raheem Lehner</td>
+                                            <td><a href="#" class="text-primary">Sunt similique distinctio</a></td>
+                                            <td>$165</td>
+                                            <td><span class="badge bg-success">Approved</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Collection Tab -->
+                <div class="tab-pane fade" id="collection" role="tabpanel">
+                    <div id="CollectionList">
+                        <div class="card recent-sales overflow-auto">
+                            <div class="card-header">
+                                <div class="filter">
+                                    <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                        <li class="dropdown-header text-start">
+                                            <h6>Filter</h6>
+                                        </li>
+                                        <li><a class="dropdown-item" href="#">Add Collection</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title"> Collection <span></span></h5>
+                                <table class="table table-borderless datatable">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Customer</th>
+                                            <th scope="col">Product</th>
+                                            <th scope="col">Price</th>
+                                            <th scope="col">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row"><a href="#">#2457</a></th>
+                                            <td>Brandon Jacob</td>
+                                            <td><a href="#" class="text-primary">At praesentium minu</a></td>
+                                            <td>$64</td>
+                                            <td><span class="badge bg-success">Approved</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row"><a href="#">#2147</a></th>
+                                            <td>Bridie Kessler</td>
+                                            <td><a href="#" class="text-primary">Blanditiis dolor omnis similique</a></td>
+                                            <td>$47</td>
+                                            <td><span class="badge bg-warning">Pending</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row"><a href="#">#2049</a></th>
+                                            <td>Ashleigh Langosh</td>
+                                            <td><a href="#" class="text-primary">At recusandae consectetur</a></td>
+                                            <td>$147</td>
+                                            <td><span class="badge bg-success">Approved</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row"><a href="#">#2644</a></th>
+                                            <td>Angus Grady</td>
+                                            <td><a href="#" class="text-primar">Ut voluptatem id earum et</a></td>
+                                            <td>$67</td>
+                                            <td><span class="badge bg-danger">Rejected</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row"><a href="#">#2644</a></th>
+                                            <td>Raheem Lehner</td>
+                                            <td><a href="#" class="text-primary">Sunt similique distinctio</a></td>
+                                            <td>$165</td>
+                                            <td><span class="badge bg-success">Approved</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
-

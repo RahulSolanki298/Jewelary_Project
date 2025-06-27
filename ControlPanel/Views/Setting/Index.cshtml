@@ -153,10 +153,23 @@
 
 
             $("#homeContainer").on("click", ".btnEdit", function () {
-                debugger;
                 const id = $(this).data("id");
                  $.ajax({
                     url: '@Url.Action("CreateHome", "Setting")?id='+id,
+                    method: 'GET',
+                    success: function (data) {
+                        $('#homeModal').empty().html(data);
+                        $("#homeModal").modal("show");
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Failed to load property items:', error);
+                    }
+                });
+            });
+
+            $("#homeContainer").on("click", "#btnAddHomePage", function () {
+                 $.ajax({
+                    url: '@Url.Action("CreateHome", "Setting")',
                     method: 'GET',
                     success: function (data) {
                         $('#homeModal').empty().html(data);

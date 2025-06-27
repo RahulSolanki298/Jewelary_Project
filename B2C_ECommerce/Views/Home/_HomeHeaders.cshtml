@@ -51,10 +51,14 @@
         <div class="video-content">
             <h2 class="video-title">
                 <span class="PlayfairDisplay-title">
-                    World’s finest diamonds and unparalleled craftsmanship
+                    @Model.VdoTitle
+                    @*World’s finest diamonds and unparalleled craftsmanship*@
                 </span>
             </h2>
-            <a href="#" class="btn btn-dark text-capitalize mt-3 shop-now-btn">SHOP NOW</a>
+            @if (!string.IsNullOrWhiteSpace(Model.VdoMetaUrl))
+            {
+                <a href="@Model.VdoMetaUrl" class="btn btn-dark text-capitalize mt-3 shop-now-btn">SHOP NOW</a>
+            }
         </div>
 
         <div class="video-down-arrow">
@@ -63,7 +67,8 @@
             </a>
         </div>
     </div>
-</div>}
+</div>
+}
 
 <!-- IMAGE SLIDER SECTION -->
 @if (
