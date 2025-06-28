@@ -29,5 +29,7 @@ namespace DataAccess.Entities
 
         [NotMapped]
         public IFormFile ImageFile { get; set; }
+
+        public bool IsDisplayHome { get; set; } = false;
     }
 }

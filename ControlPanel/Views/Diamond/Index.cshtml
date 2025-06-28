@@ -47,12 +47,10 @@
                             <i class="bi bi-three-dots-vertical"></i>
                         </a>
                         <input type="hidden" id="txtProductIds" />
-
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="#" data-status="@SD.DeActived">Deactivated</a></li>
                             <li><a class="dropdown-item" href="#" data-status="@SD.Hold">Hold</a></li>
                         </ul>
-
                     </div>
                 </div>
             </div>
@@ -60,51 +58,48 @@
             <div class="row mt-2">
                 <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12">
                     <div id="divDetails">
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+<div class="modal fade" id="showFileUpload" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="uploadForm" asp-controller="Diamond" asp-action="UpsertDiamonds" method="post" enctype="multipart/form-data">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title" id="uploadModalLabel">Upload Excel</h5>
+                    <button type="button" class="btn-close btn-danger btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="uploadMessage"></div>
 
-    <!-- Upload Excel Modal -->
-    <div class="modal fade" id="showFileUpload" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true" data-bs-backdrop="static">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form id="uploadForm" asp-controller="Diamond" asp-action="UpsertDiamonds" method="post" enctype="multipart/form-data">
-                    <div class="modal-header bg-dark text-white">
-                        <h5 class="modal-title" id="uploadModalLabel">Upload Excel</h5>
-                        <button type="button" class="btn-close btn-danger btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="mb-3">
+                        <label for="excelFile" class="form-label">Select Excel or CSV File</label>
+                        <input type="file" class="form-control" id="excelFile" name="file" accept=".xls,.xlsx,.csv" required>
                     </div>
-                    <div class="modal-body">
-                        <div id="uploadMessage"></div>
-
-                        <div class="mb-3">
-                            <label for="excelFile" class="form-label">Select Excel or CSV File</label>
-                            <input type="file" class="form-control" id="excelFile" name="file" accept=".xls,.xlsx,.csv" required>
-                        </div>
-                        <!-- Loader -->
-                        <div id="formLoader" class="loader-container">
-                            <img src="~/assets/Loader/JF-WEB-LOADER.gif" style="width:120px;" />
-                        </div>
-                        <div>
-                            <h6>Note:</h6>
-                            <p>
-                                We accept CSV and Excel files for bulk diamond uploads.<br>
-                                Download sample format: <a href="~/FileFormats/DiamondFormat.xlsx">Download</a>
-                            </p>
-                        </div>
+                    <!-- Loader -->
+                    <div id="formLoader" class="loader-container">
+                        <img src="~/assets/Loader/JF-WEB-LOADER.gif" style="width:120px;" />
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                        <button id="uploadBtn" type="submit" class="btn btn-theme">Upload</button>
+                    <div>
+                        <h6>Note:</h6>
+                        <p>
+                            We accept CSV and Excel files for bulk diamond uploads.<br>
+                            Download sample format: <a href="~/FileFormats/DiamondFormat.xlsx">Download</a>
+                        </p>
                     </div>
-                </form>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    <button id="uploadBtn" type="submit" class="btn btn-theme">Upload</button>
+                </div>
+            </form>
         </div>
     </div>
-
 </div>
-
 <div class="modal fade m-2" id="showHistory" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">

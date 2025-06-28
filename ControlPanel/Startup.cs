@@ -135,7 +135,7 @@ namespace ControlPanel
                     context.Response.Headers.Add("X-Frame-Options", "DENY");
                     context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
                     await next();
-                });
+                    });
 
 
                 app.UseAuthentication();

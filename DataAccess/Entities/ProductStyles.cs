@@ -28,5 +28,7 @@ namespace DataAccess.Entities
 
         public string ProductType { get; set; }// Wedding, Engagement
 
+        public bool IsDisplayHome { get; set; } = false;
+
     }
 }

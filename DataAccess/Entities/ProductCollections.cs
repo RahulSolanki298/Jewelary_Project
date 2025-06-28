@@ -30,5 +30,9 @@ namespace DataAccess.Entities
         public string Description { get; set; }
 
         public virtual ICollection<Product> Products { get; set; }
+
+        public bool IsDisplayHome { get; set; } = false;
+
+        public string ProductType { get; set; }
     }
 }

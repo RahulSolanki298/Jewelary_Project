@@ -81,11 +81,13 @@
 
         function categoryList()
         {
+            debugger;
             $.ajax({
                 url: '@Url.Action("CategoryList", "Category")',
                 type: 'GET',
                 success: function (result)
                 {
+                    debugger;
                     $('#categoryList').html("");
                     $('#categoryList').html(result);
                 },

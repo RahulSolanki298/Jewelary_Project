@@ -153,6 +153,7 @@
 
 
             $("#homeContainer").on("click", ".btnEdit", function () {
+                debugger;
                 const id = $(this).data("id");
                  $.ajax({
                     url: '@Url.Action("CreateHome", "Setting")?id='+id,
@@ -168,6 +169,7 @@
             });
 
             $("#homeContainer").on("click", "#btnAddHomePage", function () {
+                debugger;
                  $.ajax({
                     url: '@Url.Action("CreateHome", "Setting")',
                     method: 'GET',

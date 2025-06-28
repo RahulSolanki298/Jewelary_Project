@@ -21,6 +21,7 @@
                                     <th scope="col">Image</th>
                                     <th scope="col">Category Name</th>
                                     <th scope="col">Status</th>
+                                    <th scope="col">Is Display Home</th>
                                     <th scope="col">Actions</th>
                                 </tr>
                             </thead>
@@ -29,39 +30,40 @@
                                 {
                                     foreach (var item in Model)
                                     {
-                                        <tr class="clickable-row" data-property-name="@item.Name">
-                                            <td>@(index++)</td>
-                                            <td>
-                                                <img src="@($"{SD.ImgUrl}/{item.CategoryImage}")" alt="@item.Name Image" style="height:100px;width:200px;" loading="lazy" />
-                                            </td>
-                                            <td>@item.Name</td>
-                                            <td>@(item.IsActivated ? "Active" : "Inactive")</td>
-                                            <td>
-                                                <div class="dropdown">
-                                                    <a class="" data-bs-toggle="dropdown" aria-expanded="false">
-                                                        <i class="bi bi-three-dots-vertical"></i>
+                                <tr class="clickable-row" data-property-name="@item.Name">
+                                    <td>@(index++)</td>
+                                    <td>
+                                        <img src="@($"{SD.ImgUrl}/{item.CategoryImage}")" alt="@item.Name Image" style="height:100px;width:200px;" loading="lazy" />
+                                    </td>
+                                    <td>@item.Name</td>
+                                    <td>@(item.IsActivated ? "Active" : "Inactive")</td>
+                                    <td>@(item.IsDisplayHome ? "Active" : "Inactive")</td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <a class="" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="bi bi-three-dots-vertical"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a class="dropdown-item show-property" data-type="styles" data-category-id="@item.Id">
+                                                        <i class="bi bi-pencil-square me-1"></i>Show Styles
                                                     </a>
-                                                    <ul class="dropdown-menu">
-                                                        <li>
-                                                            <a class="dropdown-item show-property" data-type="styles" data-category-id="@item.Id">
-                                                                <i class="bi bi-pencil-square me-1"></i>Show Styles
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="dropdown-item" href="@Url.Action("GetCategory","Category",new { id=item.Id})">
-                                                                <i class="bi bi-pencil-square me-1"></i>Edit
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="dropdown-item text-danger" href="@Url.Action("DeleteCategory","Category",new { id=item.Id})">
-                                                                <i class="bi bi-trash me-1"></i>Delete
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="@Url.Action("GetCategory","Category",new { id=item.Id})">
+                                                        <i class="bi bi-pencil-square me-1"></i>Edit
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item text-danger" href="@Url.Action("DeleteCategory","Category",new { id=item.Id})">
+                                                        <i class="bi bi-trash me-1"></i>Delete
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
 
-                                            </td>
-                                        </tr>
+                                    </td>
+                                </tr>
                                     }
                                 }
                                 else

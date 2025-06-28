@@ -12,17 +12,17 @@
         <div class="modal-body px-4 py-3">
             <ul class="nav nav-pills mb-4 nav-fill gap-2 p-1 bg-light rounded-3 shadow-sm" id="tabs" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link text-dark" id="slider-tab" data-bs-toggle="pill" data-bs-target="#slider" type="button">Main Slider / Video</button>
+                    <button class="nav-link btn btn-theme text-white" id="slider-tab" data-bs-toggle="pill" data-bs-target="#slider" type="button">Home Page Slider / Video</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link text-dark" id="category-tab" data-bs-toggle="pill" data-bs-target="#category" type="button">Category</button>
+                    <button class="nav-link btn btn-theme text-white" id="category-tab" data-bs-toggle="pill" data-bs-target="#category" type="button">Category</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link text-dark" id="subcategory-tab" data-bs-toggle="pill" data-bs-target="#subcategory" type="button">SubCategory</button>
+                    <button class="nav-link btn btn-theme text-white" id="subcategory-tab" data-bs-toggle="pill" data-bs-target="#subcategory" type="button">SubCategory</button>
                 </li>
-                <li class="nav-item" role="presentation">
+                @*<li class="nav-item" role="presentation">
                     <button class="nav-link text-dark" id="collection-tab" data-bs-toggle="pill" data-bs-target="#collection" type="button">Collection</button>
-                </li>
+                </li>*@
             </ul>
             <div class="tab-content" id="tabContent">
                 <div class="tab-pane fade show active" id="slider" role="tabpanel">
@@ -31,7 +31,7 @@
                             <div class="col-lg-7 col-md-7 col-sm-12">
                                 <form asp-action="SaveHomePageSetting" asp-controller="Setting" method="post" enctype="multipart/form-data">
                                     <div class="modal-header bg-theme">
-                                         <h5 id="exampleModalLabel">Setup Website Main Slider / Video Content</h5>
+                                        <h5 id="exampleModalLabel">Setup Website Main Slider / Video Content</h5>
                                     </div>
                                     <div class="container mt-5">
                                         <div id="deviceSection" class="mb-4">
@@ -72,23 +72,22 @@
                                                 </div>
                                                 <div class="col-xl-4 col-md-4 col-lg-4">
                                                     <div>
-                                                        <img src="@(Model?.SetVideoPath != null ? "/assets/img/video-icon.svg" : "/assets/img/no-image.png")" style="width: 120px;" />
+                                                        <a href="@SD.ImgUrl/@Model?.SetVideoPath" target="_blank">
+                                                            <img src="@(Model?.SetVideoPath != null ? "/assets/img/video-icon.svg" : "/assets/img/no-image.png")" style="width: 120px;" />
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-xl-8 col-md-8 col-lg-8">
+                                                <div class="col-md-6">
                                                     <label><b>Video Title</b></label>
                                                     <input type="text" class="form-control mb-2" id="VdoTitle" asp-for="VdoTitle" />
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-xl-8 col-md-8 col-lg-8">
+                                                <div class="col-md-6">
                                                     <label><b>Video Meta Url</b></label>
                                                     <input type="text" class="form-control mb-2" id="VdoMetaUrl" asp-for="VdoMetaUrl" />
                                                 </div>
                                             </div>
-
                                         </div>
                                         <div class="form-check form-switch mb-3">
                                             <input class="form-check-input" type="checkbox" id="toggleSlider" name="isSetCompanySlider" value="true" @(Model?.isSetCompanySlider == true ? "checked" : "") />
@@ -177,14 +176,12 @@
                                 <div class="card shadow border-0">
                                     <div class="card-body text-center p-3">
                                         <a href="http://godhaniinfotech.org" target="_blank">
-            <img src="@Url.Content($"{SD.ImgUrl}/assets/img/FrountEnd.png")"
-                 alt="Frontend Preview"
-                 class="img-fluid rounded preview-img large-img" style="height:700px;">
-        </a>
+                                            <img src="@Url.Content($"{SD.ImgUrl}/assets/img/FrountEnd.png")" class="img-fluid rounded shadow" style="max-height: 450px; object-fit: cover;">
+                                        </a>
                                         @*<iframe id="certIframe"
-                                                src="http://godhaniinfotech.org"
-                                                allowfullscreen="yes"
-                                                style="width:100%; height:100vh; border:none;"></iframe>*@
+                                            src="http://godhaniinfotech.org"
+                                            allowfullscreen="yes"
+                                            style="width:100%; height:100vh; border:none;"></iframe>*@
 
                                     </div>
                                     <div class="card-footer text-center bg-light">
@@ -219,52 +216,30 @@
 
                                     <div class="card-body">
                                         <h5 class="card-title">Category</h5>
+
+                                        
+
                                         <table class="table table-borderless datatable">
                                             <thead>
                                                 <tr>
                                                     <th scope="col">#</th>
-                                                    <th scope="col">Customer</th>
-                                                    <th scope="col">Product</th>
-                                                    <th scope="col">Price</th>
+                                                    <th scope="col">Category Name</th>
+                                                    <th scope="col">Product Type</th>
+                                                    <th scope="col">Title</th>
                                                     <th scope="col">Status</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <th scope="row"><a href="#">#2457</a></th>
-                                                    <td>Brandon Jacob</td>
-                                                    <td><a href="#" class="text-primary">At praesentium minu</a></td>
-                                                    <td>$64</td>
-                                                    <td><span class="badge bg-success">Approved</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row"><a href="#">#2147</a></th>
-                                                    <td>Bridie Kessler</td>
-                                                    <td><a href="#" class="text-primary">Blanditiis dolor omnis similique</a></td>
-                                                    <td>$47</td>
-                                                    <td><span class="badge bg-warning">Pending</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row"><a href="#">#2049</a></th>
-                                                    <td>Ashleigh Langosh</td>
-                                                    <td><a href="#" class="text-primary">At recusandae consectetur</a></td>
-                                                    <td>$147</td>
-                                                    <td><span class="badge bg-success">Approved</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row"><a href="#">#2644</a></th>
-                                                    <td>Angus Grady</td>
-                                                    <td><a href="#" class="text-primar">Ut voluptatem id earum et</a></td>
-                                                    <td>$67</td>
-                                                    <td><span class="badge bg-danger">Rejected</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row"><a href="#">#2644</a></th>
-                                                    <td>Raheem Lehner</td>
-                                                    <td><a href="#" class="text-primary">Sunt similique distinctio</a></td>
-                                                    <td>$165</td>
-                                                    <td><span class="badge bg-success">Approved</span></td>
-                                                </tr>
+                                                @foreach (var item in Model.CategoryList.Where(x => x.IsDisplayHome == true && x.IsActivated==true))
+                                                {
+                                                    <tr>
+                                                        <th scope="row"><a href="#">#2457</a></th>
+                                                        <td>@item.Name</td>
+                                                        <td>@item.ProductType</td>
+                                                        <td>@item.Title</td>
+                                                        <td><span class="badge bg-success">@item.IsDisplayHome</span></td>
+                                                    </tr>
+                                                }
                                             </tbody>
                                         </table>
                                     </div>
@@ -286,8 +261,6 @@
                                             <h6>Filter</h6>
                                         </li>
                                         <li><a class="dropdown-item" href="#">Add Subcategory</a></li>
-                                        <li><a class="dropdown-item" href="#">This Month</a></li>
-                                        <li><a class="dropdown-item" href="#">This Year</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -297,48 +270,23 @@
                                     <thead>
                                         <tr>
                                             <th scope="col">#</th>
-                                            <th scope="col">Customer</th>
-                                            <th scope="col">Product</th>
-                                            <th scope="col">Price</th>
+                                            <th scope="col">Style Name</th>
                                             <th scope="col">Status</th>
+                                            <th scope="col">Is Display Home</th>
+                                            <th scope="col">Product Type</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach (var item in Model.StyleList.Where(x => x.IsDisplayHome == true && x.IsActivated == true))
+                                        {
                                         <tr>
-                                            <th scope="row"><a href="#">#2457</a></th>
-                                            <td>Brandon Jacob</td>
-                                            <td><a href="#" class="text-primary">At praesentium minu</a></td>
-                                            <td>$64</td>
-                                            <td><span class="badge bg-success">Approved</span></td>
+                                            <th scope="row"><a href="#">@item.Id</a></th>
+                                            <td>@item.StyleName</td>
+                                            <td>@item.IsActivated</td>
+                                            <td>@item.IsDisplayHome</td>
+                                            <td>@item.ProductType</td>
                                         </tr>
-                                        <tr>
-                                            <th scope="row"><a href="#">#2147</a></th>
-                                            <td>Bridie Kessler</td>
-                                            <td><a href="#" class="text-primary">Blanditiis dolor omnis similique</a></td>
-                                            <td>$47</td>
-                                            <td><span class="badge bg-warning">Pending</span></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><a href="#">#2049</a></th>
-                                            <td>Ashleigh Langosh</td>
-                                            <td><a href="#" class="text-primary">At recusandae consectetur</a></td>
-                                            <td>$147</td>
-                                            <td><span class="badge bg-success">Approved</span></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><a href="#">#2644</a></th>
-                                            <td>Angus Grady</td>
-                                            <td><a href="#" class="text-primar">Ut voluptatem id earum et</a></td>
-                                            <td>$67</td>
-                                            <td><span class="badge bg-danger">Rejected</span></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><a href="#">#2644</a></th>
-                                            <td>Raheem Lehner</td>
-                                            <td><a href="#" class="text-primary">Sunt similique distinctio</a></td>
-                                            <td>$165</td>
-                                            <td><span class="badge bg-success">Approved</span></td>
-                                        </tr>
+                                        }
                                     </tbody>
                                 </table>
                             </div>
@@ -348,7 +296,7 @@
                 </div>
 
                 <!-- Collection Tab -->
-                <div class="tab-pane fade" id="collection" role="tabpanel">
+                @*<div class="tab-pane fade" id="collection" role="tabpanel">
                     <div id="CollectionList">
                         <div class="card recent-sales overflow-auto">
                             <div class="card-header">
@@ -415,7 +363,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>*@
             </div>
         </div>
     </div>

@@ -65,13 +65,14 @@ namespace ControlPanel.Controllers
         {
             var productResp = new ProductMstResponse();
             var productUpload = new List<ProductDTO>();
-
+            var processedItems = new List<ProductDTO>();
             if (file == null || file.Length == 0)
             {
-                productResp = new ProductMstResponse(); 
+                productResp = new ProductMstResponse();
                 productResp.Status = false;
-                productResp.Message= "No file uploaded.";
-                
+                productResp.Message = "No file uploaded.";
+                productResp.tempProductList = new List<ProductDTO>();
+
                 return PartialView("_JewelleryList", productResp);
             }
 
@@ -80,6 +81,7 @@ namespace ControlPanel.Controllers
                 productResp = new ProductMstResponse();
                 productResp.Status = false;
                 productResp.Message = "Invalid file format. Please upload an Excel (.xlsx) file.";
+                productResp.tempProductList = new List<ProductDTO>();
                 return PartialView("_ExcelUploadList", productResp);
             }
 
@@ -107,10 +109,12 @@ namespace ControlPanel.Controllers
 
                     if (sheetProcessors.TryGetValue(sheetName, out var processor))
                     {
-                        var processedItems = processor(worksheet);
-                        productUpload.AddRange(processedItems);
+                        processedItems = processor(worksheet);
                     }
                 }
+                productResp.tempProductList = new List<ProductDTO>();
+                productResp.tempProductList.AddRange(processedItems);
+                productResp.Status = true;
             }
             catch (Exception ex)
             {
@@ -126,106 +130,114 @@ namespace ControlPanel.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveAllProduct(string productsJson)
         {
-            ProductUploadResult productUploadResults = new ProductUploadResult();
-            List<ProductDTO> ringProducts = new List<ProductDTO>();
-            List<ProductDTO> weddings = new List<ProductDTO>();
-            List<ProductDTO> earrings = new List<ProductDTO>();
-            List<ProductDTO> pendants = new List<ProductDTO>();
-            List<ProductDTO> bracelets = new List<ProductDTO>();
-
-            // Get user ID from cookie
-            var userId = HttpContext.Request.Cookies["UserId"];
-
-            if (string.IsNullOrEmpty(userId))
+            try
             {
-                return Json("User is not logged in or cookie expired.");
+                ProductUploadResult productUploadResults = new ProductUploadResult();
+                List<ProductDTO> ringProducts = new List<ProductDTO>();
+                List<ProductDTO> weddings = new List<ProductDTO>();
+                List<ProductDTO> earrings = new List<ProductDTO>();
+                List<ProductDTO> pendants = new List<ProductDTO>();
+                List<ProductDTO> bracelets = new List<ProductDTO>();
+
+                // Get user ID from cookie
+                var userId = HttpContext.Request.Cookies["UserId"];
+
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Json("User is not logged in or cookie expired.");
+                }
+
+                var user = await _userManager.FindByIdAsync(userId);
+
+                if (string.IsNullOrEmpty(productsJson))
+                {
+                    return Json("Product Doesn't Found");
+                }
+
+                var uploadHistory = new ProductFileUploadHistory
+                {
+                    Title = $"Jewellery Upload with {user.FirstName} {user.LastName}",
+                    UploadedDate = DateTime.UtcNow,
+                    UploadedBy = userId,
+                    IsSuccess = 1
+                };
+
+                int uploadHistoryId = await _productRepository.AddProductFileUploadedHistory(uploadHistory);
+
+                var products = JsonConvert.DeserializeObject<List<ProductDTO>>(productsJson);
+
+                var categoryList = products.GroupBy(p => p.CategoryName)
+                                           .Select(g => g.First())
+                                           .ToList();
+
+                foreach (var wkSheet in categoryList)
+                {
+                    string category = wkSheet.CategoryName.Trim().ToLower();
+
+                    if (category == "rings")
+                    {
+                        ringProducts = products.Where(x => x.CategoryName == "Rings").ToList();
+                        var ringResp = await _productRepository.SaveNewProductListToDbAsync(ringProducts, "Rings", userId, uploadHistoryId);
+                        if (ringResp != null)
+                        {
+                            return Json(ringResp);
+                        }
+                       // productUploadResults = ringResp;
+                    }
+                    else if (category == "bands")
+                    {
+                        weddings = products.Where(x => x.CategoryName == "Bands").ToList();
+                        var bandResp = await _productRepository.SaveNewProductListToDbAsync(weddings, "Bands", userId, uploadHistoryId);
+                        if (bandResp != null)
+                        {
+                            return Json(bandResp);
+                        }
+                        //productUploadResults = bandResp;
+
+                    }
+                    else if (category == "earrings")
+                    {
+                        earrings = products.Where(x => x.CategoryName == "Earrings").ToList();
+                        var errResp = await _productRepository.SaveNewProductListToDbAsync(earrings, "Earrings", userId, uploadHistoryId);
+                        if (errResp != null)
+                        {
+                            return Json(errResp);
+                        }
+                        //productUploadResults = errResp;
+
+                    }
+                    else if (category == "pendants")
+                    {
+                        pendants = products.Where(x => x.CategoryName == "Pendants").ToList();
+                        var pendResp = await _productRepository.SaveNewProductListToDbAsync(pendants, "Pendants", userId, uploadHistoryId);
+                        if (pendResp != null)
+                        {
+                            return Json(pendResp);
+                        }
+                        //productUploadResults = pendResp;
+
+                    }
+                    else if (category == "bracelets")
+                    {
+                        bracelets = products.Where(x => x.CategoryName == "Bracelets").ToList();
+                        var braceResp = await _productRepository.SaveNewProductListToDbAsync(bracelets, "Bracelets", userId, uploadHistoryId);
+                        if (braceResp != null)
+                        {
+                            return Json(braceResp);
+                        }
+                      //  productUploadResults = braceResp;
+
+                    }
+                }
+                productUploadResults.Message = "AI transforms data migration Successfully.";
+                return Json(productUploadResults);
+
+            }
+            catch (Exception ex)
+            {
+                throw;
             }
 
-            var user = await _userManager.FindByIdAsync(userId);
-
-            if (string.IsNullOrEmpty(productsJson))
-            {
-                return Json("Product Doesn't Found");
-            }
-
-            var uploadHistory = new ProductFileUploadHistory
-            {
-                Title = $"Jewellery Upload with {user.FirstName} {user.LastName}",
-                UploadedDate = DateTime.UtcNow,
-                UploadedBy = userId,
-                IsSuccess = 1
-            };
-
-            int uploadHistoryId = await _productRepository.AddProductFileUploadedHistory(uploadHistory);
-
-            var products = JsonConvert.DeserializeObject<List<ProductDTO>>(productsJson);
-
-            var categoryList = products.GroupBy(p => p.CategoryName)
-                                       .Select(g => g.First())
-                                       .ToList();
-
-            foreach (var wkSheet in categoryList)
-            {
-                string category = wkSheet.CategoryName.Trim().ToLower();
-
-                if (category == "rings")
-                {
-                    ringProducts = products.Where(x => x.CategoryName == "Rings").ToList();
-                    var ringResp=  await _productRepository.SaveNewProductList(ringProducts, "Rings", userId, uploadHistoryId);
-                    if (ringResp != null)
-                    {
-                        return Json(ringResp);
-                    }
-                    productUploadResults = ringResp;
-                }
-                else if (category == "bands")
-                {
-                    weddings = products.Where(x => x.CategoryName == "Bands").ToList();
-                    var bandResp = await _productRepository.SaveNewProductList(weddings, "Bands", userId, uploadHistoryId);
-                    if (bandResp != null)
-                    {
-                        return Json(bandResp);
-                    }
-                    productUploadResults = bandResp;
-
-                }
-                else if (category == "earrings")
-                {
-                    earrings = products.Where(x => x.CategoryName == "Earrings").ToList();
-                    var errResp=  await _productRepository.SaveNewProductList(earrings, "Earrings", userId, uploadHistoryId);
-                    if (errResp != null)
-                    {
-                        return Json(errResp);
-                    }
-                    productUploadResults = errResp;
-
-                }
-                else if (category == "pendants")
-                {
-                    pendants = products.Where(x => x.CategoryName == "Pendants").ToList();
-                    var pendResp = await _productRepository.SaveNewProductList(pendants, "Pendants", userId, uploadHistoryId);
-                    if (pendResp != null)
-                    {
-                        return Json(pendResp);
-                    }
-                    productUploadResults = pendResp;
-
-                }
-                else if (category == "bracelets")
-                {
-                    bracelets = products.Where(x => x.CategoryName == "Bracelets").ToList();
-                    var braceResp= await _productRepository.SaveNewProductList(bracelets, "Bracelets", userId, uploadHistoryId);
-                    if (braceResp != null)
-                    {
-                        return Json(braceResp);
-                    }
-                    productUploadResults = braceResp;
-
-                }
-            }
-            productUploadResults.Message = "AI transforms data migration Successfully.";
-            //return Json("No Data Found...AI transforms data migration Failed.");
-            return Json(productUploadResults);
         }
 
 
@@ -239,8 +251,7 @@ namespace ControlPanel.Controllers
             var products = new List<ProductDTO>();
             var tempProducts = new ProductDTO();
             int rowCount = worksheet.Dimension.Rows;
-            ProductDTO product = null;
-            string tempSku = string.Empty;
+            ProductDTO product = new ProductDTO();
 
             for (int row = 5; row <= rowCount; row++)
             {
@@ -272,11 +283,12 @@ namespace ControlPanel.Controllers
                     //UnitPrice = ConvertStringToDecimal(worksheet.Cells[row, 24].Text),
                     WholesaleCost = decimal.TryParse(worksheet.Cells[row, 26].Text, out var hCost) ? hCost : (decimal?)null,
                     Description = worksheet.Cells[row, 30].Text,
+                    Type = worksheet.Name
                 };
 
-                if (!string.IsNullOrWhiteSpace(product.Title) 
-                    && !string.IsNullOrWhiteSpace(product.VenderName) 
-                    && !string.IsNullOrWhiteSpace(product.VenderStyle) 
+                if (!string.IsNullOrWhiteSpace(product.Title)
+                    && !string.IsNullOrWhiteSpace(product.VenderName)
+                    && !string.IsNullOrWhiteSpace(product.VenderStyle)
                     && !string.IsNullOrWhiteSpace(product.Sku))
                 {
                     tempProducts = new ProductDTO();
@@ -286,7 +298,7 @@ namespace ControlPanel.Controllers
                 }
                 else
                 {
-                    product.DisplayDate = string.IsNullOrWhiteSpace(product.DisplayDate) ? tempProducts.DisplayDate : product.DisplayDate; 
+                    product.DisplayDate = string.IsNullOrWhiteSpace(product.DisplayDate) ? tempProducts.DisplayDate : product.DisplayDate;
                     product.CategoryName = SD.Rings;
                     product.Title = string.IsNullOrWhiteSpace(product.Title) ? tempProducts.Title : product.Title;
                     product.VenderName = string.IsNullOrWhiteSpace(product.VenderName) ? tempProducts.VenderName : product.VenderName;
@@ -323,7 +335,7 @@ namespace ControlPanel.Controllers
 
         private List<ProductDTO> ProcessBandsData(ExcelWorksheet worksheet)
         {
-            var tempProductList = new List<ProductDTO>(); 
+            var tempProductList = new List<ProductDTO>();
             var newProductList = new List<ProductDTO>();
             var products = new List<ProductDTO>();
             var tempProducts = new ProductDTO();
@@ -407,7 +419,7 @@ namespace ControlPanel.Controllers
 
         private List<ProductDTO> ProcessEarringsData(ExcelWorksheet worksheet)
         {
-            var tempProductList = new List<ProductDTO>(); 
+            var tempProductList = new List<ProductDTO>();
             var newProductList = new List<ProductDTO>();
             var products = new List<ProductDTO>();
             var tempProducts = new ProductDTO();
@@ -427,10 +439,10 @@ namespace ControlPanel.Controllers
                     Diameter = worksheet.Cells[row, 8].Text,
                     GoldWeight = worksheet.Cells[row, 9].Text,
                     CTW = worksheet.Cells[row, 10].Text,
-                    CenterShapeName= worksheet.Cells[row, 11].Text,
-                    CenterCaratName= worksheet.Cells[row, 12].Text,
+                    CenterShapeName = worksheet.Cells[row, 11].Text,
+                    CenterCaratName = worksheet.Cells[row, 12].Text,
                     ColorName = worksheet.Cells[row, 13].Text,
-                    Certificate= worksheet.Cells[row, 14].Text,
+                    Certificate = worksheet.Cells[row, 14].Text,
                     CollectionName = worksheet.Cells[row, 15].Text,
                     StyleName = worksheet.Cells[row, 16].Text,
                     AccentStoneShapeName = worksheet.Cells[row, 17].Text,
@@ -443,7 +455,7 @@ namespace ControlPanel.Controllers
                     WholesaleCost = decimal.TryParse(worksheet.Cells[row, 23].Text, out var hCost) ? hCost : 0,
                     //UnitPrice = ConvertStringToDecimal(worksheet.Cells[row, 23].Text),
                     Description = worksheet.Cells[row, 31].Text,
-                    
+
                 };
 
                 if (!string.IsNullOrWhiteSpace(product.Title) && !string.IsNullOrWhiteSpace(product.VenderName) && !string.IsNullOrWhiteSpace(product.VenderStyle) && !string.IsNullOrWhiteSpace(product.Sku))
@@ -492,7 +504,7 @@ namespace ControlPanel.Controllers
 
         private List<ProductDTO> ProcessPendantsData(ExcelWorksheet worksheet)
         {
-            var tempProductList = new List<ProductDTO>(); 
+            var tempProductList = new List<ProductDTO>();
             var newProductList = new List<ProductDTO>();
             var products = new List<ProductDTO>();
             var tempProducts = new ProductDTO();
@@ -654,7 +666,7 @@ namespace ControlPanel.Controllers
             }
             catch (Exception ex)
             {
-               // _logger.LogError(ex, "Error loading product list.");
+                // _logger.LogError(ex, "Error loading product list.");
                 return StatusCode(500, "Internal Server Error");
             }
         }
@@ -846,8 +858,8 @@ namespace ControlPanel.Controllers
             if (leftParts.Length < 2) return result;
 
             string karat = leftParts[0];
-            
-            var metals =  GetMetalIds(baseProduct.ColorName);
+
+            var metals = GetMetalIds(baseProduct.ColorName);
 
             string[] shapes = { };
             if (baseProduct.CenterShapeName != null)
@@ -859,7 +871,7 @@ namespace ControlPanel.Controllers
             {
                 foreach (var shape in shapes)
                 {
-                    for (int metal=0;metal< metals.Length;metal++)
+                    for (int metal = 0; metal < metals.Length; metal++)
                     {
                         result.Add(new ProductDTO
                         {
@@ -891,9 +903,9 @@ namespace ControlPanel.Controllers
                             IsReadyforShip = baseProduct.IsReadyforShip,
                             WholesaleCost = baseProduct.WholesaleCost,
                             Diameter = baseProduct.Diameter,
-                            StyleName=baseProduct.StyleName,
-                            CollectionName=baseProduct.CollectionName,
-                            Type=baseProduct.Type
+                            StyleName = baseProduct.StyleName,
+                            CollectionName = baseProduct.CollectionName,
+                            Type = baseProduct.Type
                         });
                     }
                 }
@@ -937,7 +949,7 @@ namespace ControlPanel.Controllers
                     });
                 }
             }
-            
+
             return result;
         }
 
@@ -948,7 +960,7 @@ namespace ControlPanel.Controllers
             try
             {
                 List<string> styleErr = new List<string>();
-                string fileName = string.Empty; 
+                string fileName = string.Empty;
                 int metalId = 0;
                 string extractedFolder = string.Empty;
                 string zipPath = string.Empty;
@@ -1001,20 +1013,20 @@ namespace ControlPanel.Controllers
                                         entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
                                     {
                                         styleName = _productRepository.ExtractStyleName(entry.Name);
-                                        if (styleName == null) 
+                                        if (styleName == null && string.IsNullOrEmpty(styleName.ColorName) && string.IsNullOrEmpty(fileName) && string.IsNullOrEmpty(zipPath))
                                         {
                                             styleErr.Add($"Design Name :{entry.Name} is not found.");
                                         };
 
                                         var dt = shapeList.Where(x => x.SymbolName == styleName.ShapeCode).FirstOrDefault();
-                                        
-                                       var  shape = await _productRepository.GetProductShapeId(styleName.ShapeCode, dt.Id);
+
+                                        var shape = await _productRepository.GetProductShapeId(styleName.ShapeCode, dt.Id);
                                         if (shape == null) continue;
 
                                         metalId = await _productRepository.GetMetalId(styleName.ColorName);
                                         if (metalId == 0) continue;
 
-                                        prdDesignDT = await _productRepository.GetJewelleryDTByDesignNo(styleName.DesignNo, metalId,shape.Id);
+                                        prdDesignDT = await _productRepository.GetJewelleryDTByDesignNo(styleName.DesignNo, metalId, shape.Id);
                                         if (prdDesignDT.Count == 0) continue;
 
                                         prdDesignDT = prdDesignDT
@@ -1043,6 +1055,9 @@ namespace ControlPanel.Controllers
                                         {
 
                                             //var findImgVdo = _productRepository.GetProductImagesVideoById(pro.Id.ToString);
+
+
+
                                             prdDT = new ProductImages
                                             {
                                                 ProductId = pro.ProductKey,
@@ -1336,7 +1351,7 @@ namespace ControlPanel.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveBulkProductProperty([FromBody]List<ProductProperty> productProperties)
+        public async Task<IActionResult> SaveBulkProductProperty([FromBody] List<ProductProperty> productProperties)
         {
             if (productProperties == null || !productProperties.Any())
             {

@@ -293,7 +293,9 @@ namespace Business.Repository
                         CreatedDate = DateTime.Now,
                         UpdatedDate = null,
                         IsActivated = product.IsActivated ?? false,
-                        StyleImage = product.StyleImage
+                        StyleImage = product.StyleImage,
+                        CoverPageImage=product.CoverPageImage,
+                        CoverPageTitle=product.CoverPageTitle
                     };
 
                     await _context.ProductStyles.AddAsync(entity);
@@ -303,14 +305,16 @@ namespace Business.Repository
                     // Update existing entity
                     entity = await _context.ProductStyles.FindAsync(product.Id);
 
-                    if (entity == null)
+                    if (entity == null) 
                         return false;
 
-                    entity.StyleName = product.StyleName;
-                    entity.VenderId = product.VenderId;
+                    entity.StyleName = !string.IsNullOrEmpty(product.StyleName) ? product.StyleName : entity.StyleName;
+                    entity.VenderId = !string.IsNullOrEmpty(product.VenderId) ? product.VenderId : entity.VenderId;
                     entity.UpdatedDate = DateTime.Now;
                     entity.IsActivated = product.IsActivated ?? false;
-                    entity.StyleImage = product.StyleImage;
+                    entity.StyleImage = !string.IsNullOrEmpty(product.StyleImage) ?product.StyleImage : entity.StyleImage;
+                    entity.CoverPageImage = !string.IsNullOrEmpty(product.CoverPageImage) ? product.CoverPageImage : entity.CoverPageImage;
+                    entity.CoverPageTitle = !string.IsNullOrEmpty(product.CoverPageTitle) ?product.CoverPageTitle : entity.CoverPageTitle;
                 }
 
                 await _context.SaveChangesAsync();

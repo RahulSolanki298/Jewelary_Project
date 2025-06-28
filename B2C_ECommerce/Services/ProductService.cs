@@ -895,6 +895,7 @@ namespace B2C_ECommerce.Services
                                       StyleImage=proSt.StyleImage,
                                       Id = proSt.Id,
                                       CoverPageImage = proSt.CoverPageImage,
+                                      CoverPageTitle = proSt.CoverPageTitle,
                                       CreatedDate = proSt.CreatedDate,
                                       UpdatedDate = proSt.UpdatedDate
                                   }).ToListAsync();

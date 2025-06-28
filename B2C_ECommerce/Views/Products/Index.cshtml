@@ -1,7 +1,14 @@
-﻿@model Models.ProductStyleCollectionDTO
-@using Common
+﻿@model Models.ProductStyleCollectionDTO;
+@using Common;
+@using Models;
 @{
-    ViewBag.Title = "Products";
+    var styleName = string.Empty;
+    ProductStyleDTO homeCover = new ProductStyleDTO();
+    if (!string.IsNullOrEmpty(ViewBag.StyleName))
+    {
+        styleName = ViewBag.StyleName.ToString();
+    }
+
     <link rel="stylesheet" asp-href-include="~/assets/css/products.css">
 
     <style>
@@ -37,17 +44,35 @@
     </style>
 }
 
+@{
+    if (Model.IsStyle)
+    {
+        homeCover = Model.StyleList.FirstOrDefault(x => x.StyleName == styleName);
+    }
+    var imageUrl = !string.IsNullOrEmpty(homeCover?.CoverPageImage)
+        ? SD.ImgUrl + "/" + homeCover.CoverPageImage
+        : Url.Content("~/assets/img/banner/filter-cover-image.jpg");
+}
+
 <section>
     <div class="listingpage">
         <div class="home-giftbanner-main position-relative left-text-banner">
-            <a href="#" aria-label="" class="d-block">
-                <div class="ole-image-banner thumb text-center ">
-                    <img src="~/assets/img/banner/filter-cover-image.jpg" class="filter-top-image" alt="" title="" />
+            <a href="#" aria-label="" class="d-block position-relative">
+                <div class="ole-image-banner text-center">
+                    <img src="@imageUrl" class="filter-top-image w-100" alt="@homeCover?.CoverPageTitle" />
+
+                    @if (!string.IsNullOrEmpty(homeCover?.CoverPageTitle))
+                    {
+                        <div class="cover-text-overlay position-absolute top-50 start-50 translate-middle text-white text-shadow p-3">
+                            <h2 class="fw-bold">@homeCover.CoverPageTitle</h2>
+                        </div>
+                    }
                 </div>
             </a>
         </div>
     </div>
 </section>
+
 
 <!-- breadcrumb area start -->
 <div class="breadcrumb-area">
@@ -59,7 +84,7 @@
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="#"><i class="fa fa-home"></i></a></li>
                             <li class="breadcrumb-item active" aria-current="page">
-                                @ViewBag.Title
+                                @ViewBag.Title @homeCover
                             </li>
                         </ul>
                     </nav>
@@ -175,7 +200,7 @@
                         else
                         {
                             <div class="row">
-                                @if (Model.CategoryList!= null)
+                                @if (Model.CategoryList != null)
                                 {
                                     @foreach (var item in Model.CategoryList)
                                     {

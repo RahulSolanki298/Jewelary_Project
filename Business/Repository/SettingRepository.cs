@@ -21,14 +21,18 @@ namespace Business.Repository
         {
             int[] categoryIds = { },styleIds = { },collectionIds = { };
             var response = await _context.HomePageSetting.FirstOrDefaultAsync(x => x.Id == id);
-            if (!string.IsNullOrEmpty(response.CategoryIds)) categoryIds = response.CategoryIds.Split(',').Select(int.Parse).ToArray();
-            if (categoryIds.Length > 0) response.CategoryList = await _context.Category.Where(x=>x.IsActivated==true && categoryIds.Contains(x.Id)).ToListAsync();
 
-            if (!string.IsNullOrEmpty(response.StylesIds)) styleIds = response.StylesIds.Split(',').Select(int.Parse).ToArray();
-            if (styleIds.Length > 0) response.StyleList = await _context.ProductStyles.Where(x => x.IsActivated == true && styleIds.Contains(x.Id)).ToListAsync();
+            response.CategoryList = await _context.Category.Where(x => x.IsActivated == true).ToListAsync();
+            response.StyleList = await _context.ProductStyles.Where(x => x.IsActivated == true).ToListAsync();
+            response.CollectionList = await _context.ProductCollections.Where(x => x.IsActivated == true).ToListAsync();
+            //if (!string.IsNullOrEmpty(response.CategoryIds)) categoryIds = response.CategoryIds.Split(',').Select(int.Parse).ToArray();
+            //if (categoryIds.Length > 0) response.CategoryList = await _context.Category.Where(x=>x.IsActivated==true && categoryIds.Contains(x.Id)).ToListAsync();
 
-            if (!string.IsNullOrEmpty(response.CollectionIds)) collectionIds = response.CollectionIds.Split(',').Select(int.Parse).ToArray();
-            if (collectionIds.Length > 0) response.CollectionList = await _context.ProductCollections.Where(x => x.IsActivated == true && collectionIds.Contains(x.Id)).ToListAsync();
+            //if (!string.IsNullOrEmpty(response.StylesIds)) styleIds = response.StylesIds.Split(',').Select(int.Parse).ToArray();
+            //if (styleIds.Length > 0) response.StyleList = await _context.ProductStyles.Where(x => x.IsActivated == true && styleIds.Contains(x.Id)).ToListAsync();
+
+            //if (!string.IsNullOrEmpty(response.CollectionIds)) collectionIds = response.CollectionIds.Split(',').Select(int.Parse).ToArray();
+            //if (collectionIds.Length > 0) response.CollectionList = await _context.ProductCollections.Where(x => x.IsActivated == true && collectionIds.Contains(x.Id)).ToListAsync();
 
             return response;
         }

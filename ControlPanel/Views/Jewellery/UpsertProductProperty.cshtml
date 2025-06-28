@@ -10,127 +10,124 @@
         </div>
     </div>
     <div class="row">
-        <div class="row justify-content-center mt-3">
-            <div class="col-12 col-xl-10">
-                <div class="card shadow-lg border-0 rounded-4">
-                    <div class="card-body p-4">
+
+        <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-4">
+                    <form id="productPropertyForm" asp-action="UpsertProductProperty" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input asp-for="Id" type="hidden" />
+
                         <div class="row">
-                            <div class="col-lg-10 col-md-10 col-sm-8">
-                                <form id="productPropertyForm" asp-action="UpsertProductProperty" method="post" enctype="multipart/form-data">
-                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                    <input asp-for="Id" type="hidden" class="form-control" />
-
-                                    <div class="form-group mb-3">
-                                        <label asp-for="Name" class="form-label"></label>
-                                        <input asp-for="Name" class="form-control" />
-                                        <span asp-validation-for="Name" class="text-danger"></span>
-                                    </div>
-
-                                    <div class="form-group mb-3">
-                                        <label class="control-label">Main Property</label>
-                                        <select asp-for="ParentId" class="form-control">
-                                            <option value="">-- Select Parent --</option>
-                                            @foreach (var item in ViewBag.ParentDrp)
-                                            {
-                                                @if (item.Id == Model.ParentId)
-                                                {
-                                                    <option value="@item.Id" selected="selected">@item.Name</option>
-
-                                                }
-                                                else
-                                                {
-                                                    <option value="@item.Id">@item.Name</option>
-                                                }
-                                            }
-                                        </select>
-                                        <span asp-validation-for="ParentId" class="text-danger"></span>
-                                    </div>
-
-                                    <div class="form-group mb-3">
-                                        <label asp-for="Description" class="control-label"></label>
-                                        <textarea id="Description" asp-for="Description" class="form-control"></textarea>
-                                        <span asp-validation-for="Description" class="text-danger"></span>
-                                    </div>
-
-
-
-                                    <div class="form-group mb-3">
-                                        <label class="control-label">Image Upload</label>
-                                        <input type="file" name="UploadFile" id="UploadFile" class="form-control" accept="image/*" onchange="previewImage(event)" />
-                                        <span asp-validation-for="IconPath" class="text-danger"></span>
-                                    </div>
-
-                                    <div class="form-group mb-3">
-                                        <label class="control-label">Symbol Name</label> <b>(.xlsx file ex. PLD-115-R1 [PLD-115[Style Name]- R1 Rose Gold 1st Image])</b>
-                                        <input asp-for="SymbolName" class="form-control" />
-                                        <span asp-validation-for="SymbolName" class="text-danger"></span>
-                                    </div>
-
-                                    <div class="form-group mb-3">
-                                        <label class="control-label">Synonyms</label></b>
-                                        <input asp-for="Synonyms" class="form-control" />
-                                        <span asp-validation-for="Synonyms" class="text-danger"></span>
-                                    </div>
-
-                                    <div class="form-group mb-3">
-                                        <label asp-for="DisplayOrder" class="control-label"></label>
-                                        <input asp-for="DisplayOrder" class="form-control" />
-                                        <span asp-validation-for="DisplayOrder" class="text-danger"></span>
-                                    </div>
-
-                                    <div class="form-check mb-3">
-                                        <input type="hidden" name="IsActive" value="false" />
-                                        <input type="checkbox" name="IsActive" id="IsActive" class="form-check-input" value="true" @(isChecked ? "checked" : "") />
-                                        <label asp-for="IsActive" class="form-check-label">Is Activated</label>
-                                    </div>
-
-                                    <div class="form-check mb-3">
-                                        <button type="submit" class="btn btn-theme mt-2">Submit</button>
-                                        <a href="@Url.Action("JewelryProperty","Jewellery")" class="btn btn-danger mt-2">Back to list</a>
-                                    </div>
-                                </form>
+                            <div class="col-xxl-4 col-xl-4 col-lg-4 mb-3">
+                                <label asp-for="Name" class="form-label fw-bold"></label>
+                                <input asp-for="Name" class="form-control" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
                             </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4">
-                                <div>
-                                    @if (@Model.IconPath != null)
+
+                            <div class="col-xxl-4 col-xl-4 col-lg-4 mb-3">
+                                <label class="form-label fw-bold">Main Property</label>
+                                <select asp-for="ParentId" class="form-control">
+                                    <option value="">-- Select Parent --</option>
+                                    @foreach (var item in ViewBag.ParentDrp)
                                     {
-                                        <img src="@Model.IconPath" id="imagePreview" class="img-fluid img-responsive img-thumbnail" />
-                                    }
-                                    else
-                                    {
-                                        <img src="~/assets/img/no-image.png" id="imagePreview" class="img-fluid img-responsive img-thumbnail" />
+                                        if (item.Id == Model.ParentId)
+                                        {
+                                            <option value="@item.Id" selected="selected">@item.Name</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
 
                                     }
+                                </select>
+                                <span asp-validation-for="ParentId" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-xxl-4 col-xl-4 col-lg-4 mb-3">
+                                <label class="form-label fw-bold">Image Upload</label>
+                                <input type="file" name="UploadFile" id="UploadFile" class="form-control" accept="image/*" onchange="previewImage(event)" />
+                                <span asp-validation-for="IconPath" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xxl-4 col-xl-4 col-lg-4 mb-3">
+                                <label class="form-label fw-bold">Symbol Name</label>
+                                <input asp-for="SymbolName" class="form-control" />
+                                <span asp-validation-for="SymbolName" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-xxl-4 col-xl-4 col-lg-4 mb-3">
+                                <label class="form-label fw-bold">Synonyms</label>
+                                <input asp-for="Synonyms" class="form-control" />
+                                <span asp-validation-for="Synonyms" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-xxl-4 col-xl-4 col-lg-4 mb-3">
+                                <label asp-for="DisplayOrder" class="form-label fw-bold"></label>
+                                <input asp-for="DisplayOrder" class="form-control" />
+                                <span asp-validation-for="DisplayOrder" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xxl-8 col-xl-8 col-lg-8 mb-3">
+                                <b><label asp-for="Description" class="control-label"></label></b>
+                                <input asp-for="Description" class="form-control" />
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                            <div class="col-xxl-4 col-xl-4 col-lg-6 mb-3">
+                                <input type="hidden" name="IsActive" value="false" />
+                                <input type="checkbox" name="IsActive" id="IsActive" class="form-check-input" value="true" @(isChecked ? "checked" : "") />
+                                <label asp-for="IsActive" class="form-check-label">Is Activated</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
+                                @if (Model.IconPath != null)
+                                {
+                                    <img src="@Model.IconPath" id="imagePreview" class="img-fluid img-thumbnail justify-content-center" style="height: 150px;" /> }
+                                else
+                                {
+                                    <img src="~/assets/img/no-image.png" id="imagePreview" class="img-fluid img-thumbnail" style="height: 150px;" />}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 p-1 offset-5">
+                                <div class="form-check">
+                                    <button type="submit" class="btn btn-theme">Submit</button>
+                                    <a href="@Url.Action("JewelryProperty","Jewellery")" class="btn btn-danger">Back to list</a>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
+
     </div>
 </div>
-
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
 
     <script>
-        
+
 
         $(document).ready(function () {
             $('#productPropertyForm').on('submit', function (e) {
                 e.preventDefault();
 
-                var name=$("#Name").val();
+                var name = $("#Name").val();
 
                 var form = $(this);
                 var actionUrl = form.attr('action');
                 var formData = form.serialize();
 
-                if(name=="" || name==undefined || name==null){
+                if (name == "" || name == undefined || name == null) {
                     alert("please enter name.");
-                    return; 
+                    return;
                 }
 
                 $.ajax({
@@ -149,12 +146,12 @@
                     }
                 });
             });
-            $('#Description').summernote({
-                height: 400, // set editor height
-                minHeight: null, // set minimum height of editor
-                maxHeight: null, // set maximum height of editor
-                focus: true // set focus to editable area after initializing summernote
-            });
+            //$('#Description').summernote({
+            //    height: 400, // set editor height
+            //    minHeight: null, // set minimum height of editor
+            //    maxHeight: null, // set maximum height of editor
+            //    focus: true // set focus to editable area after initializing summernote
+            //});
         });
 
         function previewImage(event) {

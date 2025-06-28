@@ -2,6 +2,7 @@
 using Common;
 using DataAccess.Data;
 using DataAccess.Entities;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using System;
@@ -10,18 +11,23 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Tavis.UriTemplates;
+using Microsoft.Extensions.Configuration; // Required for ConfigurationBuilder
+using System.IO;
 
 namespace Business.Repository
 {
     public class ProductRepository : IProductRepository
     {
         private readonly ApplicationDBContext _context;
-
-        public ProductRepository(ApplicationDBContext context)
+        private IConfiguration _configuration;
+        public ProductRepository(ApplicationDBContext context,IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
+
+        
+
 
         public async Task<Product> GetProductByDesignNo(string designNo, int metalId)
         {
@@ -935,477 +941,484 @@ namespace Business.Repository
             }
         }
 
-        public async Task<ProductUploadResult> SaveNewProductList(List<ProductDTO> products, string categoryName, string userId, int fileHistoryId)
-        {
-            var result = new ProductUploadResult(); // Result object to store success/failure data
-            try
-            {
-                // Step 0: Initialize variables
-                var productStyleName = new ProductStyleDTO();
-                var styleList = new List<ProductStyleItems>();
-                var errorList = new List<string>();
-                var existingProduct = new Product();
-                var colors = await GetColorList();
-                var categories = await _context.Category.ToListAsync();
-                var karats = await GetKaratList();
-                var shapes = await GetShapeList();
-                var caratId = 0;
-                var colorId = 0;
-                var shapeId = 0;
-                var AshapeId = 0;
-                var karatId = 0;
-                var PreGroupId = string.Empty;
+        //public async Task<ProductUploadResult> SaveNewProductList(List<ProductDTO> products, string categoryName, string userId, int fileHistoryId)
+        //{
+        //    var result = new ProductUploadResult(); // Result object to store success/failure data
+        //    try
+        //    {
+        //        // Step 0: Initialize variables
+        //        var productStyleName = new ProductStyleDTO();
+        //        var styleList = new List<ProductStyleItems>();
+        //        var errorList = new List<string>();
+        //        var existingProduct = new Product();
+        //        var colors = await GetColorList();
+        //        var categories = await _context.Category.ToListAsync();
+        //        var karats = await GetKaratList();
+        //        var shapes = await GetShapeList();
+        //        var caratId = 0;
+        //        var colorId = 0;
+        //        var shapeId = 0;
+        //        var AshapeId = 0;
+        //        var karatId = 0;
+        //        var PreGroupId = string.Empty;
 
-                var colorDict = colors.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
-                var categoryDict = categories.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
-                var KaratDict = karats.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
-                var shapeDict = shapes.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
-                var AshapeDict = shapes.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
+        //        var colorDict = colors.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
+        //        var categoryDict = categories.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
+        //        var KaratDict = karats.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
+        //        var shapeDict = shapes.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
+        //        var AshapeDict = shapes.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
 
-                var categoryId = categoryDict.GetValueOrDefault(categoryName);
+        //        var categoryId = categoryDict.GetValueOrDefault(categoryName);
 
-                var existingProducts = await _context.Product
-                    .Where(x => x.CategoryId == categoryId)
-                    .ToListAsync();
+        //        var existingProducts = await _context.Product
+        //            .Where(x => x.CategoryId == categoryId)
+        //            .ToListAsync();
 
-                var SuccessProductItems = new List<Product>();
-                var FailProductItems = new List<Product>();
+        //        var SuccessProductItems = new List<Product>();
+        //        var FailProductItems = new List<Product>();
 
-                var productList = new List<Product>();
-                var ExistingProductList = new List<Product>();
-                var HistoryProductList = new List<ProductHistory>();
-                var newProduct = new Product();
-                var productStyleList = new List<ProductStyleDTO>();
-                var productCollectionList = new List<ProductCollectionItems>();
-                var productMst = new ProductMaster();
-                string productKey = string.Empty;
-                var groupedProducts = products
-                                          .Where(p => !string.IsNullOrEmpty(p.Sku))
-                                          .GroupBy(p =>
-                                          {
-                                              var skuParts = p.Sku.Split('-');
-                                              return skuParts.Length >= 2
-                                                  ? $"{skuParts[0]}-{skuParts[1]}" // PLDR-374
-                                                  : p.Sku;
-                                          })
-                                          .ToList();
-                foreach (var product in products)
-                {
-                    if (fileHistoryId == 0)
-                    {
-                        fileHistoryId = product.FileHistoryId.Value;
-                    }
+        //        var productList = new List<Product>();
+        //        var ExistingProductList = new List<Product>();
+        //        var HistoryProductList = new List<ProductHistory>();
+        //        var newProduct = new Product();
+        //        var productStyleList = new List<ProductStyleDTO>();
+        //        var productCollectionList = new List<ProductCollectionItems>();
+        //        var productMst = new ProductMaster();
+        //        string productKey = string.Empty;
+        //        var groupedProducts = products
+        //                                  .Where(p => !string.IsNullOrEmpty(p.Sku))
+        //                                  .GroupBy(p =>
+        //                                  {
+        //                                      var skuParts = p.Sku.Split('-');
+        //                                      return skuParts.Length >= 2
+        //                                          ? $"{skuParts[0]}-{skuParts[1]}" // PLDR-374
+        //                                          : p.Sku;
+        //                                  })
+        //                                  .ToList();
+        //        foreach (var product in products)
+        //        {
+        //            if (fileHistoryId == 0)
+        //            {
+        //                fileHistoryId = product.FileHistoryId.Value;
+        //            }
 
-                    if (string.IsNullOrEmpty(product.Sku)
-                        || string.IsNullOrEmpty(product.ColorName)
-                        || string.IsNullOrEmpty(categoryName)
-                        || string.IsNullOrEmpty(product.Karat))
-                    {
-                        result.IsSuccess = false;
-                        result.Errors = $"{product.Sku} is failed to added. invalid data.";
-                        return result;
+        //            if (string.IsNullOrEmpty(product.Sku)
+        //                || string.IsNullOrEmpty(product.ColorName)
+        //                || string.IsNullOrEmpty(categoryName)
+        //                || string.IsNullOrEmpty(product.Karat))
+        //            {
+        //                result.IsSuccess = false;
+        //                result.Errors = $"{product.Sku} is failed to added. invalid data.";
+        //                return result;
 
-                    }
+        //            }
 
-                    caratId = GetProductCarat(product.CenterCaratName);
-                    colorId = colorDict.GetValueOrDefault(product.ColorName);
-                    shapeId = shapeDict.GetValueOrDefault(product.CenterShapeName);
-                    AshapeId = AshapeDict.GetValueOrDefault(product.AccentStoneShapeName);
-                    karatId = KaratDict.GetValueOrDefault(product.Karat);
+        //            caratId = GetProductCarat(product.CenterCaratName);
+        //            colorId = colorDict.GetValueOrDefault(product.ColorName);
+        //            shapeId = shapeDict.GetValueOrDefault(product.CenterShapeName);
+        //            AshapeId = AshapeDict.GetValueOrDefault(product.AccentStoneShapeName);
+        //            karatId = KaratDict.GetValueOrDefault(product.Karat);
 
-                    if (string.IsNullOrWhiteSpace(product.Title) ||
-                        string.IsNullOrWhiteSpace(product.ColorName) ||
-                        string.IsNullOrWhiteSpace(product.Sku) ||
-                        product.Price == null)
-                    {
-                        newProduct = new Product    
-                        {
-                            Title = $"{product.Title}",
-                            WholesaleCost = product.WholesaleCost,
-                            Sku = product.Sku ?? throw new ArgumentNullException(nameof(product.Sku)),
-                            CategoryId = categoryId,
-                            KaratId = karatId,
-                            Length = product.Length,
-                            ColorId = colorId,
-                            Description = product.Description,
-                            BandWidth = product.BandWidth,
-                            ProductType = product.ProductType,
-                            GoldWeight = product.GoldWeight,
-                            Grades = product.Grades,
-                            Price = product.Price.HasValue ? product.Price.Value : 0,
-                            UnitPrice = product.UnitPrice.HasValue ? product.UnitPrice.Value : 0,
-                            MMSize = product.MMSize,
-                            NoOfStones = Convert.ToInt32(product.NoOfStones),
-                            DiaWT = product.DiaWT,
-                            Certificate = product.Certificate,
-                            IsReadyforShip = product.IsReadyforShip,
-                            CTW = product.CTW,
-                            Vendor = product.VenderName,
-                            VenderStyle = product.VenderStyle,
-                            Diameter = product.Diameter,
-                            Id = Guid.NewGuid(),
-                            UpdatedDate = DateTime.Now,
-                            ProductDate=DateTime.Now,
-                            UpdatedBy = userId,
-                            CreatedBy = userId,
-                            CreatedDate = DateTime.Now,
-                            FileHistoryId = fileHistoryId,
-                            UploadStatus = SD.Pending,
-                            IsActivated = false,
-                            IsSuccess = false,
-                            GroupId = $"{product.Sku}_{product.ColorName}",
-                            Type = product.Type
-                        };
+        //            if (string.IsNullOrWhiteSpace(product.Title) ||
+        //                string.IsNullOrWhiteSpace(product.ColorName) ||
+        //                string.IsNullOrWhiteSpace(product.Sku) ||
+        //                product.Price == null)
+        //            {
+        //                newProduct = new Product    
+        //                {
+        //                    Title = $"{product.Title}",
+        //                    WholesaleCost = product.WholesaleCost,
+        //                    Sku = product.Sku ?? throw new ArgumentNullException(nameof(product.Sku)),
+        //                    CategoryId = categoryId,
+        //                    KaratId = karatId,
+        //                    Length = product.Length,
+        //                    ColorId = colorId,
+        //                    Description = product.Description,
+        //                    BandWidth = product.BandWidth,
+        //                    ProductType = product.ProductType,
+        //                    GoldWeight = product.GoldWeight,
+        //                    Grades = product.Grades,
+        //                    Price = product.Price.HasValue ? product.Price.Value : 0,
+        //                    UnitPrice = product.UnitPrice.HasValue ? product.UnitPrice.Value : 0,
+        //                    MMSize = product.MMSize,
+        //                    NoOfStones = Convert.ToInt32(product.NoOfStones),
+        //                    DiaWT = product.DiaWT,
+        //                    Certificate = product.Certificate,
+        //                    IsReadyforShip = product.IsReadyforShip,
+        //                    CTW = product.CTW,
+        //                    Vendor = product.VenderName,
+        //                    VenderStyle = product.VenderStyle,
+        //                    Diameter = product.Diameter,
+        //                    Id = Guid.NewGuid(),
+        //                    UpdatedDate = DateTime.Now,
+        //                    ProductDate=DateTime.Now,
+        //                    UpdatedBy = userId,
+        //                    CreatedBy = userId,
+        //                    CreatedDate = DateTime.Now,
+        //                    FileHistoryId = fileHistoryId,
+        //                    UploadStatus = SD.Pending,
+        //                    IsActivated = false,
+        //                    IsSuccess = false,
+        //                    GroupId = $"{product.Sku}_{product.ColorName}",
+        //                    Type = product.Type
+        //                };
 
-                        if (caratId > 0)
-                        {
-                            newProduct.CenterCaratId = caratId;
-                        }
-                        if (shapeId > 0)
-                        {
-                            newProduct.CenterShapeId = shapeId;
+        //                if (caratId > 0)
+        //                {
+        //                    newProduct.CenterCaratId = caratId;
+        //                }
+        //                if (shapeId > 0)
+        //                {
+        //                    newProduct.CenterShapeId = shapeId;
 
-                        }
-                        if (AshapeId > 0)
-                        {
-                            newProduct.AccentStoneShapeId = AshapeId;
-                        }
-                        productList.Add(newProduct);
-                        continue;
-                    }
-                    
-                    if (PreGroupId != string.Concat(product.Sku, "_", product.CenterShapeName))
-                    {
-                        PreGroupId = string.Concat(product.Sku, "_", product.CenterShapeName);
-                    }
+        //                }
+        //                if (AshapeId > 0)
+        //                {
+        //                    newProduct.AccentStoneShapeId = AshapeId;
+        //                }
+        //                productList.Add(newProduct);
+        //                continue;
+        //            }
 
-                    var productDTMst = await (from prd in _context.Product
-                                              join proMst in _context.ProductMaster on prd.ProductKey equals proMst.ProductKey
-                                              join cat in _context.Category on prd.CategoryId equals cat.Id
-                                              join col in _context.ProductProperty on prd.ColorId equals col.Id
-                                              where proMst.GroupId == PreGroupId && prd.ShapeId == shapeId && prd.Sku == product.Sku
-                                              select new ProductMasterDTO
-                                              {
-                                                  Id = proMst.Id,
-                                                  ProductKey = proMst.ProductKey,
-                                                  CategoryId = proMst.CategoryId,
-                                                  CategoryName = cat.Name,
-                                                  ColorId = proMst.ColorId,
-                                                  ColorName = col.Name,
-                                                  GroupId = proMst.GroupId,
-                                                  IsActive = proMst.IsActive,
-                                                  IsSale = proMst.IsSale,
-                                              }).FirstOrDefaultAsync();
+        //            if (PreGroupId != string.Concat(product.Sku, "_", product.CenterShapeName, "_", product.ColorName))
+        //            {
+        //                PreGroupId = string.Concat(product.Sku, "_", product.CenterShapeName, "_", product.ColorName);
+        //            }
+
+        //            var productDTMst = await (from prd in _context.Product
+        //                                      join proMst in _context.ProductMaster on prd.ProductKey equals proMst.ProductKey
+        //                                      join cat in _context.Category on prd.CategoryId equals cat.Id
+        //                                      join col in _context.ProductProperty on prd.ColorId equals col.Id
+        //                                      where proMst.GroupId == PreGroupId && prd.CenterShapeId == shapeId && prd.Sku == product.Sku
+        //                                      select new ProductMasterDTO
+        //                                      {
+        //                                          Id = proMst.Id,
+        //                                          ProductKey = proMst.ProductKey,
+        //                                          CategoryId = proMst.CategoryId,
+        //                                          CategoryName = cat.Name,
+        //                                          ColorId = proMst.ColorId,
+        //                                          ColorName = col.Name,
+        //                                          GroupId = proMst.GroupId,
+        //                                          IsActive = proMst.IsActive,
+        //                                          IsSale = proMst.IsSale,
+        //                                      }).FirstOrDefaultAsync();
 
 
-                    if (productDTMst == null)
-                    {
-                        productMst = new ProductMaster();
-                        productMst.FileHistoryId = fileHistoryId;
-                        productMst.ColorId = colorId;
-                        productMst.ColorName = product.ColorName;
-                        productMst.GroupId = PreGroupId;
-                        productMst.ProductKey = Guid.NewGuid().ToString();
-                        productMst.ProductStatus = SD.Pending;
-                        productMst.CreatedBy = userId;
-                        productMst.CreatedDate = DateTime.Now;
-                        productMst.UpdatedBy = userId;
-                        productMst.UpdatedDate = DateTime.Now;
-                        productMst.CategoryId = categoryId;
-                        productMst.IsActive = false;
-                        productMst.Sku = product.Sku;
-                        await _context.ProductMaster.AddAsync(productMst);
-                        await _context.SaveChangesAsync();
+        //            if (productDTMst == null)
+        //            {
+        //                var checkProductKey = _context.Product.Where(x => x.Sku == product.Sku && x.CenterShapeId == shapeId).FirstOrDefault();
 
-                        var productHMst = new ProductMasterHistory();
-                        productHMst.ProductMasterId = productMst.Id;
-                        productMst.ColorId = colorId;
-                        productHMst.ColorName = product.ColorName;
-                        productHMst.GroupId = PreGroupId;
-                        productHMst.ProductStatus = SD.Pending;
-                        if (productMst.Sku != product.Sku)
-                        {
-                            productMst.ProductKey = Guid.NewGuid().ToString();
-                        }
-                        else
-                        {
-                            productHMst.ProductKey = productMst.ProductKey;
-                        }
-                        productHMst.CreatedBy = userId;
-                        productHMst.CreatedDate = DateTime.Now;
-                        productHMst.UpdatedBy = userId;
-                        productHMst.UpdatedDate = DateTime.Now;
-                        productHMst.CategoryId = categoryId;
-                        productHMst.IsActive = false;
-                        productHMst.Sku = newProduct.Sku;
-                        await _context.ProductMasterHistory.AddAsync(productHMst);
-                        await _context.SaveChangesAsync();
-                    }
+        //                productMst = new ProductMaster();
+        //                productMst.FileHistoryId = fileHistoryId;
+        //                productMst.ColorId = colorId;
+        //                productMst.ColorName = product.ColorName;
+        //                productMst.GroupId = PreGroupId;
+        //                productMst.ProductKey = checkProductKey != null ? checkProductKey.ProductKey : Guid.NewGuid().ToString();
+        //                productMst.ProductStatus = SD.Pending;
+        //                productMst.CreatedBy = userId;
+        //                productMst.CreatedDate = DateTime.Now;
+        //                productMst.UpdatedBy = userId;
+        //                productMst.UpdatedDate = DateTime.Now;
+        //                productMst.CategoryId = categoryId;
+        //                productMst.IsActive = false;
+        //                productMst.Sku = product.Sku;
+        //                await _context.ProductMaster.AddAsync(productMst);
+        //                await _context.SaveChangesAsync();
 
-                    if (productDTMst != null)
-                    {
-                        existingProduct = existingProducts
-                      .FirstOrDefault(x => x.GroupId == productDTMst.GroupId && x.ProductKey == productDTMst.ProductKey);
+        //                var productHMst = new ProductMasterHistory();
+        //                productHMst.ProductMasterId = productMst.Id;
+        //                productMst.ColorId = colorId;
+        //                productHMst.ColorName = product.ColorName;
+        //                productHMst.GroupId = PreGroupId;
+        //                productHMst.ProductStatus = SD.Pending;
+        //                if (productMst.Sku != product.Sku)
+        //                {
+        //                    productMst.ProductKey = Guid.NewGuid().ToString();
+        //                }
+        //                else
+        //                {
+        //                    productHMst.ProductKey = productMst.ProductKey;
+        //                }
+        //                productHMst.CreatedBy = userId;
+        //                productHMst.CreatedDate = DateTime.Now;
+        //                productHMst.UpdatedBy = userId;
+        //                productHMst.UpdatedDate = DateTime.Now;
+        //                productHMst.CategoryId = categoryId;
+        //                productHMst.IsActive = false;
+        //                productHMst.Sku = newProduct.Sku;
+        //                await _context.ProductMasterHistory.AddAsync(productHMst);
+        //                await _context.SaveChangesAsync();
+        //            }
 
-                    }
-                    else
-                    {
-                        existingProduct = existingProducts
-                      .FirstOrDefault(x => x.GroupId == productMst.GroupId && x.ProductKey == productMst.ProductKey);
+        //            if (productDTMst != null)
+        //            {
+        //                existingProduct = existingProducts
+        //              .FirstOrDefault(x => x.GroupId == productDTMst.GroupId && x.ProductKey == productDTMst.ProductKey);
 
-                    }
+        //            }
+        //            else
+        //            {
+        //                existingProduct = existingProducts
+        //              .FirstOrDefault(x => x.GroupId == productMst.GroupId && x.ProductKey == productMst.ProductKey);
 
-                    if (existingProduct != null)
-                    {
-                        existingProduct.Title = $"{product.Title}";
-                        existingProduct.Sku = product.Sku;
-                        existingProduct.KaratId = karatId;
-                        existingProduct.BandWidth = product.BandWidth;
-                        existingProduct.GoldWeight = product.GoldWeight;
-                        existingProduct.Grades = product.Grades;
-                        existingProduct.MMSize = product.MMSize;
-                        existingProduct.CTW = product.CTW;
-                        existingProduct.Certificate = product.Certificate;
-                        existingProduct.CenterShapeId = shapeId;
-                        existingProduct.IsReadyforShip = product.IsReadyforShip;
-                        existingProduct.WholesaleCost = product.WholesaleCost;
-                        existingProduct.Price = product.Price.HasValue ? product.Price.Value : 0;
-                        existingProduct.UnitPrice = product.UnitPrice.HasValue ? product.UnitPrice.Value : 0;
-                        existingProduct.IsSuccess = true;
-                        existingProduct.UploadStatus = SD.Pending;
-                        existingProduct.UpdatedBy = userId;
-                        existingProduct.UpdatedDate = DateTime.Now;
-                        existingProduct.FileHistoryId = fileHistoryId;
-                        existingProduct.Type = product.Type;
-                        if (caratId > 0)
-                        {
-                            existingProduct.CenterCaratId = caratId;
-                        }
-                        if (shapeId > 0)
-                        {
-                            existingProduct.CenterShapeId = shapeId;
+        //            }
 
-                        }
-                        if (AshapeId > 0)
-                        {
-                            existingProduct.AccentStoneShapeId = AshapeId;
-                        }
-                        ExistingProductList.Add(existingProduct);
-                        result.NoOfProducts++;
+        //            if (existingProduct != null)
+        //            {
+        //                existingProduct.Title = $"{product.Title}";
+        //                existingProduct.Sku = product.Sku;
+        //                existingProduct.KaratId = karatId;
+        //                existingProduct.BandWidth = product.BandWidth;
+        //                existingProduct.GoldWeight = product.GoldWeight;
+        //                existingProduct.Grades = product.Grades;
+        //                existingProduct.MMSize = product.MMSize;
+        //                existingProduct.CTW = product.CTW;
+        //                existingProduct.Certificate = product.Certificate;
+        //                existingProduct.CenterShapeId = shapeId;
+        //                existingProduct.IsReadyforShip = product.IsReadyforShip;
+        //                existingProduct.WholesaleCost = product.WholesaleCost;
+        //                existingProduct.Price = product.Price.HasValue ? product.Price.Value : 0;
+        //                existingProduct.UnitPrice = product.UnitPrice.HasValue ? product.UnitPrice.Value : 0;
+        //                existingProduct.IsSuccess = true;
+        //                existingProduct.UploadStatus = SD.Pending;
+        //                existingProduct.UpdatedBy = userId;
+        //                existingProduct.UpdatedDate = DateTime.Now;
+        //                existingProduct.FileHistoryId = fileHistoryId;
+        //                existingProduct.Type = product.Type;
+        //                if (caratId > 0)
+        //                {
+        //                    existingProduct.CenterCaratId = caratId;
+        //                }
+        //                if (shapeId > 0)
+        //                {
+        //                    existingProduct.CenterShapeId = shapeId;
 
-                    }
-                    else
-                    {
-                        newProduct = new Product
-                        {
-                            Title = $"{product.Title}",
-                            WholesaleCost = product.WholesaleCost,
-                            Sku = product.Sku ?? throw new ArgumentNullException(nameof(product.Sku)),
-                            CategoryId = categoryId,
-                            KaratId = karatId,
-                            Length = product.Length,
-                            ColorId = colorId,
-                            Description = product.Description,
-                            BandWidth = product.BandWidth,
-                            ProductType = product.ProductType,
-                            GoldWeight = product.GoldWeight,
-                            Grades = product.Grades,
-                            Price = product.Price.HasValue ? product.Price.Value : 0,
-                            UnitPrice = product.UnitPrice.HasValue ? product.UnitPrice.Value : 0,
-                            MMSize = product.MMSize,
-                            NoOfStones = Convert.ToInt32(product.NoOfStones),
-                            DiaWT = product.DiaWT,
-                            Certificate = product.Certificate,
-                            IsReadyforShip = product.IsReadyforShip,
-                            CTW = product.CTW,
-                            Vendor = product.VenderName,
-                            VenderStyle = product.VenderStyle,
-                            Diameter = product.Diameter,
-                            Id = Guid.NewGuid(),
-                            UpdatedDate = DateTime.Now,
-                            UpdatedBy = userId,
-                            CreatedBy = userId,
-                            CreatedDate = DateTime.Now,
-                            FileHistoryId = fileHistoryId,
-                            UploadStatus = SD.Pending,
-                            IsActivated = false,
-                            IsSuccess = true,
-                            GroupId = productDTMst != null ? productDTMst.GroupId : productMst.GroupId,
-                            ProductKey = productDTMst != null ? productDTMst.ProductKey : productMst.ProductKey,
-                            Type = product.Type,
-                            ProductDate = DateTime.Now,
+        //                }
+        //                if (AshapeId > 0)
+        //                {
+        //                    existingProduct.AccentStoneShapeId = AshapeId;
+        //                }
+        //                ExistingProductList.Add(existingProduct);
+        //                result.NoOfProducts++;
 
-                        };
-                        if (caratId > 0)
-                        {
-                            newProduct.CenterCaratId = caratId;
-                        }
-                        if (shapeId > 0)
-                        {
-                            newProduct.CenterShapeId = shapeId;
-                        }
-                        if (AshapeId > 0)
-                        {
-                            newProduct.AccentStoneShapeId = AshapeId;
-                        }
+        //            }
+        //            else
+        //            {
+        //                newProduct = new Product
+        //                {
+        //                    Title = $"{product.Title}",
+        //                    WholesaleCost = product.WholesaleCost,
+        //                    Sku = product.Sku ?? throw new ArgumentNullException(nameof(product.Sku)),
+        //                    CategoryId = categoryId,
+        //                    KaratId = karatId,
+        //                    Length = product.Length,
+        //                    ColorId = colorId,
+        //                    Description = product.Description,
+        //                    BandWidth = product.BandWidth,
+        //                    ProductType = product.ProductType,
+        //                    GoldWeight = product.GoldWeight,
+        //                    Grades = product.Grades,
+        //                    Price = product.Price.HasValue ? product.Price.Value : 0,
+        //                    UnitPrice = product.UnitPrice.HasValue ? product.UnitPrice.Value : 0,
+        //                    MMSize = product.MMSize,
+        //                    NoOfStones = Convert.ToInt32(product.NoOfStones),
+        //                    DiaWT = product.DiaWT,
+        //                    Certificate = product.Certificate,
+        //                    IsReadyforShip = product.IsReadyforShip,
+        //                    CTW = product.CTW,
+        //                    Vendor = product.VenderName,
+        //                    VenderStyle = product.VenderStyle,
+        //                    Diameter = product.Diameter,
+        //                    Id = Guid.NewGuid(),
+        //                    UpdatedDate = DateTime.Now,
+        //                    UpdatedBy = userId,
+        //                    CreatedBy = userId,
+        //                    CreatedDate = DateTime.Now,
+        //                    FileHistoryId = fileHistoryId,
+        //                    UploadStatus = SD.Pending,
+        //                    IsActivated = false,
+        //                    IsSuccess = true,
+        //                    GroupId = productDTMst != null ? productDTMst.GroupId : productMst.GroupId,
+        //                    ProductKey = productDTMst != null ? productDTMst.ProductKey : productMst.ProductKey,
+        //                    Type = product.Type,
+        //                    ProductDate = DateTime.Now,
 
-                        productList.Add(newProduct);
-                        result.NoOfProducts++;
-                    }
+        //                };
+        //                if (caratId > 0)
+        //                {
+        //                    newProduct.CenterCaratId = caratId;
+        //                }
+        //                if (shapeId > 0)
+        //                {
+        //                    newProduct.CenterShapeId = shapeId;
+        //                }
+        //                if (AshapeId > 0)
+        //                {
+        //                    newProduct.AccentStoneShapeId = AshapeId;
+        //                }
 
-                    var styleDT = await _context.ProductStyles.Where(x => x.StyleName == product.StyleName).FirstOrDefaultAsync();
-                    if (styleDT == null && product.StyleName != null)
-                    {
-                        styleDT = new ProductStyles()
-                        {
-                            StyleName = product.StyleName,
-                            CategoryId = categoryId,
-                            IsActivated = true,
-                            CreatedDate = DateTime.Now,
-                            UpdatedDate = DateTime.Now,
+        //                if (newProduct != null)
+        //                { 
+        //                    await _context.Product.AddAsync(newProduct);
+        //                    await _context.SaveChangesAsync();
+        //                }
+        //                result.NoOfProducts++;
+        //            }
+
+        //            var styleDT = await _context.ProductStyles.Where(x => x.StyleName == product.StyleName).FirstOrDefaultAsync();
+        //            if (styleDT == null && product.StyleName != null)
+        //            {
+        //                styleDT = new ProductStyles()
+        //                {
+        //                    StyleName = product.StyleName,
+        //                    ProductType=product.Type,
+        //                    CategoryId = categoryId,
+        //                    IsActivated = true,
+        //                    CreatedDate = DateTime.Now,
+        //                    UpdatedDate = DateTime.Now,
                             
-                        };
-                        await _context.ProductStyles.AddAsync(styleDT);
-                        await _context.SaveChangesAsync();
-                    }
+        //                };
+        //                await _context.ProductStyles.AddAsync(styleDT);
+        //                await _context.SaveChangesAsync();
+        //            }
 
-                    if (styleDT != null)
-                    {
-                        var productStyleItem = await _context.ProductStyleItems.Where(x => x.StyleId == styleDT.Id && x.ProductId == product.Id.ToString()).FirstOrDefaultAsync();
+        //            if (styleDT != null)
+        //            {
+        //                var productStyleItem = await _context.ProductStyleItems.Where(x => x.StyleId == styleDT.Id && x.ProductId == newProduct.Id.ToString()).FirstOrDefaultAsync();
 
-                        if (!string.IsNullOrEmpty(product.StyleName))
-                        {
-                            productStyleItem = new ProductStyleItems();
-                            productStyleItem.StyleId = styleDT.Id;
-                            productStyleItem.UserId = userId;
-                            productStyleItem.ProductId = newProduct.ProductKey;
-                            productStyleItem.IsActive = true;
+        //                if (!string.IsNullOrEmpty(product.StyleName))
+        //                {
+        //                    productStyleItem = new ProductStyleItems();
+        //                    productStyleItem.StyleId = styleDT.Id;
+        //                    productStyleItem.UserId = userId;
+        //                    productStyleItem.ProductId = newProduct.ProductKey;
+        //                    productStyleItem.IsActive = true;
 
-                            styleList.Add(productStyleItem);
-                            result.NoOfStyles++;
+        //                    styleList.Add(productStyleItem);
+        //                    result.NoOfStyles++;
 
-                        }
-                    }
+        //                }
+        //            }
 
-                    var collectionDT = await _context.ProductCollections.Where(x => x.CollectionName == product.CollectionName).FirstOrDefaultAsync();
-                    if (collectionDT == null && !string.IsNullOrEmpty(product.CollectionName))
-                    {
-                        collectionDT = new ProductCollections()
-                        {
-                            CollectionName = product.CollectionName,
-                            IsActivated = true,
-                            CreatedDate = DateTime.Now,
+        //            var collectionDT = await _context.ProductCollections.Where(x => x.CollectionName == product.CollectionName).FirstOrDefaultAsync();
+        //            if (collectionDT == null && !string.IsNullOrEmpty(product.CollectionName))
+        //            {
+        //                collectionDT = new ProductCollections()
+        //                {
+        //                    CollectionName = product.CollectionName,
+        //                    IsActivated = true,
+        //                    CreatedDate = DateTime.Now,
 
-                        };
-                        await _context.ProductCollections.AddAsync(collectionDT);
-                        await _context.SaveChangesAsync();
-                    }
-                    if (collectionDT != null)
-                    {
-                        var productCollectionItem = await _context.ProductCollectionItems.Where(x => x.CollectionId == collectionDT.Id && x.ProductId == product.ProductKey).FirstOrDefaultAsync();
-                        if (productCollectionItem == null && !string.IsNullOrEmpty(newProduct.Id.ToString()))
-                        {
-                            productCollectionItem = new ProductCollectionItems();
-                            productCollectionItem.CollectionId = collectionDT.Id;
-                            productCollectionItem.UserId = userId;
-                            productCollectionItem.ProductId = newProduct.ProductKey;
-                            productCollectionItem.IsActive = true;
-                            productCollectionItem.CreatedBy = userId;
-                            productCollectionItem.CreatedDate = DateTime.Now;
-                            productCollectionItem.UpdatedBy = userId;
-                            productCollectionItem.UpdatedDate = DateTime.Now;
+        //                };
+        //                await _context.ProductCollections.AddAsync(collectionDT);
+        //                await _context.SaveChangesAsync();
+        //            }
+        //            if (collectionDT != null)
+        //            {
+        //                var productCollectionItem = await _context.ProductCollectionItems.Where(x => x.CollectionId == collectionDT.Id && x.ProductId == product.ProductKey).FirstOrDefaultAsync();
+        //                if (productCollectionItem == null && !string.IsNullOrEmpty(newProduct.Id.ToString()))
+        //                {
+        //                    productCollectionItem = new ProductCollectionItems();
+        //                    productCollectionItem.CollectionId = collectionDT.Id;
+        //                    productCollectionItem.UserId = userId;
+        //                    productCollectionItem.ProductId = newProduct.ProductKey;
+        //                    productCollectionItem.IsActive = true;
+        //                    productCollectionItem.CreatedBy = userId;
+        //                    productCollectionItem.CreatedDate = DateTime.Now;
+        //                    productCollectionItem.UpdatedBy = userId;
+        //                    productCollectionItem.UpdatedDate = DateTime.Now;
 
-                            productCollectionList.Add(productCollectionItem);
-                            result.NoOfStyles++;
-                        }
+        //                    productCollectionList.Add(productCollectionItem);
+        //                    result.NoOfStyles++;
+        //                }
 
-                    }
+        //            }
 
-                }
+        //        }
 
-                if (productList.Any()) await _context.Product.AddRangeAsync(productList);
-                if (ExistingProductList.Any()) _context.Product.UpdateRange(ExistingProductList);
-                if (styleList.Any()) await _context.ProductStyleItems.AddRangeAsync(styleList);
-                if (productCollectionList.Any()) await _context.ProductCollectionItems.AddRangeAsync(productCollectionList);
-                await _context.SaveChangesAsync();
+        //        if (productList.Any()) await _context.Product.AddRangeAsync(productList);
+        //        if (ExistingProductList.Any()) _context.Product.UpdateRange(ExistingProductList);
+        //        if (styleList.Any()) await _context.ProductStyleItems.AddRangeAsync(styleList);
+        //        if (productCollectionList.Any()) await _context.ProductCollectionItems.AddRangeAsync(productCollectionList);
+        //        await _context.SaveChangesAsync();
 
 
-                var productDT = await _context.Product.Where(x => x.FileHistoryId == fileHistoryId).ToListAsync();
+        //        var productDT = await _context.Product.Where(x => x.FileHistoryId == fileHistoryId).ToListAsync();
 
-                foreach (var product in productDT)
-                {
-                    var historyResult = new ProductHistory
-                    {
-                        ProductId = product.Id.ToString(),
-                        Title = product.Title,
-                        WholesaleCost = product.WholesaleCost,
-                        Sku = product.Sku ?? throw new ArgumentNullException(nameof(product.Sku)),
-                        CategoryId = product.CategoryId,
-                        KaratId = product.KaratId,
-                        CenterCaratId = product.CenterCaratId,
-                        Length = product.Length,
-                        ColorId = product.ColorId,
-                        Description = product.Description,
-                        BandWidth = product.BandWidth,
-                        ProductType = product.ProductType,
-                        GoldWeight = product.GoldWeight,
-                        Grades = product.Grades,
-                        Price = product.Price,
-                        UnitPrice = product.UnitPrice,
-                        MMSize = product.MMSize,
-                        NoOfStones = Convert.ToInt32(product.NoOfStones),
-                        DiaWT = product.DiaWT,
-                        CenterShapeId = product.CenterShapeId,
-                        Certificate = product.Certificate,
-                        AccentStoneShapeId = product.AccentStoneShapeId,
-                        IsReadyforShip = product.IsReadyforShip,
-                        CTW = product.CTW,
-                        Vendor = product.Vendor,
-                        VenderStyle = product.VenderStyle,
-                        Diameter = product.Diameter,
-                        Id = Guid.NewGuid(),
-                        UpdatedDate = DateTime.Now,
-                        UpdatedBy = userId,
-                        CreatedBy = userId,
-                        CreatedDate = DateTime.Now,
-                        FileUploadHistoryId = fileHistoryId,
-                        UploadStatus = product.UploadStatus,
-                        IsActivated = product.IsActivated,
-                        IsSuccess = product.IsSuccess,
-                        GroupId = product.GroupId,
-                        ProductKey = product.ProductKey,
-                        Type = product.Type,
-                        ProductDate = DateTime.Now,
+        //        foreach (var product in productDT)
+        //        {
+        //            var historyResult = new ProductHistory
+        //            {
+        //                ProductId = product.Id.ToString(),
+        //                Title = product.Title,
+        //                WholesaleCost = product.WholesaleCost,
+        //                Sku = product.Sku ?? throw new ArgumentNullException(nameof(product.Sku)),
+        //                CategoryId = product.CategoryId,
+        //                KaratId = product.KaratId,
+        //                CenterCaratId = product.CenterCaratId,
+        //                Length = product.Length,
+        //                ColorId = product.ColorId,
+        //                Description = product.Description,
+        //                BandWidth = product.BandWidth,
+        //                ProductType = product.ProductType,
+        //                GoldWeight = product.GoldWeight,
+        //                Grades = product.Grades,
+        //                Price = product.Price,
+        //                UnitPrice = product.UnitPrice,
+        //                MMSize = product.MMSize,
+        //                NoOfStones = Convert.ToInt32(product.NoOfStones),
+        //                DiaWT = product.DiaWT,
+        //                CenterShapeId = product.CenterShapeId,
+        //                Certificate = product.Certificate,
+        //                AccentStoneShapeId = product.AccentStoneShapeId,
+        //                IsReadyforShip = product.IsReadyforShip,
+        //                CTW = product.CTW,
+        //                Vendor = product.Vendor,
+        //                VenderStyle = product.VenderStyle,
+        //                Diameter = product.Diameter,
+        //                Id = Guid.NewGuid(),
+        //                UpdatedDate = DateTime.Now,
+        //                UpdatedBy = userId,
+        //                CreatedBy = userId,
+        //                CreatedDate = DateTime.Now,
+        //                FileUploadHistoryId = fileHistoryId,
+        //                UploadStatus = product.UploadStatus,
+        //                IsActivated = product.IsActivated,
+        //                IsSuccess = product.IsSuccess,
+        //                GroupId = product.GroupId,
+        //                ProductKey = product.ProductKey,
+        //                Type = product.Type,
+        //                ProductDate = DateTime.Now,
 
-                    };
-                    HistoryProductList.Add(historyResult);
-                }
+        //            };
+        //            HistoryProductList.Add(historyResult);
+        //        }
 
-                if (HistoryProductList.Count > 0)
-                {
-                    await _context.ProductHistory.AddRangeAsync(HistoryProductList);
-                    await _context.SaveChangesAsync();
-                }
+        //        if (HistoryProductList.Count > 0)
+        //        {
+        //            await _context.ProductHistory.AddRangeAsync(HistoryProductList);
+        //            await _context.SaveChangesAsync();
+        //        }
 
-                var history = await _context.ProductFileUploadHistory.Where(x => x.Id == fileHistoryId).FirstOrDefaultAsync();
+        //        var history = await _context.ProductFileUploadHistory.Where(x => x.Id == fileHistoryId).FirstOrDefaultAsync();
 
-                if (history != null)
-                {
-                    _context.ProductFileUploadHistory.Update(history);
-                    await _context.SaveChangesAsync();
-                }
+        //        if (history != null)
+        //        {
+        //            _context.ProductFileUploadHistory.Update(history);
+        //            await _context.SaveChangesAsync();
+        //        }
 
-                result.IsSuccess = true;
-                result.Message = "AI transforms data migration Successfully.";
-                return result;
-            }
-            catch (Exception ex)
-            {
-                result.IsSuccess = false;
-                result.Errors = $"Exception: {ex.Message}";
-                return result;
-            }
-        }
+        //        result.IsSuccess = true;
+        //        result.Message = "AI transforms data migration Successfully.";
+        //        return result;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        result.IsSuccess = false;
+        //        result.Errors = $"Exception: {ex.Message}";
+        //        return result;
+        //    }
+        //}
 
         public async Task<bool> SaveEarringsList(List<ProductDTO> products, string categoryName, string userId, int fileHistoryId)
         {
@@ -3200,5 +3213,93 @@ namespace Business.Repository
 
             return grouped;
         }
+
+
+        private DataTable CreateProductDataTable(List<ProductDTO> products)
+        {
+            var table = new DataTable();
+            table.Columns.Add("Sku", typeof(string));
+            table.Columns.Add("Title", typeof(string));
+            table.Columns.Add("ColorName", typeof(string));
+            table.Columns.Add("Karat", typeof(string));
+            table.Columns.Add("CenterCaratName", typeof(string));
+            table.Columns.Add("CenterShapeName", typeof(string));
+            table.Columns.Add("AccentStoneShapeName", typeof(string));
+            table.Columns.Add("WholesaleCost", typeof(decimal));
+            table.Columns.Add("Price", typeof(decimal));
+            table.Columns.Add("UnitPrice", typeof(decimal));
+            table.Columns.Add("Length", typeof(decimal));
+            table.Columns.Add("BandWidth", typeof(decimal));
+            table.Columns.Add("ProductType", typeof(string));
+            table.Columns.Add("GoldWeight", typeof(decimal));
+            table.Columns.Add("Grades", typeof(string));
+            table.Columns.Add("MMSize", typeof(string));
+            table.Columns.Add("NoOfStones", typeof(int));
+            table.Columns.Add("DiaWT", typeof(decimal));
+            table.Columns.Add("Certificate", typeof(string));
+            table.Columns.Add("IsReadyforShip", typeof(bool));
+            table.Columns.Add("CTW", typeof(decimal));
+            table.Columns.Add("VenderName", typeof(string));
+            table.Columns.Add("VenderStyle", typeof(string));
+            table.Columns.Add("Diameter", typeof(string));
+            table.Columns.Add("FileHistoryId", typeof(int));
+            table.Columns.Add("StyleName", typeof(string));
+            table.Columns.Add("CollectionName", typeof(string));
+            table.Columns.Add("Description", typeof(string));
+            table.Columns.Add("Type", typeof(string));
+
+            foreach (var p in products)
+            {
+                table.Rows.Add(
+                    p.Sku, p.Title, p.ColorName, p.Karat, p.CenterCaratName, p.CenterShapeName, p.AccentStoneShapeName,
+                    p.WholesaleCost ?? 0, p.Price ?? 0, p.UnitPrice ?? 0, p.Length, p.BandWidth, p.ProductType,
+                    p.GoldWeight, p.Grades, p.MMSize, p.NoOfStones ?? 0, p.DiaWT ?? 0, p.Certificate,
+                    p.IsReadyforShip ?? false, p.CTW, p.VenderName, p.VenderStyle, p.Diameter,
+                    p.FileHistoryId ?? 0, p.StyleName, p.CollectionName, p.Description, p.Type
+                );
+            }
+
+            return table;
+        }
+
+        public async Task<List<ProductDTO>> SaveNewProductListToDbAsync(List<ProductDTO> products, string categoryName, string userId, int fileHistoryId)
+        {
+        try
+        {
+            var table = CreateProductDataTable(products);
+
+            // Correct way to build configuration
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            {
+                using (var command = new SqlCommand("dbo.SaveNewProductList", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.Add(new SqlParameter
+                    {
+                        ParameterName = "@Products",
+                        SqlDbType = SqlDbType.Structured,
+                        TypeName = "dbo.ProductDTOType",
+                        Value = table
+                    });
+
+                    command.Parameters.AddWithValue("@CategoryName", categoryName ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@UserId", userId ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@FileHistoryId", fileHistoryId);
+
+                    await connection.OpenAsync();
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+
+            return new List<ProductDTO>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+            return new List<ProductDTO>();
+        }
     }
+
+}
 }
