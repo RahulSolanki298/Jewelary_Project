@@ -1,4 +1,4 @@
-﻿@model List<Models.ProductDTO>
+﻿@model List<Models.ProductMasterDTO>
 @* @model List<Models.ProductMasterDTO> *@
 @using Common;
 @{
@@ -27,6 +27,7 @@
         {
             priImg = item.ProductImageVideos.Where(x => x.ImageUrl != null).LastOrDefault()?.ImageUrl;
         }
+        var productFirst = item.ProductItems.FirstOrDefault();
 
         <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6">
             <div class="product-main-box">
@@ -42,21 +43,25 @@
 
                     <div class="product-caption text-left product-box-desc">
                         <div class="product-identity">
-                            <p class="manufacturer-name"><a href="#" class="pro-title" data-title="@item.Title" data-sku="@item.Sku">@item.Title</a></p>
+                            <p class="manufacturer-name"><a href="#" class="pro-title" data-title="@productFirst.Title" data-sku="@productFirst.Sku">@productFirst.Title</a></p>
                         </div>
                         <div class="price-box">
-                            <span class="price-regular f-16" data-sku="@item.Sku">$ @item.Price USD</span>
+                            <span class="price-regular f-16" data-sku="@productFirst.Sku">$ @productFirst.Price USD</span>
                         </div>
 
                         <div class="d-flex">
                             <p class="title-bold mb-0">Metal : </p>&nbsp;&nbsp;@* <span class="activemetalname title-regular mb-0" data-sku="@item.Sku">@item.ColorName</span> *@
                             <ul class="color-categories" style="padding-left:10px;">
-                                @foreach (var color in item.Metals)
+                                @if (item.Metals != null )
                                 {
-                                    <li>
-                                        <a class="@color.Synonyms metalColor" @(color.Name == item.ColorName ? "selected" : null) metalId="@color.Id" href="javascript:void(0)" title="@color.Name" productId="@item.Sku" data-colorName="@color.Name" data-sku="@item.Sku"><p class="product-metal-desc">@item.Karat</p></a>
-                                    </li>
+                                    @foreach (var color in item.Metals)
+                                    {
+                                        <li>
+                                            <a class="@color.Synonyms metalColor" @(color.Name == item.ColorName ? "selected" : null) metalId="@color.Id" href="javascript:void(0)" title="@color.Name" productId="@productFirst.Sku" data-colorName="@color.Name" data-sku="@productFirst.Sku"><p class="product-metal-desc">@productFirst.Karat</p></a>
+                                        </li>
+                                    }
                                 }
+
                             </ul>
 
 
@@ -65,11 +70,14 @@
                         <div class="d-flex">
                             <p class="title-bold mb-0">Carat : </p>&nbsp;&nbsp;
                             <ul class="size-categories" style="padding-left:10px;">
-                                @foreach (var carat in item.CaratSizes)
+                                @if (item.CaratSizes != null)
                                 {
-                                    <li>
-                                        <a class="@carat.Name caratName f-14" @(carat.Name == item.CenterCaratName ? "selected" : null) caratId="@carat.Id" title="@carat.Name" href="javascript:void(0)" productId="@item.Sku" data-sku="@item.Sku">@carat.Name</a>
-                                    </li>
+                                    @foreach (var carat in item.CaratSizes)
+                                    {
+                                        <li>
+                                            <a class="@carat.Name caratName f-14" @(carat.Name == productFirst.CenterCaratName ? "selected" : null) caratId="@carat.Id" title="@carat.Name" href="javascript:void(0)" productId="@productFirst.Sku" data-sku="@productFirst.Sku">@carat.Name</a>
+                                        </li>
+                                    }
                                 }
                             </ul>
                         </div>
@@ -79,15 +87,18 @@
 
                             <span class="product-center-scroll-arrow" onclick="scrollShapes(-100)"><i class="fa fa-arrow-left"></i></span>
                             <ul class="product-center-shape-scroll" id="shapeList" style="padding-left:10px;">
-                                @foreach (var shape in item.Shapes)
+                                @if (item.Shapes != null)
                                 {
-                                    <li>
-                                        <a href="#" class="shapeDT" title="@shape.Name" sku="@item.Sku" colorId="@item.ColorId" shapeId="@shape.Id" data-sku="@item.Sku">
-                                            <img src="@SD.ShapeImgUrl@shape.IconPath" />
-                                        </a>
-                                    </li>
+                                    @foreach (var shape in item.Shapes)
+                                    {
+                                        <li>
+                                            <a href="#" class="shapeDT" title="@shape.Name" sku="@productFirst.Sku" colorId="@item.ColorId" shapeId="@shape.Id" data-sku="@productFirst.Sku">
+                                                <img src="@SD.ShapeImgUrl@shape.IconPath" />
+                                            </a>
+                                        </li>
+                                    }
                                 }
-                            </ul>
+                                </ul>
                             <span class="product-center-scroll-arrow" onclick="scrollShapes(100)"><i class="fa fa-arrow-right"></i></span>
 
                         </div>

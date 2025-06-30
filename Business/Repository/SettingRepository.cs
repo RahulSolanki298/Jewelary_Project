@@ -78,8 +78,6 @@ namespace Business.Repository
             {
                 return false;
             }
-
-
         }
 
         public async Task<List<HomePageSetting>> GetHomePageSettingList()
@@ -93,7 +91,6 @@ namespace Business.Repository
             var response = await _context.AboutUs.FirstOrDefaultAsync();
             return response;
         }
-
 
         public async Task<bool> UpdateAboutUsSetting(AboutUs data)
         {
@@ -122,6 +119,12 @@ namespace Business.Repository
                 throw;
                 return false;
             }
+        }
+
+        public async Task<List<EventSites>> GetEventSiteList()
+        {
+            var response = await _context.EventSites.ToListAsync();
+            return response;
         }
     }
 }

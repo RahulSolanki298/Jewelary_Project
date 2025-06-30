@@ -143,12 +143,18 @@ namespace ControlPanel.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> EventDataList()
+        {
+            var eventBase = await _settingRepository.GetEventSiteList();
+            return PartialView("_EventBaseList", eventBase);
+        }
+
+        [HttpGet]
         public IActionResult CreateEventBaseDiscount()
         {
             var eventBase = new EventSites();
             return PartialView("_EventBaseDiscount", eventBase);
         }
-
 
         [HttpPost]
         public async Task<IActionResult> CreateEventBaseDiscount(EventSites model, IFormFile imageFile)
@@ -180,9 +186,7 @@ namespace ControlPanel.Controllers
                 return BadRequest(new { success = false, message = ex.Message });
             }
         }
-
-
-
+        
         public IActionResult InquiryAndVirtualMeeting()
         {
 

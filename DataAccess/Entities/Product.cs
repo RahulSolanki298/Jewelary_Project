@@ -19,7 +19,7 @@ namespace DataAccess.Entities
         public string Description { get; set; }
         public decimal UnitPrice { get; set; }
         public decimal Price { get; set; }
-        public int Quantity { get; set; } = 0;
+        public int? Quantity { get; set; } = 0;
         public string ProductType { get; set; } // Diamond, Gold
         public string DiamondType { get; set; } // Diamond, Gold
         public string Occasion { get; set; }
@@ -49,7 +49,7 @@ namespace DataAccess.Entities
         public decimal? DiaWT { get; set; }
         public string MMSize { get; set; }
         public string Grades { get; set; }
-        public int NoOfStones { get; set; }
+        public int? NoOfStones { get; set; }
         public string Component { get; set; }
         public string MaterialType { get; set; }
         public string Type { get; set; }

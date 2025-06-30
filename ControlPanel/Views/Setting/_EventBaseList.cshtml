@@ -1,0 +1,77 @@
+﻿@model List<DataAccess.Entities.EventSites>
+@using Common;
+
+<div class="card">
+    <div class="card-header">
+        <h3>
+            Event-Site List
+            <a class="btn btn-theme float-end" id="btnEventSite" title="Add Page."><i class="bi bi-plus-circle me-1"></i> Add</a>
+        </h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="table-responsive" style="max-height:600px !important">
+                <table class="table table-bordered table-sm" id="homeTable">
+                    <thead class="thead-light" style="position:sticky;top:0">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Event Name</th>
+                            <th scope="col">Company.Logo</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Discount</th>
+                            <th scope="col">Slider-2</th>
+                            <th scope="col">Slider-3</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td scope="col">
+                                        <a href="#" class="btnEdit" data-id="@item.Id"><i class="bi-pencil-fill"></i></a>
+                                    </td>
+                                    <td scope="col">
+                                        <img src="@SD.ImgUrl/@item.ProfileImage" style="width:100px;" />
+                                    </td>
+                                    <td scope="col">
+                                        @item.EventName
+                                    </td>
+                                    <td scope="col">
+                                        <input type="text" value="@item.Description" style="width:100px;" />
+                                    </td>
+                                    <td scope="col">
+                                        <input type="text" value="@item.Discount" style="width:100px;" />
+                                    </td>
+                                    <td scope="col">
+                                        <input type="date" value="@item.StartDate" style="width:100px;" />
+                                    </td>
+                                    <td scope="col">
+                                        <input type="date" value="@item.EndDate" style="width:100px;" />
+                                    </td>
+                                    <td scope="col">
+                                        @if (item.IsActive)
+                                        {
+                                            <input type="checkbox" class="ckIsActive" eventId="@item.Id" checked />
+                                        }
+                                        else
+                                        {
+                                            <input type="checkbox" class="ckIsActive" />
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="7"> No data found</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -17,9 +17,9 @@ namespace DataAccess.Entities
         public string Sku { get; set; }  // OTN23U01-D300R0B 
         public string Title { get; set; }
         public string Description { get; set; }
-        public decimal UnitPrice { get; set; }
+        public decimal? UnitPrice { get; set; }
         public decimal Price { get; set; }
-        public int Quantity { get; set; } = 0;
+        public int? Quantity { get; set; } = 0;
         public string ProductType { get; set; } // Diamond, Gold
         public string Occasion { get; set; }
         public string Remarks { get; set; }

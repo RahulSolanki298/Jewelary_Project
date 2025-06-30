@@ -41,7 +41,20 @@
             border: 1px solid black;
             display: block;
         }
+
+        .hover-scale {
+            transition: transform 0.3s ease;
+        }
+
+            .hover-scale:hover {
+                transform: scale(1.05);
+            }
+
+        .object-fit-cover {
+            object-fit: cover;
+        }
     </style>
+
 }
 
 @{
@@ -149,28 +162,39 @@
                     <div class="container" id="allcategories">
                         @if (Model.IsStyle)
                         {
-                            <div class="row">
-                                @foreach (var item in Model.StyleList)
-                                {
-                                    <div class="col-6 col-sm-6 col-md-2 col-lg-2 mb-4 animate-card clsCategory" data-categoryName="@item.StyleName">
-                                        <a href="#" class="text-decoration-none text-dark">
-                                            <div class="product-main-box shadow-sm rounded p-2 bg-white h-100 hover-scale">
-                                                <div class="product-item">
-                                                    <figure class="product-thumb media-container mb-2">
-                                                        <div class="img-with-bg position-relative">
-                                                            <img src="@SD.ImgUrl/@item.StyleImage" alt="@item.StyleName" class="img-fluid">
+                            <div class="swiper myStyleSlider">
+                                <div class="swiper-wrapper">
+                                    @foreach (var item in Model.StyleList)
+                                    {
+                                        <div class="swiper-slide">
+                                            <div class="col animate-card clsCategory" data-category-name="@item.StyleName">
+                                                <a href="#" class="text-decoration-none text-dark">
+                                                    <div class="product-main-box shadow-sm rounded p-2 bg-white h-100 hover-scale">
+                                                        <div class="product-item">
+                                                            <figure class="product-thumb media-container mb-2">
+                                                                <div class="img-with-bg position-relative">
+                                                                    <img src="@SD.ImgUrl/@item.StyleImage" alt="@item.StyleName" class="img-fluid" />
+                                                                </div>
+                                                            </figure>
+                                                            <div class="product-details-des text-center">
+                                                                <h6 class="fw-semibold mb-0 text-truncate">@item.StyleName</h6>
+                                                            </div>
                                                         </div>
-                                                    </figure>
-                                                    <div class="product-details-des text-center">
-                                                        <h5 class="fw-semibold">@item.StyleName</h5>
                                                     </div>
-                                                </div>
+                                                </a>
                                             </div>
-                                        </a>
-                                    </div>
-                                }
+                                        </div>
+                                    }
+                                </div>
 
+                                <!-- Swiper Navigation and Pagination -->
+                                <div class="swiper-button-next"></div>
+                                <div class="swiper-button-prev"></div>
+                                <div class="swiper-pagination"></div>
                             </div>
+
+
+
                         }
                         else if (Model.IsCollection)
                         {
@@ -796,5 +820,29 @@
         }
 
     </script>
+
+    <script>
+        const swiper = new Swiper('.myStyleSlider', {
+            slidesPerView: 2,
+            spaceBetween: 16,
+            loop: false,
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev'
+            },
+            breakpoints: {
+                576: { slidesPerView: 2 },
+                768: { slidesPerView: 3 },
+                992: { slidesPerView: 4 },
+                1200: { slidesPerView: 6 }
+            }
+        });
+    </script>
+
+
 
 }

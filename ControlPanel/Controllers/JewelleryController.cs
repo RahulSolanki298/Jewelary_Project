@@ -50,7 +50,8 @@ namespace ControlPanel.Controllers
         [HttpGet]
         public async Task<IActionResult> GetJewellries()
         {
-            var productList = await _productRepository.GetProductStyleList();
+            var status = SD.Activated;
+            var productList = await _productRepository.GetProductPendingList(status);
             return PartialView("_JewelleryList", productList);
         }
 
@@ -182,7 +183,6 @@ namespace ControlPanel.Controllers
                         {
                             return Json(ringResp);
                         }
-                       // productUploadResults = ringResp;
                     }
                     else if (category == "bands")
                     {
@@ -192,7 +192,6 @@ namespace ControlPanel.Controllers
                         {
                             return Json(bandResp);
                         }
-                        //productUploadResults = bandResp;
 
                     }
                     else if (category == "earrings")
@@ -203,7 +202,6 @@ namespace ControlPanel.Controllers
                         {
                             return Json(errResp);
                         }
-                        //productUploadResults = errResp;
 
                     }
                     else if (category == "pendants")
@@ -214,8 +212,6 @@ namespace ControlPanel.Controllers
                         {
                             return Json(pendResp);
                         }
-                        //productUploadResults = pendResp;
-
                     }
                     else if (category == "bracelets")
                     {
@@ -225,8 +221,6 @@ namespace ControlPanel.Controllers
                         {
                             return Json(braceResp);
                         }
-                      //  productUploadResults = braceResp;
-
                     }
                 }
                 productUploadResults.Message = "AI transforms data migration Successfully.";
@@ -661,12 +655,12 @@ namespace ControlPanel.Controllers
         {
             try
             {
-                var productList = await _productRepository.GetProductPendingList();
+                string status = SD.Pending;
+                var productList = await _productRepository.GetProductPendingList(status);
                 return View("~/Views/Jewellery/RequestedNewProductList.cshtml", productList);
             }
             catch (Exception ex)
             {
-                // _logger.LogError(ex, "Error loading product list.");
                 return StatusCode(500, "Internal Server Error");
             }
         }
@@ -690,14 +684,16 @@ namespace ControlPanel.Controllers
         [HttpGet]
         public async Task<IActionResult> HoldProductList()
         {
-            var productList = await _productRepository.GetProductHoldList();
+            string status = SD.Hold;
+            var productList = await _productRepository.GetProductPendingList(status);
             return View(productList);
         }
 
         [HttpGet]
         public async Task<IActionResult> DeactivatedProductList()
         {
-            var productList = await _productRepository.GetProductDeActivatedList();
+            string status = SD.DeActived;
+            var productList = await _productRepository.GetProductPendingList(status);
             return View(productList);
         }
 

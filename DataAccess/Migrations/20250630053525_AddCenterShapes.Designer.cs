@@ -4,14 +4,16 @@ using DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250630053525_AddCenterShapes")]
+    partial class AddCenterShapes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1794,7 +1796,7 @@ namespace DataAccess.Migrations
                     b.Property<string>("MfgDesign")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("NoOfStones")
+                    b.Property<int>("NoOfStones")
                         .HasColumnType("int");
 
                     b.Property<string>("Occasion")
@@ -1824,7 +1826,7 @@ namespace DataAccess.Migrations
                     b.Property<string>("ProductType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Quantity")
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<string>("Remarks")
@@ -2173,7 +2175,7 @@ namespace DataAccess.Migrations
                     b.Property<string>("ProductType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Quantity")
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<string>("Remarks")
@@ -2200,7 +2202,7 @@ namespace DataAccess.Migrations
                     b.Property<string>("Type")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("UnitPrice")
+                    b.Property<decimal>("UnitPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("UpdatedBy")

@@ -90,6 +90,7 @@
             });
 
             $("#ImportProductList").on("click", "#ringList #btnSaveRings", function () {
+                debugger;
                 var productDTO = [];
                 showLoader();
                 $('#ringTable tbody tr').each(function () {
@@ -141,9 +142,8 @@
                     contentType: false,
                     data: formData,
                     success: function (response) {
-                        
-
-                        if(response.isSuccess){
+                        debugger;
+                        if (response.status){
                             $("#btnSaveRings").hide();
                             $("#btnEditRings").hide();
 

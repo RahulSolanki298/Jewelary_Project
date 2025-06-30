@@ -69,10 +69,10 @@ namespace ControlPanel.Controllers
                     TempData["Message"] = "Product category has been deleted successfully.";
                 }
 
-                return RedirectToAction("Index");
+                return Json("Index");
             }
 
-            return View();
+            return Json("Invalid...Data not found..");
         }
 
         [HttpGet]

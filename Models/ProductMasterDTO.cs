@@ -17,6 +17,10 @@ namespace Models
         
         public string CategoryName { get; set; }
 
+        public int ShapeId { get; set; }
+
+        public string ShapeName { get; set; }
+
         public bool IsActive { get; set; }
 
         public string ProductStatus { get; set; }  // Hold -- Deactived -- Active
@@ -24,5 +28,10 @@ namespace Models
         public bool IsSale { get; set; } = false;
 
         public List<ProductDTO> ProductItems { get; set; }
+
+        public List<ProductImageAndVideoDTO> ProductImageVideos { get; set; }
+        public List<ProductPropertyDTO> Metals { get; set; }
+        public List<ProductPropertyDTO> CaratSizes { get; set; }
+        public List<ProductPropertyDTO> Shapes { get; set; }
     }
 }

@@ -14,8 +14,8 @@ namespace Business.Repository.IRepository
 
         Task<AboutUs> GetAboutUsSetting();
 
-
         Task<bool> UpdateAboutUsSetting(AboutUs data);
 
+        Task<List<EventSites>> GetEventSiteList();
     }
 }
