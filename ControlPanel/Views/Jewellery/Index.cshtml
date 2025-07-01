@@ -88,6 +88,15 @@
             //$("#ExcelUpload").on("click",function(){
             //    $("#showFileUpload").modal("show");
             //});
+             $('#modalImages #ringTable').DataTable({
+                pageLength: 10,
+                lengthChange: true,    // Allows user to choose number of rows per page
+                ordering: false,       // Disable sorting (optional)
+                info: true,
+                language: {
+                    emptyTable: "No rings found"
+                }
+            });
 
             $('#chkAllIds').on('change', function () {
                 var isChecked = $(this).is(':checked');
@@ -197,8 +206,7 @@
 
 
             $("#modalImages").on("click", ".popupImgs", function () {
-              debugger;
-               const id = $(this).attr("id");
+                const id = $(this).attr("id");
 
                 $.ajax({
                     url: `@Url.Action("UpdateJewelryProductImageById", "Jewellery")?id=${id}`,

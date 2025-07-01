@@ -51,7 +51,7 @@ namespace ControlPanel.Controllers
         public async Task<IActionResult> GetJewellries()
         {
             var status = SD.Activated;
-            var productList = await _productRepository.GetProductPendingList(status);
+            var productList = await _productRepository.GetProductMasterList(status);
             return PartialView("_JewelleryList", productList);
         }
 
@@ -656,7 +656,7 @@ namespace ControlPanel.Controllers
             try
             {
                 string status = SD.Pending;
-                var productList = await _productRepository.GetProductPendingList(status);
+                var productList = await _productRepository.GetProductMasterList(status);
                 return View("~/Views/Jewellery/RequestedNewProductList.cshtml", productList);
             }
             catch (Exception ex)
@@ -685,7 +685,7 @@ namespace ControlPanel.Controllers
         public async Task<IActionResult> HoldProductList()
         {
             string status = SD.Hold;
-            var productList = await _productRepository.GetProductPendingList(status);
+            var productList = await _productRepository.GetProductMasterList(status);
             return View(productList);
         }
 
@@ -693,7 +693,7 @@ namespace ControlPanel.Controllers
         public async Task<IActionResult> DeactivatedProductList()
         {
             string status = SD.DeActived;
-            var productList = await _productRepository.GetProductPendingList(status);
+            var productList = await _productRepository.GetProductMasterList(status);
             return View(productList);
         }
 

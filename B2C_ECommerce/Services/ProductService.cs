@@ -710,8 +710,6 @@ namespace B2C_ECommerce.Services
         //    return productMstList;
         //}
 
-
-
         public async Task<List<ProductMasterDTO>> GetJewelleryByShapeColorId(string sku, int colorId, int? shapeId = 0)
         {
             var productsQuery = from product in _context.Product
@@ -1100,7 +1098,6 @@ namespace B2C_ECommerce.Services
                     join color in _context.ProductProperty on pm.ColorId equals color.Id
                     join shape in _context.ProductProperty on pm.CenterShapeId equals shape.Id
                     where pm.ColorId != null &&
-                          pm.CenterShapeId != null &&
                           pm.ProductStatus == SD.Activated &&
                           pm.IsActive == true
                     select new
@@ -1132,6 +1129,7 @@ namespace B2C_ECommerce.Services
                     })
                     .ToList();
 
+                var groupIds = dtProMasterList.Select(x => x.GroupId).ToList();
                 var productKeys = dtProMasterList.Select(x => x.ProductKey).ToList();
 
                 // Step 3: Load all products with extended info
@@ -1149,7 +1147,7 @@ namespace B2C_ECommerce.Services
                     from size in sizeGroup.DefaultIfEmpty()
                     join ashape in _context.ProductProperty on product.AccentStoneShapeId equals ashape.Id into ashapeGroup
                     from ashape in ashapeGroup.DefaultIfEmpty()
-                    where productKeys.Contains(product.ProductKey)
+                    where groupIds.Contains(product.GroupId)
                     select new ProductDTO
                     {
                         Id = product.Id,
@@ -1207,7 +1205,7 @@ namespace B2C_ECommerce.Services
                 var metals = await (from col in _context.ProductProperty
                                     join prod in _context.Product on col.Id equals prod.ColorId
                                     join colN in _context.ProductProperty on col.ParentId equals colN.Id
-                                    where colN.Name == SD.Metal && productKeys.Contains(prod.ProductKey) && prod.IsActivated
+                                    where colN.Name == SD.Metal 
                                     select new ProductPropertyDTO 
                                     { 
                                         Id=col.Id,
@@ -1225,7 +1223,7 @@ namespace B2C_ECommerce.Services
                 var caratSizes = await (from col in _context.ProductProperty
                                         join prod in _context.Product on col.Id equals prod.CenterCaratId
                                         join colN in _context.ProductProperty on col.ParentId equals colN.Id
-                                        where colN.Name == SD.CaratSize && productKeys.Contains(prod.ProductKey) && prod.IsActivated
+                                        where colN.Name == SD.CaratSize 
                                         select new ProductPropertyDTO
                                         {
                                             Id = col.Id,
@@ -1244,7 +1242,7 @@ namespace B2C_ECommerce.Services
                 var shapes = await (from col in _context.ProductProperty
                                     join prod in _context.Product on col.Id equals prod.CenterShapeId
                                     join colN in _context.ProductProperty on col.ParentId equals colN.Id
-                                    where colN.Name == SD.Shape && productKeys.Contains(prod.ProductKey) && prod.IsActivated
+                                    where colN.Name == SD.Shape && groupIds.Contains(prod.GroupId) && prod.IsActivated
                                     select new ProductPropertyDTO
                                     {
                                         Id = col.Id,
@@ -1283,11 +1281,13 @@ namespace B2C_ECommerce.Services
                     master.Shapes = shapes;
 
                     master.ProductItems = allProducts
-                        .Where(p => p.ProductKey == master.ProductKey)
+                        .Where(p => p.ProductKey == master.ProductKey && p.ShapeId==master.ShapeId)
                         .ToList();
 
                     var productImages = allProductImages
-                        .Where(p => p.ProductId == master.ProductKey)
+                        .Where(p => p.ProductId == master.ProductKey &&
+                                    p.ShapeId==master.ShapeId &&
+                                    p.MetalId==master.ColorId)
                         .ToList();
 
                     var imageVideos = productImages.Select(image => new ProductImageAndVideoDTO

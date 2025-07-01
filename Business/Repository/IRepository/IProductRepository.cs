@@ -48,7 +48,7 @@ namespace Business.Repository.IRepository
         Task<IEnumerable<ProductMasterDTO>> GetProductDeActivatedList();
 
         Task<IEnumerable<ProductMasterDTO>> GetProductPendingList(string status);
-
+        Task<IEnumerable<ProductMasterDTO>> GetProductMasterList(string status);
         Task<ProductMstResponse> SaveNewProductListToDbAsync(List<ProductDTO> products, string categoryName, string userId, int fileHistoryId);
     }
 }
