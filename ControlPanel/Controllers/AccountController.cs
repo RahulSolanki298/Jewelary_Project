@@ -60,7 +60,7 @@ namespace ControlPanel.Controllers
                 var options = new CookieOptions
                 {
                     HttpOnly = true,
-                    Secure = true, // use true in production with HTTPS
+                    Secure = false, // use true in production with HTTPS
                     Expires = DateTimeOffset.UtcNow.AddHours(1)
                 };
 

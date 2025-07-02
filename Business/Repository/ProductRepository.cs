@@ -1576,50 +1576,57 @@ namespace Business.Repository
             string nameOnly = Path.GetFileNameWithoutExtension(fileName);
             var parts = nameOnly.Split('-');
 
-            if (parts.Length < 4)
+            if (parts.Length < 2)
             {
-                return new FileSplitDTO();
                 throw new ArgumentException("Filename format is invalid. Expected format: DESIGNNO-COLORCODE");
             }
 
-            var dtImgVideo = new FileSplitDTO
-            {
-                DesignNo = $"{parts[0]}-{parts[1]}"
-            };
+            string potentialSku = parts[0];
+            FileSplitDTO dto = new FileSplitDTO();
 
-            var IsVerify = _context.Product.Where(x => x.Sku == dtImgVideo.DesignNo).FirstOrDefault();
-            if (IsVerify == null)
+            for (int i = 1; i < parts.Length; i++)
             {
-                dtImgVideo.DesignNo = $"{dtImgVideo.DesignNo}-{parts[2]}";
-                var dtDesign = _context.Product.Where(x => x.Sku == dtImgVideo.DesignNo).FirstOrDefault();
-
-                if (dtDesign == null)
+                potentialSku += "-" + parts[i];
+                var exists = _context.Product.FirstOrDefault(p => p.Sku == potentialSku);
+                if (exists != null)
                 {
-                    return new FileSplitDTO();
+                    dto.DesignNo = potentialSku;
+
+                    // Set ShapeCode as the last part of the SKU
+                    var skuParts = potentialSku.Split('-');
+                    if (skuParts.Length >= 3)
+                    {
+                        dto.ShapeCode = skuParts.Last(); // e.g., "OV"
+                    }
+
+                    // Next part after SKU is assumed to be color part
+                    if (i + 1 < parts.Length)
+                    {
+                        string colorPart = parts[i + 1];
+
+                        if (char.IsDigit(colorPart.Last()))
+                        {
+                            string letters = new string(colorPart.TakeWhile(c => !char.IsDigit(c)).ToArray());
+                            string digits = new string(colorPart.SkipWhile(c => !char.IsDigit(c)).ToArray());
+
+                            dto.ColorName = letters;
+                            dto.Index = int.TryParse(digits, out int indexVal) ? indexVal : 0;
+                        }
+                        else
+                        {
+                            dto.ColorName = colorPart;
+                            dto.Index = 0;
+                        }
+                    }
+
+                    return dto;
                 }
             }
 
-            string shapePart = parts[2];
-            dtImgVideo.ShapeCode = shapePart.ToString();
-
-            string colorPart = parts[3];
-
-            if (char.IsDigit(colorPart.Last()))
-            {
-                string letters = new string(colorPart.TakeWhile(c => !char.IsDigit(c)).ToArray());
-                string digits = new string(colorPart.SkipWhile(c => !char.IsDigit(c)).ToArray());
-
-                dtImgVideo.ColorName = letters;
-                dtImgVideo.Index = int.TryParse(digits, out int indexVal) ? indexVal : 0;
-            }
-            else
-            {
-                dtImgVideo.ColorName = colorPart;
-                dtImgVideo.Index = 0; // or null if changed to int?
-            }
-
-            return dtImgVideo;
+            return new FileSplitDTO(); // No matching SKU found
         }
+
+
 
         public async Task<ProductDTO> GetProductWithDetails(string productId)
         {
@@ -3293,45 +3300,44 @@ namespace Business.Repository
 
         public async Task<ProductMstResponse> SaveNewProductListToDbAsync(List<ProductDTO> products, string categoryName, string userId, int fileHistoryId)
         {
-            ProductMstResponse response = new ProductMstResponse();
+            var response = new ProductMstResponse();
+
             try
             {
                 var table = CreateProductDataTable(products);
 
-                // Correct way to build configuration
-                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+                await conn.OpenAsync();
+
+                using var command = new SqlCommand("SaveNewProductList", conn)
                 {
-                    using (var command = new SqlCommand("SaveNewProductList", connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
+                    CommandType = CommandType.StoredProcedure
+                };
+                command.Parameters.Add(new SqlParameter
+                {
+                    ParameterName = "@Products",
+                    SqlDbType = SqlDbType.Structured,
+                    TypeName = "ProductDTOType",
+                    Value = table
+                });
+                command.Parameters.AddWithValue("@CategoryName", categoryName ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@UserId", userId ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@FileHistoryId", fileHistoryId);
 
-                        command.Parameters.Add(new SqlParameter
-                        {
-                            ParameterName = "@Products",
-                            SqlDbType = SqlDbType.Structured,
-                            TypeName = "ProductDTOType",
-                            Value = table
-                        });
-
-                        command.Parameters.AddWithValue("@CategoryName", categoryName ?? (object)DBNull.Value);
-                        command.Parameters.AddWithValue("@UserId", userId ?? (object)DBNull.Value);
-                        command.Parameters.AddWithValue("@FileHistoryId", fileHistoryId);
-
-                        await connection.OpenAsync();
-                        await command.ExecuteNonQueryAsync();
-                    }
-                }
+                await command.ExecuteNonQueryAsync();
 
                 response.Status = true;
-                response.Message = "Product list has been successfully saved to the database.";
+                response.Message = "Product list successfully saved.";
             }
             catch (Exception ex)
             {
                 response.Status = false;
                 response.Message = $"Failed to save product list. Error: {ex.Message}";
             }
+
             return response;
         }
+
 
         public async Task<IEnumerable<ProductMasterDTO>> GetProductMasterList(string status)
         {
@@ -3516,16 +3522,17 @@ namespace Business.Repository
             // Now map everything back to each item
             foreach (var master in grouped)
             {
-                foreach (var item in master.ProductItems)
+                var prd = master.ProductItems.Where(x => x.ProductKey == master.ProductKey && x.GroupId == master.GroupId).FirstOrDefault();
+                if (prd != null)
                 {
-                    item.Metals = metals.Where(m => m.Id == item.ColorId).ToList();
-                    item.CaratSizes = caratSizes.Where(c => c.Id == item.CenterCaratId).ToList();
-                    item.Shapes = shapes.Where(s => s.Id == item.CenterShapeId).ToList();
+                   var colorList = metals.Where(m => m.Id == prd.ColorId).ToList();
+                    master.CaratSizes = caratSizes.Where(c => c.Id == prd.CenterCaratId).ToList();
+                    master.Shapes = shapes.Where(s => s.Id == prd.CenterShapeId).ToList();
 
-                    item.ProductImageVideos = imageData
-                        .Where(img => img.ProductId == item.ProductKey.ToString()
-                                   && img.MetalId == item.ColorId
-                                   && img.ShapeId == item.CenterShapeId)
+                    master.ProductImageVideos = imageData
+                        .Where(img => img.ProductId == prd.ProductKey.ToString()
+                                   && img.MetalId == prd.ColorId
+                                   && img.ShapeId == prd.CenterShapeId)
                         .Select(img => new ProductImageAndVideoDTO
                         {
                             ProductId = img.ProductId,

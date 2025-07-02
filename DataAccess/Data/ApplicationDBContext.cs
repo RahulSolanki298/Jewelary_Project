@@ -1,8 +1,13 @@
 ﻿using DataAccess.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Threading.Tasks;
 
 namespace DataAccess.Data
 {
@@ -189,5 +194,94 @@ namespace DataAccess.Data
 
         }
 
+        public async Task<ProductMstResponse> SaveNewProductListToDbAsync(
+       List<ProductDTO> products,
+       string categoryName,
+       string userId,
+       int fileHistoryId)
+        {
+            var response = new ProductMstResponse();
+
+            try
+            {
+                var table = CreateProductDataTable(products); // Your existing method
+
+                var conn = (SqlConnection)Database.GetDbConnection();
+                if (conn.State != ConnectionState.Open)
+                    await conn.OpenAsync();
+
+                using var command = new SqlCommand("SaveNewProductList", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                var tvpParam = command.Parameters.AddWithValue("@Products", table);
+                tvpParam.SqlDbType = SqlDbType.Structured;
+                tvpParam.TypeName = "dbo.ProductDTOType";
+
+                command.Parameters.AddWithValue("@CategoryName", categoryName ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@UserId", userId ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@FileHistoryId", fileHistoryId);
+
+                await command.ExecuteNonQueryAsync();
+
+                response.Status = true;
+                response.Message = "Product list successfully saved.";
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = $"Error: {ex.Message}";
+            }
+
+            return response;
+        }
+
+        private DataTable CreateProductDataTable(List<ProductDTO> products)
+        {
+            var table = new DataTable();
+            table.Columns.Add("Sku", typeof(string));
+            table.Columns.Add("Title", typeof(string));
+            table.Columns.Add("ColorName", typeof(string));
+            table.Columns.Add("Karat", typeof(string));
+            table.Columns.Add("CenterCaratName", typeof(string));
+            table.Columns.Add("CenterShapeName", typeof(string));
+            table.Columns.Add("AccentStoneShapeName", typeof(string));
+            table.Columns.Add("WholesaleCost", typeof(decimal));
+            table.Columns.Add("Price", typeof(decimal));
+            table.Columns.Add("UnitPrice", typeof(decimal));
+            table.Columns.Add("Length", typeof(string));
+            table.Columns.Add("BandWidth", typeof(string));
+            table.Columns.Add("ProductType", typeof(string));
+            table.Columns.Add("GoldWeight", typeof(string));
+            table.Columns.Add("Grades", typeof(string));
+            table.Columns.Add("MMSize", typeof(string));
+            table.Columns.Add("NoOfStones", typeof(int));
+            table.Columns.Add("DiaWT", typeof(decimal));
+            table.Columns.Add("Certificate", typeof(string));
+            table.Columns.Add("IsReadyforShip", typeof(bool));
+            table.Columns.Add("CTW", typeof(decimal));
+            table.Columns.Add("VenderName", typeof(string));
+            table.Columns.Add("VenderStyle", typeof(string));
+            table.Columns.Add("Diameter", typeof(string));
+            table.Columns.Add("FileHistoryId", typeof(int));
+            table.Columns.Add("StyleName", typeof(string));
+            table.Columns.Add("CollectionName", typeof(string));
+            table.Columns.Add("Description", typeof(string));
+            table.Columns.Add("Type", typeof(string));
+
+            foreach (var p in products)
+            {
+                table.Rows.Add(
+                    p.Sku, p.Title, p.ColorName, p.Karat, p.CenterCaratName, p.CenterShapeName, p.AccentStoneShapeName,
+                    p.WholesaleCost ?? 0, p.Price ?? 0, p.UnitPrice ?? 0, p.Length, p.BandWidth, p.ProductType,
+                    p.GoldWeight, p.Grades, p.MMSize, p.NoOfStones ?? 0, p.DiaWT ?? 0, p.Certificate,
+                    p.IsReadyforShip ?? false, Convert.ToDecimal(p.CTW ?? "0"), p.VenderName, p.VenderStyle, p.Diameter,
+                    p.FileHistoryId ?? 0, p.StyleName, p.CollectionName, p.Description, p.Type
+                );
+            }
+
+            return table;
+        }
     }
 }

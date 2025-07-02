@@ -22,11 +22,11 @@ using System.Security.Cryptography;
 using Microsoft.AspNetCore.Identity;
 using Business.Repository;
 using System.Text.RegularExpressions;
+using ControlPanel.Services.IServices;
 
 namespace ControlPanel.Controllers
 {
 
-    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
     [Authorize]
     public class JewelleryController : Controller
     {
@@ -34,14 +34,17 @@ namespace ControlPanel.Controllers
         private readonly IProductPropertyRepository _productPropertyRepository;
         private readonly IWebHostEnvironment _env;
         private readonly UserManager<ApplicationUser> _userManager;
-        public JewelleryController(IProductRepository productRepository, IProductPropertyRepository productProperty, IWebHostEnvironment env, UserManager<ApplicationUser> userManager)
+        private readonly IProductService _productService;
+        public JewelleryController(IProductRepository productRepository, IProductPropertyRepository productProperty, IWebHostEnvironment env, UserManager<ApplicationUser> userManager, IProductService productService)
         {
             _productRepository = productRepository;
             _productPropertyRepository = productProperty;
             _env = env;
             _userManager = userManager;
+            _productService = productService;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
@@ -178,7 +181,7 @@ namespace ControlPanel.Controllers
                     if (category == "rings")
                     {
                         ringProducts = products.Where(x => x.CategoryName == "Rings").ToList();
-                        var ringResp = await _productRepository.SaveNewProductListToDbAsync(ringProducts, "Rings", userId, uploadHistoryId);
+                        var ringResp = await _productService.SaveNewProductListAsync(ringProducts, "Rings", userId, uploadHistoryId);
                         if (ringResp != null)
                         {
                             return Json(ringResp);
@@ -187,7 +190,7 @@ namespace ControlPanel.Controllers
                     else if (category == "bands")
                     {
                         weddings = products.Where(x => x.CategoryName == "Bands").ToList();
-                        var bandResp = await _productRepository.SaveNewProductListToDbAsync(weddings, "Bands", userId, uploadHistoryId);
+                        var bandResp = await _productService.SaveNewProductListAsync(weddings, "Bands", userId, uploadHistoryId);
                         if (bandResp != null)
                         {
                             return Json(bandResp);
@@ -197,7 +200,7 @@ namespace ControlPanel.Controllers
                     else if (category == "earrings")
                     {
                         earrings = products.Where(x => x.CategoryName == "Earrings").ToList();
-                        var errResp = await _productRepository.SaveNewProductListToDbAsync(earrings, "Earrings", userId, uploadHistoryId);
+                        var errResp = await _productService.SaveNewProductListAsync(earrings, "Earrings", userId, uploadHistoryId);
                         if (errResp != null)
                         {
                             return Json(errResp);
@@ -207,7 +210,7 @@ namespace ControlPanel.Controllers
                     else if (category == "pendants")
                     {
                         pendants = products.Where(x => x.CategoryName == "Pendants").ToList();
-                        var pendResp = await _productRepository.SaveNewProductListToDbAsync(pendants, "Pendants", userId, uploadHistoryId);
+                        var pendResp = await _productService.SaveNewProductListAsync(pendants, "Pendants", userId, uploadHistoryId);
                         if (pendResp != null)
                         {
                             return Json(pendResp);
@@ -216,7 +219,7 @@ namespace ControlPanel.Controllers
                     else if (category == "bracelets")
                     {
                         bracelets = products.Where(x => x.CategoryName == "Bracelets").ToList();
-                        var braceResp = await _productRepository.SaveNewProductListToDbAsync(bracelets, "Bracelets", userId, uploadHistoryId);
+                        var braceResp = await _productService.SaveNewProductListAsync(bracelets, "Bracelets", userId, uploadHistoryId);
                         if (braceResp != null)
                         {
                             return Json(braceResp);
@@ -1009,13 +1012,15 @@ namespace ControlPanel.Controllers
                                         entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
                                     {
                                         styleName = _productRepository.ExtractStyleName(entry.Name);
-                                        if (styleName == null && string.IsNullOrEmpty(styleName.ColorName) && string.IsNullOrEmpty(fileName) && string.IsNullOrEmpty(zipPath))
-                                        {
+                                        //if (styleName == null && string.IsNullOrEmpty(styleName.ColorName) && string.IsNullOrEmpty(fileName) && string.IsNullOrEmpty(zipPath))
+                                        if (styleName == null && string.IsNullOrEmpty(styleName.ColorName))
+                                            {
                                             styleErr.Add($"Design Name :{entry.Name} is not found.");
+                                            continue;
                                         };
 
                                         var dt = shapeList.Where(x => x.SymbolName == styleName.ShapeCode).FirstOrDefault();
-
+                                       
                                         var shape = await _productRepository.GetProductShapeId(styleName.ShapeCode, dt.Id);
                                         if (shape == null) continue;
 
