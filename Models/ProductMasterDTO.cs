@@ -21,6 +21,10 @@ namespace Models
 
         public string ShapeName { get; set; }
 
+        public string Title { get; set; }
+
+        public decimal? Price { get; set; }
+
         public bool IsActive { get; set; }
 
         public string ProductStatus { get; set; }  // Hold -- Deactived -- Active

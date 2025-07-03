@@ -51,7 +51,6 @@ namespace B2C_ECommerce.Controllers
 
         }
 
-
         [HttpPost]
         public async Task<IActionResult> LoginProcess([FromBody] CustomerLoginDTO loginDT)
         {
@@ -104,50 +103,71 @@ namespace B2C_ECommerce.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> RegisterProcess([FromBody] CustomerRegisterDTO registerDT)
+        public async Task<IActionResult> RegisterProcess(CustomerRegisterDTO registerDT)
         {
             if (ModelState.IsValid)
             {
-                var captchaResponse = Request.Form["g-recaptcha-response"];
-                var secretKey = "6LdSim0rAAAAACrck7la2MF-t4OtK92wK3J9wkK5";
+                //var captchaResponse = Request.Form["g-recaptcha-response"];
+                //var secretKey = "6LdSim0rAAAAACrck7la2MF-t4OtK92wK3J9wkK5";
 
-                using var client = new HttpClient();
-                var postData = new Dictionary<string, string>
+                //using var client = new HttpClient();
+                //var postData = new Dictionary<string, string>
+                //{
+                //    { "secret", secretKey },
+                //    { "response", captchaResponse }
+                //};
+
+                //var response = await client.PostAsync("https://www.google.com/recaptcha/api/siteverify", new FormUrlEncodedContent(postData));
+                //var responseContent = await response.Content.ReadAsStringAsync();
+
+                //var captchaResult = JsonSerializer.Deserialize<GoogleCaptchaResponse>(responseContent);
+
+                //if (captchaResult?.Success != true)
+                //{
+                //    ModelState.AddModelError("", "Captcha verification failed.");
+                //    return View(registerDT);
+                //}
+                try
                 {
-                    { "secret", secretKey },
-                    { "response", captchaResponse }
-                };
+                    var data = new UserRequestDTO()
+                    {
+                        Email = registerDT.EmailId,
+                        FirstName = registerDT.FirstName,
+                        LastName = registerDT.LastName,
+                        PhoneNo = registerDT.PhoneNumber,
+                        Password = registerDT.TextPassword,
+                        ConfirmPassword = registerDT.ConfirmPassword
+                    };
 
-                var response = await client.PostAsync("https://www.google.com/recaptcha/api/siteverify", new FormUrlEncodedContent(postData));
-                var responseContent = await response.Content.ReadAsStringAsync();
+                    var result = await _accountService.CustomerSignUpAsync(data);
 
-                var captchaResult = JsonSerializer.Deserialize<GoogleCaptchaResponse>(responseContent);
+                    if (result != null)
+                    {
+                        TempData["Status"] = "Success";
+                        TempData["Message"] = $"{data.FirstName} {data.LastName}, You're all set! Registration was successful. Welcome aboard!";
+                        
+                        var custData = new CustomerLoginDTO();
+                        custData.Username = data.Email;
+                        custData.Password = data.Password;
+                        await LoginProcess(custData);
+                    }
 
-                if (captchaResult?.Success != true)
-                {
-                    ModelState.AddModelError("", "Captcha verification failed.");
-                    return View(registerDT);
+                    
                 }
-
-                var data = new UserRequestDTO()
+                catch (InvalidOperationException ex)
                 {
-                    Email = registerDT.EmailId,
-                    FirstName = registerDT.FirstName,
-                    LastName = registerDT.LastName,
-                    PhoneNo = registerDT.PhoneNumber,
-                    Password = registerDT.TextPassword,
-                    ConfirmPassword = registerDT.ConfirmPassword
-                };
-
-                var result = await _accountService.CustomerSignUpAsync(data);
-
-                return Json(new {
-                    Status="Success",
-                    Message = $"{data.FirstName} {data.LastName} has been created successfully.",
-                });
+                    // Email already exists
+                    TempData["Status"] = "Error";
+                    TempData["Message"] = $"Oops! Something went wrong during registration. Exception : {ex.Message} Please review the form and try again.";
+                }
+                catch (Exception ex)
+                {
+                    TempData["Status"] = "Error";
+                    TempData["Message"] = "Registration failed: " + ex.Message;
+                }
             }
 
-            return Json("Index");
+            return View(registerDT);
         }
 
 

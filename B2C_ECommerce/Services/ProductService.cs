@@ -30,70 +30,77 @@ namespace B2C_ECommerce.Services
         {
             var products = await GetProductStyleDTList();
 
-            //var query = products.AsQueryable();
+            var query = products.AsQueryable();
 
-            //var shapeIds = filters.Shapes?.Select(Int32.Parse).ToList();
-            //var metalIds = filters.Metals?.Select(Int32.Parse).ToList();
+            var shapeIds = filters.Shapes?.Select(Int32.Parse).ToList();
+            var metalIds = filters.Metals?.Select(Int32.Parse).ToList();
 
-            //if (shapeIds?.Any() == true)
-            //{
-            //    query = query.Where(p => p.Shapes.Any(shape => shapeIds.Contains(p.ShapeId)));
-            //}
+            if (shapeIds?.Any() == true)
+            {
+                query = query.Where(p => p.Shapes.Any(shape => shapeIds.Contains(p.ShapeId)));
+            }
 
-            //if (metalIds?.Any() == true)
-            //{
-            //    query = query.Where(p => p.Metals.Any(metal => metalIds.Contains(p.ColorId.Value)));
-            //}
+            if (metalIds?.Any() == true)
+            {
+                query = query.Where(p => p.Metals.Any(metal => metalIds.Contains(p.ColorId.Value)));
+            }
 
-            //if (filters.FromPrice.HasValue)
-            //{
-            //    query = query.Where(p => p.Price >= filters.FromPrice.Value);
-            //}
+            if (filters.FromPrice.HasValue && filters.ToPrice.HasValue)
+            {
+                query = query.Where(p => p.Price != null &&
+                                         p.Price.HasValue &&
+                                         p.Price.Value >= filters.FromPrice.Value &&
+                                         p.Price.Value <= filters.ToPrice.Value);
+            }
+            else if (filters.FromPrice.HasValue)
+            {
+                query = query.Where(p => p.Price != null && p.Price.HasValue != true && p.Price.Value >= filters.FromPrice);
+            }
+            else if (filters.ToPrice.HasValue)
+            {
+                query = query.Where(p => p.Price != null && p.Price.HasValue != true && p.Price.Value <= filters.ToPrice);
+            }
 
-            //if (filters.ToPrice.HasValue)
-            //{
-            //    query = query.Where(p => p.Price <= filters.ToPrice.Value);
-            //}
 
-            //if (filters.FromCarat.HasValue)
-            //{
-            //    query = query.Where(p => Convert.ToDecimal(p.CenterCaratName) >= filters.FromCarat.Value);
-            //}
+            if (filters.FromCarat.HasValue)
+            {
+                query = query.Where(p => Convert.ToDecimal(p.CaratSizes) >= filters.FromCarat.Value);
+            }
 
-            //if (filters.ToCarat.HasValue)
-            //{
-            //    query = query.Where(p => Convert.ToDecimal(p.CenterCaratName) <= filters.ToCarat.Value);
-            //}
+            if (filters.ToCarat.HasValue)
+            {
+                query = query.Where(p => Convert.ToDecimal(p.CaratSizes) <= filters.ToCarat.Value);
+            }
 
-            //if (filters.categories != null && filters.categories.Length > 0 && filters.categories[0] != null)
-            //{
-            //    query = query.Where(p => filters.categories.Contains(p.CategoryName));
-            //}
+            if (filters.categories != null && filters.categories.Length > 0 && filters.categories[0] != null)
+            {
+                query = query.Where(p => filters.categories.Contains(p.CategoryName));
+            }
 
-            //if (!string.IsNullOrEmpty(filters.OrderBy))
-            //{
-            //    switch (filters.OrderBy.ToLower())
-            //    {
-            //        case "asc":
-            //            query = query.OrderBy(p => p.Title); // assuming product has a Name property
-            //            break;
-            //        case "desc":
-            //            query = query.OrderByDescending(p => p.Title);
-            //            break;
-            //        case "price":
-            //            query = query.OrderBy(p => p.Price);
-            //            break;
-            //        case "priceMax":
-            //            query = query.OrderByDescending(p => p.Price);
-            //            break;
-            //    }
-            //}
+            if (!string.IsNullOrEmpty(filters.OrderBy))
+            {
+                switch (filters.OrderBy.ToLower())
+                {
+                    case "asc":
+                        query = query.OrderBy(p => p.Title); // assuming product has a Name property
+                        break;
+                    case "desc":
+                        query = query.OrderByDescending(p => p.Title);
+                        break;
+                    case "price":
+                        query = query.OrderBy(p => p.Price);
+                        break;
+                    case "priceMax":
+                        query = query.OrderByDescending(p => p.Price);
+                        break;
+                }
+            }
 
             // Pagination
-            //var pagedResult = await query
-            //    .Skip((pageNumber - 1) * pageSize)
-            //    .Take(pageSize)
-            //    .ToListAsync();
+            var pagedResult = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
 
             return products.ToList();
         }

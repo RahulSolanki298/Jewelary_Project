@@ -17,9 +17,11 @@ namespace Models
 
         public string Gender { get; set; }
 
+        [Required(ErrorMessage = "Please enter a phone no.")]
         [Phone]
         public string PhoneNumber { get; set; }
 
+        [Required(ErrorMessage = "Please enter a email id.")]
         [EmailAddress]
         public string EmailId { get; set; }
 
@@ -38,7 +40,7 @@ namespace Models
 
         public string ActivationStatus { get; set; }
 
-        [Required]
+        //[Required]
         public string RecaptchaToken { get; set; }
 
     }

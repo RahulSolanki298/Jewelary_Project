@@ -38,7 +38,16 @@ namespace B2C_ECommerce.Services
                 return new AuthenticationResponseDTO
                 {
                     IsAuthSuccessful = false,
-                    ErrorMessage = "Invalid username or password."
+                    ErrorMessage = "Authentication unsuccessful. Check your username and password."
+                };
+            }
+
+            if (user.ActivationStatus != SD.Activated)
+            {
+                return new AuthenticationResponseDTO
+                {
+                    IsAuthSuccessful = false,
+                    ErrorMessage = "Login restricted: Your account is currently inactive. Contact support for assistance."
                 };
             }
 
@@ -49,53 +58,83 @@ namespace B2C_ECommerce.Services
                 return new AuthenticationResponseDTO
                 {
                     IsAuthSuccessful = true,
-                    SuccessMessage = "Login successful."
+                    SuccessMessage = "Success: Your account has been created."
                 };
             }
-            else if (result.IsLockedOut)
-            {
-                return new AuthenticationResponseDTO
-                {
-                    IsAuthSuccessful = false,
-                    ErrorMessage = "Account is locked out."
-                };
-            }
-            else if (result.IsNotAllowed)
-            {
-                return new AuthenticationResponseDTO
-                {
-                    IsAuthSuccessful = false,
-                    ErrorMessage = "Login not allowed. Please confirm your email."
-                };
-            }
+
+            string errorMessage = result.IsLockedOut
+                ? "Your account has been locked. Please try again later or contact support."
+                : result.IsNotAllowed
+                    ? "Login not permitted. Please verify your email address to proceed."
+                    : "Incorrect username or password.";
 
             return new AuthenticationResponseDTO
             {
                 IsAuthSuccessful = false,
-                ErrorMessage = "Invalid username or password."
+                ErrorMessage = errorMessage,
+                userDTO = new UserDTO
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    PhoneNo = user.PhoneNumber,
+                    Email = user.Email
+                }
             };
         }
 
+
         // Example for Supplier Sign-Up
-        public async Task<RegisterationResponseDTO> SupplierSignUpAsync(UserRequestDTO userRequestDTO)
+        public async Task<ApplicationUser> SupplierSignUpAsync(SupplierRegisterDTO userRequestDTO)
         {
-            var jsonContent = JsonConvert.SerializeObject(userRequestDTO);
-            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-
-            var response = await _httpClient.PostAsync("api/account/supplier-sign-up", content);
-
-            if (response.IsSuccessStatusCode)
+            // Check if the email is already registered
+            var existingUser = await _userManager.FindByEmailAsync(userRequestDTO.EmailId);
+            if (existingUser != null)
             {
-                var result = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<RegisterationResponseDTO>(result);
+                throw new Exception("Email already in use. Try logging in or choose another address.");
             }
-            return null;
+
+            var user = new ApplicationUser()
+            {
+                UserName = userRequestDTO.EmailId,
+                Email = userRequestDTO.EmailId,
+                FirstName = userRequestDTO.FirstName,
+                LastName = userRequestDTO.LastName,
+                PhoneNumber = userRequestDTO.PhoneNumber,
+                EmailConfirmed = true,
+                IsBusinessAccount=true,
+                ActivationStatus=SD.Pending,
+                TextPassword=userRequestDTO.TextPassword,
+                AadharCardNo=userRequestDTO.AadharCardNo,
+                PancardNo=userRequestDTO.PancardNo,
+                GstNumber=userRequestDTO.GstNumber,
+                MiddleName=userRequestDTO.MiddleName,
+            };
+
+            var result = await _userManager.CreateAsync(user, userRequestDTO.TextPassword);
+
+            if (!result.Succeeded)
+            {
+                throw new Exception("User creation failed: ");
+            }
+
+            await _userManager.AddToRoleAsync(user, SD.Supplier); // Assuming SD.Supplier = "Supplier"
+            return user;
         }
+
 
 
         // Customer Sign-Up method
         public async Task<ApplicationUser> CustomerSignUpAsync(UserRequestDTO userRequestDTO)
         {
+            // Check if the email is already registered
+            var existingUser = await _userManager.FindByEmailAsync(userRequestDTO.Email);
+            if (existingUser != null)
+            {
+                // You can throw an exception or handle it as per your requirement
+                throw new InvalidOperationException("Email is already registered.");
+            }
+
             var user = new ApplicationUser()
             {
                 UserName = userRequestDTO.Email,
@@ -109,9 +148,17 @@ namespace B2C_ECommerce.Services
             };
 
             var result = await _userManager.CreateAsync(user, userRequestDTO.Password);
+
+            if (!result.Succeeded)
+            {
+                // You might want to throw an error or return null / result.Errors
+                throw new Exception("User creation failed: " + string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
+
             await _userManager.AddToRoleAsync(user, SD.Customer);
             return user;
         }
+
 
         private async Task<string> GenerateCustomerCode()
         {
@@ -126,5 +173,6 @@ namespace B2C_ECommerce.Services
             return customerCode;
         }
 
+        
     }
 }

@@ -1587,7 +1587,7 @@ namespace Business.Repository
             for (int i = 1; i < parts.Length; i++)
             {
                 potentialSku += "-" + parts[i];
-                var exists = _context.Product.FirstOrDefault(p => p.Sku == potentialSku);
+                var exists = _context.ProductMaster.Where(x=>x.Sku == potentialSku.ToString()).FirstOrDefault();
                 if (exists != null)
                 {
                     dto.DesignNo = potentialSku;
@@ -1621,6 +1621,7 @@ namespace Business.Repository
 
                     return dto;
                 }
+                
             }
 
             return new FileSplitDTO(); // No matching SKU found
@@ -3452,14 +3453,15 @@ namespace Business.Repository
 
             // Collect all SKUs and Product IDs to batch query dependent data
             var allSkus = grouped.SelectMany(g => g.ProductItems.Select(p => p.Sku)).Distinct().ToList();
-            var allProductIds = grouped.Select(g => g.ProductItems.First().ProductKey.ToString()).ToList();
-            var allColorIds = grouped.SelectMany(g => g.ProductItems.Select(p => p.ColorId)).Distinct().ToList();
-            var allCenterShapeIds = grouped.SelectMany(g => g.ProductItems.Select(p => p.CenterShapeId)).Distinct().ToList();
+            var allProductIds = grouped.Select(g => g.ProductKey).Distinct().ToList();
+            var allColorIds = grouped.Select(g => g.ColorId).Distinct().ToList();
+            var allCenterShapeIds = grouped.Select(g => g.ShapeId).Distinct().ToList();
+            var allGroupIds = grouped.Select(g => g.GroupId).Distinct().ToList();
 
             // Load ProductImages and FileManager data in one go
             var imageData = await _context.ProductImages
-                .Where(img => allProductIds.Contains(img.ProductId))
-                .ToListAsync();
+                .Where(img => allProductIds.Contains(img.ProductId) 
+                                        && allCenterShapeIds.Contains(img.ShapeId.Value)).ToListAsync();
 
             var allFileIds = imageData.Select(i => i.ImageSmId)
                 .Concat(imageData.Select(i => i.VideoId))

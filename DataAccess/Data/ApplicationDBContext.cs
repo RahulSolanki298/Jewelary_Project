@@ -217,7 +217,7 @@ namespace DataAccess.Data
 
                 var tvpParam = command.Parameters.AddWithValue("@Products", table);
                 tvpParam.SqlDbType = SqlDbType.Structured;
-                tvpParam.TypeName = "dbo.ProductDTOType";
+                tvpParam.TypeName = "ProductDTOType";
 
                 command.Parameters.AddWithValue("@CategoryName", categoryName ?? (object)DBNull.Value);
                 command.Parameters.AddWithValue("@UserId", userId ?? (object)DBNull.Value);

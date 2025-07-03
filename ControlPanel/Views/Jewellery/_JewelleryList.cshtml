@@ -170,9 +170,9 @@
                                 </td>
                                 <td scope="col">
                                     <div class="image-row">
-                                        @if (product != null && product.ProductImageVideos != null)
+                                        @if (item != null && item.ProductImageVideos != null)
                                         {
-                                            foreach (var imgVdo in product.ProductImageVideos)
+                                            foreach (var imgVdo in item.ProductImageVideos)
                                             {
                                                 if (!string.IsNullOrEmpty(imgVdo.ImageUrl) && imgVdo.ImageUrl != "-")
                                                 {

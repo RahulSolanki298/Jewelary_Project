@@ -6,7 +6,7 @@ namespace B2C_ECommerce.IServices
 {
     public interface IAccountService
     {
-        Task<RegisterationResponseDTO> SupplierSignUpAsync(UserRequestDTO userRequestDTO);
+        Task<ApplicationUser> SupplierSignUpAsync(SupplierRegisterDTO userRequestDTO);
 
         Task<ApplicationUser> CustomerSignUpAsync(UserRequestDTO userRequestDTO);
 
