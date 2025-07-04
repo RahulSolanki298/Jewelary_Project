@@ -35,6 +35,8 @@ namespace ControlPanel.Controllers
         private readonly IWebHostEnvironment _env;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IProductService _productService;
+        private readonly ILogEntryRepository _logEntryRepository;
+
         public JewelleryController(IProductRepository productRepository, IProductPropertyRepository productProperty, IWebHostEnvironment env, UserManager<ApplicationUser> userManager, IProductService productService)
         {
             _productRepository = productRepository;
@@ -232,7 +234,18 @@ namespace ControlPanel.Controllers
             }
             catch (Exception ex)
             {
-                throw;
+                var st = new System.Diagnostics.StackTrace(ex, true);
+                var frame = st.GetFrame(0); // the first frame is usually the origin
+                var line = frame?.GetFileLineNumber();
+
+                await _logEntryRepository.SaveLogEntry(new LogEntry { 
+                    ActionType="ImageUpload",
+                    LogDate=DateTime.Now,
+                    TableName= "Product",
+                    LogLevel="Error",
+                    LogMessage=$"AI transformas has been failed: Exception : {ex.Message},Line Number: {line}, StackTrace={ex.StackTrace} "
+                });
+                return Json($"AI transforms data migration failed Exception: {ex.Message}");
             }
 
         }   
@@ -660,12 +673,13 @@ namespace ControlPanel.Controllers
             {
                 string status = SD.Pending;
                 var productList = await _productRepository.GetProductMasterList(status);
-                return View("~/Views/Jewellery/RequestedNewProductList.cshtml", productList);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Internal Server Error");
+                
             }
+
+            return View("~/Views/Jewellery/RequestedNewProductList.cshtml",null);
         }
 
         //[HttpGet]
@@ -982,6 +996,7 @@ namespace ControlPanel.Controllers
 
                 if (section == null)
                     return Json("No file uploaded.");
+                
                 var shape = new ProductProperty();
                 while (section != null)
                 {
@@ -1136,6 +1151,18 @@ namespace ControlPanel.Controllers
             }
             catch (Exception ex)
             {
+                var st = new System.Diagnostics.StackTrace(ex, true);
+                var frame = st.GetFrame(0); // the first frame is usually the origin
+                var line = frame?.GetFileLineNumber();
+
+                await _logEntryRepository.SaveLogEntry(new LogEntry
+                {
+                    ActionType = "ImageUpload",
+                    LogDate = DateTime.Now,
+                    TableName = "Product",
+                    LogLevel = "Error",
+                    LogMessage = $"AI transformas has been failed: Exception : {ex.Message},Line Number: {line}, StackTrace={ex.StackTrace} "
+                });
                 return Json("Images and Videoes have been failed to upload.");
             }
         }
