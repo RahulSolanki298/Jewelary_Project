@@ -225,7 +225,7 @@ namespace DataAccess.Data
 
                 await command.ExecuteNonQueryAsync();
 
-                response.Status = true;
+                    response.Status = true;
                 response.Message = "Product list successfully saved.";
             }
             catch (Exception ex)

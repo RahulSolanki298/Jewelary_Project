@@ -982,7 +982,7 @@ namespace ControlPanel.Controllers
 
                 if (section == null)
                     return Json("No file uploaded.");
-
+                var shape = new ProductProperty();
                 while (section != null)
                 {
                     if (ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out var contentDisposition))
@@ -1013,15 +1013,15 @@ namespace ControlPanel.Controllers
                                     {
                                         styleName = _productRepository.ExtractStyleName(entry.Name);
                                         //if (styleName == null && string.IsNullOrEmpty(styleName.ColorName) && string.IsNullOrEmpty(fileName) && string.IsNullOrEmpty(zipPath))
-                                        if (styleName == null && string.IsNullOrEmpty(styleName.ColorName))
+                                        if (string.IsNullOrEmpty(styleName.ColorName))
                                             {
                                             styleErr.Add($"Design Name :{entry.Name} is not found.");
                                             continue;
                                         };
 
                                         var dt = shapeList.Where(x => x.SymbolName == styleName.ShapeCode).FirstOrDefault();
-                                       
-                                        var shape = await _productRepository.GetProductShapeId(styleName.ShapeCode, dt.Id);
+
+                                        if (dt != null) shape = await _productRepository.GetProductShapeId(styleName.ShapeCode, dt.Id);
                                         if (shape == null) continue;
 
                                         metalId = await _productRepository.GetMetalId(styleName.ColorName);
@@ -1378,6 +1378,11 @@ namespace ControlPanel.Controllers
             }
         }
 
+        public IActionResult GetJewelleryById(int Id)
+        {
 
+
+            return View();
+        }
     }
 }

@@ -1950,16 +1950,29 @@ namespace Business.Repository
 
         public async Task<int> GetMetalId(string name)
         {
+            if (string.IsNullOrWhiteSpace(name))
+                return 0;
+
             var colorId = await GetColorId();
 
-            // Use EF.Functions.Like for partial matching (fuzzy search)
+            // 1. Try exact match (case-insensitive)
             var color = await _context.ProductProperty
-                //.Where(x => x.ParentId == colorId && EF.Functions.Like(x.Synonyms, "%" + name + "%"))
-                .Where(x => x.ParentId == colorId && x.SymbolName == name)
+                .Where(x => x.ParentId == colorId && x.SymbolName.ToLower() == name.ToLower())
                 .FirstOrDefaultAsync();
 
-            return color?.Id ?? 0; // If no match found, return 0
+            // 2. If not found, try partial match in Synonyms or SymbolName
+            if (color == null)
+            {
+                color = await _context.ProductProperty
+                    .Where(x => x.ParentId == colorId &&
+                        (EF.Functions.Like(x.Synonyms ?? "", $"%{name}%") ||
+                         EF.Functions.Like(x.SymbolName ?? "", $"%{name}%")))
+                    .FirstOrDefaultAsync();
+            }
+
+            return color?.Id ?? 0;
         }
+
 
         public async Task<EventSites> GetEventSitesByName(string name)
         {

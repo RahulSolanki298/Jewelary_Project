@@ -19,8 +19,7 @@ namespace ControlPanel.Services
 
        public async Task<ProductMstResponse> SaveNewProductListAsync(List<ProductDTO> products, string categoryName, string userId, int fileHistoryId)
         {
-            return await _dbContext.SaveNewProductListToDbAsync(
-          products, categoryName, userId, fileHistoryId);
+            return await _dbContext.SaveNewProductListToDbAsync(products, categoryName, userId, fileHistoryId);
         }
     }
 
