@@ -31,8 +31,7 @@ namespace Models
 
         public bool IsSale { get; set; } = false;
 
-        public List<ProductDTO> ProductItems { get; set; }
-
+        public List<ProductDTO> ProductItems { get; set; }  // detail
         public List<ProductImageAndVideoDTO> ProductImageVideos { get; set; }
         public List<ProductPropertyDTO> Metals { get; set; }
         public List<ProductPropertyDTO> CaratSizes { get; set; }

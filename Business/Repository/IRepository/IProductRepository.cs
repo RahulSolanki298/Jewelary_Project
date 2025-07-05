@@ -22,13 +22,13 @@ namespace Business.Repository.IRepository
         Task<bool> SaveNewProductCollectionList(List<ProductDTO> products);
         Task<int> SaveImageVideoPath(string imgVdoPath);
         FileSplitDTO ExtractStyleName(string fileName);
-        Task<Product> GetProductByDesignNo(string designNo, int metalId);
+        Task<ProductMaster> GetProductByDesignNo(string designNo, int metalId);
         Task<int> GetKaratId();
         Task<List<ProductProperty>> GetKaratList();
         Task<bool> UpdateProductDetailsByExcel(List<ProductDTO> products);
         Task<ProductDTO> GetProductWithDetails(string productId);
         Task<int> GetMetalId(string name);
-        Task<List<Product>> GetProductDataByDesignNo(string designNo, int metalId);
+        Task<List<ProductMaster>> GetProductDataByDesignNo(string designNo, int metalId);
         Task<ProductDTO> GetProductByColorId(string sku, int? colorId = 0, int? caratId = 0);
         Task<ProductProperty> GetKaratById(int karatId);
         Task<ProductPrices> GetProductPriceData(ProductPriceDTO price);
@@ -41,7 +41,7 @@ namespace Business.Repository.IRepository
         Task<ProductImageAndVideoDTO> GetProductImagesVideoById(int id);
         //Task<ProductUploadResult> SaveNewProductList(List<ProductDTO> products, string categoryName, string userId, int fileHistoryId);
         Task<bool>  SaveEarringsList(List<ProductDTO> products, string categoryName, string userId, int fileHistoryId);
-        Task<List<Product>> GetJewelleryDTByDesignNo(string designNo, int metalId, int shapeId);
+        Task<List<ProductMaster>> GetJewelleryDTByDesignNo(string designNo, int metalId, int shapeId);
         Task<ProductProperty> GetProductShapeId(string ShapeCode, int shapeId);
         Task<List<ProductImageAndVideoDTO>> GetProductImagesVideos(string productKey);
 

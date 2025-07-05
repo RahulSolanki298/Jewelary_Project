@@ -135,7 +135,7 @@
 
                                     @foreach (var item in Model.Where(x => x.CategoryName == SD.Rings))
                                     {
-                                        var product = item.ProductItems.Where(x => x.ProductKey == item.ProductKey).FirstOrDefault();
+                                        var product = item.ProductItems.FirstOrDefault();
 
                                         <tr>
                                             <td scope="col">

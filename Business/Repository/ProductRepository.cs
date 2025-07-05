@@ -4,6 +4,8 @@ using DataAccess.Data;
 using DataAccess.Entities;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration; // Required for ConfigurationBuilder
+using Microsoft.IdentityModel.Tokens;
 using Models;
 using System;
 using System.Collections.Generic;
@@ -11,36 +13,36 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration; // Required for ConfigurationBuilder
-using System.IO;
 
 namespace Business.Repository
 {
     public class ProductRepository : IProductRepository
     {
         private readonly ApplicationDBContext _context;
-        private IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
+
         public ProductRepository(ApplicationDBContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
         }
 
-        public async Task<Product> GetProductByDesignNo(string designNo, int metalId)
+        public async Task<ProductMaster> GetProductByDesignNo(string designNo, int metalId)
         {
-            var dtDesign = await _context.Product.Where(x => x.Sku == designNo && x.ColorId == metalId).FirstOrDefaultAsync();
+            var dtDesign = await _context.ProductMaster.Where(x => x.Sku == designNo &&
+                                                              x.ColorId == metalId).FirstOrDefaultAsync();
             return dtDesign;
         }
 
-        public async Task<List<Product>> GetProductDataByDesignNo(string designNo, int metalId)
+        public async Task<List<ProductMaster>> GetProductDataByDesignNo(string designNo, int metalId)
         {
-            var dtDesign = await _context.Product.Where(x => x.Sku == designNo && x.ColorId == metalId).ToListAsync();
+            var dtDesign = await _context.ProductMaster.Where(x => x.Sku == designNo && x.ColorId == metalId).ToListAsync();
             return dtDesign;
         }
 
-        public async Task<List<Product>> GetJewelleryDTByDesignNo(string designNo, int metalId, int shapeId)
+        public async Task<List<ProductMaster>> GetJewelleryDTByDesignNo(string designNo, int metalId, int shapeId)
         {
-            var dtDesign = await _context.Product.Where(x => x.Sku == designNo && x.ColorId == metalId && x.CenterShapeId == shapeId).ToListAsync();
+            var dtDesign = await _context.ProductMaster.Where(x => x.Sku == designNo && x.ColorId == metalId && x.CenterShapeId == shapeId).ToListAsync();
             return dtDesign;
         }
 
@@ -360,8 +362,10 @@ namespace Business.Repository
                         }
                         else
                         {
-                            ProductCollections collection = new ProductCollections();
-                            collection.CollectionName = product.CollectionName;
+                            ProductCollections collection = new ProductCollections
+                            {
+                                CollectionName = product.CollectionName
+                            };
                             await _context.ProductCollections.AddAsync(collection);
                             await _context.SaveChangesAsync();
                             StyleId = collection.Id;
@@ -377,8 +381,10 @@ namespace Business.Repository
                         }
                         else
                         {
-                            ProductStyles style = new ProductStyles();
-                            style.StyleName = product.StyleName;
+                            ProductStyles style = new ProductStyles
+                            {
+                                StyleName = product.StyleName
+                            };
                             await _context.ProductStyles.AddAsync(style);
                             await _context.SaveChangesAsync();
                             StyleId = style.Id;
@@ -901,8 +907,10 @@ namespace Business.Repository
 
             if (existImg == null)
             {
-                var imgVdo = new FileManager();
-                imgVdo.FileUrl = imgVdoPath;
+                var imgVdo = new FileManager
+                {
+                    FileUrl = imgVdoPath
+                };
                 await _context.FileManager.AddAsync(imgVdo);
                 await _context.SaveChangesAsync();
 
@@ -916,16 +924,18 @@ namespace Business.Repository
         {
             try
             {
-                var imgDT = new ProductImages();
-                imgDT.ProductId = ImgVdoData.ProductId;
-                imgDT.ImageLgId = ImgVdoData.ImageLgId ?? null;
-                imgDT.ImageSmId = ImgVdoData.ImageSmId ?? null;
-                imgDT.ImageMdId = ImgVdoData.ImageMdId ?? null;
-                imgDT.VideoId = ImgVdoData.VideoId ?? null;
-                imgDT.MetalId = ImgVdoData.MetalId;
-                imgDT.Sku = ImgVdoData.Sku;
-                imgDT.ShapeId = ImgVdoData.ShapeId;
-                imgDT.IsDefault = true;
+                var imgDT = new ProductImages
+                {
+                    ProductId = ImgVdoData.ProductId,
+                    ImageLgId = ImgVdoData.ImageLgId ?? null,
+                    ImageSmId = ImgVdoData.ImageSmId ?? null,
+                    ImageMdId = ImgVdoData.ImageMdId ?? null,
+                    VideoId = ImgVdoData.VideoId ?? null,
+                    MetalId = ImgVdoData.MetalId,
+                    Sku = ImgVdoData.Sku,
+                    ShapeId = ImgVdoData.ShapeId,
+                    IsDefault = true
+                };
 
                 await _context.AddAsync(imgDT);
                 await _context.SaveChangesAsync();
@@ -1587,7 +1597,7 @@ namespace Business.Repository
             for (int i = 1; i < parts.Length; i++)
             {
                 potentialSku += "-" + parts[i];
-                var exists = _context.ProductMaster.Where(x=>x.Sku == potentialSku.ToString()).FirstOrDefault();
+                var exists = _context.ProductMaster.Where(x => x.Sku == potentialSku.ToString()).FirstOrDefault();
                 if (exists != null)
                 {
                     dto.DesignNo = potentialSku;
@@ -1621,7 +1631,7 @@ namespace Business.Repository
 
                     return dto;
                 }
-                
+
             }
 
             return new FileSplitDTO(); // No matching SKU found
@@ -1981,8 +1991,10 @@ namespace Business.Repository
             eventDT = await _context.EventSites.Where(x => x.EventName == name).FirstOrDefaultAsync();
             if (eventDT == null)
             {
-                eventDT = new EventSites();
-                eventDT.EventName = name;
+                eventDT = new EventSites
+                {
+                    EventName = name
+                };
                 await _context.EventSites.AddAsync(eventDT);
                 await _context.SaveChangesAsync();
             }
@@ -1996,8 +2008,10 @@ namespace Business.Repository
             weightDT = await _context.ProductWeights.Where(x => x.ProductId == weightDT.ProductId).FirstOrDefaultAsync();
             if (weightDT == null)
             {
-                weightDT = new ProductWeight();
-                weightDT.Weight = weightDTO.Weight;
+                weightDT = new ProductWeight
+                {
+                    Weight = weightDTO.Weight
+                };
                 weightDT.ProductId = weightDT.ProductId;
                 weightDT.KaratId = weightDT.KaratId;
                 await _context.ProductWeights.AddAsync(weightDT);
@@ -2013,10 +2027,12 @@ namespace Business.Repository
             priceDT = await _context.ProductPrices.Where(x => x.ProductId == priceDT.ProductId).FirstOrDefaultAsync();
             if (priceDT == null)
             {
-                priceDT = new ProductPrices();
-                priceDT.ProductPrice = price.ProductPrice;
-                priceDT.ProductId = price.ProductId;
-                priceDT.KaratId = price.KaratId;
+                priceDT = new ProductPrices
+                {
+                    ProductPrice = price.ProductPrice,
+                    ProductId = price.ProductId,
+                    KaratId = price.KaratId
+                };
                 await _context.ProductPrices.AddAsync(priceDT);
                 await _context.SaveChangesAsync();
             }
@@ -3355,211 +3371,209 @@ namespace Business.Repository
 
         public async Task<IEnumerable<ProductMasterDTO>> GetProductMasterList(string status)
         {
-            var pendingProducts = await (
-                                        from proMstr in _context.ProductMaster
-                                        join product in _context.Product on proMstr.ProductKey equals product.ProductKey
-                                        where proMstr.ProductStatus == status
-                                        join usr in _context.ApplicationUser on product.UpdatedBy equals usr.Id
-                                        join krt in _context.ProductProperty on product.KaratId equals krt.Id
-                                        join cat in _context.Category on product.CategoryId equals cat.Id
-                                        join color in _context.ProductProperty on product.ColorId equals color.Id
-                                        join shape in _context.ProductProperty on product.CenterShapeId equals shape.Id into shapeGroup
-                                        from shape in shapeGroup.DefaultIfEmpty()
-                                        join clarity in _context.ProductProperty on product.ClarityId equals clarity.Id into clarityGroup
-                                        from clarity in clarityGroup.DefaultIfEmpty()
-                                        join size in _context.ProductProperty on product.CenterCaratId equals size.Id into sizeGroup
-                                        from size in sizeGroup.DefaultIfEmpty()
-                                        join ashape in _context.ProductProperty on product.AccentStoneShapeId equals ashape.Id into ashapeGroup
-                                        from ashape in ashapeGroup.DefaultIfEmpty()
-                                        select new
-                                        {
-                                            proMstr.Id,
-                                            proMstr.ProductKey,
-                                            Product = product,
-                                            User = usr,
-                                            Karat = krt,
-                                            Category = cat,
-                                            Color = color,
-                                            Shape = shape,
-                                            Clarity = clarity,
-                                            CenterCarat = size,
-                                            CenterShape = shape,
-                                            AccentShape = ashape,
-                                            proMstr.GroupId,
-                                            proMstr.IsActive,
-                                            proMstr.ProductStatus,
-                                            proMstr.Sku,
-                                            proMstr.UpdatedBy,
-                                            proMstr.UpdatedDate,
-                                            proMstr.CenterShapeId,
-                                        }).ToListAsync();
+            var data = await (from proMstr in _context.ProductMaster
+                              join cat in _context.Category on proMstr.CategoryId equals cat.Id
+                              join color in _context.ProductProperty on proMstr.ColorId equals color.Id
+                              join shape in _context.ProductProperty on proMstr.CenterShapeId equals shape.Id into shapeGroup
+                              from shape in shapeGroup.DefaultIfEmpty()
+                              where proMstr.ProductStatus == status
+                              select new ProductMasterDTO
+                              {
+                                  Id = proMstr.Id,
+                                  ProductKey = proMstr.ProductKey,
+                                  CategoryId = cat.Id,
+                                  CategoryName = cat.Name,
+                                  ShapeId = shape != null ? shape.Id : 0,
+                                  ShapeName = shape != null ? shape.Name : null,
+                                  ColorId = color.Id,
+                                  ColorName = color.Name,
+                                  GroupId = proMstr.GroupId,
+                                  IsActive = proMstr.IsActive,
+                                  IsSale = proMstr.IsSale,
+                                  Title = proMstr.Title,
+                                  Price = proMstr.Price,
+                                  ProductStatus = proMstr.ProductStatus
+                              }).ToListAsync();
 
+            // Load required shape and metal data
+            var shapeList = await GetShapeList();
+            var colorList = await GetColorList();
 
-            var grouped = pendingProducts
-                .GroupBy(x => new { x.Id, x.Category, x.GroupId, x.CenterShapeId, x.CenterShape, x.ProductKey, x.ProductStatus })
-                .Select(g => new ProductMasterDTO
-                {
-                    Id = g.Key.Id,
-                    CategoryId = g.Key.Category.Id,
-                    CategoryName = g.Key.Category.Name,
-                    GroupId=g.Key.GroupId,
-                    ShapeId=g.Key.CenterShapeId,
-                    ShapeName=g.Key.CenterShape.Name,
-                    ProductKey=g.Key.ProductKey,
-                    ProductStatus=g.Key.ProductStatus,
-                    ProductItems = g.Select(x => new ProductDTO
-                    {
-                        Id = x.Product.Id,
-                        Title = x.Product.Title,
-                        BandWidth = x.Product.BandWidth,
-                        Length = x.Product.Length,
-                        CaratName = x.Product.Carat,
-                        CategoryId = x.Category?.Id,
-                        CategoryName = x.Category?.Name,
-                        ColorId = x.Color?.Id,
-                        ColorName = x.Color?.Name,
-                        ClarityId = x.Clarity?.Id,
-                        ClarityName = x.Clarity?.Name,
-                        ShapeName = x.Shape?.Name,
-                        CenterShapeName = x.Shape?.Name,
-                        UnitPrice = x.Product.UnitPrice,
-                        Price = x.Product.Price,
-                        IsActivated = x.Product.IsActivated,
-                        CaratSizeId = x.Product.CaratSizeId,
-                        Description = x.Product.Description,
-                        Sku = x.Product.Sku,
-                        ProductType = x.Category?.ProductType,
-                        VenderName = x.Product.Vendor,
-                        Grades = x.Product.Grades,
-                        GoldWeight = x.Product.GoldWeight,
-                        IsReadyforShip = x.Product.IsReadyforShip,
-                        VenderStyle = x.Product.VenderStyle,
-                        CenterCaratId = x.CenterCarat?.Id ?? 0,
-                        CenterCaratName = x.CenterCarat?.Name,
-                        CenterShapeId = x.Shape?.Id ?? 0,
-                        Quantity = x.Product.Quantity,
-                        KaratId = x.Karat?.Id ?? 0,
-                        Karat = x.Karat?.Name,
-                        UploadStatus = x.Product.UploadStatus,
-                        ProductDate = x.Product.UpdatedDate,
-                        Diameter = x.Product.Diameter,
-                        CTW = x.Product.CTW,
-                        Certificate = x.Product.Certificate,
-                        WholesaleCost = x.Product.WholesaleCost,
-                        MMSize = x.Product.MMSize,
-                        DiaWT = x.Product.DiaWT,
-                        NoOfStones = x.Product.NoOfStones,
-                        AccentStoneShapeName = x.AccentShape?.Name,
-                        AccentStoneShapeId = x.Product.AccentStoneShapeId,
-                        CreatedBy = x.Product.CreatedBy,
-                        UpdatedBy = x.Product.UpdatedBy,
-                        CreatedDate = x.Product.CreatedDate,
-                        UpdatedDate = x.Product.UpdatedDate,
-                        DisplayDate = x.Product.UpdatedDate?.ToString("dd/MM/yyyy hh:mm tt"),
-                        UpdatedPersonName = x.User.FirstName,
-                        ProductKey = x.Product.ProductKey,
-                        GroupId = x.Product.GroupId
-                    }).ToList()
-                })
-                .OrderByDescending(x => x.ProductItems.First().Sku)
-                .ToList();
+            var shapeDT = (from sp in shapeList
+                           join dt in data on sp.Id equals dt.ShapeId
+                           select new ProductPropertyDTO
+                           {
+                               Id = sp.Id,
+                               Name = sp.Name,
+                               Description = sp.Description,
+                               DispOrder = sp.DisplayOrder,
+                               IconPath = sp.IconPath,
+                               IsActive = sp.IsActive.HasValue ? sp.IsActive.Value : false,
+                               ParentId = sp.ParentId,
+                               SymbolName = sp.SymbolName,
+                               Synonyms = sp.Synonyms
+                           }).ToList();
 
-            // Collect all SKUs and Product IDs to batch query dependent data
-            var allSkus = grouped.SelectMany(g => g.ProductItems.Select(p => p.Sku)).Distinct().ToList();
-            var allProductIds = grouped.Select(g => g.ProductKey).Distinct().ToList();
-            var allColorIds = grouped.Select(g => g.ColorId).Distinct().ToList();
-            var allCenterShapeIds = grouped.Select(g => g.ShapeId).Distinct().ToList();
-            var allGroupIds = grouped.Select(g => g.GroupId).Distinct().ToList();
+            var colorDT = (from sc in colorList
+                           join dt in data on sc.Id equals dt.ColorId
+                           select new ProductPropertyDTO
+                           {
+                               Id = sc.Id,
+                               Name = sc.Name,
+                               Description = sc.Description,
+                               DispOrder = sc.DisplayOrder,
+                               IconPath = sc.IconPath,
+                               IsActive = sc.IsActive.HasValue ? sc.IsActive.Value : false,
+                               ParentId = sc.ParentId,
+                               SymbolName = sc.SymbolName,
+                               Synonyms = sc.Synonyms
+                           }).ToList();
 
-            // Load ProductImages and FileManager data in one go
-            var imageData = await _context.ProductImages
-                .Where(img => allProductIds.Contains(img.ProductId) 
-                                        && allCenterShapeIds.Contains(img.ShapeId.Value)).ToListAsync();
+            // Load images and videos for all relevant product keys and shapeIds
+            var productKeys = data.Select(x => x.ProductKey).Distinct().ToList();
+            var shapeIds = data.Select(x => x.ShapeId).Distinct().ToList();
+            var colorIds = data.Select(x => x.ColorId).Distinct().ToList();
 
-            var allFileIds = imageData.Select(i => i.ImageSmId)
-                .Concat(imageData.Select(i => i.VideoId))
-                .Where(id => id.HasValue)
-                .Select(id => id.Value)
+            var productImages = await _context.ProductImages
+                .Where(x => productKeys.Contains(x.ProductId) &&
+                            shapeIds.Contains(x.ShapeId ?? 0) &&
+                            colorIds.Contains(x.MetalId ?? 0))
+                .ToListAsync();
+
+            var fileIds = productImages
+                .SelectMany(x => new[] { x.ImageSmId, x.VideoId })
+                .Where(x => x.HasValue)
+                .Select(x => x.Value)
                 .Distinct()
                 .ToList();
 
             var fileManagerData = await _context.FileManager
-                .Where(f => allFileIds.Contains(f.Id))
+                .Where(f => fileIds.Contains(f.Id))
                 .ToDictionaryAsync(f => f.Id, f => f.FileUrl);
+            var productProps = await _context.ProductProperty.ToListAsync();
 
-            // Load ProductProperties by type
-            var metalParentId = await _context.ProductProperty
-                .Where(p => p.Name == SD.Metal)
-                .Select(p => p.Id)
-                .FirstOrDefaultAsync();
-
-            var caratSizeParentId = await _context.ProductProperty
-                .Where(p => p.Name == SD.CaratSize)
-                .Select(p => p.Id)
-                .FirstOrDefaultAsync();
-
-            var shapeParentId = await _context.ProductProperty
-                .Where(p => p.Name == SD.Shape)
-                .Select(p => p.Id)
-                .FirstOrDefaultAsync();
-
-            var allProperties = await _context.ProductProperty.ToListAsync();
-
-            var metals = allProperties
-                .Where(p => p.ParentId == metalParentId)
-                .Select(p => new ProductPropertyDTO
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    SymbolName = p.SymbolName,
-                    IsActive = p.IsActive ?? false
-                }).ToList();
-
-            var caratSizes = allProperties
-                .Where(p => p.ParentId == caratSizeParentId)
-                .Select(p => new ProductPropertyDTO
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    IsActive = p.IsActive ?? false
-                }).ToList();
-
-            var shapes = allProperties
-                .Where(p => p.ParentId == shapeParentId)
-                .Select(p => new ProductPropertyDTO
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    IconPath = p.IconPath,
-                    IsActive = p.IsActive ?? false
-                }).ToList();
-
-            // Now map everything back to each item
-            foreach (var master in grouped)
+            // Enrich each item
+            foreach (var pm in data)
             {
-                var prd = master.ProductItems.Where(x => x.ProductKey == master.ProductKey && x.GroupId == master.GroupId).FirstOrDefault();
-                if (prd != null)
-                {
-                   var colorList = metals.Where(m => m.Id == prd.ColorId).ToList();
-                    master.CaratSizes = caratSizes.Where(c => c.Id == prd.CenterCaratId).ToList();
-                    master.Shapes = shapes.Where(s => s.Id == prd.CenterShapeId).ToList();
+                pm.Shapes = shapeDT.Where(x => x.Id == pm.ShapeId).Distinct().ToList();
+                pm.Metals = colorDT.Where(x => x.Id == pm.ColorId).Distinct().ToList();
 
-                    master.ProductImageVideos = imageData
-                        .Where(img => img.ProductId == prd.ProductKey.ToString()
-                                   && img.MetalId == prd.ColorId
-                                   && img.ShapeId == prd.CenterShapeId)
-                        .Select(img => new ProductImageAndVideoDTO
-                        {
-                            ProductId = img.ProductId,
-                            ImageUrl = fileManagerData.ContainsKey(img.ImageSmId ?? 0) ? fileManagerData[img.ImageSmId.Value] : null,
-                            VideoUrl = fileManagerData.ContainsKey(img.VideoId ?? 0) ? fileManagerData[img.VideoId.Value] : null,
-                            IsDefault = img.IsDefault
-                        }).ToList();
-                }
+                pm.ProductItems = await GetProductDataByProductKey(pm.GroupId);
+
+
+                pm.CaratSizes = (from col in productProps
+                                 join prod in pm.ProductItems on col.Id equals prod.CenterCaratId
+                                 join colN in productProps on col.ParentId equals colN.Id into colNGroup
+                                 from colN in colNGroup.DefaultIfEmpty()
+                                 where colN != null && colN.Name == SD.CaratSize
+                                 select new ProductPropertyDTO
+                                 {
+                                     Id = col.Id,
+                                     Name = string.IsNullOrEmpty(col.Name) ? "-" : col.Name,
+                                     SymbolName = string.IsNullOrEmpty(col.SymbolName) ? "-" : col.SymbolName,
+                                     Description = string.IsNullOrEmpty(col.Description) ? "-" : col.Description,
+                                     Synonyms = string.IsNullOrEmpty(col.Synonyms) ? "-" : col.Synonyms,
+                                     IsActive = col.IsActive ?? false,
+                                     DispOrder = col.DisplayOrder,
+                                     IconPath = string.IsNullOrEmpty(col.IconPath) ? "-" : col.IconPath,
+                                     ParentId = col.ParentId ?? 0
+                                 })
+                                 .Distinct()
+                                 .OrderByDescending(x => x.Id)
+                                 .ToList();
+
+                pm.ProductImageVideos = productImages
+                    .Where(x => x.ProductId == pm.ProductKey &&
+                                x.MetalId == pm.ColorId &&
+                                x.ShapeId == pm.ShapeId)
+                    .Select(x => new ProductImageAndVideoDTO
+                    {
+                        ProductId = x.ProductId,
+                        ImageUrl = x.ImageSmId.HasValue && fileManagerData.ContainsKey(x.ImageSmId.Value)
+                            ? fileManagerData[x.ImageSmId.Value]
+                            : null,
+                        VideoUrl = x.VideoId.HasValue && fileManagerData.ContainsKey(x.VideoId.Value)
+                            ? fileManagerData[x.VideoId.Value]
+                            : null,
+                        IsDefault = x.IsDefault
+                    }).ToList();
             }
 
-            return grouped;
+            return data;
         }
 
+        private async Task<List<ProductDTO>> GetProductDataByProductKey(string groupId)
+        {
+            var groupedProducts = await (
+                from product in _context.Product
+                join usr in _context.ApplicationUser on product.UpdatedBy equals usr.Id
+                join krt in _context.ProductProperty on product.KaratId equals krt.Id
+                join cat in _context.Category on product.CategoryId equals cat.Id
+                join color in _context.ProductProperty on product.ColorId equals color.Id
+                join shape in _context.ProductProperty on product.CenterShapeId equals shape.Id into shapeGroup
+                from shape in shapeGroup.DefaultIfEmpty()
+                join clarity in _context.ProductProperty on product.ClarityId equals clarity.Id into clarityGroup
+                from clarity in clarityGroup.DefaultIfEmpty()
+                join size in _context.ProductProperty on product.CenterCaratId equals size.Id into sizeGroup
+                from size in sizeGroup.DefaultIfEmpty()
+                join ashape in _context.ProductProperty on product.AccentStoneShapeId equals ashape.Id into ashapeGroup
+                from ashape in ashapeGroup.DefaultIfEmpty()
+                where product.GroupId == groupId
+                select new ProductDTO
+                {
+                    Id = product.Id,
+                    Title = product.Title,
+                    BandWidth = product.BandWidth,
+                    Length = product.Length,
+                    CaratName = product.Carat,
+                    CategoryId = cat != null ? cat.Id : (int?)null,
+                    CategoryName = cat.Name,
+                    ColorId = color != null ? color.Id : (int?)null,
+                    ColorName = color.Name,
+                    ClarityId = clarity != null ? clarity.Id : (int?)null,
+                    ClarityName = clarity.Name,
+                    ShapeName = shape.Name,
+                    CenterShapeName = shape.Name,
+                    UnitPrice = product.UnitPrice,
+                    Price = product.Price,
+                    IsActivated = product.IsActivated,
+                    CaratSizeId = product.CaratSizeId,
+                    Description = product.Description,
+                    Sku = product.Sku,
+                    ProductType = cat.ProductType,
+                    VenderName = product.Vendor,
+                    Grades = product.Grades,
+                    GoldWeight = product.GoldWeight,
+                    IsReadyforShip = product.IsReadyforShip,
+                    VenderStyle = product.VenderStyle,
+                    CenterCaratId = size.Id,
+                    CenterShapeId = shape != null ? shape.Id : (int?)null,
+                    CenterCaratName = size.Name,
+                    Quantity = product.Quantity,
+                    KaratId = krt != null ? krt.Id : (int?)null,
+                    Karat = krt.Name,
+                    UploadStatus = product.UploadStatus,
+                    ProductDate = product.UpdatedDate,
+                    Diameter = product.Diameter,
+                    CTW = product.CTW,
+                    Certificate = product.Certificate,
+                    WholesaleCost = product.WholesaleCost,
+                    MMSize = product.MMSize,
+                    DiaWT = product.DiaWT,
+                    NoOfStones = product.NoOfStones,
+                    AccentStoneShapeName = ashape.Name,
+                    AccentStoneShapeId = product.AccentStoneShapeId,
+                    CreatedBy = product.CreatedBy,
+                    UpdatedBy = product.UpdatedBy,
+                    CreatedDate = product.CreatedDate,
+                    UpdatedDate = product.UpdatedDate,
+                    DisplayDate = product.UpdatedDate.Value.ToString("dd/MM/yyyy hh:mm tt"),
+                    UpdatedPersonName = usr.FirstName
+                })
+            .OrderByDescending(x => x.Sku)
+            .ToListAsync();
+
+            return groupedProducts;
+        }
     }
 }

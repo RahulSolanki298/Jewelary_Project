@@ -292,14 +292,15 @@ namespace B2C_ECommerce.Services
                                     where prd.IsActive == true && met.Name == SD.Metal
                                     select new ProductPropertyDTO
                                     {
-                                        Id = prd.Id,
-                                        Name = prd.Name,
-                                        Description = prd.Description,
-                                        SymbolName = prd.SymbolName,
-                                        Synonyms = prd.Synonyms,
-                                        IconPath = prd.IconPath,
-                                        ParentId = met.Id,
-                                        ParentProperty = "-"
+                                        Id         =prd.Id,
+                                        Name       =!string.IsNullOrEmpty(prd.Name) ? prd.Name : "-",
+                                        Description=!string.IsNullOrEmpty(prd.Description) ? prd.Description : "-",
+                                        SymbolName =!string.IsNullOrEmpty(prd.SymbolName) ? prd.SymbolName : "-",
+                                        Synonyms   =!string.IsNullOrEmpty(prd.Synonyms) ? prd.Synonyms : "-",
+                                        IconPath   =!string.IsNullOrEmpty(prd.IconPath) ? prd.IconPath :"-",
+                                        ParentId   =!string.IsNullOrEmpty(met.Id.ToString()) ? prd.ParentId : 0,
+                                        DispOrder  =!string.IsNullOrEmpty(prd.DisplayOrder.ToString()) ? prd.DisplayOrder : 0,
+                                        IsActive   =prd.IsActive.HasValue ? prd.IsActive.Value : false,
                                     }).ToListAsync();
 
                 return colors;

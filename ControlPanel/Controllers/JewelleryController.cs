@@ -238,17 +238,18 @@ namespace ControlPanel.Controllers
                 var frame = st.GetFrame(0); // the first frame is usually the origin
                 var line = frame?.GetFileLineNumber();
 
-                await _logEntryRepository.SaveLogEntry(new LogEntry { 
-                    ActionType="ImageUpload",
-                    LogDate=DateTime.Now,
-                    TableName= "Product",
-                    LogLevel="Error",
-                    LogMessage=$"AI transformas has been failed: Exception : {ex.Message},Line Number: {line}, StackTrace={ex.StackTrace} "
+                await _logEntryRepository.SaveLogEntry(new LogEntry
+                {
+                    ActionType = "ImageUpload",
+                    LogDate = DateTime.Now,
+                    TableName = "Product",
+                    LogLevel = "Error",
+                    LogMessage = $"AI transformas has been failed: Exception : {ex.Message},Line Number: {line}, StackTrace={ex.StackTrace} "
                 });
                 return Json($"AI transforms data migration failed Exception: {ex.Message}");
             }
 
-        }   
+        }
 
 
 
@@ -669,17 +670,9 @@ namespace ControlPanel.Controllers
         [HttpGet]
         public async Task<IActionResult> RequestedProductList()
         {
-            try
-            {
-                string status = SD.Pending;
-                var productList = await _productRepository.GetProductMasterList(status);
-            }
-            catch (Exception ex)
-            {
-                
-            }
-
-            return View("~/Views/Jewellery/RequestedNewProductList.cshtml",null);
+            string status = SD.Pending;
+            var productList = await _productRepository.GetProductMasterList(status);
+            return View("~/Views/Jewellery/RequestedNewProductList.cshtml", productList);
         }
 
         //[HttpGet]
@@ -979,7 +972,7 @@ namespace ControlPanel.Controllers
                 string zipPath = string.Empty;
                 string folderPath = string.Empty;
                 var styleName = new FileSplitDTO();
-                var prdDesignDT = new List<Product>();
+                var prdDesignDT = new List<ProductMaster>();
                 string destinationPath = string.Empty;
                 string relativePath = string.Empty;
                 var prdDT = new ProductImages();
@@ -996,7 +989,7 @@ namespace ControlPanel.Controllers
 
                 if (section == null)
                     return Json("No file uploaded.");
-                
+
                 var shape = new ProductProperty();
                 while (section != null)
                 {
@@ -1029,7 +1022,7 @@ namespace ControlPanel.Controllers
                                         styleName = _productRepository.ExtractStyleName(entry.Name);
                                         //if (styleName == null && string.IsNullOrEmpty(styleName.ColorName) && string.IsNullOrEmpty(fileName) && string.IsNullOrEmpty(zipPath))
                                         if (string.IsNullOrEmpty(styleName.ColorName))
-                                            {
+                                        {
                                             styleErr.Add($"Design Name :{entry.Name} is not found.");
                                             continue;
                                         };
@@ -1231,7 +1224,7 @@ namespace ControlPanel.Controllers
                             ProductId = pro.Id.ToString(),
                             MetalId = metalId,
                             Sku = styleName.DesignNo,
-                            ShapeId = pro.ShapeId
+                            ShapeId = pro.CenterShapeId,
                         };
 
                         string baseFolder = Path.Combine(_env.WebRootPath, "UploadedFiles", "Collections", styleName.DesignNo);
