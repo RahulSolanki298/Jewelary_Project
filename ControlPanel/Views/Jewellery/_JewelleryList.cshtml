@@ -157,7 +157,7 @@
 
                         @foreach (var item in Model.Where(x => x.CategoryName == SD.Rings))
                         {
-                            var product = item.ProductItems.Where(x => x.GroupId == item.GroupId).FirstOrDefault();
+                            var product = item.ProductItems.FirstOrDefault();
 
                             if (product == null)
                             {

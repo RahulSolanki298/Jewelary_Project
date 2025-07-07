@@ -37,7 +37,10 @@ namespace ControlPanel.Controllers
         private readonly IProductService _productService;
         private readonly ILogEntryRepository _logEntryRepository;
 
-        public JewelleryController(IProductRepository productRepository, IProductPropertyRepository productProperty, IWebHostEnvironment env, UserManager<ApplicationUser> userManager, IProductService productService)
+        public JewelleryController(IProductRepository productRepository,
+                                    IProductPropertyRepository productProperty,
+                                    IWebHostEnvironment env, UserManager<ApplicationUser> userManager,
+                                    IProductService productService)
         {
             _productRepository = productRepository;
             _productPropertyRepository = productProperty;
@@ -258,15 +261,13 @@ namespace ControlPanel.Controllers
         private List<ProductDTO> ProcessRingData(ExcelWorksheet worksheet)
         {
             var tempProductList = new List<ProductDTO>();
-            var newProductList = new List<ProductDTO>();
             var products = new List<ProductDTO>();
-            var tempProducts = new ProductDTO();
+            ProductDTO tempProducts = null;
             int rowCount = worksheet.Dimension.Rows;
-            ProductDTO product = new ProductDTO();
 
             for (int row = 5; row <= rowCount; row++)
             {
-                product = new ProductDTO
+                var product = new ProductDTO
                 {
                     DisplayDate = worksheet.Cells[row, 1].Text,
                     CategoryName = SD.Rings,
@@ -289,9 +290,7 @@ namespace ControlPanel.Controllers
                     DiaWT = decimal.TryParse(worksheet.Cells[row, 20].Text, out var diaWt) ? diaWt : (decimal?)null,
                     NoOfStones = int.TryParse(worksheet.Cells[row, 21].Text, out var noOfStones) ? noOfStones : 0,
                     Grades = worksheet.Cells[row, 22].Text,
-                    //ProductType = worksheet.Cells[row, 23].Text,
                     Price = ConvertStringToDecimal(worksheet.Cells[row, 23].Text),
-                    //UnitPrice = ConvertStringToDecimal(worksheet.Cells[row, 24].Text),
                     WholesaleCost = decimal.TryParse(worksheet.Cells[row, 26].Text, out var hCost) ? hCost : (decimal?)null,
                     Description = worksheet.Cells[row, 30].Text,
                     Type = worksheet.Name
@@ -302,13 +301,20 @@ namespace ControlPanel.Controllers
                     && !string.IsNullOrWhiteSpace(product.VenderStyle)
                     && !string.IsNullOrWhiteSpace(product.Sku))
                 {
-                    tempProducts = new ProductDTO();
-                    tempProducts = product;
-                    newProductList = CreateRingVariantsFromColor(product);
-                    tempProductList.AddRange(newProductList);
+                    tempProducts = product; // Deep copy for fallback use
+                    var newProductList = CreateRingVariantsFromColor(product);
+
+                    foreach (var variant in newProductList)
+                    {
+                        if (!tempProductList.Any(p => p.Sku == variant.Sku && p.ColorName == variant.ColorName))
+                        {
+                            tempProductList.Add(variant);
+                        }
+                    }
                 }
-                else
+                else if (tempProducts != null)
                 {
+                    // Fill missing fields using tempProducts
                     product.DisplayDate = string.IsNullOrWhiteSpace(product.DisplayDate) ? tempProducts.DisplayDate : product.DisplayDate;
                     product.CategoryName = SD.Rings;
                     product.Title = string.IsNullOrWhiteSpace(product.Title) ? tempProducts.Title : product.Title;
@@ -333,16 +339,23 @@ namespace ControlPanel.Controllers
                     product.Price = product.Price == 0 ? tempProducts.Price : product.Price;
                     product.UnitPrice = product.Price == 0 ? tempProducts.UnitPrice : product.UnitPrice;
                     product.Description = string.IsNullOrWhiteSpace(product.Description) ? tempProducts.Description : product.Description;
-                    product.WholesaleCost = string.IsNullOrWhiteSpace(product.WholesaleCost.ToString()) ? tempProducts.WholesaleCost : product.WholesaleCost;
-                    product.Type = product.Type != null ? tempProducts.Type : product.Type;
-                    products.Add(product);
-                    newProductList = CreateRingVariantsFromColor(product);
-                    tempProductList.AddRange(newProductList);
+                    product.WholesaleCost = product.WholesaleCost == null ? tempProducts.WholesaleCost : product.WholesaleCost;
+                    product.Type = string.IsNullOrWhiteSpace(product.Type) ? tempProducts.Type : product.Type;
+
+                    var newProductList = CreateRingVariantsFromColor(product);
+                    foreach (var variant in newProductList)
+                    {
+                        if (tempProductList.Any(p => p.Sku == variant.Sku && p.CenterShapeName == variant.CenterShapeName))
+                        {
+                            tempProductList.Add(variant);
+                        }
+                    }
                 }
             }
 
             return tempProductList;
         }
+
 
         private List<ProductDTO> ProcessBandsData(ExcelWorksheet worksheet)
         {
@@ -1404,5 +1417,8 @@ namespace ControlPanel.Controllers
 
             return View();
         }
+
+        
+
     }
 }

@@ -260,7 +260,7 @@ namespace DataAccess.Data
             table.Columns.Add("DiaWT", typeof(decimal));
             table.Columns.Add("Certificate", typeof(string));
             table.Columns.Add("IsReadyforShip", typeof(bool));
-            table.Columns.Add("CTW", typeof(decimal));
+            table.Columns.Add("CTW", typeof(string));
             table.Columns.Add("VenderName", typeof(string));
             table.Columns.Add("VenderStyle", typeof(string));
             table.Columns.Add("Diameter", typeof(string));
@@ -276,7 +276,7 @@ namespace DataAccess.Data
                     p.Sku, p.Title, p.ColorName, p.Karat, p.CenterCaratName, p.CenterShapeName, p.AccentStoneShapeName,
                     p.WholesaleCost ?? 0, p.Price ?? 0, p.UnitPrice ?? 0, p.Length, p.BandWidth, p.ProductType,
                     p.GoldWeight, p.Grades, p.MMSize, p.NoOfStones ?? 0, p.DiaWT ?? 0, p.Certificate,
-                    p.IsReadyforShip ?? false, Convert.ToDecimal(p.CTW ?? "0"), p.VenderName, p.VenderStyle, p.Diameter,
+                    p.IsReadyforShip ?? false, p.CTW, p.VenderName, p.VenderStyle, p.Diameter,
                     p.FileHistoryId ?? 0, p.StyleName, p.CollectionName, p.Description, p.Type
                 );
             }
