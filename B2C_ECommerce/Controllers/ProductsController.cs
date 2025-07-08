@@ -24,8 +24,8 @@ namespace B2C_ECommerce.Controllers
             {
                 ViewBag.Title = "Engagement";
                 var styleList = await _productRepository.ProgramStylesList();
-                ViewBag.StyleName= styleList.FirstOrDefault(x=>x.Id== Convert.ToInt32(styleId)).StyleName;
-                productStyleColl.StyleList = styleList.Where(x=>x.IsActivated==true).ToList();
+                ViewBag.StyleName = styleList.FirstOrDefault(x => x.Id == Convert.ToInt32(styleId)).StyleName;
+                productStyleColl.StyleList = styleList.Where(x => x.IsActivated == true).ToList();
                 productStyleColl.IsStyle = true;
                 return View(productStyleColl);
             }
@@ -52,14 +52,14 @@ namespace B2C_ECommerce.Controllers
             }
             else
             {
-                var styleList = await _productRepository.ProgramStylesList();
+                var styleList = await _productRepository.GetCategoriesList();
                 if (styleId != null)
                 {
-                    productStyleColl.StyleList = styleList.Where(x => x.Id == Convert.ToInt32(styleId)).ToList();
+                    productStyleColl.CategoryList = styleList.Where(x => x.Id == Convert.ToInt32(styleId) && x.IsActivated == true).ToList();
                 }
                 else
                 {
-                    productStyleColl.StyleList = styleList;
+                    productStyleColl.CategoryList = styleList;
                 }
                 return View(productStyleColl);
             }

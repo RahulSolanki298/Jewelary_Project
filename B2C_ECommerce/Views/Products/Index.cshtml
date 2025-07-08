@@ -235,7 +235,6 @@
                                 </div>
                             </div>
                         }
-
                         else if (Model.IsCollection)
                         {
                             <div class="row">
@@ -274,7 +273,10 @@
                                                     <div class="product-item">
                                                         <figure class="product-thumb media-container mb-2">
                                                             <div class="img-with-bg position-relative">
-                                                                <img src="@SD.ImgUrl/@item.CategoryImage" alt="@item.Name" class="img-fluid">
+                                                                @if (item.CategoryImage != null && item.CategoryImage.Length > 0)
+                                                                {
+                                                                    <img src="@SD.ImgUrl/@item.CategoryImage" alt="@item.Name" class="img-fluid">
+                                                                }
                                                             </div>
                                                         </figure>
                                                         <div class="product-details-des text-center">

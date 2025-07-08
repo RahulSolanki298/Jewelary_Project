@@ -3,12 +3,11 @@ using ControlPanel.Services.IServices;
 using DataAccess.Data;
 using DataAccess.Entities;
 using Microsoft.AspNetCore.Identity;
-using System.Collections.Generic;
-using System;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
+using System.Threading.Tasks;
 
 namespace ControlPanel.Services
 {
@@ -157,9 +156,9 @@ namespace ControlPanel.Services
                     var metal = await _db.ProductProperty.Where(x => x.Name == SD.Metal).FirstOrDefaultAsync();
                     var metalDTs = new List<ProductProperty>
                     {
-                        new ProductProperty{ Name="White",ParentId=metal.Id,SymbolName="white",DisplayOrder=1,IsActive=true,Synonyms="W,white,WG,White"},
-                        new ProductProperty{ Name="Yellow",ParentId=metal.Id,SymbolName="yellow",DisplayOrder=2,IsActive=true,Synonyms="Y,Yellow,yellow,YG"},
-                        new ProductProperty{ Name="Rose",ParentId=metal.Id,SymbolName="rose",DisplayOrder=3,IsActive=true,Synonyms="rose,RG,Rose"},
+                        new ProductProperty{ Name="White",ParentId=metal.Id,SymbolName="W",DisplayOrder=1,IsActive=true,Synonyms="W,white,WG,White"},
+                        new ProductProperty{ Name="Yellow",ParentId=metal.Id,SymbolName="Y",DisplayOrder=2,IsActive=true,Synonyms="Y,Yellow,yellow,YG"},
+                        new ProductProperty{ Name="Rose",ParentId=metal.Id,SymbolName="R",DisplayOrder=3,IsActive=true,Synonyms="R,rose,RG,Rose"},
                         new ProductProperty{ Name="E-F",ParentId=metal.Id,SymbolName="E-F",DisplayOrder=4,IsActive=true,Synonyms="E-F"},
                     };
                     await _db.ProductProperty.AddRangeAsync(metalDTs);
@@ -170,16 +169,16 @@ namespace ControlPanel.Services
                     var shape = await _db.ProductProperty.Where(x => x.Name == SD.Shape).FirstOrDefaultAsync();
                     var shapeDTs = new List<ProductProperty>
                     {
-                        new ProductProperty{ Name="ROUND",ParentId=shape.Id,SymbolName="round",DisplayOrder=1,IsActive=true,Synonyms="round",IconPath="/assets/img/diamond-svg/ROUND.svg"},
-                        new ProductProperty{ Name="PRINCESS",ParentId=shape.Id,SymbolName="princess",DisplayOrder=2,IsActive=true,Synonyms="princess",IconPath="/assets/img/diamond-svg/PRINCESS.svg"},
-                        new ProductProperty{ Name="MARQUISE",ParentId=shape.Id,SymbolName="marquise",DisplayOrder=3,IsActive=true,Synonyms="marquise",IconPath="/assets/img/diamond-svg/MARQUISE.svg"},
-                        new ProductProperty{ Name="PEAR",ParentId=shape.Id,SymbolName="pear",DisplayOrder=4,IsActive=true,Synonyms="pear",IconPath="/assets/img/diamond-svg/PEAR.svg"},
-                        new ProductProperty{ Name="HEART",ParentId=shape.Id,SymbolName="heart",DisplayOrder=5,IsActive=true,Synonyms="heart",IconPath="/assets/img/diamond-svg/HEART.svg"},
-                        new ProductProperty{ Name="OVAL",ParentId=shape.Id,SymbolName="oval",DisplayOrder=6,IsActive=true,Synonyms="oval",IconPath="/assets/img/diamond-svg/OVAL.svg"},
-                        new ProductProperty{ Name="CUSHION",ParentId=shape.Id,SymbolName="cushion",DisplayOrder=7,IsActive=true,Synonyms="cushion",IconPath="/assets/img/diamond-svg/CUSHION.svg"},
-                        new ProductProperty{ Name="EMERALD",ParentId=shape.Id,SymbolName="emerald",DisplayOrder=8,IsActive=true,Synonyms="emerald",IconPath="/assets/img/diamond-svg/Emerald.svg"},
-                        new ProductProperty{ Name="RADIANT",ParentId=shape.Id,SymbolName="radiant",DisplayOrder=9,IsActive=true,Synonyms="radiant",IconPath="/assets/img/diamond-svg/RADIANT.svg"},
-                        new ProductProperty{ Name="SQ EMERALD",ParentId=shape.Id,SymbolName="sq emerald",DisplayOrder=10,IsActive=true,Synonyms="sq emerald"},
+                        new ProductProperty{ Name="ROUND",ParentId=shape.Id,SymbolName="RND",DisplayOrder=1,IsActive=true,Synonyms="round",IconPath="/assets/img/diamond-svg/ROUND.svg"},
+                        new ProductProperty{ Name="PRINCESS",ParentId=shape.Id,SymbolName="PR",DisplayOrder=2,IsActive=true,Synonyms="princess",IconPath="/assets/img/diamond-svg/PRINCESS.svg"},
+                        new ProductProperty{ Name="MARQUISE",ParentId=shape.Id,SymbolName="MQ",DisplayOrder=3,IsActive=true,Synonyms="marquise",IconPath="/assets/img/diamond-svg/MARQUISE.svg"},
+                        new ProductProperty{ Name="PEAR",ParentId=shape.Id,SymbolName="PEAR",DisplayOrder=4,IsActive=true,Synonyms="pear",IconPath="/assets/img/diamond-svg/PEAR.svg"},
+                        new ProductProperty{ Name="HEART",ParentId=shape.Id,SymbolName="HRT",DisplayOrder=5,IsActive=true,Synonyms="heart",IconPath="/assets/img/diamond-svg/HEART.svg"},
+                        new ProductProperty{ Name="OVAL",ParentId=shape.Id,SymbolName="OV",DisplayOrder=6,IsActive=true,Synonyms="oval",IconPath="/assets/img/diamond-svg/OVAL.svg"},
+                        new ProductProperty{ Name="CUSHION",ParentId=shape.Id,SymbolName="CU",DisplayOrder=7,IsActive=true,Synonyms="cushion",IconPath="/assets/img/diamond-svg/CUSHION.svg"},
+                        new ProductProperty{ Name="EMERALD",ParentId=shape.Id,SymbolName="EM",DisplayOrder=8,IsActive=true,Synonyms="emerald",IconPath="/assets/img/diamond-svg/Emerald.svg"},
+                        new ProductProperty{ Name="RADIANT",ParentId=shape.Id,SymbolName="RAD",DisplayOrder=9,IsActive=true,Synonyms="radiant",IconPath="/assets/img/diamond-svg/RADIANT.svg"},
+                        new ProductProperty{ Name="SQUARE EMERALD",ParentId=shape.Id,SymbolName="ASH",DisplayOrder=10,IsActive=true,Synonyms="sq emerald"},
                     };
                     await _db.ProductProperty.AddRangeAsync(shapeDTs);
                     await _db.SaveChangesAsync();
