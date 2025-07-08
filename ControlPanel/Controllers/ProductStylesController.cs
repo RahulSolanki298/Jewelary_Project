@@ -9,6 +9,7 @@ using System;
 using System.Threading.Tasks;
 using System.IO;
 using System.Collections.Generic;
+using Common;
 
 namespace ControlPanel.Controllers
 {
@@ -36,7 +37,7 @@ namespace ControlPanel.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProductStyleItems()
         {
-            var result = await _productStyles.GetProductStyleItemsList();
+            var result = await _productStyles.GetProductStyleItemsList(SD.Active);
             return PartialView("_ProductStyleItemList", result);
         }
 
