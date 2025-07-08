@@ -53,9 +53,9 @@ namespace B2C_ECommerce.Controllers
             else
             {
                 var styleList = await _productRepository.GetCategoriesList();
-                if (styleId != null)
+                if (styleList != null)
                 {
-                    productStyleColl.CategoryList = styleList.Where(x => x.Id == Convert.ToInt32(styleId) && x.IsActivated == true).ToList();
+                    productStyleColl.CategoryList = styleList.Where(x => x.IsActivated == true).ToList();
                 }
                 else
                 {
@@ -99,8 +99,9 @@ namespace B2C_ECommerce.Controllers
         [HttpGet]
         public async Task<IActionResult> ProductDetails(string productKey)
         {
-            var result = await _productRepository.GetProductByProductId(productKey);
-            return View(result);
+            var result = await _productRepository.GetProductStyleDTList();
+            var dtResult = result.Where(x => x.ProductKey == productKey).FirstOrDefault();
+            return View(dtResult);
         }
 
         [HttpGet]

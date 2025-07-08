@@ -37,7 +37,7 @@ namespace ControlPanel.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProductStyleItems()
         {
-            var result = await _productStyles.GetProductStyleItemsList(SD.Active);
+            var result = await _productStyles.GetProductStyleItemsList(SD.Activated);
             return PartialView("_ProductStyleItemList", result);
         }
 

@@ -43,12 +43,16 @@ namespace Business.Repository.IRepository
         Task<bool>  SaveEarringsList(List<ProductDTO> products, string categoryName, string userId, int fileHistoryId);
         Task<List<ProductMaster>> GetJewelleryDTByDesignNo(string designNo, int metalId, int shapeId);
         Task<ProductProperty> GetProductShapeId(string ShapeCode, int shapeId);
-        Task<List<ProductImageAndVideoDTO>> GetProductImagesVideos(string productKey);
 
         Task<IEnumerable<ProductMasterDTO>> GetProductDeActivatedList();
 
         Task<IEnumerable<ProductMasterDTO>> GetProductPendingList(string status);
         Task<IEnumerable<ProductMasterDTO>> GetProductMasterList(string status);
         Task<ProductMstResponse> SaveNewProductListToDbAsync(List<ProductDTO> products, string categoryName, string userId, int fileHistoryId);
+
+        Task<List<ProductImages>> GetProductImages(string productId, int metalId, int shapeId, int index);
+        Task<List<string>> GetImagePathsByIds(int?[] ids);
+        Task DeleteImageRecords(ProductImages record);
+        Task<List<ProductImageAndVideoDTO>> GetProductImagesVideos(string productKey, int shapeId, int colorId);
     }
 }

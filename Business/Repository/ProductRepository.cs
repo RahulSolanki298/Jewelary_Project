@@ -2585,11 +2585,11 @@ namespace Business.Repository
         }
 
 
-        public async Task<List<ProductImageAndVideoDTO>> GetProductImagesVideos(string productKey)
+        public async Task<List<ProductImageAndVideoDTO>> GetProductImagesVideos(string productKey, int shapeId, int colorId)
         {
             var proImgVideos = new List<ProductImageAndVideoDTO>();
             var proImgVideo = new ProductImageAndVideoDTO();
-            var productImg = await _context.ProductImages.Where(x => x.ProductId == productKey).ToListAsync();
+            var productImg = await _context.ProductImages.Where(x => x.ProductId == productKey && x.MetalId == colorId && x.ShapeId == shapeId).ToListAsync();
 
             if (productImg.Count > 0)
             {
@@ -3371,75 +3371,31 @@ namespace Business.Repository
 
         public async Task<IEnumerable<ProductMasterDTO>> GetProductMasterList(string status)
         {
-            var data = await (from proMstr in _context.ProductMaster
-                              join cat in _context.Category on proMstr.CategoryId equals cat.Id
-                              join color in _context.ProductProperty on proMstr.ColorId equals color.Id
-                              join shape in _context.ProductProperty on proMstr.CenterShapeId equals shape.Id into shapeGroup
-                              from shape in shapeGroup.DefaultIfEmpty()
-                              where proMstr.ProductStatus == status
-                              select new ProductMasterDTO
-                              {
-                                  Id = proMstr.Id,
-                                  ProductKey = proMstr.ProductKey,
-                                  CategoryId = cat.Id,
-                                  CategoryName = cat.Name,
-                                  ShapeId = shape != null ? shape.Id : 0,
-                                  ShapeName = shape != null ? shape.Name : null,
-                                  ColorId = color.Id,
-                                  ColorName = color.Name,
-                                  GroupId = proMstr.GroupId,
-                                  IsActive = proMstr.IsActive,
-                                  IsSale = proMstr.IsSale,
-                                  Title = proMstr.Title,
-                                  Price = proMstr.Price,
-                                  ProductStatus = proMstr.ProductStatus
-                              }).ToListAsync();
+            // Step 1: Fetch initial product master records
+            var data = await GetProductMasterDTOs(status);
 
-            // Load required shape and metal data
+            // Step 2: Fetch shape and color lists
             var shapeList = await GetShapeList();
             var colorList = await GetColorList();
+            var productProps = await _context.ProductProperty.ToListAsync();
 
-            var shapeDT = (from sp in shapeList
-                           join dt in data on sp.Id equals dt.ShapeId
-                           select new ProductPropertyDTO
-                           {
-                               Id = sp.Id,
-                               Name = sp.Name,
-                               Description = sp.Description,
-                               DispOrder = sp.DisplayOrder,
-                               IconPath = sp.IconPath,
-                               IsActive = sp.IsActive.HasValue ? sp.IsActive.Value : false,
-                               ParentId = sp.ParentId,
-                               SymbolName = sp.SymbolName,
-                               Synonyms = sp.Synonyms
-                           }).ToList();
+            // Step 3: Enrich shapes and colors for each product
+            var shapeDT = shapeList.Select(sp => ConvertToDTO(sp)).ToList();
+            var colorDT = colorList.Select(sc => ConvertToDTO(sc)).ToList();
 
-            var colorDT = (from sc in colorList
-                           join dt in data on sc.Id equals dt.ColorId
-                           select new ProductPropertyDTO
-                           {
-                               Id = sc.Id,
-                               Name = sc.Name,
-                               Description = sc.Description,
-                               DispOrder = sc.DisplayOrder,
-                               IconPath = sc.IconPath,
-                               IsActive = sc.IsActive.HasValue ? sc.IsActive.Value : false,
-                               ParentId = sc.ParentId,
-                               SymbolName = sc.SymbolName,
-                               Synonyms = sc.Synonyms
-                           }).ToList();
-
-            // Load images and videos for all relevant product keys and shapeIds
+            // Step 4: Get all product keys, shapeIds, colorIds
             var productKeys = data.Select(x => x.ProductKey).Distinct().ToList();
             var shapeIds = data.Select(x => x.ShapeId).Distinct().ToList();
             var colorIds = data.Select(x => x.ColorId).Distinct().ToList();
 
+            // Step 5: Fetch all relevant images
             var productImages = await _context.ProductImages
-                .Where(x => productKeys.Contains(x.ProductId) &&
-                            shapeIds.Contains(x.ShapeId ?? 0) &&
-                            colorIds.Contains(x.MetalId ?? 0))
+                .Where(x => productKeys.Contains(x.ProductId)
+                         && shapeIds.Contains(x.ShapeId ?? 0)
+                         && colorIds.Contains(x.MetalId ?? 0))
                 .ToListAsync();
 
+            // Step 6: Get FileManager mapping (Image & Video URLs)
             var fileIds = productImages
                 .SelectMany(x => new[] { x.ImageSmId, x.VideoId })
                 .Where(x => x.HasValue)
@@ -3450,57 +3406,21 @@ namespace Business.Repository
             var fileManagerData = await _context.FileManager
                 .Where(f => fileIds.Contains(f.Id))
                 .ToDictionaryAsync(f => f.Id, f => f.FileUrl);
-            var productProps = await _context.ProductProperty.ToListAsync();
 
-            // Enrich each item
+            // Step 7: Final loop to enrich each product
             foreach (var pm in data)
             {
                 pm.Shapes = shapeDT.Where(x => x.Id == pm.ShapeId).Distinct().ToList();
                 pm.Metals = colorDT.Where(x => x.Id == pm.ColorId).Distinct().ToList();
-
                 pm.ProductItems = await GetProductDataByProductKey(pm.GroupId);
 
-
-                pm.CaratSizes = (from col in productProps
-                                 join prod in pm.ProductItems on col.Id equals prod.CenterCaratId
-                                 join colN in productProps on col.ParentId equals colN.Id into colNGroup
-                                 from colN in colNGroup.DefaultIfEmpty()
-                                 where colN != null && colN.Name == SD.CaratSize
-                                 select new ProductPropertyDTO
-                                 {
-                                     Id = col.Id,
-                                     Name = string.IsNullOrEmpty(col.Name) ? "-" : col.Name,
-                                     SymbolName = string.IsNullOrEmpty(col.SymbolName) ? "-" : col.SymbolName,
-                                     Description = string.IsNullOrEmpty(col.Description) ? "-" : col.Description,
-                                     Synonyms = string.IsNullOrEmpty(col.Synonyms) ? "-" : col.Synonyms,
-                                     IsActive = col.IsActive ?? false,
-                                     DispOrder = col.DisplayOrder,
-                                     IconPath = string.IsNullOrEmpty(col.IconPath) ? "-" : col.IconPath,
-                                     ParentId = col.ParentId ?? 0
-                                 })
-                                 .Distinct()
-                                 .OrderByDescending(x => x.Id)
-                                 .ToList();
-
-                pm.ProductImageVideos = productImages
-                    .Where(x => x.ProductId == pm.ProductKey &&
-                                x.MetalId == pm.ColorId &&
-                                x.ShapeId == pm.ShapeId)
-                    .Select(x => new ProductImageAndVideoDTO
-                    {
-                        ProductId = x.ProductId,
-                        ImageUrl = x.ImageSmId.HasValue && fileManagerData.ContainsKey(x.ImageSmId.Value)
-                            ? fileManagerData[x.ImageSmId.Value]
-                            : null,
-                        VideoUrl = x.VideoId.HasValue && fileManagerData.ContainsKey(x.VideoId.Value)
-                            ? fileManagerData[x.VideoId.Value]
-                            : null,
-                        IsDefault = x.IsDefault
-                    }).ToList();
+                pm.CaratSizes = GetCaratSizes(pm.ProductItems, productProps);
+                pm.ProductImageVideos = GetProductImageVideos(pm, productImages, fileManagerData);
             }
 
             return data;
         }
+
 
         private async Task<List<ProductDTO>> GetProductDataByProductKey(string groupId)
         {
@@ -3575,5 +3495,115 @@ namespace Business.Repository
 
             return groupedProducts;
         }
+
+        public async Task<List<ProductImages>> GetProductImages(string productId, int metalId, int shapeId, int index)
+        {
+            return await _context.ProductImages
+                .Where(x => x.ProductId == productId && x.MetalId == metalId && x.ShapeId == shapeId && x.ImageIndexNumber == index)
+                .ToListAsync();
+        }
+        public async Task<List<string>> GetImagePathsByIds(int?[] ids)
+        {
+            return await _context.FileManager
+                .Where(p => ids.Contains(p.Id))
+                .Select(p => p.FileUrl)
+                .ToListAsync();
+        }
+
+        public async Task DeleteImageRecords(ProductImages record)
+        {
+            _context.ProductImages.Remove(record);
+
+            var idsToRemove = new[] { record.ImageLgId, record.ImageMdId, record.ImageSmId, record.VideoId }
+                .Where(id => id.HasValue)
+                .Select(id => id.Value);
+
+            var paths = await _context.FileManager.Where(p => idsToRemove.Contains(p.Id)).ToListAsync();
+            _context.FileManager.RemoveRange(paths);
+
+            await _context.SaveChangesAsync();
+        }
+
+        private async Task<List<ProductMasterDTO>> GetProductMasterDTOs(string status)
+        {
+            return await (from proMstr in _context.ProductMaster
+                          join cat in _context.Category on proMstr.CategoryId equals cat.Id
+                          join color in _context.ProductProperty on proMstr.ColorId equals color.Id
+                          join shape in _context.ProductProperty on proMstr.CenterShapeId equals shape.Id into shapeGroup
+                          from shape in shapeGroup.DefaultIfEmpty()
+                          where proMstr.ProductStatus == status
+                          select new ProductMasterDTO
+                          {
+                              Id = proMstr.Id,
+                              ProductKey = proMstr.ProductKey,
+                              CategoryId = cat.Id,
+                              CategoryName = cat.Name,
+                              ShapeId = shape != null ? shape.Id : 0,
+                              ShapeName = shape != null ? shape.Name : null,
+                              ColorId = color.Id,
+                              ColorName = color.Name,
+                              GroupId = proMstr.GroupId,
+                              IsActive = proMstr.IsActive,
+                              IsSale = proMstr.IsSale,
+                              Title = proMstr.Title,
+                              Price = proMstr.Price,
+                              ProductStatus = proMstr.ProductStatus
+                          }).ToListAsync();
+        }
+
+        private ProductPropertyDTO ConvertToDTO(ProductProperty prop)
+        {
+            return new ProductPropertyDTO
+            {
+                Id = prop.Id,
+                Name = prop.Name,
+                Description = prop.Description,
+                DispOrder = prop.DisplayOrder,
+                IconPath = prop.IconPath,
+                IsActive = prop.IsActive ?? false,
+                ParentId = prop.ParentId,
+                SymbolName = prop.SymbolName,
+                Synonyms = prop.Synonyms
+            };
+        }
+
+        private List<ProductPropertyDTO> GetCaratSizes(List<ProductDTO> items, List<ProductProperty> props)
+        {
+            return (from col in props
+                    join prod in items on col.Id equals prod.CenterCaratId
+                    join colN in props on col.ParentId equals colN.Id into colNGroup
+                    from colN in colNGroup.DefaultIfEmpty()
+                    where colN != null && colN.Name == SD.CaratSize
+                    select ConvertToDTO(col))
+                   .Distinct()
+                   .OrderByDescending(x => x.Id)
+                   .ToList();
+        }
+
+        private List<ProductImageAndVideoDTO> GetProductImageVideos(
+    ProductMasterDTO pm,
+    List<ProductImages> productImages,
+    Dictionary<int, string> fileManagerData)
+        {
+            return (from img in productImages
+                    join pro in _context.ProductMaster on img.ProductId equals pro.ProductKey
+                    where img.ProductId == pm.ProductKey &&
+                          (img.ShapeId ?? 0) == pm.ShapeId &&
+                          (img.MetalId ?? 0) == pm.ColorId &&
+                          pro.GroupId == pm.GroupId
+                    select new ProductImageAndVideoDTO
+                    {
+                        ProductId = img.ProductId,
+                        ImageUrl = img.ImageSmId.HasValue && fileManagerData.ContainsKey(img.ImageSmId.Value)
+                            ? fileManagerData[img.ImageSmId.Value]
+                            : null,
+                        VideoUrl = img.VideoId.HasValue && fileManagerData.ContainsKey(img.VideoId.Value)
+                            ? fileManagerData[img.VideoId.Value]
+                            : null,
+                        IsDefault = img.IsDefault
+                    }).ToList();
+        }
+
+
     }
 }

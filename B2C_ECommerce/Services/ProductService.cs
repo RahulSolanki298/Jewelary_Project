@@ -26,9 +26,9 @@ namespace B2C_ECommerce.Services
             _productPropertyRepository = productPropertyRepository;
         }
 
-        public async Task<List<ProductMasterDTO>> GetProductListByFilter(ProductFilters filters, int pageNumber = 1, int pageSize = 10)
+        public async Task<IEnumerable<ProductMasterDTO>> GetProductListByFilter(ProductFilters filters, int pageNumber = 1, int pageSize = 10)
         {
-            var products = await GetProductStyleDTList();
+            var products = await GetProductStyleDTList(); // this loads full list into memory
 
             var query = products.AsQueryable();
 
@@ -47,20 +47,18 @@ namespace B2C_ECommerce.Services
 
             if (filters.FromPrice.HasValue && filters.ToPrice.HasValue)
             {
-                query = query.Where(p => p.Price != null &&
-                                         p.Price.HasValue &&
+                query = query.Where(p => p.Price.HasValue &&
                                          p.Price.Value >= filters.FromPrice.Value &&
                                          p.Price.Value <= filters.ToPrice.Value);
             }
             else if (filters.FromPrice.HasValue)
             {
-                query = query.Where(p => p.Price != null && p.Price.HasValue != true && p.Price.Value >= filters.FromPrice);
+                query = query.Where(p => p.Price.HasValue && p.Price.Value >= filters.FromPrice);
             }
             else if (filters.ToPrice.HasValue)
             {
-                query = query.Where(p => p.Price != null && p.Price.HasValue != true && p.Price.Value <= filters.ToPrice);
+                query = query.Where(p => p.Price.HasValue && p.Price.Value <= filters.ToPrice);
             }
-
 
             if (filters.FromCarat.HasValue)
             {
@@ -82,7 +80,7 @@ namespace B2C_ECommerce.Services
                 switch (filters.OrderBy.ToLower())
                 {
                     case "asc":
-                        query = query.OrderBy(p => p.Title); // assuming product has a Name property
+                        query = query.OrderBy(p => p.Title);
                         break;
                     case "desc":
                         query = query.OrderByDescending(p => p.Title);
@@ -90,20 +88,27 @@ namespace B2C_ECommerce.Services
                     case "price":
                         query = query.OrderBy(p => p.Price);
                         break;
-                    case "priceMax":
+                    case "pricemax":
                         query = query.OrderByDescending(p => p.Price);
                         break;
                 }
             }
 
-            // Pagination
-            var pagedResult = await query
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            return products.ToList();
+            try
+            {
+                var pagedResult = query
+                   .Skip((pageNumber - 1) * pageSize)
+                   .Take(pageSize)
+                   .ToList(); // 🔁 use sync because it's in-memory
+                return pagedResult;
+            }
+            catch (Exception ex)
+            {
+                string ext = ex.Message;
+                throw;
+            }
         }
+
 
         public async Task<ProductDTO> GetProductByProductId(string productId)
         {
@@ -320,8 +325,14 @@ namespace B2C_ECommerce.Services
                                     {
                                         Id = prd.Id,
                                         Name = prd.Name,
+                                        CategoryImage=prd.CategoryImage,
+                                        IsActivated=prd.IsActivated,
+                                        Title=prd.Title,
+                                        DisplayOrder=prd.DisplayOrder,
+                                        Prefix=prd.Prefix,
+                                        SEO_Title=prd.SEO_Title,
+                                        SEO_Url=prd.SEO_Url
                                     }).ToListAsync();
-
             return categories;
         }
 
@@ -1289,7 +1300,7 @@ namespace B2C_ECommerce.Services
                     master.Shapes = shapes;
 
                     master.ProductItems = allProducts
-                        .Where(p => p.ProductKey == master.ProductKey && p.ShapeId==master.ShapeId)
+                        .Where(p => p.ProductKey == master.ProductKey && p.CenterShapeId==master.ShapeId)
                         .ToList();
 
                     var productImages = allProductImages

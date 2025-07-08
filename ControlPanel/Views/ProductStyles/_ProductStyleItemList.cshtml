@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Models.ProductDTO>
+﻿@model IEnumerable<Models.ProductMasterDTO>
 @using Common
 
 <style>
@@ -102,11 +102,11 @@
 
             <div class="product-card">
                 <div class="product-image">
-                    <img src="@($"{SD.ImgUrl}/{imageUrl}")" alt="@item.VenderStyle" />
+                    <img src="@($"{SD.ImgUrl}/{imageUrl}")" alt="@item.Title" />
                 </div>
                 <div class="product-details">
-                    <h2 class="product-title">@(!string.IsNullOrEmpty(item.Title) ? item.Title : item.EventName)</h2>
-                    <p class="product-description">@item.Description</p>
+                    <h2 class="product-title">@item.Title</h2>
+                    @*<p class="product-description">@item.Description</p>*@
                     <div class="product-price" style="color:#151542;">@item.Price</div>
                     <button class="btn btn-lg btn-theme">Show More Details</button>
                 </div>

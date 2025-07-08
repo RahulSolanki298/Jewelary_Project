@@ -1,15 +1,78 @@
-﻿
-
-<div class="mb-3" id="divZipDT" >
+﻿<div class="container my-5" id="divZipDT">
     <form id="uploadForm" asp-controller="Jewellery" asp-action="UploadProductCollectionImages" method="post" enctype="multipart/form-data">
-        <div class="mb-4">
-            <label for="excelFile" class="form-label fw-bold">Select Zip File</label>
-            <input type="file" class="form-control form-control-lg" id="zipFile" name="zipFile" accept=".zip" required>
-            <small id="fileError" style="color: red; display: none;">File size must not exceed 4 GB.</small>
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h4 class="mb-4 text-center">
+                    Upload Product Collection (ZIP)
+                </h4>
+
+                <div class="mb-3">
+                    <label for="zipFile" class="form-label fw-semibold">Choose a ZIP File</label>
+                    <input type="file" class="form-control" id="zipFile" name="zipFile" accept=".zip" required>
+                    <div id="fileError" class="form-text text-danger d-none">⚠️ File size must not exceed 4 GB.</div>
+                    <div class="form-text text-muted">Only ZIP files are allowed. Max size: 4 GB.</div>
+                </div>
+
+                <div id="loader" class="text-center my-3 d-none">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2 mb-0 text-primary">Uploading, please wait...</p>
+                </div>
+
+                <button id="uploadBtn" type="submit" class="btn btn-theme w-100">Start AIMigrate Tools</button>
+            </div>
         </div>
-        <div id="loader" style="display:none;">
-            <span class="spinner-border text-primary" role="status"></span> AIMigrate Uploading...
-        </div>
-        <button id="uploadBtn" type="submit" class="btn btn-theme w-100"> Start AIMigrate Tools</button>
     </form>
 </div>
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('#uploadForm').on('submit', function (e) {
+                e.preventDefault(); // Prevent default form submission
+
+                var form = $('#uploadForm')[0];
+                var formData = new FormData(form);
+                var fileInput = $('#zipFile')[0];
+                var file = fileInput.files[0];
+
+                // Clear previous error
+                $('#fileError').addClass('d-none');
+
+                // File size validation (max 4 GB)
+                if (file && file.size > 4 * 1024 * 1024 * 1024) {
+                    $('#fileError').removeClass('d-none');
+                    return;
+                }
+
+                // Show loader and disable button
+                $('#loader').removeClass('d-none');
+                $('#uploadBtn').prop('disabled', true);
+
+                $.ajax({
+                    url: '@Url.Action("UploadProductCollectionImages", "Jewellery")',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        // Hide loader and enable button
+                        $('#loader').addClass('d-none');
+                        $('#uploadBtn').prop('disabled', false);
+
+                        // Handle response (e.g., show success message or redirect)
+                        alert('Upload successful!');
+                        console.log(response);
+                    },
+                    error: function (xhr, status, error) {
+                        $('#loader').addClass('d-none');
+                        $('#uploadBtn').prop('disabled', false);
+
+                        alert('Upload failed. Please try again.');
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+}

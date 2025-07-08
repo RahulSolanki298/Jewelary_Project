@@ -10,7 +10,9 @@ namespace B2C_ECommerce.IServices
         //Task<IEnumerable<ProductMasterDTO>> GetProductListByFilter(ProductFilters filters, int pageNumber = 1, int pageSize = 10);
         //Task<List<ProductDTO>> GetProductListByFilter(ProductFilters productFilters, int pageNumber = 1, int pageSize = 10);
         //Task<List<ProductDTO>> GetProductListByFilter(ProductFilters filters, int pageNumber = 1, int pageSize = 10);
-        Task<List<ProductMasterDTO>> GetProductListByFilter(ProductFilters filters, int pageNumber = 1, int pageSize = 10);
+        //Task<List<ProductMasterDTO>> GetProductListByFilter(ProductFilters filters, int pageNumber = 1, int pageSize = 10);
+
+        Task<IEnumerable<ProductMasterDTO>> GetProductListByFilter(ProductFilters filters, int pageNumber = 1, int pageSize = 10);
         Task<List<SubCategoryDTO>> GetSubcategoryList();
         Task<List<CategoryDTO>> GetCategoriesList();
         Task<ProductDTO> GetProductByProductId(string productId);

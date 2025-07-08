@@ -1,4 +1,4 @@
-﻿@model Models.ProductDTO
+﻿@model Models.ProductMasterDTO
 @using Common
 @{
     ViewData["Title"] = "Product Details";
@@ -42,6 +42,8 @@
             display: block;
         }
     </style>
+
+    var productDT = Model.ProductItems.Where(x => x.CenterShapeId == Model.ShapeId && x.ColorId == Model.ColorId && x.GroupId == Model.GroupId).FirstOrDefault();
 }
 
 <!-- page main wrapper start -->
@@ -100,7 +102,7 @@
 
                                 <div class="price-box  d-flex">
                                     <span class="price-regular" style="font-size: x-large; font-family: Castoro serif; ">$@Model.Price USD</span>
-                                    <span class="price-old"><del>$@Model.UnitPrice</del> USD</span>
+                                    @*<span class="price-old"><del>$@productDT.UnitPrice</del> USD</span>*@
                                 </div>
                                 <div class="price-box  d-flex">
                                     <label>Leave Review</label>
@@ -120,19 +122,19 @@
                                         @foreach (var color in Model.Metals)
                                         {
                                             <li>
-                                                <a class="@color.Synonyms metalColor" metalId="@color.Id" href="javascript:void(0)" title="@color.Name" productId="@Model.Sku" data-colorName="@color.Name"><span style="font-size: 15px; color: black; padding: 5px 24px; ">@Model.Karat</span></a>
+                                                <a class="@color.Synonyms metalColor" metalId="@color.Id" href="javascript:void(0)" title="@color.Name" productId="@productDT.Sku" data-colorName="@color.Name"><span style="font-size: 15px; color: black; padding: 5px 24px; ">@productDT.Karat</span></a>
                                             </li>
                                         }
                                     </ul>
                                 </div>
 
                                 <div class="pt-3">
-                                    <h6 class="option-title"> <span style="font-weight:bold;">Diamond Shape</span> : <span class="active-shape">@(Model.CenterShapeName != null ? Model.CenterShapeName : "-")</span> </h6>
+                                    <h6 class="option-title"> <span style="font-weight:bold;">Diamond Shape</span> : <span class="active-shape">@(productDT.CenterShapeName != null ? productDT.CenterShapeName : "-")</span> </h6>
                                     <ul class="shape-categories-details">
                                         @foreach (var shape in Model.Shapes)
                                         {
                                             <li>
-                                                <a href="#" class="shapeDT" title="@shape.Name" sku="@Model.Sku" colorId="@Model.ColorId" shapeId="@shape.Id">
+                                                <a href="#" class="shapeDT" title="@shape.Name" sku="@productDT.Sku" colorId="@productDT.ColorId" shapeId="@productDT.Id">
                                                     <img class="shape-img" src="@SD.ShapeImgUrl@shape.IconPath" title="@shape.Name" />
                                                 </a>
                                             </li>
@@ -141,7 +143,7 @@
                                 </div>
 
                                 <div class="pt-4">
-                                    <h5 class="offer-text"><strong>Carat Weight :</strong> @Model.CaratName</h5>
+                                    <h5 class="offer-text"><strong>Carat Weight :</strong> @productDT.CaratName</h5>
                                     @*<ul class="size-categories-details">
                 @foreach (var item in Model.CaratSizes)
                 {
@@ -232,7 +234,7 @@
                                         Description
                                     </h3>
                                     <p class="card-text text-secondary" style="font-size: 1.1rem; line-height: 1.6;" id="txtDescription">
-                                        @Model.Description
+                                        @productDT.Description
                                     </p>
                                 </div>
                             </div>
@@ -268,8 +270,8 @@
                                                                 <div class="card-body">
                                                                     <h5 class="text-center mb-3">Item Details</h5>
                                                                     @{
-                                                                        var ctw = !string.IsNullOrWhiteSpace(Model.CTW) ? Convert.ToDecimal(Model.CTW) : 0;
-                                                                        var centerCarat = !string.IsNullOrWhiteSpace(Model.CenterCaratName) ? Convert.ToDecimal(Model.CenterCaratName) : 0;
+                                                                        var ctw = !string.IsNullOrWhiteSpace(productDT.CTW) ? Convert.ToDecimal(productDT.CTW) : 0;
+                                                                        var centerCarat = !string.IsNullOrWhiteSpace(productDT.CenterCaratName) ? Convert.ToDecimal(productDT.CenterCaratName) : 0;
                                                                         var total = ctw + centerCarat;
                                                                         var NoOfStones = 0;
 
@@ -287,10 +289,10 @@
                                                                     }
                                                                     <table class="table table-borderless">
                                                                         <tbody>
-                                                                            <tr class="border-bottom border-dark"><th>Sku</th><td>@Model.Sku</td></tr>
-                                                                            <tr class="border-bottom border-dark"><th>Category</th><td>@Model.CategoryName</td></tr>
-                                                                            <tr class="border-bottom border-dark"><th>Vender</th><td>@Model.VenderName</td></tr>
-                                                                            <tr class="border-bottom border-dark"><th>Weight</th><td>@Model.GoldWeight</td></tr>
+                                                                            <tr class="border-bottom border-dark"><th>Sku</th><td>@productDT.Sku</td></tr>
+                                                                            <tr class="border-bottom border-dark"><th>Category</th><td>@productDT.CategoryName</td></tr>
+                                                                            <tr class="border-bottom border-dark"><th>Vender</th><td>@productDT.VenderName</td></tr>
+                                                                            <tr class="border-bottom border-dark"><th>Weight</th><td>@productDT.GoldWeight</td></tr>
                                                                             <tr class="border-bottom border-dark"><th>CTW</th><td>@total</td></tr>
                                                                         </tbody>
                                                                     </table>
@@ -305,19 +307,19 @@
                                                                     <h5 class="text-center mb-3">Diamond Details</h5>
                                                                     <table class="table table-borderless">
                                                                         <tbody>
-                                                                            <tr class="border-bottom border-dark"><th>Center Shape</th><td>@Model.CenterShapeName</td></tr>
-                                                                            <tr class="border-bottom border-dark"><th>Center Carat</th><td>@Model.CenterCaratName</td></tr>
+                                                                            <tr class="border-bottom border-dark"><th>Center Shape</th><td>@productDT.CenterShapeName</td></tr>
+                                                                            <tr class="border-bottom border-dark"><th>Center Carat</th><td>@productDT.CenterCaratName</td></tr>
                                                                             <tr class="border-bottom border-dark">
                                                                                 <th>Metal Options</th>
                                                                                 <td>
-                                                                                    <span>@Model.Karat</span>
+                                                                                    <span>@productDT.Karat</span>
                                                                                     @foreach (var item in Model.Metals)
                                                                                     {<span>@item.Name, </span>}
                                                                                 </td>
                                                                             </tr>
-                                                                            @if (!string.IsNullOrWhiteSpace(@Model.Certificate))
+                                                                            @if (!string.IsNullOrWhiteSpace(productDT.Certificate))
                                                                             {
-                                                                                <tr class="border-bottom border-dark"><th>Certification</th><td>@Model.Certificate</td></tr>
+                                                                                <tr class="border-bottom border-dark"><th>Certification</th><td>@productDT.Certificate</td></tr>
                                                                             }
                                                                             <tr class="border-bottom border-dark"><th>No Of Stones</th><td>@NoOfStones</td></tr>
                                                                         </tbody>

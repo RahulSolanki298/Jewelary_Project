@@ -116,36 +116,33 @@
 
 
         $(document).ready(function () {
-            $('#productPropertyForm').on('submit', function (e) {
-                e.preventDefault();
+            $(document).ready(function () {
+                $('#productPropertyForm').on('submit', function (e) {
+                    e.preventDefault();
 
-                var name = $("#Name").val();
+                    var form = $('#productPropertyForm')[0]; // Get form DOM element
+                    var formData = new FormData(form); // Create FormData object
 
-                var form = $(this);
-                var actionUrl = form.attr('action');
-                var formData = form.serialize();
-
-                if (name == "" || name == undefined || name == null) {
-                    alert("please enter name.");
-                    return;
-                }
-
-                $.ajax({
-                    type: 'POST',
-                    url: actionUrl,
-                    data: formData,
-                    success: function (response) {
-                        Swal.fire({
-                            title: response.message || 'Saved Successfully!',
-                            icon: 'success'
-                        });
-                    },
-                    error: function (xhr) {
-                        console.error("Error:", xhr.responseText);
-                        alert("An error occurred while saving.");
-                    }
+                    $.ajax({
+                        type: 'POST',
+                        url: $(this).attr('action'),
+                        data: formData,
+                        contentType: false, // Needed for FormData
+                        processData: false, // Needed for FormData
+                        success: function (response) {
+                            Swal.fire({
+                                title: response.message || 'Saved Successfully!',
+                                icon: 'success'
+                            });
+                        },
+                        error: function (xhr) {
+                            console.error("Error:", xhr.responseText);
+                            alert("An error occurred while saving.");
+                        }
+                    });
                 });
             });
+
             //$('#Description').summernote({
             //    height: 400, // set editor height
             //    minHeight: null, // set minimum height of editor

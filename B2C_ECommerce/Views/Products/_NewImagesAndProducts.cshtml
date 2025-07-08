@@ -56,7 +56,7 @@
                                     @foreach (var color in item.Metals)
                                     {
                                         <li>
-                                            <a class="@color.Synonyms metalColor" @(color.Name == item.ColorName ? "selected" : null) metalId="@color.Id" href="javascript:void(0)" title="@color.Name" productId="@productFirst.Sku" data-colorName="@color.Name" data-sku="@productFirst.Sku"><p class="product-metal-desc">@productFirst.Karat</p></a>
+                                            <a class="@color.Name.ToLower() metalColor" @(color.Name == item.ColorName ? "selected" : null) metalId="@color.Id" href="javascript:void(0)" title="@color.Name" productId="@productFirst.Sku" data-colorName="@color.Name" data-sku="@productFirst.Sku"><p class="product-metal-desc">@productFirst.Karat</p></a>
                                         </li>
                                     }
                                 }
@@ -89,7 +89,7 @@
                                     {
                                         <li>
                                             <a href="#" class="shapeDT" title="@shape.Name" sku="@productFirst.Sku" colorId="@item.ColorId" shapeId="@shape.Id" data-sku="@productFirst.Sku">
-                                                <img src="@SD.ShapeImgUrl@shape.IconPath" />
+                                                <img src="@SD.ImgUrl@shape.IconPath" />
                                             </a>
                                         </li>
                                     }

@@ -40,13 +40,14 @@ namespace ControlPanel.Controllers
         public JewelleryController(IProductRepository productRepository,
                                     IProductPropertyRepository productProperty,
                                     IWebHostEnvironment env, UserManager<ApplicationUser> userManager,
-                                    IProductService productService)
+                                    IProductService productService, ILogEntryRepository logEntryRepository)
         {
             _productRepository = productRepository;
             _productPropertyRepository = productProperty;
             _env = env;
             _userManager = userManager;
             _productService = productService;
+            _logEntryRepository = logEntryRepository;
         }
 
         [HttpGet]
@@ -754,9 +755,9 @@ namespace ControlPanel.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> JewelryProductImages(string productKey)
+        public async Task<IActionResult> JewelryProductImages(string productKey,int shapeId,int colorId)
         {
-            var jewelryImgList = await _productRepository.GetProductImagesVideos(productKey);
+            var jewelryImgList = await _productRepository.GetProductImagesVideos(productKey,shapeId,colorId);
             return PartialView("~/Views/Jewellery/_ImagesDisplayModal.cshtml", jewelryImgList);
         }
 
@@ -1418,7 +1419,7 @@ namespace ControlPanel.Controllers
             return View();
         }
 
-        
+
 
     }
 }
