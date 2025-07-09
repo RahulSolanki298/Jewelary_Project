@@ -12,6 +12,8 @@
 
         public string VideoUrl { get; set; }
 
+        public int DisplayOrder { get; set; } = 0;
+
         public bool? IsDefault { get; set; } = false;
 
     }

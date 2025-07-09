@@ -20,6 +20,10 @@ namespace DataAccess.Entities
 
         public string Sku { get; set; }
 
+        public string VenderName { get; set; }
+        
+        public string VenderStyle { get; set; }
+
         public string GroupId { get; set; }  //  PLDR-381-SE
 
         public string ProductKey { get; set; } 

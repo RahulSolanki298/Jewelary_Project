@@ -65,7 +65,8 @@ namespace ControlPanel.Controllers
                 };
 
                 Response.Cookies.Append("UserId", user.Id, options);
-                Response.Cookies.Append("UserRoles", JsonSerializer.Serialize(roles), options);
+                Response.Cookies.Append("UserRoles", string.Join(",", roles), options);
+
 
                 // Generate OTP
                 //var otp = new Random().Next(100000, 999999).ToString();

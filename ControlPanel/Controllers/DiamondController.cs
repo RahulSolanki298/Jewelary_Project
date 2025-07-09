@@ -72,7 +72,7 @@ namespace ControlPanel.Controllers
                 return Json(new { status="fail",message = "No file uploaded." });
             }
 
-            var userId = HttpContext.Session.GetString("UserId");
+            var userId = HttpContext.Request.Cookies["UserId"];
             var user = await _userManager.FindByIdAsync(userId);
 
             string extension = Path.GetExtension(file.FileName).ToLowerInvariant();
@@ -737,7 +737,7 @@ namespace ControlPanel.Controllers
         [HttpPost]
         public async Task<IActionResult> ChangeStatus([FromBody] StoneStatusChangeModel model)
         {
-            var userId = HttpContext.Session.GetString("UserId");
+            var userId = HttpContext.Request.Cookies["UserId"];
             var user = await _userManager.FindByIdAsync(userId);
 
             if (model.StoneIds != null && model.StoneIds.Length > 0)

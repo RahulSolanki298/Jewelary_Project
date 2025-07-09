@@ -7,6 +7,7 @@ using Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DataAccess.Data
@@ -225,7 +226,7 @@ namespace DataAccess.Data
 
                 await command.ExecuteNonQueryAsync();
 
-                    response.Status = true;
+                response.Status = true;
                 response.Message = "Product list successfully saved.";
             }
             catch (Exception ex)
@@ -272,8 +273,11 @@ namespace DataAccess.Data
 
             foreach (var p in products)
             {
+                string sku = p.Sku != null && p.Sku.Contains("-")
+                                    ? string.Join("-", p.Sku.Split('-').Take(2))
+                                    : p.Sku;
                 table.Rows.Add(
-                    p.Sku, p.Title, p.ColorName, p.Karat, p.CenterCaratName, p.CenterShapeName, p.AccentStoneShapeName,
+                    sku, p.Title, p.ColorName, p.Karat, p.CenterCaratName, p.CenterShapeName, p.AccentStoneShapeName,
                     p.WholesaleCost ?? 0, p.Price ?? 0, p.UnitPrice ?? 0, p.Length, p.BandWidth, p.ProductType,
                     p.GoldWeight, p.Grades, p.MMSize, p.NoOfStones ?? 0, p.DiaWT ?? 0, p.Certificate,
                     p.IsReadyforShip ?? false, p.CTW, p.VenderName, p.VenderStyle, p.Diameter,

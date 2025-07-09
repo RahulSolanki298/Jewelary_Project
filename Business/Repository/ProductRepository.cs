@@ -42,7 +42,7 @@ namespace Business.Repository
 
         public async Task<List<ProductMaster>> GetJewelleryDTByDesignNo(string designNo, int metalId, int shapeId)
         {
-            var dtDesign = await _context.ProductMaster.Where(x => x.Sku == designNo && x.ColorId == metalId && x.CenterShapeId == shapeId).ToListAsync();
+            var dtDesign = await _context.ProductMaster.Where(x => x.VenderStyle == designNo && x.ColorId == metalId && x.CenterShapeId == shapeId).ToListAsync();
             return dtDesign;
         }
 
@@ -1597,7 +1597,7 @@ namespace Business.Repository
             for (int i = 1; i < parts.Length; i++)
             {
                 potentialSku += "-" + parts[i];
-                var exists = _context.ProductMaster.Where(x => x.Sku == potentialSku.ToString()).FirstOrDefault();
+                var exists = _context.ProductMaster.Where(x => x.VenderStyle == potentialSku.ToString()).FirstOrDefault();
                 if (exists != null)
                 {
                     dto.DesignNo = potentialSku;

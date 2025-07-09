@@ -65,7 +65,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="showFileUpload" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true" data-bs-backdrop="static">
+<div class="modal fade" id="showDiamondFileUpload" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
             <form id="uploadForm" asp-controller="Diamond" asp-action="UpsertDiamonds" method="post" enctype="multipart/form-data">
@@ -160,7 +160,7 @@
             loadData();
 
             $("#ExcelUpload").on("click", function () {
-                $("#showFileUpload").modal("show");
+                $("#showDiamondFileUpload").modal("show");
             });
 
            $('#uploadForm').on('submit', function (e) {
