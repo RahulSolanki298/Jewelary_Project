@@ -392,7 +392,7 @@ namespace B2C_ECommerce.Services
         }
 
 
-        public async Task<ProductDTO> GetProductsByColorId(string sku, int? colorId = 0, int? caratId = 0)
+        public async Task<ProductDTO> GetProductsByColorId(string groupId, int? colorId = 0, int? caratId = 0)
         {
             var products = await (from product in _context.Product
                                   join cat in _context.Category on product.CategoryId equals cat.Id
@@ -412,7 +412,7 @@ namespace B2C_ECommerce.Services
                                   from kt in ktGroup.DefaultIfEmpty()
                                   join ashapeProp in _context.ProductProperty on product.AccentStoneShapeId equals ashapeProp.Id into ashapeGroup
                                   from ashape in ashapeGroup.DefaultIfEmpty()
-                                  where product.IsActivated != false && product.Sku == sku
+                                  where product.IsActivated != false && product.GroupId == groupId
                                   select new ProductDTO
                                   {
                                       Id = product.Id,
@@ -773,43 +773,43 @@ namespace B2C_ECommerce.Services
                         IsSale = prodMst.IsSale,
                         ProductItems = new List<ProductDTO>
                         {
-                    new ProductDTO
-                    {
-                        Title = p.product.Title,
-                        BandWidth = p.product.BandWidth,
-                        Length = p.product.Length,
-                        CaratName = p.product.Carat,
-                        CategoryId = p.cat.Id,
-                        CategoryName = p.cat.Name,
-                        ProductType = p.cat.ProductType,
-                        ColorId = p.product.ColorId,
-                        ColorName = p.color.Name,
-                        ClarityId = p.product.ClarityId,
-                        ClarityName = p.clarity.Name,
-                        CenterShapeId = p.product.CenterShapeId,
-                        CenterShapeName = p.shape.Name,
-                        AccentStoneShapeId = p.product.AccentStoneShapeId,
-                        AccentStoneShapeName = p.ashape.Name,
-                        CaratSizeId = p.product.CaratSizeId,
-                        Description = p.product.Description,
-                        Sku = p.product.Sku,
-                        UnitPrice = p.product.UnitPrice,
-                        Price = p.product.Price,
-                        IsActivated = p.product.IsActivated,
-                        GoldWeight = p.product.GoldWeight,
-                        CenterCaratName = p.size.Name,
-                        Grades = p.product.Grades,
-                        Certificate = p.product.Certificate,
-                        VenderName = p.product.Vendor,
-                        CTW = p.product.CTW,
-                        Diameter = p.product.Diameter,
-                        CenterCaratId = p.product.CenterCaratId,
-                        MMSize = p.product.MMSize,
-                        NoOfStones = p.product.NoOfStones,
-                        DiaWT = p.product.DiaWT,
-                        KaratId = p.product.KaratId,
-                        Karat = p.karat.Name
-                    }
+                            new ProductDTO
+                            {
+                                Title = p.product.Title,
+                                BandWidth = p.product.BandWidth,
+                                Length = p.product.Length,
+                                CaratName = p.product.Carat,
+                                CategoryId = p.cat.Id,
+                                CategoryName = p.cat.Name,
+                                ProductType = p.cat.ProductType,
+                                ColorId = p.product.ColorId,
+                                ColorName = p.color.Name,
+                                ClarityId = p.product.ClarityId,
+                                ClarityName = p.clarity.Name,
+                                CenterShapeId = p.product.CenterShapeId,
+                                CenterShapeName = p.shape.Name,
+                                AccentStoneShapeId = p.product.AccentStoneShapeId,
+                                AccentStoneShapeName = p.ashape.Name,
+                                CaratSizeId = p.product.CaratSizeId,
+                                Description = p.product.Description,
+                                Sku = p.product.Sku,
+                                UnitPrice = p.product.UnitPrice,
+                                Price = p.product.Price,
+                                IsActivated = p.product.IsActivated,
+                                GoldWeight = p.product.GoldWeight,
+                                CenterCaratName = p.size.Name,
+                                Grades = p.product.Grades,
+                                Certificate = p.product.Certificate,
+                                VenderName = p.product.Vendor,
+                                CTW = p.product.CTW,
+                                Diameter = p.product.Diameter,
+                                CenterCaratId = p.product.CenterCaratId,
+                                MMSize = p.product.MMSize,
+                                NoOfStones = p.product.NoOfStones,
+                                DiaWT = p.product.DiaWT,
+                                KaratId = p.product.KaratId,
+                                Karat = p.karat.Name
+                            }
                         }
                     }
                 ).AsNoTracking().ToListAsync();
@@ -1130,11 +1130,12 @@ namespace B2C_ECommerce.Services
 
                 // Step 2: Project to master DTOs (distinct by ProductKey)
                 var dtProMasterList = data
-                    .GroupBy(x => x.Product.ProductKey)
+                    .GroupBy(x => x.Product.Sku)
                     .Select(g => g.First())
                     .Select(x => new ProductMasterDTO
                     {
                         Id = x.Product.Id,
+                        Title=x.Product.Title,
                         ProductKey = x.Product.ProductKey,
                         ShapeId = x.Product.CenterShapeId,
                         CategoryId = x.Category?.Id ?? 0,
@@ -1144,10 +1145,14 @@ namespace B2C_ECommerce.Services
                         ShapeName = x.Shape?.Name,
                         GroupId = x.Product.GroupId,
                         IsActive = x.Product.IsActive,
-                        ProductStatus = x.Product.ProductStatus
+                        IsSale=x.Product.IsSale,
+                        Price=x.Product.Price,
+                        ProductStatus = x.Product.ProductStatus,
+                        Sku=x.Product.Sku
                     })
                     .ToList();
 
+                var skus = dtProMasterList.Select(x => x.Sku).ToList();
                 var groupIds = dtProMasterList.Select(x => x.GroupId).ToList();
                 var productKeys = dtProMasterList.Select(x => x.ProductKey).ToList();
 
@@ -1259,9 +1264,9 @@ namespace B2C_ECommerce.Services
 
                 // Get Shapes
                 var shapes = await (from col in _context.ProductProperty
-                                    join prod in _context.Product on col.Id equals prod.CenterShapeId
+                                    join prod in _context.ProductMaster on col.Id equals prod.CenterShapeId
                                     join colN in _context.ProductProperty on col.ParentId equals colN.Id
-                                    where colN.Name == SD.Shape && groupIds.Contains(prod.GroupId) && prod.IsActivated
+                                    where colN.Name == SD.Shape && skus.Contains(prod.Sku) && prod.IsActive==true
                                     select new ProductPropertyDTO
                                     {
                                         Id = col.Id,
@@ -1282,7 +1287,7 @@ namespace B2C_ECommerce.Services
                     .ToListAsync();
 
                 var allFileIds = allProductImages
-                    .SelectMany(p => new[] { p.ImageMdId, p.VideoId })
+                    .SelectMany(p => new[] { p.ImageMdId,p.ImageLgId, p.VideoId })
                     .Where(id => id.HasValue)
                     .Select(id => id.Value)
                     .Distinct()
@@ -1313,14 +1318,15 @@ namespace B2C_ECommerce.Services
                     {
                         Id = image.Id,
                         ProductId = image.ProductId,
-                        ImageUrl = image.ImageMdId.HasValue && fileMap.TryGetValue(image.ImageMdId.Value, out var imgUrl)
+                        ImageUrl = image.ImageLgId.HasValue && fileMap.TryGetValue(image.ImageLgId.Value, out var imgUrl)
                             ? imgUrl
                             : null,
                         VideoUrl = image.VideoId.HasValue && fileMap.TryGetValue(image.VideoId.Value, out var vidUrl)
                             ? vidUrl
                             : null,
+                        DisplayOrder=image.ImageIndexNumber,
                         IsDefault = image.IsDefault
-                    }).ToList();
+                    }).OrderBy(x=>x.DisplayOrder).ToList();
 
                     master.ProductImageVideos = imageVideos;
                 }

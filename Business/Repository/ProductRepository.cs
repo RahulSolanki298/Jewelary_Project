@@ -934,10 +934,11 @@ namespace Business.Repository
                     MetalId = ImgVdoData.MetalId,
                     Sku = ImgVdoData.Sku,
                     ShapeId = ImgVdoData.ShapeId,
+                    ImageIndexNumber= ImgVdoData.ImageIndexNumber,
                     IsDefault = true
                 };
 
-                await _context.AddAsync(imgDT);
+                await _context.ProductImages.AddAsync(imgDT);
                 await _context.SaveChangesAsync();
 
                 return true;
@@ -2604,6 +2605,7 @@ namespace Business.Repository
                         proImgVideo.ProductId = item.ProductId;
                         proImgVideo.IsDefault = item.IsDefault;
                         proImgVideo.VideoUrl = "-";
+                        proImgVideo.DisplayOrder = item.ImageIndexNumber;
                         proImgVideos.Add(proImgVideo);
 
                     }
@@ -3580,10 +3582,7 @@ namespace Business.Repository
                    .ToList();
         }
 
-        private List<ProductImageAndVideoDTO> GetProductImageVideos(
-    ProductMasterDTO pm,
-    List<ProductImages> productImages,
-    Dictionary<int, string> fileManagerData)
+        private List<ProductImageAndVideoDTO> GetProductImageVideos(ProductMasterDTO pm, List<ProductImages> productImages, Dictionary<int, string> fileManagerData)
         {
             return (from img in productImages
                     join pro in _context.ProductMaster on img.ProductId equals pro.ProductKey
@@ -3600,8 +3599,75 @@ namespace Business.Repository
                         VideoUrl = img.VideoId.HasValue && fileManagerData.ContainsKey(img.VideoId.Value)
                             ? fileManagerData[img.VideoId.Value]
                             : null,
+                        DisplayOrder=img.ImageIndexNumber,
                         IsDefault = img.IsDefault
                     }).ToList();
+        }
+
+
+        public async Task<ProductImages> GetProductImageAsync(string productId, int metalId, string sku, int shapeId, int imageIndex)
+        {
+            return await _context.ProductImages
+                .FirstOrDefaultAsync(x => x.ProductId == productId &&
+                                          x.MetalId == metalId &&
+                                          x.Sku == sku &&
+                                          x.ShapeId == shapeId &&
+                                          x.ImageIndexNumber == imageIndex);
+        }
+
+        public async Task DeleteImageFilesAsync(ProductImages img, string webRootPath)
+        {
+            var fileIds = new List<int?>
+                {
+                    img.ImageLgId,
+                    img.ImageMdId,
+                    img.ImageSmId,
+                    img.VideoId
+                };
+
+            var paths = await _context.FileManager
+                .Where(f => fileIds.Contains(f.Id))
+                .Select(f => f.FileUrl)
+                .ToListAsync();
+
+            foreach (var path in paths.Distinct()) // avoid duplicate deletes
+            {
+                var fullPath = Path.Combine(webRootPath, path.Replace("/", "\\"));
+                if (System.IO.File.Exists(fullPath))
+                {
+                    System.IO.File.Delete(fullPath);
+                }
+            }
+        }
+        public async Task DeleteProductImageAsync(int imageId)
+        {
+            var img = await _context.ProductImages.FindAsync(imageId);
+            if (img != null)
+            {
+                _context.ProductImages.Remove(img);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<bool> UpdateDisplayOrdersAsync(List<ProductImageAndVideoDTO> updates)
+        {
+            var ids = updates.Select(x => x.Id).ToList();
+
+            var records = await _context.ProductImages
+                .Where(x => ids.Contains(x.Id))
+                .ToListAsync();
+
+            foreach (var record in records)
+            {
+                var update = updates.FirstOrDefault(x => x.Id == record.Id);
+                if (update != null)
+                {
+                    record.ImageIndexNumber = update.DisplayOrder;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return true;
         }
 
 

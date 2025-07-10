@@ -43,7 +43,6 @@
         }
     </style>
 
-    var productDT = Model.ProductItems.Where(x => x.CenterShapeId == Model.ShapeId && x.ColorId == Model.ColorId && x.GroupId == Model.GroupId).FirstOrDefault();
 }
 
 <!-- page main wrapper start -->
@@ -61,19 +60,22 @@
                                     @if (Model != null)
                                     {
                                         <input type="hidden" id="productId" value="@Model.Id" />
+                                        <input type="hidden" id="groupId" value="@Model.GroupId" />
                                     }
                                     <ul id="lightSliderVertical" class="img-with-bg">
                                         @if (Model != null && Model.ProductImageVideos.Count > 0)
                                         {
-                                            foreach (var item in Model.ProductImageVideos)
+                                            foreach (var item in Model.ProductImageVideos.OrderBy(x => x.DisplayOrder))
                                             {
                                                 if (!string.IsNullOrEmpty(item.ImageUrl) && item.ImageUrl != "-")
                                                 {
                                                     <li data-thumb="@($"{SD.ImgUrl}/{item.ImageUrl}")">
 
-                                                        <a>
-                                                            <img src="@($"{SD.ImgUrl}/{item.ImageUrl}")" class="zoom-images" />
-                                                        </a>
+                                                        <div class="zoom-wrapper">
+                                                            <center>
+                                                                <img src="@($"{SD.ImgUrl}/{item.ImageUrl}")" class="zoom-image" />
+                                                            </center>
+                                                        </div>
 
                                                     </li>
                                                 }
@@ -121,42 +123,60 @@
                                     <ul class="color-categories-details">
                                         @foreach (var color in Model.Metals)
                                         {
+                                            var actionUrl = Url.Action("ProductDetails", "Products", new
+                                            {
+                                                productKey = Model.ProductKey,
+                                                colorId = color.Id,
+                                                shapeId = Model.ShapeId // or any value
+                                            });
                                             <li>
-                                                <a class="@color.Synonyms metalColor" metalId="@color.Id" href="javascript:void(0)" title="@color.Name" productId="@productDT.Sku" data-colorName="@color.Name"><span style="font-size: 15px; color: black; padding: 5px 24px; ">@productDT.Karat</span></a>
+                                                <a class="@color.Name.ToLower() metalColor" metalId="@color.Id" href="@actionUrl" title="@color.Name" productKey="@Model.ProductKey" data-colorName="@color.Name"><span style="font-size: 15px; color: black; padding: 5px 24px; ">@Model.ProductItems.FirstOrDefault().Karat</span></a>
                                             </li>
                                         }
                                     </ul>
                                 </div>
 
                                 <div class="pt-3">
-                                    <h6 class="option-title"> <span style="font-weight:bold;">Diamond Shape</span> : <span class="active-shape">@(productDT.CenterShapeName != null ? productDT.CenterShapeName : "-")</span> </h6>
+                                    <h6 class="option-title"> <span style="font-weight:bold;">Diamond Shape</span> : <span class="active-shape">@(Model.ProductItems.FirstOrDefault().CenterShapeName != null ? Model.ProductItems.FirstOrDefault().CenterShapeName : "-")</span> </h6>
                                     <ul class="shape-categories-details">
                                         @foreach (var shape in Model.Shapes)
                                         {
+                                            var groupDT = Model.ProductItems.FirstOrDefault(x => x.CenterShapeId == shape.Id && x.ColorId==Model.ColorId);
+                                            bool isAvailable = groupDT != null;
+
                                             <li>
-                                                <a href="#" class="shapeDT" title="@shape.Name" sku="@productDT.Sku" colorId="@productDT.ColorId" shapeId="@productDT.Id">
-                                                    <img class="shape-img" src="@SD.ShapeImgUrl@shape.IconPath" title="@shape.Name" />
+                                                <a href="@(isAvailable ? "#" : "javascript:void(0);")"
+                                                   class="shapeDT @(isAvailable ? "border-1 border-dark" : "")"
+                                                   title="@shape.Name"
+                                                   data-groupid="@(isAvailable ? groupDT.GroupId : 0)"
+                                                   data-shapeid="@shape.Id"
+                                                   data-colorid="@Model.ColorId">
+                                                    <img class="shape-img" src="@($"{SD.ImgUrl}{shape.IconPath}")" alt="@shape.Name" />
                                                 </a>
                                             </li>
                                         }
                                     </ul>
+
+
                                 </div>
 
                                 <div class="pt-4">
-                                    <h5 class="offer-text"><strong>Carat Weight :</strong> @productDT.CaratName</h5>
+                                    <h5 class="offer-text"><strong>Carat Weight :</strong> @Model.ProductItems.FirstOrDefault().CaratName</h5>
                                     @*<ul class="size-categories-details">
-                @foreach (var item in Model.CaratSizes)
-                {
-                    <li>
-                        <a class="text-black-50" href="#" >@item.Name</a>
-                    </li>
-                }
-            </ul>*@
+                                            @foreach (var item in Model.CaratSizes)
+                                            {
+                                                <li>
+                                                    <a class="text-black-50" href="#" >@item.Name</a>
+                                                </li>
+                                            }
+                                        </ul>*@
                                     <div class="product-countdown">
 
                                         @foreach (var item in Model.CaratSizes)
                                         {
-                                            <div class="single-countdown selectedCaratClick"><span class="single-countdown__time" title="@item.Name">@item.Name</span></div>
+                                            <div class="single-countdown selectedCaratClick">
+                                                    <span class="single-countdown__time" title="@item.Name">@item.Name</span>
+                                            </div>
                                         }
                                     </div>
                                 </div>
@@ -190,7 +210,7 @@
 
 
 
-                                
+
                                 <div class="delivery_date_shortcode">
                                     <h2 class="delivery_msg">Estimated Delivery Date (Working Day)</h2>
                                     <div class="order_steps">
@@ -234,7 +254,7 @@
                                         Description
                                     </h3>
                                     <p class="card-text text-secondary" style="font-size: 1.1rem; line-height: 1.6;" id="txtDescription">
-                                        @productDT.Description
+                                        @Model.ProductItems.FirstOrDefault().Description
                                     </p>
                                 </div>
                             </div>
@@ -270,29 +290,29 @@
                                                                 <div class="card-body">
                                                                     <h5 class="text-center mb-3">Item Details</h5>
                                                                     @{
-                                                                        var ctw = !string.IsNullOrWhiteSpace(productDT.CTW) ? Convert.ToDecimal(productDT.CTW) : 0;
-                                                                        var centerCarat = !string.IsNullOrWhiteSpace(productDT.CenterCaratName) ? Convert.ToDecimal(productDT.CenterCaratName) : 0;
+                                                                        var ctw = !string.IsNullOrWhiteSpace(Model.ProductItems.FirstOrDefault().CTW) ? Convert.ToDecimal(Model.ProductItems.FirstOrDefault().CTW) : 0;
+                                                                        var centerCarat = !string.IsNullOrWhiteSpace(Model.ProductItems.FirstOrDefault().CenterCaratName) ? Convert.ToDecimal(Model.ProductItems.FirstOrDefault().CenterCaratName) : 0;
                                                                         var total = ctw + centerCarat;
                                                                         var NoOfStones = 0;
 
                                                                         @*@if (Model.RelatedProducts != null)
-                                                                        {
-                                                                            foreach (var item in Model.RelatedProducts)
                                                                             {
-                                                                                if (!string.IsNullOrWhiteSpace(item.NoOfStones.ToString()))
+                                                                                foreach (var item in Model.RelatedProducts)
                                                                                 {
-                                                                                    NoOfStones += item.NoOfStones.Value;
+                                                                                    if (!string.IsNullOrWhiteSpace(item.NoOfStones.ToString()))
+                                                                                    {
+                                                                                        NoOfStones += item.NoOfStones.Value;
+                                                                                    }
                                                                                 }
-                                                                            }
-                                                                        }*@
-                                                                        
+                                                                            }*@
+
                                                                     }
                                                                     <table class="table table-borderless">
                                                                         <tbody>
-                                                                            <tr class="border-bottom border-dark"><th>Sku</th><td>@productDT.Sku</td></tr>
-                                                                            <tr class="border-bottom border-dark"><th>Category</th><td>@productDT.CategoryName</td></tr>
-                                                                            <tr class="border-bottom border-dark"><th>Vender</th><td>@productDT.VenderName</td></tr>
-                                                                            <tr class="border-bottom border-dark"><th>Weight</th><td>@productDT.GoldWeight</td></tr>
+                                                                            <tr class="border-bottom border-dark"><th>Sku</th><td>@Model.ProductItems.FirstOrDefault().Sku</td></tr>
+                                                                            <tr class="border-bottom border-dark"><th>Category</th><td>@Model.ProductItems.FirstOrDefault().CategoryName</td></tr>
+                                                                            <tr class="border-bottom border-dark"><th>Vender</th><td>@Model.ProductItems.FirstOrDefault().VenderName</td></tr>
+                                                                            <tr class="border-bottom border-dark"><th>Weight</th><td>@Model.ProductItems.FirstOrDefault().GoldWeight</td></tr>
                                                                             <tr class="border-bottom border-dark"><th>CTW</th><td>@total</td></tr>
                                                                         </tbody>
                                                                     </table>
@@ -307,19 +327,19 @@
                                                                     <h5 class="text-center mb-3">Diamond Details</h5>
                                                                     <table class="table table-borderless">
                                                                         <tbody>
-                                                                            <tr class="border-bottom border-dark"><th>Center Shape</th><td>@productDT.CenterShapeName</td></tr>
-                                                                            <tr class="border-bottom border-dark"><th>Center Carat</th><td>@productDT.CenterCaratName</td></tr>
+                                                                            <tr class="border-bottom border-dark"><th>Center Shape</th><td>@Model.ProductItems.FirstOrDefault().CenterShapeName</td></tr>
+                                                                            <tr class="border-bottom border-dark"><th>Center Carat</th><td>@Model.ProductItems.FirstOrDefault().CenterCaratName</td></tr>
                                                                             <tr class="border-bottom border-dark">
                                                                                 <th>Metal Options</th>
                                                                                 <td>
-                                                                                    <span>@productDT.Karat</span>
+                                                                                    <span>@Model.ProductItems.FirstOrDefault().Karat</span>
                                                                                     @foreach (var item in Model.Metals)
                                                                                     {<span>@item.Name, </span>}
                                                                                 </td>
                                                                             </tr>
-                                                                            @if (!string.IsNullOrWhiteSpace(productDT.Certificate))
+                                                                            @if (!string.IsNullOrWhiteSpace(Model.ProductItems.FirstOrDefault().Certificate))
                                                                             {
-                                                                                <tr class="border-bottom border-dark"><th>Certification</th><td>@productDT.Certificate</td></tr>
+                                                                                <tr class="border-bottom border-dark"><th>Certification</th><td>@Model.ProductItems.FirstOrDefault().Certificate</td></tr>
                                                                             }
                                                                             <tr class="border-bottom border-dark"><th>No Of Stones</th><td>@NoOfStones</td></tr>
                                                                         </tbody>
@@ -628,8 +648,8 @@
                                 <a href="#" data-bs-toggle="modal" data-bs-target="#quick_view"><span data-bs-toggle="tooltip" data-bs-placement="left" title="Quick View"><i class="pe-7s-search"></i></span></a>
                             </div>
                             @*<div class="cart-hover">
-                                <button class="btn btn-cart">add to cart</button>
-                            </div>*@
+                                    <button class="btn btn-cart">add to cart</button>
+                                </div>*@
                         </figure>
                         <div class="product-caption text-center">
                             <div class="product-identity">
@@ -680,8 +700,8 @@
                                 <a href="#" data-bs-toggle="modal" data-bs-target="#quick_view"><span data-bs-toggle="tooltip" data-bs-placement="left" title="Quick View"><i class="pe-7s-search"></i></span></a>
                             </div>
                             @*<div class="cart-hover">
-                                <button class="btn btn-cart">add to cart</button>
-                            </div>*@
+                                    <button class="btn btn-cart">add to cart</button>
+                                </div>*@
                         </figure>
                         <div class="product-caption text-center">
                             <div class="product-identity">
@@ -718,19 +738,19 @@
 </section>
 
 <!-- Fixed Footer Add to Cart Bar -->
-    <div id="footerCartBar" class="footer-add-to-cart fixed-bottom bg-white shadow-lg border-top px-3 py-3">
-        <div>
-            <strong>@Model.Title</strong> <br />
-            <h3>$@Model.Price USD</h3>
-        </div>
-        <a href="#" class="btn btn-theme px-4 py-2">Add to Cart</a>
+<div id="footerCartBar" class="footer-add-to-cart fixed-bottom bg-white shadow-lg border-top px-3 py-3">
+    <div>
+        <strong>@Model.Title</strong> <br />
+        <h3>$@Model.Price USD</h3>
     </div>
+    <a href="#" class="btn btn-theme px-4 py-2">Add to Cart</a>
+</div>
 
 
-    @section Scripts {
-        <script src="~/assets/js/plugins/lightslider.js"></script>
+@section Scripts {
+    <script src="~/assets/js/plugins/lightslider.js"></script>
 
-        <script>
+    <script>
 
         let vSlider;
         let resizeTimeout;
@@ -762,8 +782,8 @@
 
             $(document).on("click", ".metalColor", function () {
                 const colorId = $(this).attr("metalId");
-                const productId = $(this).attr("productId");
-                GetProductByColorId(productId, colorId);
+                const productKey = $(this).attr("productKey");
+                GetProductByColorId(productKey, colorId);
             });
 
             $(window).on('resize', function () {
@@ -805,11 +825,12 @@
             $("#wishlistMobileCounter").text(wishlist.length + productWishlist.length);
         }
 
-        function GetProductByColorId(productId, colorId) {
+        function GetProductByColorId(productKey, colorId) {
+            debugger;
             $.ajax({
                 url: '@Url.Action("ProductDetailsByColorId", "Products")',
                 data: {
-                    sku: productId,
+                    productKey: productKey,
                     colorId: parseInt(colorId)
                 },
                 type: 'GET',
@@ -818,8 +839,8 @@
                 const baseUrl = '@SD.ImgUrl'.replace(/\\/g, '/');
 
                 $(".product-name").text(response.title);
-                $(".price-regular[data-sku='" + productId + "']").text(response.Price);
-                $(".price-old[data-sku='" + productId + "']").html('<del>' + response.unitPrice + '</del>');
+                $(".price-regular[data-groupId='" + groupId + "']").text(response.Price);
+                $(".price-old[data-groupId='" + groupId + "']").html('<del>' + response.unitPrice + '</del>');
                 $(".active-metal").text(response.colorName);
 
                 const images = (response.productImageVideos || []).filter(x => x.imageUrl && x.imageUrl !== "-");
@@ -863,73 +884,11 @@
                 console.error("AJAX Error:", status, error);
             });
         }
-        </script>
+    </script>
 
 
 
-        @*  <script>
-                $(function () {
-                  var zoomed = false;
-                  var isDragging = false;
-                  var lastX, lastY;
-                  var posX = 0, posY = 0;
-
-                  var $img = $('.zoom-images');
-
-                  $img.on('click', function (e) {
-                      debugger;
-                    if (!zoomed) {
-                      zoomed = true;
-                      $(this).css('cursor', 'grab');
-                      $(this).css('transform', 'scale(2)');
-                    } else {
-                      zoomed = false;
-                      $(this).css('cursor', 'zoom-in');
-                      $(this).css({
-                        transform: 'scale(1)',
-                        top: 0,
-                        left: 0
-                      });
-                      posX = posY = 0;
-                    }
-                  });
-
-                  $img.on('mousedown', function (e) {
-                    if (!zoomed) return;
-                    isDragging = true;
-                    lastX = e.pageX;
-                    lastY = e.pageY;
-                    $(this).css('cursor', 'grabbing');
-                  });
-
-                  $(document).on('mousemove', function (e) {
-                    if (isDragging && zoomed) {
-                      var dx = e.pageX - lastX;
-                      var dy = e.pageY - lastY;
-
-                      posX += dx;
-                      posY += dy;
-
-                      $img.css({
-                        top: posY + 'px',
-                        left: posX + 'px'
-                      });
-
-                      lastX = e.pageX;
-                      lastY = e.pageY;
-                    }
-                  });
-
-                  $(document).on('mouseup', function () {
-                    if (zoomed) {
-                      isDragging = false;
-                      $img.css('cursor', 'grab');
-                    }
-                  });
-                });
-            </script> *@
-
-        <script>
+    <script>
         $(function () {
             var zoomed = false;
             var isDragging = false;
@@ -994,10 +953,10 @@
                 checkFooterVisibility();
 
                 $(".shapeDT").click(function () {
-                    var sku = $(this).attr('sku');
+                    const groupId = $this.data("groupid");
                     var shapeId = $(this).attr('shapeId');
                     var colorId = $(this).attr('colorId');
-                    GetProductByShapeId(sku, shapeId, colorId);
+                    GetProductByShapeId(groupId, shapeId, colorId);
                 });
 
             });
@@ -1019,82 +978,88 @@
                 checkFooterVisibility();
             });
 
-            function GetProductByShapeId(sku, shapeId, colorId) {
-                $.ajax({
-                    url: '@Url.Action("GetProductDetailsByShapeId", "Products")',
-                    data: {
-                        sku: sku,
-                        shapeId: parseInt(shapeId),
-                        colorId: parseInt(colorId)
-                    },
-                    type: 'GET',
-                    dataType: 'json'
-                })
+            function GetProductByShapeId(groupId, shapeId, colorId) {
+                    $.ajax({
+                        url: '@Url.Action("GetProductDetailsByShapeId", "Products")',
+                        data: {
+                            groupId: parseInt(groupId),
+                            shapeId: parseInt(shapeId),
+                            colorId: parseInt(colorId)
+                        },
+                        type: 'GET',
+                        dataType: 'json'
+                    })
                     .done(function (response) {
-                                    const $productContainer = $(".product-item").has("[data-sku='" + sku + "']");
-                                    const baseUrl = '@SD.BaseApiUrl'.replace(/\\/g, '/');
+                        if (!response || response.length === 0) return;
 
-                                    $(".product-name").text(response[0].title);
-                                    $(".activemetalname[data-sku='" + sku + "']").text(response[0].colorName);
-                                    $(".price-regular").text(response[0].Price);
-                                    $("#txtDescription").text(response[0].description);
+                        const baseUrl = '@SD.BaseApiUrl'.replace(/\\/g, '/');
 
-                                    // Get distinct carat names
-                                    const distinctCaratNames = [...new Set(
-                                        response
-                                            .map(item => item.centerCaratName)
-                                            .filter(name => name !== null && name !== undefined)
-                                    )];
+                        $(".product-name").text(response[0].title || '');
+                        $(".activemetalname").text(response[0].colorName || '');
+                        $(".price-regular").text(response[0].Price || '');
+                        $("#txtDescription").text(response[0].description || '');
 
-                                    // Clear container
-                                   /* $(".selectedCaratClick").html('');*/
+                        const distinctCaratNames = [...new Set(
+                            response.map(item => item.centerCaratName).filter(Boolean)
+                        )];
 
-                                    // Add spans with data-price attribute
-                                    distinctCaratNames.forEach(name => {
-                                        const item = response.find(x => x.centerCaratName === name); // find matching item
-                                        const span = document.createElement("span");
-                                        span.innerHTML = name;
-                                        span.classList.add("carat-span");
-                                        if (item) {
-                                            span.setAttribute("data-price", item.Price);
-                                        }
-                                        $(".selectedCaratClick").append(span);
-                                    });
+                        const $caratContainer = $(".selectedCaratClick");
+                        $caratContainer.empty();
 
-                                    // Hover events
-                                    $(document).on('mouseenter', '.carat-span', function () {
-                                        const newPrice = $(this).data("price");
-                                        alert(newPrice);
-                                        $(".price-regular").text('rahul');
+                        distinctCaratNames.forEach(name => {
+                            const item = response.find(x => x.centerCaratName === name);
+                            const $span = $('<span/>', {
+                                class: 'carat-span',
+                                text: name,
+                                'data-price': item?.Price || ''
+                            });
+                            $caratContainer.append($span);
+                        });
 
-                                        if (newPrice) {
-                                          //  $(".price-regular").text(newPrice);
-                                        }
-                                    });
-
-                                    // Optional: Reset price on mouse leave
-                                    $(document).on('mouseleave', '.carat-span', function () {
-                                        $(".price-regular").text(response[0].Price); // reset to original
-                                    });
-                                });
+                        $(".price-regular").data("original-price", response[0].Price);
+                    })
                     .fail(function (xhr, status, error) {
                         console.error('AJAX error:', status, error);
                     });
-            }
+                }
         });
-        </script>
-        <script>
-            const collapseEl = document.getElementById('collapseDetails');
-            const toggleIcon = document.getElementById('toggleIcon');
+    </script>
+    <script>
+        const collapseEl = document.getElementById('collapseDetails');
+        const toggleIcon = document.getElementById('toggleIcon');
 
-            collapseEl.addEventListener('show.bs.collapse', function () {
-                toggleIcon.textContent = '−'; // Use minus symbol
+        collapseEl.addEventListener('show.bs.collapse', function () {
+            toggleIcon.textContent = '−'; // Use minus symbol
+        });
+
+        collapseEl.addEventListener('hide.bs.collapse', function () {
+            toggleIcon.textContent = '+'; // Use plus symbol
+        });
+
+        $(document).ready(function () {
+            let scale = 1;
+            const scaleStep = 0.2;
+            const maxScale = 3;
+            const minScale = 1;
+
+            $(document).on('click', '.zoom-wrapper', function () {
+                const img = $(this).find('.zoom-image');
+                scale += scaleStep;
+                if (scale > maxScale) scale = minScale; // Reset
+                img.css('transform', `scale(${scale})`);
             });
 
-            collapseEl.addEventListener('hide.bs.collapse', function () {
-                toggleIcon.textContent = '+'; // Use plus symbol
+            // Optional: Mouse wheel zoom
+            $(document).on('wheel', '.zoom-wrapper', function (e) {
+                e.preventDefault();
+                const img = $(this).find('.zoom-image');
+                scale += e.originalEvent.deltaY < 0 ? scaleStep : -scaleStep;
+                scale = Math.min(Math.max(scale, minScale), maxScale);
+                img.css('transform', `scale(${scale})`);
             });
-        </script>
+        });
+    </script>
 
 
-    }
+
+}

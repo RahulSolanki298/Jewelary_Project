@@ -97,17 +97,37 @@ namespace B2C_ECommerce.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> ProductDetails(string productKey)
+        public async Task<IActionResult> ProductDetails(string? groupId, string? productKey, int? colorId = 0, int? shapeId = 0)
         {
-            var result = await _productRepository.GetProductStyleDTList();
-            var dtResult = result.Where(x => x.ProductKey == productKey).FirstOrDefault();
-            return View(dtResult);
+            if (string.IsNullOrWhiteSpace(groupId))
+            {
+                TempData["Status"] = "Fail";
+                TempData["Message"] = "Invalid Group Id.";
+                return View(null);
+            }
+
+            var productList = await _productRepository.GetProductStyleDTList();
+            var product = productList.FirstOrDefault(x =>
+                x.GroupId == groupId &&
+                (string.IsNullOrEmpty(productKey) || x.ProductKey == productKey) &&
+                (colorId == 0 || x.ColorId == colorId) &&
+                (shapeId == 0 || x.ShapeId == shapeId)
+            );
+
+            if (product == null)
+            {
+                TempData["Status"] = "Fail";
+                TempData["Message"] = "No Product Found";
+            }
+
+            return View(product);
         }
 
+
         [HttpGet]
-        public async Task<IActionResult> ProductDetailsByColorId(string sku, int? colorId = 0)
+        public async Task<IActionResult> ProductDetailsByColorId(string groupId, int? colorId = 0)
         {
-            var jsonResult = await _productRepository.GetProductsByColorId(sku, colorId);
+            var jsonResult = await _productRepository.GetProductsByColorId(groupId, colorId);
             return Json(jsonResult);
         }
 

@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<ProductMasterDTO>
+@Html.AntiForgeryToken()
+
 @using Common;
 @using Models;
 @{
@@ -881,6 +883,49 @@
                     }
                 });
             });
+
+
+
+        // Event handler for the "Change Display Order" button
+        $(document).on('click', '.btn-outline-dark', function () {
+            const updates = [];
+
+            $('.image-row .thumb-wrapper').each(function () {
+                const id = $(this).find('a.popupImgs').attr('id');
+                const orderVal = $(this).find('input.number-input').val();
+
+                if (id && orderVal) {
+                    updates.push({
+                        Id: id,
+                        DisplayOrder: parseInt(orderVal)
+                    });
+                }
+            });
+
+            if (updates.length === 0) {
+                alert("No display order values found.");
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("UpdateDisplayOrder", "Jewellery")', // Replace with your controller route
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(updates),
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
+                    alert(response.message || "Updated successfully!");
+                    // Optional: Refresh modal or reorder visually
+                },
+                error: function (xhr) {
+                    alert(xhr.responseJSON?.message || "Error updating display order.");
+                }
+            });
+        });
+
+
 
 
 

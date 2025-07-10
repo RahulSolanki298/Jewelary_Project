@@ -755,9 +755,9 @@ namespace ControlPanel.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> JewelryProductImages(string productKey,int shapeId,int colorId)
+        public async Task<IActionResult> JewelryProductImages(string productKey, int shapeId, int colorId)
         {
-            var jewelryImgList = await _productRepository.GetProductImagesVideos(productKey,shapeId,colorId);
+            var jewelryImgList = await _productRepository.GetProductImagesVideos(productKey, shapeId, colorId);
             return PartialView("~/Views/Jewellery/_ImagesDisplayModal.cshtml", jewelryImgList);
         }
 
@@ -1000,7 +1000,7 @@ namespace ControlPanel.Controllers
                 var reader = new MultipartReader(boundary, Request.Body);
                 var section = await reader.ReadNextSectionAsync();
                 var shapeList = await _productRepository.GetShapeList();
-
+                var dt = new ProductProperty();
                 if (section == null)
                     return Json("No file uploaded.");
 
@@ -1041,7 +1041,7 @@ namespace ControlPanel.Controllers
                                             continue;
                                         };
 
-                                        var dt = shapeList.Where(x => x.SymbolName == styleName.ShapeCode).FirstOrDefault();
+                                        dt = shapeList.Where(x => x.SymbolName == styleName.ShapeCode).FirstOrDefault();
 
                                         if (dt != null) shape = await _productRepository.GetProductShapeId(styleName.ShapeCode, dt.Id);
                                         if (shape == null) continue;
@@ -1078,9 +1078,15 @@ namespace ControlPanel.Controllers
                                         {
 
                                             //var findImgVdo = _productRepository.GetProductImagesVideoById(pro.Id.ToString);
+                                            var existingImage = await _productRepository.GetProductImageAsync(
+                                                pro.ProductKey, metalId, styleName.DesignNo, shape.Id, styleName.Index);
 
-
-
+                                            if (existingImage != null)
+                                            {
+                                                await _productRepository.DeleteImageFilesAsync(existingImage, webRootPath: _env.WebRootPath);
+                                                await _productRepository.DeleteProductImageAsync(existingImage.Id);
+                                            }
+                                            // Now insert new image
                                             prdDT = new ProductImages
                                             {
                                                 ProductId = pro.ProductKey,
@@ -1094,6 +1100,7 @@ namespace ControlPanel.Controllers
                                             if (entry.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
                                             {
                                                 prdDT.VideoId = await _productRepository.SaveImageVideoPath(relativePath);
+                                                prdDT.ImageIndexNumber = 5;
                                             }
                                             else
                                             {
@@ -1131,9 +1138,11 @@ namespace ControlPanel.Controllers
                                                         {
                                                             case "Md":
                                                                 prdDT.ImageMdId = resizedId;
+                                                                prdDT.ImageIndexNumber = styleName.Index;
                                                                 break;
                                                             case "Sm":
                                                                 prdDT.ImageSmId = resizedId;
+                                                                prdDT.ImageIndexNumber = styleName.Index;
                                                                 break;
                                                         }
                                                     }
@@ -1414,12 +1423,24 @@ namespace ControlPanel.Controllers
 
         public IActionResult GetJewelleryById(int Id)
         {
-
-
             return View();
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken] // optional
+        public async Task<IActionResult> UpdateDisplayOrder([FromBody] List<ProductImageAndVideoDTO> updates)
+        {
+            if (updates == null || updates.Count == 0)
+                return BadRequest(new { message = "No data received." });
 
+            var ids = updates.Select(x => x.Id).ToList();
+            var success = await _productRepository.UpdateDisplayOrdersAsync(updates);
+
+            if (success)
+                return Json(new { message = "Display order updated successfully!" });
+
+            return StatusCode(500, new { message = "Something went wrong." });
+        }
 
     }
 }

@@ -54,5 +54,13 @@ namespace Business.Repository.IRepository
         Task<List<string>> GetImagePathsByIds(int?[] ids);
         Task DeleteImageRecords(ProductImages record);
         Task<List<ProductImageAndVideoDTO>> GetProductImagesVideos(string productKey, int shapeId, int colorId);
+
+        Task<ProductImages> GetProductImageAsync(string productId, int metalId, string sku, int shapeId, int imageIndex);
+
+        Task DeleteImageFilesAsync(ProductImages img, string webRootPath);
+
+        Task DeleteProductImageAsync(int imageId);
+
+        Task<bool> UpdateDisplayOrdersAsync(List<ProductImageAndVideoDTO> updates);
     }
 }

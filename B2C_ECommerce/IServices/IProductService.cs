@@ -17,7 +17,7 @@ namespace B2C_ECommerce.IServices
         Task<List<CategoryDTO>> GetCategoriesList();
         Task<ProductDTO> GetProductByProductId(string productId);
         Task<PriceRanges> GetProductPriceRangeData();
-        Task<ProductDTO> GetProductsByColorId(string sku, int? colorId = 0, int? caratId = 0);
+        Task<ProductDTO> GetProductsByColorId(string groupId, int? colorId = 0, int? caratId = 0);
         Task<List<ProductPropertyDTO>> GetProductColorList();
         Task<List<ProductPropertyDTO>> GetShapeList();
         Task<IEnumerable<ProductMasterDTO>> GetSelectedProductByIds(string[] productIds);

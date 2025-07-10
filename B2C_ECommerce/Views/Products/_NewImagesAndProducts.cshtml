@@ -9,23 +9,12 @@
 {
     @foreach (var item in Model)
     {
-        //vdoUrl = item.ProductImageVideos.Where(x => x.VideoUrl != null && x.VideoUrl != "-").FirstOrDefault()?.VideoUrl;
-        //if (vdoUrl != null && vdoUrl == "-")
-        //{
-        //    vdoUrl = null;
-        //}
-
-        secImg = item.ProductImageVideos.Where(x => x.ImageUrl != null && x.ImageUrl != "-").LastOrDefault()?.ImageUrl;
-        if (secImg != null && secImg == "-")
+        if (item.ProductImageVideos.Count > 0)
         {
-            secImg = item.ProductImageVideos.Where(x => x.ImageUrl != null).FirstOrDefault()?.ImageUrl;
+            secImg = item.ProductImageVideos.Where(x => x.DisplayOrder == 2).FirstOrDefault()?.ImageUrl;
+            priImg = item.ProductImageVideos.Where(x => x.DisplayOrder == 1).FirstOrDefault()?.ImageUrl;
         }
-
-        priImg = item.ProductImageVideos.Where(x => x.ImageUrl != null && x.ImageUrl != "-").FirstOrDefault()?.ImageUrl;
-        if (priImg != null && priImg == "-")
-        {
-            priImg = item.ProductImageVideos.Where(x => x.ImageUrl != null).LastOrDefault()?.ImageUrl;
-        }
+        
         var productFirst = item.ProductItems.FirstOrDefault();
 
         <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6">
@@ -33,19 +22,18 @@
                 <input type="hidden" class="product-id" value="@item.Id" />
                 <div class="product-item">
                     <figure class="product-thumb product-box-with-border media-container">
-                        <a class="img-with-bg" href="@Url.Action("ProductDetails", "Products", new { productKey = item.ProductKey })">
+                        <a class="img-with-bg" href="@Url.Action("ProductDetails", "Products", new { groupId = item.GroupId })">
                             <img class="pri-img media-item" src="@($"{SD.ImgUrl}/{priImg}")" />
                             <img class="sec-img media-item" src="@($"{SD.ImgUrl}/{secImg}")" />
-
                         </a>
                     </figure>
 
                     <div class="product-caption text-left product-box-desc">
                         <div class="product-identity">
-                            <p class="manufacturer-name"><a href="#" class="pro-title" data-title="@productFirst.Title" data-sku="@productFirst.Sku">@productFirst.Title</a></p>
+                            <p class="manufacturer-name"><a href="#" class="pro-title" data-title="@item.Title" data-sku="@item.Sku">@productFirst.Title</a></p>
                         </div>
                         <div class="price-box">
-                            <span class="price-regular f-16" data-sku="@productFirst.Sku">$ @productFirst.Price USD</span>
+                            <span class="price-regular f-16" data-sku="@item.Sku">$ @item.Price USD</span>
                         </div>
 
                         <div class="d-flex">
@@ -88,7 +76,7 @@
                                     @foreach (var shape in item.Shapes)
                                     {
                                         <li>
-                                            <a href="#" class="shapeDT" title="@shape.Name" sku="@productFirst.Sku" colorId="@item.ColorId" shapeId="@shape.Id" data-sku="@productFirst.Sku">
+                                            <a href="#" class="shapeDT" title="@shape.Name" groupId="@productFirst.GroupId" colorId="@item.ColorId" shapeId="@shape.Id" data-sku="@productFirst.Sku">
                                                 <img src="@SD.ImgUrl@shape.IconPath" />
                                             </a>
                                         </li>
