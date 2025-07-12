@@ -429,15 +429,6 @@ namespace ControlPanel.Services
                     new ProductStyles { StyleName = "Hidden-halo",StyleImage="/assets/icons/hidden-halo.png" , CategoryId = ring.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
                     new ProductStyles { StyleName = "Eternity-Bands-Small",StyleImage="/assets/icons/eternity-bands-small.png" , CategoryId = bands.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
                     new ProductStyles { StyleName = "Eternity-ring",StyleImage="/assets/icons/hidden-ring.png" , CategoryId = ring.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
-                    
-                    //new ProductStyles { StyleName = "Wedding and Anniversary", CategoryId = bands.Id ,IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
-                    //new ProductStyles { StyleName = "Eternity", CategoryId = bands.Id ,IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
-                    //new ProductStyles { StyleName = "3/4 Eternity", CategoryId = bands.Id ,IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
-                    //new ProductStyles { StyleName = "Enhancers", CategoryId = bands.Id ,IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
-                    //new ProductStyles { StyleName = "Curve Bands", CategoryId = bands.Id ,IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
-                    //new ProductStyles { StyleName = "Open Bands", CategoryId = bands.Id ,IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
-                    //new ProductStyles { StyleName = "Design Your Stack", CategoryId = bands.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
-                    //new ProductStyles { StyleName = "Customer Favorites", CategoryId = bands.Id ,IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
                 };
                 await _db.ProductStyles.AddRangeAsync(stylesDT);
                 await _db.SaveChangesAsync();
@@ -458,7 +449,7 @@ namespace ControlPanel.Services
                     new ProductCollections { CollectionName = "Toi Et Moi", IsActivated=true ,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now},
                     new ProductCollections { CollectionName = "Naas", IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
                     new ProductCollections { CollectionName = "High Jewelry", IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
-                    new ProductCollections { CollectionName = "Aether Diamonds", IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now },
+                    new ProductCollections { CollectionName = "Aether Diamonds", IsActivated=true,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now }
                 };
                 await _db.ProductCollections.AddRangeAsync(collection);
                 await _db.SaveChangesAsync();

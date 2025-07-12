@@ -36,7 +36,6 @@ namespace ControlPanel.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IProductService _productService;
         private readonly ILogEntryRepository _logEntryRepository;
-
         public JewelleryController(IProductRepository productRepository,
                                     IProductPropertyRepository productProperty,
                                     IWebHostEnvironment env, UserManager<ApplicationUser> userManager,
@@ -1440,6 +1439,13 @@ namespace ControlPanel.Controllers
                 return Json(new { message = "Display order updated successfully!" });
 
             return StatusCode(500, new { message = "Something went wrong." });
+        }
+
+
+        public async Task<IActionResult> GetFileUploadHistory()
+        {
+
+            return View();
         }
 
     }
