@@ -99,6 +99,7 @@
             });
 
             $('#chkAllIds').on('change', function () {
+                debugger;
                 var isChecked = $(this).is(':checked');
                 $('#ringTable .chkId').not(this).prop('checked', isChecked);
                 updateSelectedIds();
@@ -235,6 +236,7 @@
             });
 
             $("#jewelleryList").on("click", ".showImgs", function (e) {
+                debugger;
             const productId = $(this).data("productid");
 
             $.ajax({
@@ -270,6 +272,7 @@
 
         function checkAll()
         {
+            debugger;
             $.ajax({
                 url: '@Url.Action("GetJewellries", "Jewellery")',
                 type: 'GET',

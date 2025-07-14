@@ -43,5 +43,7 @@ namespace DataAccess.Entities
         public DateTime? UpdatedDate { get; set; }
 
         public int? FileHistoryId { get; set; }
+
+        public int DisplayOrder {  get; set; }
     }
 }

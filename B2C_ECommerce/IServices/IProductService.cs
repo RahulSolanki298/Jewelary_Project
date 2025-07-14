@@ -30,5 +30,7 @@ namespace B2C_ECommerce.IServices
 
         /**/
         Task<IEnumerable<ProductMasterDTO>> GetProductStyleDTList();
+
+        Task<IEnumerable<ProductMasterDTO>> GetProductMasterByProperty(string sku, int colorId, int shapeId);
     }
 }

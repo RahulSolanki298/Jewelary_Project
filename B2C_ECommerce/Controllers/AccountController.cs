@@ -1,6 +1,7 @@
 ﻿using B2C_ECommerce.IServices;
 using DataAccess.Entities;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -51,48 +52,69 @@ namespace B2C_ECommerce.Controllers
 
         }
 
-        [HttpPost]
-        public async Task<IActionResult> LoginProcess([FromBody] CustomerLoginDTO loginDT)
+        [HttpGet]
+        public IActionResult LoginProcess()
         {
-            if (ModelState.IsValid)
+            try
             {
-                var response = await _accountService.CustomerSignInAsync(loginDT);
+                var customer = new CustomerLoginDTO();
+                return View(customer);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Exception in LoginProcess GET: {Message}", ex.Message);
+                return View("Error");
+            }
+        }
 
-                if (response != null)
-                {
-                    var claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Name, response.userDTO.FirstName+" "+response.userDTO.LastName),
-                        new Claim(ClaimTypes.NameIdentifier, response.userDTO.Id.ToString()) // 👈 UserId here
-                    };
-
-                    var identity = new ClaimsIdentity(claims, "MyCookieAuth");
-                    var principal = new ClaimsPrincipal(identity);
-
-                    await HttpContext.SignInAsync("MyCookieAuth", principal);
-
-
-                    return Json(new { 
-                    Status="Success",
-                    Message= "Login Successfully."
-                    });
-                }
-                else
-                {
-                    return Json(new
-                    {
-                        Status = "Error",
-                        Message = "Invalid username or password..."
-                    });
-                }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LoginProcess(CustomerLoginDTO loginDTO, string returnUrl = null)
+        {
+            // If the user is already authenticated, skip login
+            if (User.Identity.IsAuthenticated)
+            {
+                // Optionally: refresh cookie expiration or redirect
+                return LocalRedirect(returnUrl ?? Url.Action("Index", "Home"));
             }
 
-            return Json(new
+            if (!ModelState.IsValid)
+                return View(loginDTO);
+
+            var response = await _accountService.CustomerSignInAsync(loginDTO);
+
+            if (response == null || !response.IsAuthSuccessful || response.userDTO == null)
             {
-                Status = "Error",
-                Message = "Pleasen enter yourname and password"
-            });
+                ModelState.AddModelError(string.Empty, "Invalid username or password.");
+                return View(loginDTO);
+            }
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, response.userDTO.Id.ToString()),
+                new Claim(ClaimTypes.Name, $"{response.userDTO.FirstName} {response.userDTO.LastName}"),
+                new Claim(ClaimTypes.Email, response.userDTO.Email ?? "")
+            };
+
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var authProperties = new AuthenticationProperties
+            {
+                IsPersistent = loginDTO.RememberMe,
+                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30),
+                AllowRefresh = true
+            };
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity),
+                authProperties
+            );
+
+            return LocalRedirect(returnUrl ?? Url.Action("Index", "Home"));
         }
+
+
 
         [HttpGet]
         public async Task<IActionResult> RegisterProcess()

@@ -97,30 +97,30 @@ namespace B2C_ECommerce.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> ProductDetails(string? groupId, string? productKey, int? colorId = 0, int? shapeId = 0)
+        public async Task<IActionResult> ProductDetails(string? groupId, string? productKey,string? sku, int? colorId = 0, int? shapeId = 0)
         {
-            if (string.IsNullOrWhiteSpace(groupId))
+            if (!string.IsNullOrWhiteSpace(groupId))
             {
-                TempData["Status"] = "Fail";
-                TempData["Message"] = "Invalid Group Id.";
-                return View(null);
+                var productList = await _productRepository.GetProductStyleDTList();
+                var product = productList.FirstOrDefault(x =>
+                    x.GroupId == groupId &&
+                    (string.IsNullOrEmpty(productKey) || x.ProductKey == productKey) &&
+                    (colorId == 0 || x.ColorId == colorId) &&
+                    (shapeId == 0 || x.ShapeId == shapeId)
+                );
+                return View(product);
             }
 
-            var productList = await _productRepository.GetProductStyleDTList();
-            var product = productList.FirstOrDefault(x =>
-                x.GroupId == groupId &&
-                (string.IsNullOrEmpty(productKey) || x.ProductKey == productKey) &&
-                (colorId == 0 || x.ColorId == colorId) &&
-                (shapeId == 0 || x.ShapeId == shapeId)
-            );
-
-            if (product == null)
+            if (string.IsNullOrWhiteSpace(groupId) && colorId > 0 
+                                                    && shapeId > 0 
+                                                    && !string.IsNullOrWhiteSpace(sku))
             {
-                TempData["Status"] = "Fail";
-                TempData["Message"] = "No Product Found";
+                var productList=await _productRepository.GetProductMasterByProperty(sku,colorId.Value,shapeId.Value);
+
+                return View(productList.First());
             }
 
-            return View(product);
+            return View(null);
         }
 
 

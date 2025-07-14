@@ -14,7 +14,7 @@ namespace Models
         public string ProductKey { get; set; } //  PLDR-381-SE-Y
 
         public int CategoryId { get; set; }
-        
+
         public string CategoryName { get; set; }
 
         public int ShapeId { get; set; }
@@ -32,6 +32,8 @@ namespace Models
         public bool IsSale { get; set; } = false;
 
         public string Sku { get; set; }
+
+        public int DisplayOrder { get; set; } = 0;
 
         public List<ProductDTO> ProductItems { get; set; }  // detail
         public List<ProductImageAndVideoDTO> ProductImageVideos { get; set; }

@@ -125,7 +125,7 @@
                                         {
                                             var actionUrl = Url.Action("ProductDetails", "Products", new
                                             {
-                                                productKey = Model.ProductKey,
+                                                sku = Model.Sku,
                                                 colorId = color.Id,
                                                 shapeId = Model.ShapeId // or any value
                                             });
@@ -145,12 +145,8 @@
                                             bool isAvailable = groupDT != null;
 
                                             <li>
-                                                <a href="@(isAvailable ? "#" : "javascript:void(0);")"
-                                                   class="shapeDT @(isAvailable ? "border-1 border-dark" : "")"
-                                                   title="@shape.Name"
-                                                   data-groupid="@(isAvailable ? groupDT.GroupId : 0)"
-                                                   data-shapeid="@shape.Id"
-                                                   data-colorid="@Model.ColorId">
+                                                <a href="@Url.Action("ProductDetails","Products",new { sku=Model.Sku,ColorId=Model.ColorId,ShapeId=shape.Id })"
+                                                   class="shapeDT @(isAvailable ? "border-1 border-dark" : "")">
                                                     <img class="shape-img" src="@($"{SD.ImgUrl}{shape.IconPath}")" alt="@shape.Name" />
                                                 </a>
                                             </li>
@@ -200,9 +196,9 @@
                                 </div>
 
                                 <div class="quantity-cart-box d-flex align-items-center">
-                                    <div class="action_link">
+                                    @* <div class="action_link">
                                         <a class="btn btn-cart2" href="#">Add to cart</a>
-                                    </div>
+                                    </div> *@
                                     <div class="useful-links">
                                         <a href="#" data-bs-toggle="tooltip" id="btnWishListDT" title="Wishlist"><i class="pe-7s-like"></i>wishlist</a>
                                     </div>
@@ -542,7 +538,7 @@
                                 </div>
                             </div>
                             <div class="button-group">
-                                <a href="wishlist.html" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to wishlist"><i class="pe-7s-like"></i></a>
+                                <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to wishlist"><i class="pe-7s-like"></i></a>
                                 <a href="compare.html" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to Compare"><i class="pe-7s-refresh-2"></i></a>
                                 <a href="#" data-bs-toggle="modal" data-bs-target="#quick_view"><span data-bs-toggle="tooltip" data-bs-placement="left" title="Quick View"><i class="pe-7s-search"></i></span></a>
                             </div>

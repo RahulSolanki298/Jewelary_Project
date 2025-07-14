@@ -1,4 +1,6 @@
-﻿using ControlPanel.Models;
+﻿using Business.Repository.IRepository;
+using Common;
+using ControlPanel.Models;
 using DataAccess.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -16,15 +18,23 @@ namespace ControlPanel.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IB2COrdersRepository _b2COrdersRepository;
 
-        public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager)
+        public HomeController(ILogger<HomeController> logger,
+                                UserManager<ApplicationUser> userManager,
+                                IB2COrdersRepository b2COrdersRepository)
         {
             _logger = logger;
             _userManager = userManager;
+            _b2COrdersRepository = b2COrdersRepository;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            ViewBag.b2cData = await _b2COrdersRepository.GetB2COrderDeliveredList();
+            ViewBag.customerList = await _userManager.GetUsersInRoleAsync(SD.Customer);
+            ViewBag.Revenue = await _b2COrdersRepository.GetB2COrderDeliveredList();
+
             return View();
         }
 

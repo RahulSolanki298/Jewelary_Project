@@ -15,72 +15,79 @@ namespace B2C_ECommerce.Services
 {
     public class AccountService : IAccountService
     {
-        private readonly HttpClient _httpClient;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationDBContext _context;
-        public AccountService(IHttpClientFactory httpClientFactory, UserManager<ApplicationUser> userManager, ApplicationDBContext context, SignInManager<ApplicationUser> signInManager)
+        public AccountService(UserManager<ApplicationUser> userManager, ApplicationDBContext context, SignInManager<ApplicationUser> signInManager)
         {
-            _httpClient = httpClientFactory.CreateClient("API");
             _userManager = userManager;
             _context = context;
             _signInManager = signInManager;
         }
 
 
-        // Customer Sign-In method
         public async Task<AuthenticationResponseDTO> CustomerSignInAsync(CustomerLoginDTO loginDTO)
         {
             var user = await _userManager.FindByNameAsync(loginDTO.Username);
 
             if (user == null)
             {
-                return new AuthenticationResponseDTO
-                {
-                    IsAuthSuccessful = false,
-                    ErrorMessage = "Authentication unsuccessful. Check your username and password."
-                };
+                return CreateFailureResponse("Authentication unsuccessful. Check your username and password.");
             }
 
             if (user.ActivationStatus != SD.Activated)
             {
-                return new AuthenticationResponseDTO
-                {
-                    IsAuthSuccessful = false,
-                    ErrorMessage = "Login restricted: Your account is currently inactive. Contact support for assistance."
-                };
+                return CreateFailureResponse("Login restricted: Your account is currently inactive. Contact support for assistance.");
             }
 
-            var result = await _signInManager.PasswordSignInAsync(user.UserName, loginDTO.Password, loginDTO.RememberMe, lockoutOnFailure: false);
+            var signInResult = await _signInManager.PasswordSignInAsync(
+                user.UserName,
+                loginDTO.Password,
+                loginDTO.RememberMe,
+                lockoutOnFailure: false);
 
-            if (result.Succeeded)
+            if (signInResult.Succeeded)
             {
                 return new AuthenticationResponseDTO
                 {
                     IsAuthSuccessful = true,
-                    SuccessMessage = "Success: Your account has been created."
+                    SuccessMessage = "Login successful."
                 };
             }
 
-            string errorMessage = result.IsLockedOut
-                ? "Your account has been locked. Please try again later or contact support."
-                : result.IsNotAllowed
-                    ? "Login not permitted. Please verify your email address to proceed."
-                    : "Incorrect username or password.";
+            // Determine specific error
+            string error = signInResult switch
+            {
+                { IsLockedOut: true } => "Your account has been locked. Please try again later or contact support.",
+                { IsNotAllowed: true } => "Login not permitted. Please verify your email address to proceed.",
+                _ => "Incorrect username or password."
+            };
 
-            return new AuthenticationResponseDTO
+            return CreateFailureResponse(error, user);
+        }
+
+        // Helper method for consistent failure response
+        private AuthenticationResponseDTO CreateFailureResponse(string message, ApplicationUser user = null)
+        {
+            var response = new AuthenticationResponseDTO
             {
                 IsAuthSuccessful = false,
-                ErrorMessage = errorMessage,
-                userDTO = new UserDTO
+                ErrorMessage = message
+            };
+
+            if (user != null)
+            {
+                response.userDTO = new UserDTO
                 {
                     Id = user.Id,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     PhoneNo = user.PhoneNumber,
                     Email = user.Email
-                }
-            };
+                };
+            }
+
+            return response;
         }
 
 

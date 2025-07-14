@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ControlPanel.Controllers
 {
     [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
-    [Authorize]
+    //[Authorize]
     public class OrdersController : Controller
     {
         private readonly IB2COrdersRepository _OrderRepo;
