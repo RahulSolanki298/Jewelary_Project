@@ -6,40 +6,27 @@
     <link href="~/assets/css/lightslider/lightslider.css" rel="stylesheet" rel="stylesheet" />
 
     <style>
-
-        #lightSliderVertical li {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            /*height: 500px;*/
-            height: 600px;
-            width: 100%;
-            overflow: hidden;
-            background-color: #f8f8f8; /* optional, helps visualize spacing */
+        .footer-add-to-cart {
+            z-index: 9999;
         }
 
-            #lightSliderVertical li img,
-            #lightSliderVertical li video {
-                max-height: 100%;
-                max-width: 100%;
-                object-fit: contain;
-                display: block;
-                height: 570px;
+        .btn-theme {
+            background-color: #151542;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+            .btn-theme:hover {
+                background-color: #151542;
+                color: #fff;
             }
 
-        .metalHide {
-            color: black;
-            font-size: 16px;
-            font-weight: normal;
-            border: none;
-        }
-
-        .metalShow {
-            color: black;
-            font-size: 16px;
-            font-weight: bold;
-            border: 1px solid black;
-            display: block;
+        .btn-big {
+            font-size: 2rem;
+            padding: 1.5rem 3rem;
+            width: 100%;
+            text-transform: uppercase;
         }
     </style>
 
@@ -130,7 +117,7 @@
                                                 shapeId = Model.ShapeId // or any value
                                             });
                                             <li>
-                                                <a class="@color.Name.ToLower() metalColor" metalId="@color.Id" href="@actionUrl" title="@color.Name" productKey="@Model.ProductKey" data-colorName="@color.Name"><span style="font-size: 15px; color: black; padding: 5px 24px; ">@Model.ProductItems.FirstOrDefault().Karat</span></a>
+                                                <a class="@color.Name.ToLower() metalColor" metalId="@color.Id" href="@actionUrl" title="@color.Name" sku="@Model.Sku" shapeId="@Model.ShapeId" data-colorName="@color.Name"><span style="font-size: 15px; color: black; padding: 5px 24px; ">@Model.ProductItems.FirstOrDefault().Karat</span></a>
                                             </li>
                                         }
                                     </ul>
@@ -733,13 +720,31 @@
     </div>
 </section>
 
-<!-- Fixed Footer Add to Cart Bar -->
-<div id="footerCartBar" class="footer-add-to-cart fixed-bottom bg-white shadow-lg border-top px-3 py-3">
-    <div>
-        <strong>@Model.Title</strong> <br />
-        <h3>$@Model.Price USD</h3>
+<div class="footer-add-to-cart fixed-bottom bg-white shadow-lg border-top px-3 py-3">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <!-- Column 1: Estimated Ship Date + Price -->
+            <div class="col-12 col-md-3 mb-2 mb-md-0 text-md-start text-center">
+                <small class="text-muted d-block">Estimated Ship Date: @DateTime.Now.AddDays(10).ToString("d")</small>
+                <div class="mt-1">
+                    <span class="fw-bold text-dark" style="font-size: 1.75rem; line-height: 1.2;">$@Model.Price USD</span>
+                </div>
+            </div>
+
+
+            <!-- Column 2: Info Text -->
+            <div class="col-12 col-md-6 text-center">
+                <div class="text-muted small">Starting at $64/mo or 0% APR with Affirm. <a href="#" class="text-theme">Prequalify now</a></div>
+                <div class="text-muted small">No credit? Pay over time. <a href="#" class="text-theme">Estimate Payment</a></div>
+                <div class="text-muted small">Earn 5% cashback on this purchase. <a href="#" class="text-theme">Learn more</a> about GB Club</div>
+            </div>
+
+            <!-- Column 3: Add to Cart -->
+            <div class="col-12 col-md-3 text-md-end text-center mt-2 mt-md-0">
+                <a href="#" class="btn btn-theme btn-lg fs-3 px-5 py-3 w-100 text-uppercase" id="btnAdd2Cart" data-diamondId="@Model.Id">Add to Bag</a>
+            </div>
+        </div>
     </div>
-    <a href="#" class="btn btn-theme px-4 py-2">Add to Cart</a>
 </div>
 
 
@@ -776,10 +781,12 @@
         $(document).ready(function () {
             initializeSlider();
 
-            $(document).on("click", ".metalColor", function () {
+            $(document).on("hover", ".metalColor", function () {
+                debugger;
                 const colorId = $(this).attr("metalId");
-                const productKey = $(this).attr("productKey");
-                GetProductByColorId(productKey, colorId);
+                const sku = $(this).attr("sku");
+                const shapeId = $(this).attr("shapeId");
+                GetProductByColorId(sku, colorId,shapeId);
             });
 
             $(window).on('resize', function () {
@@ -821,13 +828,14 @@
             $("#wishlistMobileCounter").text(wishlist.length + productWishlist.length);
         }
 
-        function GetProductByColorId(productKey, colorId) {
+        function GetProductByColorId(sku, colorId, shapeId) {
             debugger;
             $.ajax({
                 url: '@Url.Action("ProductDetailsByColorId", "Products")',
                 data: {
-                    productKey: productKey,
-                    colorId: parseInt(colorId)
+                    sku: sku,
+                    colorId: parseInt(colorId),
+                    shapeId: parseInt(shapeId)
                 },
                 type: 'GET',
                 dataType: 'json'

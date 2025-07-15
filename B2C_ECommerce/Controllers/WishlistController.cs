@@ -1,6 +1,7 @@
 ﻿using B2C_ECommerce.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,27 +23,37 @@ namespace B2C_ECommerce.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetWishListByIds(string diamondIds,string productIds)
+        public async Task<IActionResult> GetWishListByIds(string diamondIds, string productIds)
         {
-            WishlistModel data = new WishlistModel();
+            var wishlist = new WishlistModel();
 
-            if (!string.IsNullOrEmpty(diamondIds) &&  diamondIds.Length > 0)
+            // Parse diamond IDs
+            var diamondIdArray = ParseIds(diamondIds);
+            if (diamondIdArray.Length > 0)
             {
-                int[] diamondIdArray = diamondIds.Split(',')
-                                  .Select(id => int.Parse(id))
-                                  .ToArray();
-                data.Diamonds = await _diamondService.GetSelectedDiamondByIds(diamondIdArray);
+                wishlist.Diamonds = await _diamondService.GetSelectedDiamondByIds(diamondIdArray);
             }
 
-            if (!string.IsNullOrEmpty(productIds) && productIds.Length > 0)
+            // Parse product IDs
+            var productIdArray = ParseIds(productIds);
+            if (productIdArray.Length > 0)
             {
-                string[] productIdArray = productIds.Split(',')
-                                  .Select(id => id)
-                                  .ToArray();
-               // data.Jewelleries = await _productService.GetSelectedProductByIds(productIdArray);
+                wishlist.Jewelleries = await _productService.GetSelectedProductByIds(productIdArray);
             }
-            
-            return PartialView("_WishlistDiamonds", data);
+
+            return PartialView("_WishlistDiamonds", wishlist);
         }
+
+        private int[] ParseIds(string ids)
+        {
+            if (string.IsNullOrWhiteSpace(ids)) return Array.Empty<int>();
+
+            return ids.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                      .Select(id => id.Trim())
+                      .Where(id => int.TryParse(id, out _))
+                      .Select(int.Parse)
+                      .ToArray();
+        }
+
     }
 }

@@ -125,29 +125,29 @@ namespace B2C_ECommerce.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> ProductDetailsByColorId(string groupId, int? colorId = 0)
+        public async Task<IActionResult> ProductDetailsByColorId(string sku,int? colorId = 0,int? shapeId=0)
         {
-            var jsonResult = await _productRepository.GetProductsByColorId(groupId, colorId);
-            return Json(jsonResult);
+            var productList = await _productRepository.GetProductMasterByProperty(sku, colorId.Value, shapeId.Value);
+            return Json(productList.First());
         }
 
-        [HttpGet]
-        public async Task<IActionResult> ProductDetailsByCaratId(string sku, int? caratId = 0)
-        {
-            var jsonResult = await _productRepository.GetProductsByColorId(sku, 0, caratId);
-            return Json(jsonResult);
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> ProductDetailsByCaratId(string sku, int? caratId = 0)
+        //{
+        //    var jsonResult = await _productRepository.GetProductsByColorId(sku, 0, caratId);
+        //    return Json(jsonResult);
+        //}
 
-        [HttpGet]
-        public async Task<IActionResult> GetProductDetailsByShapeId(string sku, int? shapeId = 0, int colorId = 0)
-        {
-            if (colorId > 0 && shapeId > 0)
-            {
-                var jsonResult = await _productRepository.GetJewelleryByShapeColorId(sku, colorId, shapeId);
-                return Json(jsonResult);
-            }
+        //[HttpGet]
+        //public async Task<IActionResult> GetProductDetailsByShapeId(string sku, int? shapeId = 0, int colorId = 0)
+        //{
+        //    if (colorId > 0 && shapeId > 0)
+        //    {
+        //        var jsonResult = await _productRepository.GetJewelleryByShapeColorId(sku, colorId, shapeId);
+        //        return Json(jsonResult);
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
     }
 }

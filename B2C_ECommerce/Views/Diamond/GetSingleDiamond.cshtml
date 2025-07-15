@@ -325,8 +325,10 @@
         <div class="row align-items-center">
             <!-- Column 1: Establish Date -->
             <div class="col-12 col-md-3 mb-2 mb-md-0 text-md-start text-center">
-                <small class="text-muted">Estimated Ship Date. @DateTime.Now.ToString("yyyy")</small>
-                <div><strong class="text-dark">$@Model.Price USD</strong></div>
+                <small class="text-muted d-block">Estimated Ship Date: @DateTime.Now.AddDays(10).ToString("d")</small>
+                <div class="mt-1">
+                    <span class="fw-bold text-dark" style="font-size: 1.75rem; line-height: 1.2;">$@Model.Price USD</span>
+                </div>
             </div>
 
             <!-- Column 2: Info Text -->

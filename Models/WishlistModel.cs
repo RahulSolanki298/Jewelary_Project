@@ -5,6 +5,6 @@ namespace Models
     public class WishlistModel
     {
         public IEnumerable<DiamondData> Diamonds { get; set; }
-        public IEnumerable<ProductDTO> Jewelleries { get; set; }
+        public IEnumerable<ProductMasterDTO> Jewelleries { get; set; }
     }
 }

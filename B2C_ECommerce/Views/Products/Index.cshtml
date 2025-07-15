@@ -442,26 +442,27 @@
 
                             var productId = $(this).attr('productId');
                             var metalId = $(this).attr('metalid');
+                            var shapeId = $(this).attr('shapeId');
                             $(".metalColor").removeClass("metalShow");
                             $(".metalColor").addClass("metalHide");
 
                             $(this).addClass("metalShow");
-                            GetProductByColorId(productId, metalId);
+                            GetProductByColorId(productId, metalId, shapeId);
                     });
 
 
 
                     $("#MyProductsImg").on("mouseenter", ".metalColor", function (event) {
                         event.preventDefault();
-
-                        var productId = $(this).attr('productId');
+                        debugger;
+                        var sku = $(this).attr('sku');
                         var metalId = $(this).attr('metalid');
-
+                        var shapeId = $(this).attr('shapeId');
                         $(this).closest('.productCard').find('.metalColor').removeClass("metalHide");
 
                         $(this).addClass("metalHide");
 
-                        GetProductByColorId(productId, metalId);
+                        GetProductByColorId(sku, metalId,shapeId);
                     });
 
 
@@ -488,9 +489,9 @@
                     $("#MyProductsImg").on("click", ".shapeDT", function (event) {
                         event.preventDefault();
                         var sku = $(this).attr('sku');
-                        var shapeId = $(this).attr('shapeId');
+                        var shapeId = $(this).attr('shapeid');
                         var colorId = $(this).attr('colorId');
-                        GetProductByShapeId(sku, shapeId, colorId)
+                        GetProductByColorId(sku, colorId, shapeId)
                     });
 
 
@@ -675,19 +676,20 @@
                 hideLoader();
             }
 
-            function GetProductByColorId(productId, colorId) {
+                function GetProductByColorId(productId, colorId, shapeId) {
                 $.ajax({
                     url: '@Url.Action("ProductDetailsByColorId", "Products")',
                     data: {
                         sku: productId,
                         colorId: parseInt(colorId),
-                        caratId:0
+                        shapeId: parseInt(shapeId)
                     },
                     type: 'GET',
                     dataType: 'json'
                 })
                     .done(function (response) {
-                        const $productContainer = $(".product-item").has("[data-sku='" + productId + "']");
+                        debugger;
+                        const $productContainer = $(".product-item").has("[sku='" + productId + "']");
                         const baseUrl = '@SD.BaseApiUrl'.replace(/\\/g, '/');
 
 
@@ -783,6 +785,7 @@
                     dataType: 'json'
                 })
                     .done(function (response) {
+                        debugger;
                         const $productContainer = $(".product-item").has("[data-sku='" + sku + "']");
                         const baseUrl = '@SD.BaseApiUrl'.replace(/\\/g, '/');
 
