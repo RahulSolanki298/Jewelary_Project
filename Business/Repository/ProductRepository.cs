@@ -3399,7 +3399,7 @@ namespace Business.Repository
 
             // Step 6: Get FileManager mapping (Image & Video URLs)
             var fileIds = productImages
-                .SelectMany(x => new[] { x.ImageSmId, x.VideoId })
+                .SelectMany(x => new[] { x.ImageMdId, x.VideoId })
                 .Where(x => x.HasValue)
                 .Select(x => x.Value)
                 .Distinct()
@@ -3593,8 +3593,8 @@ namespace Business.Repository
                     select new ProductImageAndVideoDTO
                     {
                         ProductId = img.ProductId,
-                        ImageUrl = img.ImageSmId.HasValue && fileManagerData.ContainsKey(img.ImageSmId.Value)
-                            ? fileManagerData[img.ImageSmId.Value]
+                        ImageUrl = img.ImageMdId.HasValue && fileManagerData.ContainsKey(img.ImageMdId.Value)
+                            ? fileManagerData[img.ImageMdId.Value]
                             : null,
                         VideoUrl = img.VideoId.HasValue && fileManagerData.ContainsKey(img.VideoId.Value)
                             ? fileManagerData[img.VideoId.Value]

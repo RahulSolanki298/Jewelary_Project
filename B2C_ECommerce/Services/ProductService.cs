@@ -877,7 +877,7 @@ namespace B2C_ECommerce.Services
 
         public async Task<IEnumerable<ProductMasterDTO>> GetSelectedProductByIds(int[] productIds)
         {
-            var allProducts = await _productRepository.GetProductStyleList();
+            var allProducts = await _productRepository.GetProductMasterList(SD.Activated);
             return allProducts.Where(x => productIds.Contains(x.Id)).ToList();
         }
         public async Task<List<ProductStyles>> ProductStyleDataList()

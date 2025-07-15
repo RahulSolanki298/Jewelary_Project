@@ -1,149 +1,104 @@
 ﻿@model Models.WishlistModel
 @using Common;
+
 @{
-      var secImg = string.Empty;
-      var priImg = string.Empty;
-      var vdoUrl = string.Empty;
+    var priImg = string.Empty;
+    var secImg = string.Empty;
 }
 
-<div class="shop-main-wrapper filter-padding">
-    <div class="container-fluid">
+<div class="shop-main-wrapper py-5 bg-light">
+    <div class="container">
         <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 text-center">
-                <h2>Wishlist</h2>
+            <div class="col text-center mb-4">
+                <h2 class="fw-bold">Your Wishlist</h2>
+                <hr class="w-25 mx-auto" />
             </div>
         </div>
-    </div>
-    <hr />
-    <div class="custom-container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="shop-product-wrapper">
 
-                    <div class="shop-product-wrap grid-view row mbn-30">
+        @if (Model != null && ((Model?.Jewelleries?.Any() ?? false) || (Model?.Diamonds?.Any() ?? false)))
+        {
+        <div class="row g-4">
+            @* Jewelry Items *@
+            @if (Model?.Jewelleries != null && Model.Jewelleries.Any())
+                {
+                    foreach (var item in Model.Jewelleries)
+                    {
+                        if (item == null) continue;
 
+                        var images = item.ProductImageVideos
+                            ?.Where(x => !string.IsNullOrEmpty(x.ImageUrl) && x.ImageUrl != "-")
+                            .OrderBy(x => x.DisplayOrder)
+                            .ToList();
 
-                        @if (Model != null && Model.Jewelleries != null && Model.Jewelleries.Count() > 0)
-                        {
-                            @foreach (var item in Model.Jewelleries)
-                            {
-                                @if (item != null)
-                                {
-                                    foreach (var imgVdo in item.ProductImageVideos.OrderBy(x => x.DisplayOrder))
-                                    {
-                                        if (!string.IsNullOrEmpty(imgVdo.ImageUrl) && imgVdo.ImageUrl != "-")
-                                        {
-                                            <li data-thumb="@($"{SD.ImgUrl}/{imgVdo.ImageUrl}")">
-
-                                                <div class="zoom-wrapper">
-                                                    <center>
-                                                        <img src="@($"{SD.ImgUrl}/{imgVdo.ImageUrl}")" class="zoom-image" />
-                                                    </center>
-                                                </div>
-
-                                            </li>
-                                        }
-                                        else if (!string.IsNullOrEmpty(imgVdo.VideoUrl) && imgVdo.VideoUrl != "-")
-                                        {
-                                            <li data-thumb="@SD.ShapeImgUrl/assets/img/video/video-icon.svg">
-                                                <a>
-                                                    <video autoplay="autoplay" loop="loop" muted="muted" playsinline preload="auto" style="max-width: 100%;">
-                                                        <source src="@($"{SD.ImgUrl}/{imgVdo.VideoUrl}")" type="video/mp4" />
-                                                    </video>
-                                                </a>
-                                            </li>
-                                        }
-                                    }
-                                }
-
-                                <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6">
-                                    <div class="product-main-box">
-                                        <input type="hidden" class="product-id" value="@item.Id" />
-                                        <div class="float-end p-2 f-16 text-dark remove-product" data-productId="@item.Id">
-                                            <i class="fa fa-close"></i>
-                                        </div>
-                                        <div class="product-item">
-                                            <figure class="product-thumb product-box-with-border media-container">
-                                                <a class="img-with-bg">
-                                                    <img class="pri-img media-item" style="height:420px;" src="@($"{SD.ImgUrl}/{priImg}")" />
-                                                    <img class="sec-img media-item" style="height:420px;" src="@($"{SD.ImgUrl}/{secImg}")" />
-                                                </a>
-                                            </figure>
-
-                                            <div class="product-caption text-left product-box-desc">
-                                                <div class="product-identity">
-                                                    <p class="manufacturer-name"><a href="#" class="pro-title" data-title="@item.Title">@item.Title</a></p>
-                                                </div>
-                                                <div class="price-box">
-                                                    <span class="price-regular f-16" data-sku="@item.Sku">$ @item.Price USD</span>
-                                                </div>
-                                                <div class="text-center mb-2">
-                                                    <a href="@Url.Action("ProductDetails","Products",new { id= item.Id})" class="btn btn-sm btn-dark btnWishlist">VIEW DETAIL</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            }
-
-                        }
-
-                        @if (Model != null && Model.Diamonds != null && Model.Diamonds.Count() > 0)
-                        {
-                            @foreach (var item in Model.Diamonds)
-                            {
-                                <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6">
-                                    <div class="product-main-box">
-                                        <input type="hidden" class="diamond-id" value="@item.Id" />
-                                        <div class="product-item">
-                                            <figure class="product-thumb product-box-with-border media-container">
-                                                <span class="float-end p-2 f-16 text-dark remove-diamond" data-diamondId="@item.Id">
-                                                    <i class="fa fa-close"></i>
-                                                </span>
-                                                <a class="img-with-bg" href="@Url.Action("ProductDetails", "Products", new { id = item.Id })">
-                                                    @if (item.DiamondImagePath != null)
-                                                    {
-                                                        <img src="@item.DiamondImagePath" alt="product-details" class="media-item">
-                                                    }
-                                                    else if (item.DiamondVideoPath != null)
-                                                    {
-                                                        <iframe src="@item.DiamondVideoPath"
-                                                                style="width:100%; height:420px; padding:5px 5px;"
-                                                                frameborder="0"
-                                                                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                                                                allowfullscreen>
-                                                        </iframe>
-                                                    }
-                                                    else
-                                                    {
-                                                        <img src="~/assets/img/no-image-icon-23489.png" alt="product-details">
-                                                    }
-                                                </a>
-                                            </figure>
-
-                                            <div class="product-caption text-left product-box-desc">
-                                                <div class="product-identity">
-                                                    <p class="manufacturer-name"><a href="#" class="pro-title">@item.Carat Carat @item.ShapeName Shape @item.ColorName  @item.ClarityName @item.LabName</a></p>
-                                                    @*<p style="font-size:medium;"> ( @item.CutName ) Cut | ( @item.ColorName ) Color | ( @item.ClarityName ) Clarity</p>*@
-                                                </div>
-                                                <div class="price-box">
-                                                    <span class="price-regular f-16">$ @item.Price USD</span>
-                                                </div>
-                                                <div class="text-center mb-2">
-                                                    <a href="@Url.Action("GetSingleDiamond","Diamond")?diamondId=@item.Id" class="btn btn-sm btn-dark btnWishlist">VIEW DETAIL</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            }
-
-                        }
+                        priImg = images?.FirstOrDefault()?.ImageUrl ?? "assets/img/no-image-icon-23489.png";
+                        secImg = images?.Skip(1).FirstOrDefault()?.ImageUrl ?? priImg;
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <div class="card shadow-sm h-100 border-0">
+                    <div class="position-relative">
+                        <a href="@Url.Action("ProductDetails", "Products", new { groupId = item.GroupId })">
+                            <img src="@($"{SD.ImgUrl}/{priImg}")" class="card-img-top img-fluid" alt="@item.Title" style="height: 280px; object-fit: cover;" />
+                        </a>
+                        <button type="button" class="btn-close position-absolute top-0 end-0 m-2 remove-product" aria-label="Remove" data-productId="@item.Id"></button>
+                    </div>
+                    <div class="card-body text-center">
+                        <h6 class="fw-semibold">@item.Title</h6>
+                        <div class="text-muted mb-2">$@item.Price USD</div>
+                        <a href="@Url.Action("ProductDetails", "Products", new { groupId = item.GroupId })" class="btn btn-outline-dark btn-sm">View Detail</a>
                     </div>
                 </div>
             </div>
+                    }
+                }
+
+            @* Diamond Items *@
+            @if (Model?.Diamonds != null && Model.Diamonds.Any())
+                {
+                    foreach (var item in Model.Diamonds)
+                    {
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <div class="card shadow-sm h-100 border-0">
+                    <div class="position-relative">
+                        <a href="@Url.Action("GetSingleDiamond", "Diamond", new { diamondId = item.Id })">
+                            @if (!string.IsNullOrEmpty(item.DiamondImagePath))
+                                {
+                            <img src="@item.DiamondImagePath" class="card-img-top img-fluid" alt="Diamond Image" style="height: 280px; object-fit: cover;" />
+                                }
+                                else if (!string.IsNullOrEmpty(item.DiamondVideoPath))
+                                {
+                            <iframe src="@item.DiamondVideoPath" class="w-100" style="height: 280px;" frameborder="0" allowfullscreen></iframe>
+                                }
+                                else
+                                {
+                            <img src="~/assets/img/no-image-icon-23489.png" class="card-img-top img-fluid" alt="No Image" style="height: 280px; object-fit: cover;" />
+                                }
+                        </a>
+                        <button type="button" class="btn-close position-absolute top-0 end-0 m-2 remove-diamond" aria-label="Remove" data-diamondId="@item.Id"></button>
+                    </div>
+                    <div class="card-body text-center">
+                        <p class="mb-1 small text-muted">
+                            @item.Carat Carat • @item.ShapeName • @item.ColorName • @item.ClarityName • @item.LabName
+                        </p>
+                        <div class="text-muted mb-2">$@item.Price USD</div>
+                        <a href="@Url.Action("GetSingleDiamond", "Diamond", new { diamondId = item.Id })" class="btn btn-outline-dark btn-sm">View Detail</a>
+                    </div>
+                </div>
+            </div>
+                    }
+                }
         </div>
+        }
+        else
+        {
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center py-5">
+                <img src="~/assets/img/empty-wishlist.svg" class="img-fluid mb-4" alt="Empty Wishlist" style="max-width: 200px;" />
+                <h4 class="text-muted">Your wishlist is empty</h4>
+                <p class="text-secondary">Looks like you haven’t added anything yet.</p>
+                <a href="@Url.Action("Index", "Products")" class="btn btn-primary px-4 py-2 mt-3">
+                    <i class="fa fa-shopping-bag me-2"></i> Start Shopping
+                </a>
+            </div>
+        </div>
+        }
     </div>
 </div>
