@@ -153,10 +153,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                   
+
                     @if (Model != null)
                     {
-
                         @foreach (var item in Model.Where(x => x.CategoryName == SD.Rings))
                         {
                             var product = item.ProductItems.FirstOrDefault();
@@ -179,13 +178,14 @@
                                             {
                                                 if (!string.IsNullOrEmpty(imgVdo.ImageUrl) && imgVdo.ImageUrl != "-")
                                                 {
-                                                    <a class="showImgs" data-productKey="@product.ProductKey">
+                                                    @*<a class="showImgs" productKey="@product.ProductKey">*@
+                                                    <a class="showImgs" data-productKey="@item.ProductKey" data-colorId="@item.ColorId" data-shapeId="@item.ShapeId">
                                                         <img src="@SD.ImgUrl/@imgVdo.ImageUrl" alt="Image" class="thumb-img" />
                                                     </a>
                                                 }
                                                 else if (!string.IsNullOrEmpty(imgVdo.VideoUrl) && imgVdo.VideoUrl != "-")
                                                 {
-                                                    <a class="showImgs" data-productKey="@product.ProductKey">
+                                                    <a class="showImgs" data-productKey="@item.ProductKey" data-colorId="@item.ColorId" data-shapeId="@item.ShapeId">
                                                         <img src="@SD.ImgUrl/assets/img/video-icon.svg" alt="Video" class="thumb-img" />
                                                     </a>
                                                 }

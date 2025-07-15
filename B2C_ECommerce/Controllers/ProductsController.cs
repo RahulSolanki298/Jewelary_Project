@@ -101,14 +101,16 @@ namespace B2C_ECommerce.Controllers
         {
             if (!string.IsNullOrWhiteSpace(groupId))
             {
-                var productList = await _productRepository.GetProductStyleDTList();
-                var product = productList.FirstOrDefault(x =>
-                    x.GroupId == groupId &&
-                    (string.IsNullOrEmpty(productKey) || x.ProductKey == productKey) &&
-                    (colorId == 0 || x.ColorId == colorId) &&
-                    (shapeId == 0 || x.ShapeId == shapeId)
-                );
-                return View(product);
+                //var productList = await _productRepository.GetProductStyleDTList();
+                var productList = await _productRepository.GetProductListByGroupId(groupId);
+                //var product = productList.FirstOrDefault(x =>
+                //    x.GroupId == groupId 
+                //    //&&
+                //    //(string.IsNullOrEmpty(productKey) || x.ProductKey == productKey) ||
+                //    //(colorId == 0 || x.ColorId == colorId) ||
+                //    //(shapeId == 0 || x.ShapeId == shapeId)
+                //);
+                return View(productList.FirstOrDefault());
             }
 
             if (string.IsNullOrWhiteSpace(groupId) && colorId > 0 

@@ -21,7 +21,7 @@
             @* Jewelry Items *@
             @if (Model?.Jewelleries != null && Model.Jewelleries.Any())
                 {
-                    foreach (var item in Model.Jewelleries)
+                    @foreach (var item in Model.Jewelleries)
                     {
                         if (item == null) continue;
 
@@ -35,7 +35,7 @@
             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                 <div class="card shadow-sm h-100 border-0">
                     <div class="position-relative">
-                        <a href="@Url.Action("ProductDetails", "Products", new { groupId = item.GroupId })">
+                        <a href="@Url.Action("ProductDetails", "Products", new { groupId = item.GroupId,productKey=item.ProductKey })">
                             <img src="@($"{SD.ImgUrl}/{priImg}")" class="card-img-top img-fluid" alt="@item.Title" style="height: 280px; object-fit: cover;" />
                         </a>
                         <button type="button" class="btn-close position-absolute top-0 end-0 m-2 remove-product" aria-label="Remove" data-productId="@item.Id"></button>

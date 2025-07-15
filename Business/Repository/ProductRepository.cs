@@ -3490,7 +3490,10 @@ namespace Business.Repository
                     CreatedDate = product.CreatedDate,
                     UpdatedDate = product.UpdatedDate,
                     DisplayDate = product.UpdatedDate.Value.ToString("dd/MM/yyyy hh:mm tt"),
-                    UpdatedPersonName = usr.FirstName
+                    UpdatedPersonName = usr.FirstName,
+                    GroupId=product.GroupId,
+                    ProductKey=product.ProductKey,
+                    
                 })
             .OrderByDescending(x => x.Sku)
             .ToListAsync();

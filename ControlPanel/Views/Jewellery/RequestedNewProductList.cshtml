@@ -158,7 +158,7 @@
                                                                 }
                                                                 else if (!string.IsNullOrEmpty(imgVdo.VideoUrl) && imgVdo.VideoUrl != "-")
                                                                 {
-                                                                    <a class="showImgs" data-productKey="@item.ProductKey">
+                                                                    <a class="showImgs" data-productKey="@item.ProductKey" data-colorId="@item.ColorId" data-shapeId="@item.ShapeId">
                                                                         <img src="@SD.ImgUrl/assets/img/video-icon.svg" alt="Video" class="thumb-img" />
                                                                     </a>
                                                                 }
@@ -816,7 +816,7 @@
                 $('#txtProductIds').val(ids.join(','));
             }
 
-            $("#modalImages").on("click", ".popupImgs", function () {
+          $("#modalImages").on("click", ".popupImgs", function () {
                const id = $(this).attr("id");
 
                 $.ajax({

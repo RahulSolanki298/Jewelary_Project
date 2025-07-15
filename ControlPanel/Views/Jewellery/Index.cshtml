@@ -1,4 +1,6 @@
 ﻿@using Common
+@Html.AntiForgeryToken()
+
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
 
@@ -81,6 +83,7 @@
 
 @section Scripts
 {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         $(document).ready(function(){
             getDiamondList();
@@ -88,18 +91,17 @@
             //$("#ExcelUpload").on("click",function(){
             //    $("#showFileUpload").modal("show");
             //});
-             $('#modalImages #ringTable').DataTable({
-                pageLength: 10,
-                lengthChange: true,    // Allows user to choose number of rows per page
-                ordering: false,       // Disable sorting (optional)
-                info: true,
-                language: {
-                    emptyTable: "No rings found"
-                }
-            });
+            // $('#modalImages #ringTable').DataTable({
+            //    pageLength: 10,
+            //    lengthChange: true,    // Allows user to choose number of rows per page
+            //    ordering: false,       // Disable sorting (optional)
+            //    info: true,
+            //    language: {
+            //        emptyTable: "No rings found"
+            //    }
+            //});
 
             $('#chkAllIds').on('change', function () {
-                debugger;
                 var isChecked = $(this).is(':checked');
                 $('#ringTable .chkId').not(this).prop('checked', isChecked);
                 updateSelectedIds();
@@ -157,6 +159,7 @@
             });
 
             $('#jewelleryList').on('click', '.dropdown-item', function (e) {
+                debugger;
                     e.preventDefault();
 
                     var status = $(this).data('status');
@@ -237,11 +240,24 @@
 
             $("#jewelleryList").on("click", ".showImgs", function (e) {
                 debugger;
-            const productId = $(this).data("productid");
+                const $this = $(this); // Cache selector for performance
+                const productId = $this.data("productkey");
+                const shapeId = $this.data("shapeid");
+                const colorId = $this.data("colorid");
+
+                if (!productId) {
+                    console.warn("Product ID not found.");
+                    return;
+                }
 
             $.ajax({
-                url: `@Url.Action("JewelryProductImages", "Jewellery")?productId=${productId}`,
+                url: `@Url.Action("JewelryProductImages", "Jewellery")`,
                 type: "GET",
+                data: {
+                    productKey: productId,
+                    shapeId: shapeId,
+                    colorId: colorId
+                },
                 success: function (data) {
                     // Assuming you have a modal or container to show the images
                     $("#modalImages").html(data);
