@@ -109,7 +109,9 @@
                         <table class="table table-hover table-bordered mb-0" id="ringTable">
                             <thead>
                                 <tr>
-                                    <th scope="col"><input type="checkbox" class="chkId" id="chkRingsIds" /></th>
+                                    <th scope="col">
+                                        <input type="checkbox" class="chkId" id="chkRingsIds" />
+                                    </th>
                                     <th scope="col">Images</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Title</th>
@@ -724,7 +726,6 @@
             // Status Update Button Click
             $(document).ready(function () {
                  $('.dropdown-item').on('click', function (e) {
-                            debugger;
                             e.preventDefault();
 
                             const newStatus = $(this).data('status');
