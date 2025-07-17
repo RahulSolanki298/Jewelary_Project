@@ -55,25 +55,30 @@
 <section class="section">
     <div class="row">
         <div class="col-lg-12">
-            <div class="col-lg-8">
-                <h4> <b>Product Verification and Validation (Active | Deactive | Hold)</b></h4>
-            </div>
-            <div class="col-lg-4">
-                <div class="btn-group dropup float-end">
-                    <a class="" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-three-dots-vertical"></i>
-                    </a>
-                    <input type="hidden" id="txtProductIds" />
+            <div class="row align-items-center">
+                <!-- Title Section -->
+                <div class="col-lg-8 col-md-8 col-sm-12">
+                    <h4 class="mb-0"><b>Product Verification and Validation (Active | Deactive | Hold)</b></h4>
+                </div>
 
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#" data-status="Activated">Activated</a></li>
-                        <li><a class="dropdown-item" href="#" data-status="Deactivated">Deactivated</a></li>
-                        <li><a class="dropdown-item" href="#" data-status="Hold">Hold</a></li>
-                    </ul>
+                <!-- Dropdown Section -->
+                <div class="col-lg-4 col-md-4 col-sm-12 text-end">
+                    <div class="btn-group dropup">
+                        <a class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </a>
+                        <input type="hidden" id="txtProductIds" />
 
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#" data-status="Activated">Activated</a></li>
+                            <li><a class="dropdown-item" href="#" data-status="Deactivated">Deactivated</a></li>
+                            <li><a class="dropdown-item" href="#" data-status="Hold">Hold</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
+
         <div class="card">
             <div class="card-body">
                 <div class="row mb-2">

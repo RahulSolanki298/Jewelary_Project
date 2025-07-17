@@ -19,7 +19,7 @@
 
                 <div class="filter">
                     <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    @*<ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                         <li class="dropdown-header text-start">
                             <h6>Filter</h6>
                         </li>
@@ -27,11 +27,11 @@
                         <li><a class="dropdown-item" href="#">Today</a></li>
                         <li><a class="dropdown-item" href="#">This Month</a></li>
                         <li><a class="dropdown-item" href="#">This Year</a></li>
-                    </ul>
+                    </ul>*@
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">Main Properties</h5>
-                    <table class="table table-borderless datatable mb-0" id="diamondProperty">
+                    <table class="table table-borderless mb-0" id="diamondProperty">
                         <thead class="table-light text-center">
                             <tr>
                                 <th scope="col">#</th>
@@ -45,8 +45,10 @@
                             {
                                 foreach (var item in Model.Where(x => x.ParentId == null))
                                 {
-                                    <tr class="clickable-row" data-propertyName="@item.Name">
-                                        <td>@(index++)</td>
+                                    <tr class="clickable-row" propertyName="@item.Name">
+                                        <td>
+                                            @(index++)
+                                        </td>
                                         <td>@item.Name</td>
                                         <td>
                                             @if (item.IsActive)
@@ -107,7 +109,7 @@
     <script>
             $(document).ready(function () {
                 $('.clickable-row').on('click', function () {
-                var propertyName = $(this).data('propertyname'); // Ensure correct casing in data attribute
+                var propertyName = $(this).attr('propertyname'); // Ensure correct casing in data attribute
 
                 $.ajax({
                     url: '@Url.Action("JewelryPropertyItems", "Jewellery")' + '?propertyName=' + encodeURIComponent(propertyName),
@@ -138,6 +140,8 @@
 
                     $('#diamondPropertyItems tbody tr').each(function () {
                         let $row = $(this);
+                        let id = $row.find('.id').val();
+                        let parentId = $row.find('.parentid').val();
                         let name = $row.find('.propName').val();
                         let symbolName = $row.find('.symbolName').val();
                         let isActive = $row.find('input[type="checkbox"]').is(':checked');
@@ -146,7 +150,7 @@
                         let dispOrder = $row.find('.dispOrder').val();
 
                         // You may need to get ID too (add a hidden input or data attribute if it's not already available)
-                        let id = $row.data("id");
+                        //let id = $row.data("id");
 
                         properties.push({
                             Id: id, // optional, if you want to support updating
@@ -155,7 +159,8 @@
                             IsActive: isActive,
                             Synonyms: synonyms,
                             IconPath: iconPath,
-                            DispOrder: dispOrder
+                            DisplayOrder: dispOrder,
+                            ParentId:parentId
                         });
                     });
 
@@ -165,19 +170,30 @@
                     return;
                 }
 
-                $.ajax({
+                    $.ajax({
                     url: '@Url.Action("SaveBulkProductProperty", "Jewellery")',
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(properties),
                     success: function (res) {
-                        alert(res.message || "Properties saved successfully!");
+                        Swal.fire({
+                            title: res.message,
+                            icon: "success",
+                            draggable: true
+                        });
+                        location.reload();
                     },
                     error: function (xhr, status, error) {
                         console.error(error);
-                        alert("An error occurred while saving.");
+                        Swal.fire({
+                            title: error.message,
+                            icon: "fail",
+                            draggable: true
+                        });
+                        location.reload();
                     }
                 });
+
                     $(".txtProp").prop("disabled", true);
                     $("#btnEdit").removeAttr("style");
 

@@ -24,7 +24,7 @@
 
                 <div class="card-body">
                     <h5 class="card-title">Main Properties</h5>
-                    <table class="table table-borderless datatable mb-0" id="diamondProperty">
+                    <table class="table table-borderless mb-0" id="diamondProperty">
                         <thead class="table-light text-center">
                             <tr>
                                 <th scope="col">#</th>
@@ -101,23 +101,21 @@
 @section Scripts {
     <script>
         $(document).on('click', '.clickable-row', function (e) {
-            debugger;
-                if ($(e.target).closest('.dropdown').length > 0) return; // Don't trigger when clicking dropdown
-                var propertyName = $(this).data('propertyname');
-                $.ajax({
-                    url: '@Url.Action("DiamondPropertyItems", "Diamond")' + '?propertyName=' + encodeURIComponent(propertyName),
-                    method: 'GET',
-                    contentType: 'application/json',
-                    success: function (data) {
-                        $("#propertyDT").empty().html(data);
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('API call failed:', error);
-                    }
-                });
+            if ($(e.target).closest('.dropdown').length > 0) return; // Don't trigger when clicking dropdown
+            //var propertyName = $(this).data('propertyname');
+            var propertyName = $(this).attr('data-propertyname');
+            $.ajax({
+                url: '@Url.Action("DiamondPropertyItems", "Diamond")' + '?propertyName=' + encodeURIComponent(propertyName),
+                method: 'GET',
+                contentType: 'application/json',
+                success: function (data) {
+                    $("#propertyDT").empty().html(data);
+                },
+                error: function (xhr, status, error) {
+                    console.error('API call failed:', error);
+                 }
             });
-
-
+        });
     </script>
 
     

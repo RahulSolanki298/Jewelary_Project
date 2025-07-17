@@ -182,6 +182,7 @@
                 <div class="filterclose btn btn-danger text-capitalize" id="filterclose" title="CLOSE">✕</div>
             </div>
             <div class="Main-Header" id="ProductFilters">
+
             </div>
         </div>
 
@@ -676,7 +677,8 @@
                 hideLoader();
             }
 
-                function GetProductByColorId(productId, colorId, shapeId) {
+        function GetProductByColorId(productId, colorId, shapeId) {
+            debugger;
                 $.ajax({
                     url: '@Url.Action("ProductDetailsByColorId", "Products")',
                     data: {
@@ -695,6 +697,9 @@
 
                         //$(".activemetalname[data-sku='" + productId + "']").text(response.colorName);
 
+                        
+                        $productContainer.find(".product-id").text(response.productId);
+                        $productContainer.find(".pro-title").text(response.title);
                         $productContainer.find(".activemetalname").text(response.colorName);
 
 

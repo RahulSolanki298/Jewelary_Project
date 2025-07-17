@@ -1,0 +1,135 @@
+﻿@{
+    ViewData["Title"] = "CheckOut";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="breadcrumb-area">
+    <div class="container">
+        <div class="breadcrumb-content">
+            <h2>Other</h2>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li class="active">Checkout</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="checkout-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="coupon-accordion">
+                    <h3>Returning customer? <span id="showlogin">Click here to login</span></h3>
+                    <div id="checkout-login" class="coupon-content">
+                        <form action="javascript:void(0)">
+                            <p class="coupon-text">Enter your login credentials to continue checkout.</p>
+                            <div class="form-row-first">
+                                <label>Username or Email <span class="required">*</span></label>
+                                <input type="text">
+                            </div>
+                            <div class="form-row-last">
+                                <label>Password <span class="required">*</span></label>
+                                <input type="password">
+                            </div>
+                            <div class="form-row">
+                                <input type="submit" value="Login">
+                                <label><input type="checkbox"> Remember me</label>
+                            </div>
+                            <p class="lost-password"><a href="#">Lost your password?</a></p>
+                        </form>
+                    </div>
+
+                    <h3>Have a coupon? <span id="showcoupon">Click here to enter your code</span></h3>
+                    <div id="checkout_coupon" class="coupon-checkout-content">
+                        <form action="javascript:void(0)">
+                            <p class="checkout-coupon">
+                                <input type="text" placeholder="Coupon code">
+                                <input class="coupon-inner_btn" type="submit" value="Apply Coupon">
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-12">
+                <form action="javascript:void(0)">
+                    <div class="checkbox-form">
+                        <h3>Billing Details</h3>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>Country <span class="required">*</span></label>
+                                <select class="nice-select wide">
+                                    <option value="">Select Country</option>
+                                    <option value="bd">Bangladesh</option>
+                                    <option value="uk">United Kingdom</option>
+                                    <option value="rou">Romania</option>
+                                    <option value="fr">France</option>
+                                    <option value="de">Germany</option>
+                                    <option value="aus">Australia</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label>First Name <span class="required">*</span></label>
+                                <input type="text">
+                            </div>
+                            <div class="col-md-6">
+                                <label>Last Name <span class="required">*</span></label>
+                                <input type="text">
+                            </div>
+                            <div class="col-md-12">
+                                <label>Company Name</label>
+                                <input type="text">
+                            </div>
+                            <div class="col-md-12">
+                                <label>Address <span class="required">*</span></label>
+                                <input type="text" placeholder="Street address">
+                                <input type="text" placeholder="Apartment, suite, unit etc. (optional)">
+                            </div>
+                            <div class="col-md-12">
+                                <label>Town / City <span class="required">*</span></label>
+                                <input type="text">
+                            </div>
+                            <div class="col-md-6">
+                                <label>State / County <span class="required">*</span></label>
+                                <input type="text">
+                            </div>
+                            <div class="col-md-6">
+                                <label>Postcode / Zip <span class="required">*</span></label>
+                                <input type="text">
+                            </div>
+                            <div class="col-md-6">
+                                <label>Email Address <span class="required">*</span></label>
+                                <input type="email">
+                            </div>
+                            <div class="col-md-6">
+                                <label>Phone <span class="required">*</span></label>
+                                <input type="text">
+                            </div>
+                            <div class="col-md-12">
+                                <input id="cbox" type="checkbox">
+                                <label for="cbox">Create an account?</label>
+                            </div>
+                            <div id="cbox-info" class="checkout-form-list create-account">
+                                <label>Account password <span class="required">*</span></label>
+                                <input type="password" placeholder="Password">
+                            </div>
+                        </div>
+                        <div class="different-address">
+                            <div class="ship-different-title">
+                                <h3>
+                                    <label>Ship to a different address?</label>
+                                    <input id="ship-box" type="checkbox">
+                                </h3>
+                            </div>
+                            <div id="ship-box-info" class="row">
+                                <!-- Duplicate of billing address fields, optional to reuse with JavaScript -->
+                                <!-- ... similar fields here ... -->
+                            </div>
+                            <div class="order-notes">
+                                <label>Order Notes</label>
+                                <textarea placeholder="Notes about your order, e.g. delivery instructions."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>

@@ -12,8 +12,7 @@
             getAdd2CardList();
         });
         function getAdd2CardList() {
-            debugger;
-            if (wishlist.length > 0 || jewelWishlist.length > 0) {
+             if (wishlist.length > 0 || jewelWishlist.length > 0) {
                 $.ajax({
                     url: '@Url.Action("GetAdd2CardListByIds", "AddToCard")',
                     type: 'GET',

@@ -10,28 +10,21 @@
         <div class="minicart-item-wrapper">
             <ul>
                 <li class="minicart-item">
-
                     @if (Model != null && Model.Diamonds.Count() > 0)
                     {
                         @foreach (var item in Model.Diamonds)
                         {
-                            <div class="minicart-thumb">
-                                <a href="#">
-                                    <img src="@SD.ImgUrl/@item.ShapeName" alt="product">
-                                </a>
-                            </div>
+
                             <div class="minicart-content">
                                 <h3 class="product-name">
-                                    <a href="#">
-                                        @item.Carat Carat @item.ShapeName Shaped @item.ColorName @item.ClarityName @item.LabName
-                                    </a>
+                                    <a href="product-details.html"></a>
                                 </h3>
                                 <p>
-                                    <span class="cart-quantity">1 <strong>&times;</strong></span>
-                                    <span class="cart-price">@item.Price</span>
+                                    <span class="cart-quantity">0 <strong>&times;</strong></span>
+                                    <span class="cart-price">0</span>
                                 </p>
                             </div>
-                            <button class="minicart-remove"><i class="pe-7s-close"></i></button>
+                            <button class="minicart-remove" diamondid="@item.Id"><i class="pe-7s-close"></i></button>
                         }
                     }
                 </li>
@@ -93,8 +86,8 @@
         </div>
 
         <div class="minicart-button">
-            <a href="#"><i class="fa fa-shopping-cart"></i> View Cart</a>
-            <a href="#"><i class="fa fa-share"></i> Checkout</a>
+            <a href="#" id="btnViewCart"><i class="fa fa-shopping-cart"></i> View Cart</a>
+            <a href="@Url.Action("CheckOut","AddToCard")" id="btnCheckOut"><i class="fa fa-share"></i> Checkout</a>
         </div>
     </div>
 </div>

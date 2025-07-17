@@ -14,6 +14,7 @@
     
     <table class="table table-borderless table-bordered mb-0" id="diamondPropertyItems">
         <thead class="table-light text-center">
+
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
@@ -32,18 +33,23 @@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td scope="col">@(index++)<input type="hidden" class="id"/></td>
                         <td scope="col">
-                            <input type="text" class="propName txtProp" value="@item.Name" disabled="disabled" />
+                            @(index++)
+                            <input type="hidden" class="id txtProp" value="@item.Id" />
+                            <input type="hidden" class="parentid txtProp" value="@item.ParentId" />
+
                         </td>
                         <td scope="col">
-                            <input type="text" class="symbolName txtProp" value="@item.SymbolName" disabled="disabled"/>
+                            <input type="text" class="propName" value="@item.Name" disabled="disabled" />
+                        </td>
+                        <td scope="col">
+                            <input type="text" class="symbolName" value="@item.SymbolName" disabled="disabled"/>
                         </td>
                         <td scope="col">
                             <input type="checkbox" @(item.IsActive != true?"":"checked") class="txtProp" disabled="disabled">
                         </td>
-                        <td scope="col"><input type="text" class="synonyms txtProp" value="@item.Synonyms" disabled="disabled" /></td>
-                        <td scope="col"><input type="text" class="iconPath txtProp" value="@item.IconPath" disabled="disabled"/></td>
+                        <td scope="col"><input type="text" class="synonyms" value="@item.Synonyms" disabled="disabled" /></td>
+                        <td scope="col"><input type="text" class="iconPath" value="@item.IconPath" disabled="disabled"/></td>
                         <td scope="col"><input type="text" class="dispOrder txtProp" value="@item.DispOrder" disabled="disabled" /></td>
                         <td scope="col">
                             <div class="dropdown">

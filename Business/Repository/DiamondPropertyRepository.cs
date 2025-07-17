@@ -478,7 +478,7 @@ namespace Business.Repository
                 parentDT = await _context.DiamondProperties.Where(x => x.Name == propertyName && string.IsNullOrEmpty(x.ParentId.ToString())).FirstOrDefaultAsync();
 
                 diamondProperties = await (from dp in _context.DiamondProperties
-                                           join main in _context.DiamondProperties.Where(x => x.ParentId == null) on dp.ParentId equals main.Id
+                                           //join main in _context.DiamondProperties.Where(x => x.ParentId == null) on dp.ParentId equals main.Id
                                            where dp.ParentId == parentDT.Id
                                            select new DiamondPropertyDTO
                                            {
@@ -487,11 +487,11 @@ namespace Business.Repository
                                                Description = dp.Description,
                                                ParentId = dp.ParentId,
                                                IconPath = dp.IconPath,
-                                               ParentProperty = main.Name,
+                                               //ParentProperty = main.Name,
                                                SymbolName = dp.SymbolName,
                                                DispOrder = dp.DispOrder,
                                                IsActivated = dp.IsActivated
-                                           }).ToListAsync();
+                                           }).OrderBy(x=>x.DispOrder).ToListAsync();
 
                 return diamondProperties;
 

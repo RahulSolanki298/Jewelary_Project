@@ -1080,6 +1080,7 @@ namespace ControlPanel.Controllers
                                             var existingImage = await _productRepository.GetProductImageAsync(
                                                 pro.ProductKey, metalId, styleName.DesignNo, shape.Id, styleName.Index);
 
+
                                             if (existingImage != null)
                                             {
                                                 await _productRepository.DeleteImageFilesAsync(existingImage, webRootPath: _env.WebRootPath);

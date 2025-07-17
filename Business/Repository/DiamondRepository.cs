@@ -213,6 +213,7 @@ namespace Business.Repository
                 var diamondResults =  _context
                                     .Set<DiamondData>()
                                     .FromSqlRaw($"EXEC SP_GetDiamondDataById {diamondId}")
+                                    .AsEnumerable()
                                     .FirstOrDefault();
 
                 return diamondResults;
@@ -222,6 +223,9 @@ namespace Business.Repository
                 throw new Exception("An error occurred while fetching the diamond data.", ex);
             }
         }
+
+
+      
 
         public async Task<IEnumerable<DiamondData>> GetDiamondHistoryById(string diamondId)
         {
@@ -480,6 +484,8 @@ namespace Business.Repository
                     UpdatedDate = now,
                     UploadStatus = status,
                     IsActivated = diamond.IsActivated,
+                    FluorId=diamond.FluorId,
+                    ClarityId=diamond.ClarityId
                 }).ToList();
 
                 // 5. Insert all history entries in one go

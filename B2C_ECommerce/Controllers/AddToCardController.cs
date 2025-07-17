@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 namespace B2C_ECommerce.Controllers
 {
 
-    [Route("JewelFacet/AddToCard")]
     public class AddToCardController : Controller
     {
         private readonly IDiamondService _diamondService;
@@ -42,7 +41,7 @@ namespace B2C_ECommerce.Controllers
                 string[] productIdArray = productIds.Split(',')
                                   .Select(id => id)
                                   .ToArray();
-               // data.Jewelleries = await _productService.GetSelectedProductByIds(productIdArray);
+                // data.Jewelleries = await _productService.GetSelectedProductByIds(productIdArray);
             }
 
             return PartialView("~/Views/Shared/_AddToCard.cshtml", data);
@@ -66,12 +65,16 @@ namespace B2C_ECommerce.Controllers
                 string[] productIdArray = productIds.Split(',')
                                   .Select(id => id)
                                   .ToArray();
-              //  data.Jewelleries = await _productService.GetSelectedProductByIds(productIdArray);
+                //  data.Jewelleries = await _productService.GetSelectedProductByIds(productIdArray);
             }
 
-            return PartialView("_Add2CardProduct", data);
+            return PartialView("ShowAdd2CardList", data);
         }
 
-
+        [HttpGet]
+        public ActionResult CheckOut()
+        {
+            return View();
+        }
     }
 }

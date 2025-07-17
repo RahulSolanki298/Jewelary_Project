@@ -105,7 +105,7 @@
             <div class="modal-header" style="display:block !important;padding:10px 0px;">
                 <div class="row">
                     <div class="col-xl-11 col-md-11 col-lg-11">
-                        <h3 class="modal-title text-center" id="compareDiamondsModalLabel">Compare Diamonds</h3>
+                        <h3 class="modal-title text-center" id="compareDiamondsModalLabel">Compare Stones</h3>
                     </div>
                     <div class="col-xl-1 col-md-1 col-lg-1">
                         <button type="button" class="btn-danger text-center" data-bs-dismiss="modal" aria-label="Close">X</button>
@@ -233,6 +233,11 @@
                         });
                     }
 
+                    if (selectedLabs.length==0) {
+                        selectedLabs.push('GIA');
+                        selectedLabs.push('IGI');
+                    }
+
                     diamondFilters.LabNames = selectedLabs;
                     getDiamondDataList(diamondFilters, page, rangeVal);
                 });
@@ -348,7 +353,7 @@
                 });
 
                 $("#diamondComparisonContent").on("change", ".compare-diamond-id", function () {
-
+                    debugger;
                     let checkbox = $(this);
                     let diamondId = checkbox.val();
                     let card = checkbox.closest(".col-4");  // Ensure you're getting the correct .col-4 card
@@ -362,6 +367,7 @@
                         card.fadeOut(300, function() {
                             card.remove();  // Fade out and remove the specific card
                         });
+                        $(this).closest(".card.compare-card").remove();
                     }
 
                     localStorage.setItem('selectedDiamonds', JSON.stringify(selectedDiamonds));
@@ -369,27 +375,176 @@
                     resetSelectedCheckBox(diamondId);
             });
 
-            $("#diamondComparisonContent").on("click", ".btnWishlist", function ()
-            {
-                    let diamondId = $(this).data('diamondid').toString(); // Convert to string
+                $("#diamondComparisonContent").on("click", ".btnWishlist", function ()
+                {
 
-                    let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+                        let diamondId = $(this).data('diamondid'); // Convert to string
 
-                    if (!wishlist.includes(diamondId)) {
-                        wishlist.push(diamondId); // Add
-                        localStorage.setItem("wishlist", JSON.stringify(wishlist)); // Save
-                        //alert("Added to wishlist!");
-                        toastr.success("Product has been added to your wishlist.");
-                        getWishlistCounter(); // Optional: Update UI
-                    } else {
-                        //alert("This diamond is already in your wishlist.");
-                        toastr.warning("Product already in your wishlist..");
-                    }
-                    updateWishlistUI();
+                        let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+
+                        if (!wishlist.includes(diamondId)) {
+                            wishlist.push(diamondId); // Add
+                            localStorage.setItem("wishlist", JSON.stringify(wishlist)); // Save
+                            //alert("Added to wishlist!");
+                            toastr.success("Product has been added to your wishlist.");
+                            getWishlistCounter(); // Optional: Update UI
+                        } else {
+                            //alert("This diamond is already in your wishlist.");
+                            toastr.warning("Product already in your wishlist..");
+                        }
+                        updateWishlistUI();
                 });
+
+                
+
+
+                $("#btnQuality").on("click", function () {
+                    // === PRICE SLIDER ===
+                    const maxPrice = $("#price-slider").slider("option", "max");
+                    const minPrice = $("#price-slider").slider("option", "min");
+                    const midPrice = Math.round(maxPrice / 2);
+
+                    $("#price-slider").slider("values", [midPrice, maxPrice]);
+                    $("#minPrice").val(midPrice);
+                    $("#maxPrice").val(maxPrice);
+                    diamondFilters.FromPrice = midPrice;
+                    diamondFilters.ToPrice = maxPrice;
+
+                    // === COLOR SLIDER ===
+                    if (Array.isArray(colorList)) {
+                        const colorMaxIndex = $("#color-slider").slider("option", "max");
+                        const midColorIndex = Math.floor(colorMaxIndex / 2);
+                        $("#color-slider").slider("values", [midColorIndex + 1, colorMaxIndex]);
+
+                        const minColor = colorList[midColorIndex + 1];
+                        const maxColor = colorList[colorMaxIndex];
+                        $("#minColor").val(minColor.name);
+                        $("#maxColor").val(maxColor.name);
+
+                        const selectedColorIds = colorList
+                            .slice(midColorIndex + 1, colorMaxIndex + 1)
+                            .map(item => item.id);
+                        $("#txtColorIds").val(selectedColorIds.join(','));
+                        diamondFilters.Colors = $("#txtColorIds").val();
+                    }
+
+                    // === CUT SLIDER ===
+                    if (Array.isArray(cutList)) {
+                        const cutMaxIndex = $("#Cut-slider").slider("option", "max");
+                        const midCutIndex = Math.floor(cutMaxIndex / 2);
+                        $("#Cut-slider").slider("values", [midCutIndex + 1, cutMaxIndex]);
+
+                        const minCut = cutList[midCutIndex + 1];
+                        const maxCut = cutList[cutMaxIndex];
+                        $("#minCut").val(minCut.name);
+                        $("#maxCut").val(maxCut.name);
+
+                        const selectedCutIds = cutList
+                            .slice(midCutIndex + 1, cutMaxIndex + 1)
+                            .map(item => item.id);
+                        $("#txtCutIds").val(selectedCutIds.join(','));
+                        diamondFilters.Cuts = $("#txtCutIds").val();
+                    }
+
+                    // === CLARITY SLIDER ===
+                    if (Array.isArray(clarityList)) {
+                        const clarityMaxIndex = $("#Clarity-slider").slider("option", "max");
+                        const midClarityIndex = Math.floor(clarityMaxIndex / 2);
+                        $("#Clarity-slider").slider("values", [midClarityIndex + 1, clarityMaxIndex]);
+
+                        const minClarity = clarityList[midClarityIndex + 1];
+                        const maxClarity = clarityList[clarityMaxIndex];
+                        $("#minClarity").val(minClarity.name);
+                        $("#maxClarity").val(maxClarity.name);
+
+                        const selectedClarityIds = clarityList
+                            .slice(midClarityIndex + 1, clarityMaxIndex + 1)
+                            .map(item => item.id);
+                        $("#txtClarityIds").val(selectedClarityIds.join(','));
+                        diamondFilters.Clarities = $("#txtClarityIds").val();
+                    }
+
+                    // === TRIGGER FILTER ===
+                    if (!suppressAutoLoad) {
+                        getDiamondDataList(diamondFilters, page, rangeVal);
+                    }
+                });
+
             });
 
-        $(document).on("click", ".clsCertificate", function (e) {
+        $(document).on("click", "#btnPrice" ,function () {
+            // === PRICE SLIDER ===
+            const maxPrice = $("#price-slider").slider("option", "max");
+            const minPrice = $("#price-slider").slider("option", "min");
+            const newMax = Math.round(maxPrice / 2);
+
+            $("#price-slider").slider("values", [minPrice, newMax]);
+            $("#minPrice").val(minPrice);
+            $("#maxPrice").val(newMax);
+            diamondFilters.FromPrice = minPrice;
+            diamondFilters.ToPrice = newMax;
+
+            // === COLOR SLIDER ===
+            //if (Array.isArray(colorList)) {
+            //    const colorMaxIndex = $("#color-slider").slider("option", "max");
+            //    const midColorIndex = Math.floor(colorMaxIndex / 2);
+            //    $("#color-slider").slider("values", [0, midColorIndex]);
+
+            //    const minColor = colorList[0];
+            //    const maxColor = colorList[midColorIndex];
+            //    $("#minColor").val(minColor.name);
+            //    $("#maxColor").val(maxColor.name);
+
+            //    const selectedColorIds = colorList
+            //        .slice(0, midColorIndex + 1)
+            //        .map(item => item.id);
+            //    $("#txtColorIds").val(selectedColorIds.join(','));
+            //    diamondFilters.Colors = $("#txtColorIds").val();
+            //}
+
+            //// === CUT SLIDER ===
+            //if (Array.isArray(cutList)) {
+            //    const cutMaxIndex = $("#Cut-slider").slider("option", "max");
+            //    const midCutIndex = Math.floor(cutMaxIndex / 2);
+            //    $("#Cut-slider").slider("values", [0, midCutIndex]);
+
+            //    const minCut = cutList[0];
+            //    const maxCut = cutList[midCutIndex];
+            //    $("#minCut").val(minCut.name);
+            //    $("#maxCut").val(maxCut.name);
+
+            //    const selectedCutIds = cutList
+            //        .slice(0, midCutIndex + 1)
+            //        .map(item => item.id);
+            //    $("#txtCutIds").val(selectedCutIds.join(','));
+            //    diamondFilters.Cuts = $("#txtCutIds").val();
+            //}
+
+            //// === CLARITY SLIDER ===
+            //if (Array.isArray(clarityList)) {
+            //    const clarityMaxIndex = $("#Clarity-slider").slider("option", "max");
+            //    const midClarityIndex = Math.floor(clarityMaxIndex / 2);
+            //    $("#Clarity-slider").slider("values", [0, midClarityIndex]);
+
+            //    const minClarity = clarityList[0];
+            //    const maxClarity = clarityList[midClarityIndex];
+            //    $("#minClarity").val(minClarity.name);
+            //    $("#maxClarity").val(maxClarity.name);
+
+            //    const selectedClarityIds = clarityList
+            //        .slice(0, midClarityIndex + 1)
+            //        .map(item => item.id);
+            //    $("#txtClarityIds").val(selectedClarityIds.join(','));
+            //    diamondFilters.Clarities = $("#txtClarityIds").val();
+            //}
+
+            // === TRIGGER FILTER ===
+            if (!suppressAutoLoad) {
+                getDiamondDataList(diamondFilters, page, rangeVal);
+            }
+        });
+
+                 $(document).on("click", ".clsCertificate", function (e) {
                 e.preventDefault();
 
                 var certUrl = $(this).data("certi"); // get value from data-certi attribute
@@ -399,7 +554,7 @@
                 }
             });
 
-        function GetShapeDesign() {
+             function GetShapeDesign() {
                 const $shapeListContainer = $('#filter-box #shape-list');
 
                 $.ajax({
@@ -502,7 +657,6 @@
             }
 
         async function GetCutData() {
-            
                 try {
                     const response = await $.ajax({
                         url:'@Url.Action("GetCutList", "Diamond")',
@@ -525,11 +679,15 @@
                         step: 1,
                         values: [0, cutList.length - 1],
                         slide: function (event, ui) {
+                            debugger;
                             const startIndex = ui.values[0];
                             const endIndex = ui.values[1];
 
                             const minCut = cutList[startIndex];
                             const maxCut = cutList[endIndex];
+                            console.log(minCut);
+                            console.log(maxCut);
+
 
                             $("#minCut").val(minCut.name);
                             $("#maxCut").val(maxCut.name);
@@ -563,14 +721,14 @@
                                  .slice(startindex, endindex + 1)
                                  .map(item => item.id);
 
-                             $("#txtcutids").val(selectedcutids.join(','));
+                            $("#txtCutIds").val(selectedcutids.join(','));
 
                              // update filter object
-                             diamondfilters.cuts = $("#txtcutids").val();
-                             console.log(diamondfilters.cuts);
+                            diamondFilters.Cuts = $("#txtCutIds").val();
+                            console.log(diamondFilters.Cuts);
 
                              // call filter
-                             getdiamonddatalist(diamondfilters, page, rangeval);
+                            getDiamondDataList(diamondFilters, page, rangeVal);
                          }
                     });
 

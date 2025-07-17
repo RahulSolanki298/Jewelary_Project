@@ -86,8 +86,10 @@
                         <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6  col-sm-12">
                             <div class="product-details-des">
                                 @*<h3 class="product-name">@Model.ShapeName @Model.BandWidth @Model.Length @Model.Sku</h3>*@
-                                <h3 class="product-name">@Model.Title </h3>
-
+                                <div class="title-regular">
+                                    <h3 class="product-name">@Model.Title </h3>
+                                    <p></p>
+                                </div>
 
                                 <div class="price-box  d-flex">
                                     <span class="price-regular" style="font-size: x-large; font-family: Castoro serif; ">$@Model.Price USD</span>
@@ -128,7 +130,7 @@
                                     <ul class="shape-categories-details">
                                         @foreach (var shape in Model.Shapes)
                                         {
-                                            var groupDT = Model.ProductItems.FirstOrDefault(x => x.CenterShapeId == shape.Id && x.ColorId==Model.ColorId);
+                                            var groupDT = Model.ProductItems.FirstOrDefault(x => x.CenterShapeId == shape.Id && x.ColorId == Model.ColorId);
                                             bool isAvailable = groupDT != null;
 
                                             <li>
@@ -158,7 +160,7 @@
                                         @foreach (var item in Model.CaratSizes)
                                         {
                                             <div class="single-countdown selectedCaratClick">
-                                                    <span class="single-countdown__time" title="@item.Name">@item.Name</span>
+                                                <span class="single-countdown__time" title="@item.Name">@item.Name</span>
                                             </div>
                                         }
                                     </div>
@@ -184,8 +186,8 @@
 
                                 <div class="quantity-cart-box d-flex align-items-center">
                                     @* <div class="action_link">
-                                        <a class="btn btn-cart2" href="#">Add to cart</a>
-                                    </div> *@
+                                            <a class="btn btn-cart2" href="#">Add to cart</a>
+                                        </div> *@
                                     <div class="useful-links">
                                         <a href="#" data-bs-toggle="tooltip" id="btnWishListDT" title="Wishlist"><i class="pe-7s-like"></i>wishlist</a>
                                     </div>
@@ -730,16 +732,11 @@
                     <span class="fw-bold text-dark" style="font-size: 1.75rem; line-height: 1.2;">$@Model.Price USD</span>
                 </div>
             </div>
-
-
-            <!-- Column 2: Info Text -->
             <div class="col-12 col-md-6 text-center">
                 <div class="text-muted small">Starting at $64/mo or 0% APR with Affirm. <a href="#" class="text-theme">Prequalify now</a></div>
                 <div class="text-muted small">No credit? Pay over time. <a href="#" class="text-theme">Estimate Payment</a></div>
                 <div class="text-muted small">Earn 5% cashback on this purchase. <a href="#" class="text-theme">Learn more</a> about GB Club</div>
             </div>
-
-            <!-- Column 3: Add to Cart -->
             <div class="col-12 col-md-3 text-md-end text-center mt-2 mt-md-0">
                 <a href="#" class="btn btn-theme btn-lg fs-3 px-5 py-3 w-100 text-uppercase" id="btnAdd2Cart" data-diamondId="@Model.Id">Add to Bag</a>
             </div>
@@ -752,7 +749,6 @@
     <script src="~/assets/js/plugins/lightslider.js"></script>
 
     <script>
-
         let vSlider;
         let resizeTimeout;
         function initializeSlider() {
@@ -889,9 +885,6 @@
             });
         }
     </script>
-
-
-
     <script>
         $(function () {
             var zoomed = false;
@@ -1063,7 +1056,4 @@
             });
         });
     </script>
-
-
-
 }

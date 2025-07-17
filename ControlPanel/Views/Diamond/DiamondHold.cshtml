@@ -11,22 +11,24 @@
 }
 <div class="container-fluid">
     <div class="row mb-0">
-        <div class="col-xxl-10 col-xl-10 col-lg-9 col-md-9 col-sm-8">
+        <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12">
             <h4 class="">
                Hold Diamonds
             </h4>
         </div>
-        <div class="col-xxl-2 col-xl-2 col-lg-3 col-md-3 col-sm-4">
-        </div>
+        
     </div>
 
 
     <div class="card mt-2">
         <div class="card-body">
             <div class="row mt-2">
-                <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                <div class="col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-12">
+                    <span style="font-size:16px;font-weight:700">Total No Of Hold Diamonds ==>> </span><span style="font-size:16px;font-weight:700;padding-left:5px;" id="lblTotalDiamond"></span>
+                </div>
+                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-12">
                     <div class="btn-group dropup float-end">
-                        <a class="" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="" data-bs-toggle="dropdown" aria-expanded="false" style="font-size:24px;">
                             <i class="bi bi-three-dots-vertical"></i>
                         </a>
                         <input type="hidden" id="txtProductIds" />
@@ -308,6 +310,9 @@
             resultData = [];
             $('#divDetails').jqxGrid('clear');
 
+            $("#lblTotalDiamond").text(0);
+
+            
             $.ajax({
                 type: "get",
                 url: "@Url.Action("getDiamondList", "Diamond")",
@@ -319,6 +324,7 @@
                 success: function (d) {
                     if (d.data.result.length > 0) {
                         resultData = JSON.parse(d.data.result);
+                        $("#lblTotalDiamond").text(resultData.length);
                         source =
                         {
                             localdata: resultData,

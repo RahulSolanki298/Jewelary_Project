@@ -28,20 +28,34 @@
             width: 100%;
             text-transform: uppercase;
         }
+
+        .footer-add-to-cart {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 999;
+            background-color: #fff;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+            .footer-add-to-cart.absolute {
+                position: absolute;
+            }
     </style>
 }
 
-<div class="shop-main-wrapper section-padding pb-0">
+<div class="section-padding padding-top-20 pb-0">
     <div class="container-fluid">
         <div class="row">
             <!-- product details wrapper start -->
             <div class="col-lg-12 order-1 order-lg-2">
                 <!-- product details inner end -->
                 <div class="product-details-inner">
-                    <div class="row">
+                    <div class="row mb-2">
                         <div class="col-lg-12">
                             <p>
-                                Home | Search Lab Grown Diamonds
+                                <b>Home | Search Lab Grown Diamonds</b>
                             </p>
                         </div>
                     </div>
@@ -135,41 +149,6 @@
                                     </div>
                                 </div>
 
-                                @*<div class="quantity-cart-box d-flex align-items-center">
-                                        <h6 class="option-title">qty:</h6>
-                                        <div class="quantity">
-                                            <div class="pro-qty"><input type="text" value="1"></div>
-                                        </div>
-                                        <div class="action_link">
-                                            <a class="btn btn-cart2" href="#">Add to cart</a>
-                                        </div>
-                                    </div>*@
-                                @*<div class="pro-size">
-                                        <h6 class="option-title">size :</h6>
-                                        <select class="nice-select">
-                                            <option>S</option>
-                                            <option>M</option>
-                                            <option>L</option>
-                                            <option>XL</option>
-                                        </select>
-                                    </div>*@
-                                @*<div class="color-option">
-                                        <h6 class="option-title">color :</h6>
-                                        <ul class="color-categories">
-                                            <li>
-                                                <a class="c-lightblue" href="#" title="LightSteelblue"></a>
-                                            </li>
-                                            <li>
-                                                <a class="c-darktan" href="#" title="Darktan"></a>
-                                            </li>
-                                            <li>
-                                                <a class="c-grey" href="#" title="Grey"></a>
-                                            </li>
-                                            <li>
-                                                <a class="c-brown" href="#" title="Brown"></a>
-                                            </li>
-                                        </ul>
-                                    </div>*@
 
                                 <div class="like-icon">
                                     <a class="facebook" href="#"><i class="fa fa-facebook"></i>like</a>
@@ -314,7 +293,6 @@
                             allowfullscreen=""
                             style="width:100%; height:100vh; border:none;"></iframe>
                 </div>
-
             </div>
         </div>
     </div>
@@ -324,23 +302,25 @@
     <div class="container-fluid">
         <div class="row align-items-center">
             <!-- Column 1: Establish Date -->
-            <div class="col-12 col-md-3 mb-2 mb-md-0 text-md-start text-center">
-                <small class="text-muted d-block">Estimated Ship Date: @DateTime.Now.AddDays(10).ToString("d")</small>
+            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 mb-2 mb-md-0 text-center">
+                <h5 class="d-block">Estimated Ship Date: @DateTime.Now.AddDays(10).ToString("d")</h5>
                 <div class="mt-1">
                     <span class="fw-bold text-dark" style="font-size: 1.75rem; line-height: 1.2;">$@Model.Price USD</span>
                 </div>
             </div>
 
             <!-- Column 2: Info Text -->
-            <div class="col-12 col-md-6 text-center">
-                <div class="text-muted small">Starting at $64/mo or 0% APR with Affirm. <a href="#" class="text-theme">Prequalify now</a></div>
-                <div class="text-muted small">No credit? Pay over time. <a href="#" class="text-theme">Estimate Payment</a></div>
-                <div class="text-muted small">Earn 5% cashback on this purchase. <a href="#" class="text-theme">Learn more</a> about GB Club</div>
+            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4">
+                
+                    <div class="">Starting at $64/mo or 0% APR with Affirm. <a href="#" class="text-theme">Prequalify now</a></div>
+                    <div class="">No credit? Pay over time. <a href="#" class="text-theme">Estimate Payment</a></div>
+                    <div class="">Earn 5% cashback on this purchase. <a href="#" class="text-theme">Learn more</a> about GB Club</div>
+               
             </div>
 
             <!-- Column 3: Add to Cart -->
-            <div class="col-12 col-md-3 text-md-end text-center mt-2 mt-md-0">
-                <a href="#" class="btn btn-theme btn-lg fs-3 px-5 py-3 w-100 text-uppercase" id="btnAdd2Cart" data-diamondId="@Model.Id">Add to Bag</a>
+            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 text-md-end text-center mt-2 mt-md-0">
+                <a href="#" class="btn btn-theme btn-lg fs-3 px-5 py-3 text-uppercase" id="btnAdd2Cart" data-diamondId="@Model.Id">Add to Bag</a>
             </div>
         </div>
     </div>
@@ -351,12 +331,12 @@
 {
     <script>
 
+        var $mainFooter = $('#mainFooter');
+        var $footerCartBar = $('.footer-add-to-cart');
 
         $(function () {
             updateWishlistUI();
 
-            var $footerCartBar = $('.footer-add-to-cart');
-            var $mainFooter = $('#mainFooter');
             if ($mainFooter.length === 0) {
                 $mainFooter = $('footer, .site-footer, .page-footer, .container-fluid').last();
                 $mainFooter.attr('id', 'mainFooter');
@@ -420,19 +400,34 @@
             let diamondcartlist = JSON.parse(localStorage.getItem("diamondCartlist")) || [];
 
             if (diamondcartlist.includes(diamondId)) {
-                diamondcartlist = diamondcartlist.filter(id => id !== diamondId);
-                localStorage.setItem("diamondCartlist", JSON.stringify(diamondcartlist));
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "you want to remove this item from your cartlist?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, delete it!",
+                    cancelButtonText: "No",
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        diamondcartlist = diamondcartlist.filter(id => id !== diamondId);
+                        localStorage.setItem("diamondCartlist", JSON.stringify(diamondcartlist));
+                        toastr.warning("Product has been removed from your cartlist.");
 
-                alert("Product has been removed from your cartlist.");
+                        getcartlistCounter();
+
+                    }
+                });
             }
             else {
                 diamondcartlist.push(diamondId);
                 localStorage.setItem("diamondCartlist", JSON.stringify(diamondcartlist));
+                toastr.success("Product has been added to your cartlist.");
+                getcartlistCounter();
 
-                alert("Product has been added to your cartlist.");
             }
-            getcartlistCounter();
-            updatecartlistUI();
+            //getcartlistCounter();
+            //updatecartlistUI();
         });
 
         function getWishlistCounter() {
@@ -464,22 +459,26 @@
         function getcartlistCounter() {
             let cardlist = JSON.parse(localStorage.getItem("diamondCartlist")) || [];
             $("#addtoCardCounter").text(cardlist.length);
-            $("#addtoCardMobileCounter").text(daiamondCard.length);
+            $("#addtoCardMobileCounter").text(cardlist.length);
 
         }
 
-        function updatecartlistUI() {
-            let cardlist = JSON.parse(localStorage.getItem("diamondCartlist")) || [];
-        }
 
         function toggleCartBar() {
             var windowBottom = $(window).scrollTop() + $(window).height();
             var footerTop = $mainFooter.offset().top;
 
-            if (windowBottom >= footerTop - 10) {
-                $footerCartBar.fadeOut();
+            if (windowBottom >= footerTop) {
+                // Set it just above the footer
+                var newBottom = windowBottom - footerTop;
+                $footerCartBar
+                    .addClass('absolute')
+                    .css('bottom', newBottom + 'px');
             } else {
-                $footerCartBar.fadeIn();
+                // Keep it fixed at the bottom
+                $footerCartBar
+                    .removeClass('absolute')
+                    .css('bottom', '0');
             }
         }
 

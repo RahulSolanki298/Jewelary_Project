@@ -179,7 +179,7 @@ namespace ControlPanel.Controllers
         public async Task<IActionResult> DiamondProperty()
         {
             var diamondList = await _diamondPPTY.GetAllAsync();
-            return View(diamondList);
+            return View(diamondList.Where(x => x.ParentId == null));
         }
 
         [HttpGet]

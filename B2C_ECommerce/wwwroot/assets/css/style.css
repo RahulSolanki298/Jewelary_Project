@@ -2417,8 +2417,8 @@ textarea {
     .minicart-content .product-name {
         font-weight: 700;
         line-height: 1.5;
-        padding-bottom: 10px;
-        font-size: 30px;
+        padding-bottom: 5px;
+        font-size: 18px;
     }
 
         .minicart-content .product-name a {
@@ -2447,16 +2447,16 @@ textarea {
         line-height: 1;
     }
 
-.minicart-remove {
+/*.minicart-remove {
     max-width: 30px;
     -webkit-flex-basis: 30px;
     -ms-flex-preferred-size: 30px;
     flex-basis: 30px;
     text-align: center;
-    font-size: 18px;
+    font-size: 13px;
     line-height: 1;
     color: #222222;
-}
+}*/
 
     .minicart-remove:hover {
         color: #151542;

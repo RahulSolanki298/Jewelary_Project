@@ -19,21 +19,21 @@
                     {
                         <li class="minicart-item">
                             <div class="minicart-thumb">
-                                <a href="product-details.html">
+                                <a href="@Url.Action("GetSingleDiamond","Diamond",new { diamondId= item.Id})">
                                     <input type="hidden" diamondId="@item.Id"/>
-                                    <img src="@SD.ImgUrl/@item.IconPath" style="width:100px;" alt="Diamond">
+                                    <img src="@SD.ImgUrl/@item.IconPath" style="width:50px;" alt="Diamond">
                                 </a>
                             </div>
                             <div class="minicart-content">
                                 <h3 class="product-name">
-                                    <a href="product-details.html">@item.Carat Carat @item.ShapeName Shape @item.ColorName  @item.ClarityName @item.LabName</a>
+                                    <a href="#" style="font-size: 13px; line-height: 1em; padding-top: 0;">@item.Carat Carat @item.ShapeName Shape @item.ColorName  @item.ClarityName @item.LabName</a>
                                 </h3>
-                                <p>
-                                    @*<span class="cart-quantity">1<strong>&times;</strong></span>*@
+                                <p style="display:inline-block;">
                                     <span class="cart-price">$ @item.Price</span>
                                 </p>
+                                <p style="display:inline-block;float:right;" class="minicart-remove" diamondid="@item.Id">Remove</p>
                             </div>
-                            <button class="minicart-remove"><i class="pe-7s-close"></i></button>
+                            
                         </li>
                         total += item.Price.Value;
                     }
@@ -90,8 +90,8 @@
         </div>
 
         <div class="minicart-button">
-            <a href="cart.html"><i class="fa fa-shopping-cart"></i> View Cart</a>
-            <a href="cart.html"><i class="fa fa-share"></i> Checkout</a>
+            <a href="@Url.Action("CheckOut","AddToCard")"><i class="fa fa-shopping-cart"></i> View Cart</a>
+            <a href="@Url.Action("CheckOut","AddToCard")"><i class="fa fa-share"></i> Checkout</a>
         </div>
     </div>
 </div>

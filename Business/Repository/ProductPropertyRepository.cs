@@ -52,9 +52,11 @@ namespace Business.Repository
                                               Name = prd.Name,
                                               Description = prd.Description,
                                               SymbolName = prd.SymbolName,
+                                              Synonyms=prd.Synonyms,
                                               IconPath = prd.IconPath,
                                               ParentId = main.Id,
                                               ParentProperty = "-",
+                                              DispOrder=prd.DisplayOrder,
                                               IsActive = prd.IsActive.HasValue && prd.IsActive != true ? false : true
                                           }).ToListAsync();
 
